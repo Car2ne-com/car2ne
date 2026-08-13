@@ -1,0 +1,64 @@
+import { redirect } from "next/navigation";
+
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import ProfileForm from "@/components/profile/ProfileForm";
+import ChangePasswordForm from "@/components/profile/ChangePasswordForm";
+import MfaSettings from "@/components/profile/MfaSettings";
+
+import { createClient } from "@/lib/supabase/server";
+
+export default async function ProfilePage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (
+    <>
+      <Navbar />
+
+      <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
+        <div className="mb-10">
+          <h1 className="text-5xl font-black tracking-tight text-slate-900">
+            Il mio profilo
+          </h1>
+
+          <p className="mt-4 text-lg text-slate-600">
+            Gestisci le informazioni del tuo account Car2ne.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <ProfileForm
+            profile={{
+              ...profile,
+              email: user.email ?? "",
+            }}
+          />
+
+          <ChangePasswordForm />
+
+          <MfaSettings />
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+}

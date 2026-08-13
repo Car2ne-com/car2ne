@@ -1,0 +1,230 @@
+import { notFound, redirect } from "next/navigation";
+
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import RatingStars from "@/components/ratings/RatingStars";
+
+import { createClient } from "@/lib/supabase/server";
+
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function PublicProfilePage({
+  params,
+}: Props) {
+  const { id } = await params;
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.id === id) {
+    redirect("/profile");
+  }
+
+  /*
+   * ==============================
+   * CONTROLLO RELAZIONE
+   * ==============================
+   *
+   * Il profilo pubblico e' visibile solo a chi ha
+   * una prenotazione (anche in attesa) in comune
+   * con l'utente richiesto, come conducente o
+   * come passeggero.
+   */
+
+  const [
+    asDriverResult,
+    asPassengerResult,
+  ] = await Promise.all([
+    supabase
+      .from("bookings")
+      .select("id, rides!inner(driver_id)")
+      .eq("passenger_id", id)
+      .eq("rides.driver_id", user.id)
+      .limit(1),
+
+    supabase
+      .from("bookings")
+      .select("id, rides!inner(driver_id)")
+      .eq("passenger_id", user.id)
+      .eq("rides.driver_id", id)
+      .limit(1),
+  ]);
+
+  const hasRelationship =
+    (asDriverResult.data?.length ?? 0) > 0 ||
+    (asPassengerResult.data?.length ?? 0) > 0;
+
+  if (!hasRelationship) {
+    notFound();
+  }
+
+  /*
+   * ==============================
+   * DATI PUBBLICI DEL PROFILO
+   * ==============================
+   *
+   * Volutamente non includiamo telefono
+   * ed email: sono dati sensibili.
+   */
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("id, name, surname, avatar_url, city, bio")
+    .eq("id", id)
+    .single();
+
+  if (error || !profile) {
+    notFound();
+  }
+
+  const { data: ratingRows } = await supabase
+    .from("ratings")
+    .select("rating, comment, created_at, rater_id")
+    .eq("ratee_id", id)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const ratings = ratingRows ?? [];
+
+  const raterIds = Array.from(
+    new Set(
+      ratings.map((rating) => rating.rater_id)
+    )
+  );
+
+  const { data: raterProfiles } =
+    raterIds.length > 0
+      ? await supabase
+          .from("profiles")
+          .select("id, name")
+          .in("id", raterIds)
+      : { data: [] as { id: string; name: string }[] };
+
+  const raterNameById = new Map(
+    (raterProfiles ?? []).map((rater) => [
+      rater.id,
+      rater.name,
+    ])
+  );
+
+  const ratingAverage =
+    ratings.length > 0
+      ? ratings.reduce(
+          (total, r) => total + r.rating,
+          0
+        ) / ratings.length
+      : null;
+
+  const displayName =
+    `${profile.name} ${profile.surname}`.trim();
+
+  const initials =
+    `${profile.name.charAt(0)}${profile.surname.charAt(0)}`
+      .toUpperCase();
+
+  return (
+    <>
+      <Navbar />
+
+      <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
+        <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+          <div className="flex flex-col items-center text-center">
+            {profile.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={displayName}
+                className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
+              />
+            ) : (
+              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-600 ring-4 ring-emerald-50">
+                {initials}
+              </div>
+            )}
+
+            <h1 className="mt-6 text-3xl font-black text-slate-900">
+              {displayName}
+            </h1>
+
+            {profile.city && (
+              <p className="mt-2 text-slate-500">
+                {profile.city}
+              </p>
+            )}
+
+            <div className="mt-4 flex items-center gap-2">
+              {ratingAverage !== null ? (
+                <>
+                  <RatingStars
+                    value={ratingAverage}
+                  />
+
+                  <span className="text-sm font-semibold text-slate-600">
+                    {ratingAverage.toFixed(1)} (
+                    {ratings.length})
+                  </span>
+                </>
+              ) : (
+                <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-500">
+                  Nessuna recensione ancora
+                </span>
+              )}
+            </div>
+
+            {profile.bio && (
+              <p className="mt-6 max-w-xl text-slate-600">
+                {profile.bio}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {ratings.length > 0 && (
+          <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900">
+              Recensioni
+            </h2>
+
+            <div className="mt-6 space-y-5">
+              {ratings.map((rating, index) => (
+                <div
+                  key={index}
+                  className="border-t border-slate-100 pt-5 first:border-t-0 first:pt-0"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="font-semibold text-slate-900">
+                      {raterNameById.get(
+                        rating.rater_id
+                      ) ?? "Utente Car2ne"}
+                    </p>
+
+                    <RatingStars
+                      value={rating.rating}
+                      size={16}
+                    />
+                  </div>
+
+                  {rating.comment && (
+                    <p className="mt-2 text-sm text-slate-600">
+                      {rating.comment}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </main>
+
+      <Footer />
+    </>
+  );
+}
