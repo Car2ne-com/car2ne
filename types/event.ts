@@ -32,6 +32,8 @@ export interface Event {
     | "cancelled"
     | "rejected";
 
+  view_count: number;
+
   created_at: string;
   updated_at: string;
 

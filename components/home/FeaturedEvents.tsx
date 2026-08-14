@@ -5,10 +5,17 @@ import { getRideCounts } from "@/lib/supabase/getRideCounts";
 export default async function FeaturedEvents() {
   const supabase = await createClient();
 
+  /*
+   * "In evidenza" = più viste tra gli eventi futuri, con fallback
+   * sulla data più vicina come tie-break (rilevante finché
+   * view_count è ancora 0 per la maggior parte degli eventi).
+   */
   const { data: events, error } = await supabase
     .from("events")
     .select("*")
     .eq("status", "published")
+    .gte("event_date", new Date().toISOString())
+    .order("view_count", { ascending: false })
     .order("event_date", { ascending: true })
     .limit(6);
 

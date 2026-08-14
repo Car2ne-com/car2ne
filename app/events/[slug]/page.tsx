@@ -30,6 +30,18 @@ export default async function EventPage({ params }: Props) {
     notFound();
   }
 
+  const { error: viewError } = await supabase.rpc(
+    "increment_event_views",
+    { event_id: event.id }
+  );
+
+  if (viewError) {
+    console.error(
+      "Errore incremento visualizzazioni evento:",
+      viewError.message
+    );
+  }
+
   return (
     <>
       <Navbar />
