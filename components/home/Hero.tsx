@@ -3,12 +3,15 @@ import Link from "next/link";
 import { Search, CarFront } from "lucide-react";
 
 import HeroIllustration from "./HeroIllustration";
+import SearchBox from "./SearchBox";
 
 export default function Hero() {
   return (
     <section className="relative">
 
-      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-12 px-6 py-24 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-24">
+
+      <div className="grid min-h-[80vh] items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
 
         {/* LEFT */}
 
@@ -97,6 +100,14 @@ export default function Hero() {
         {/* RIGHT */}
 
         <HeroIllustration />
+
+      </div>
+
+      {/* SEARCH */}
+
+      <div className="mt-16">
+        <SearchBox />
+      </div>
 
       </div>
 

@@ -6,9 +6,6 @@ import {
   CalendarDays,
   MapPin,
   Music2,
-  Trophy,
-  Ticket,
-  Drama,
 } from "lucide-react";
 
 import { Event } from "@/types/event";
@@ -16,25 +13,6 @@ import { Event } from "@/types/event";
 type Props = {
   event: Event;
 };
-
-function CategoryIcon(category: Event["category"]) {
-  switch (category) {
-    case "Concerto":
-      return <Music2 className="h-12 w-12 text-white" />;
-
-    case "Festival":
-      return <Ticket className="h-12 w-12 text-white" />;
-
-    case "Sport":
-      return <Trophy className="h-12 w-12 text-white" />;
-
-    case "Teatro":
-      return <Drama className="h-12 w-12 text-white" />;
-
-    default:
-      return <Ticket className="h-12 w-12 text-white" />;
-  }
-}
 
 export default function EventCard({ event }: Props) {
   const formattedDate = new Intl.DateTimeFormat("it-IT", {
@@ -79,7 +57,7 @@ export default function EventCard({ event }: Props) {
           </>
         ) : (
           <div className="flex h-full items-center justify-center bg-gradient-to-br from-emerald-500 via-emerald-400 to-emerald-300">
-            {CategoryIcon(event.category)}
+            <Music2 className="h-12 w-12 text-white" />
           </div>
         )}
       </div>

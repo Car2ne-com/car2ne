@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import {
   ChevronDown,
+  LayoutDashboard,
   MessageCircle,
   Car,
   Ticket,
@@ -168,6 +169,17 @@ export default function UserMenu({
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
+
+        {/* Dashboard */}
+
+        <DropdownMenuItem
+          render={
+            <Link href="/dashboard">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              Dashboard
+            </Link>
+          }
+        />
 
         {/* Le mie chat */}
 
