@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -47,6 +47,8 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "rejected", label: "Rifiutati" },
 ];
 
+const PAGE_SIZE = 50;
+
 export default function AdminEventTable({ events }: Props) {
   const router = useRouter();
   const supabase = createClient();
@@ -59,6 +61,8 @@ export default function AdminEventTable({ events }: Props) {
     Set<string>
   >(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [visibleCount, setVisibleCount] =
+    useState(PAGE_SIZE);
 
   const filteredEvents = useMemo(() => {
     if (filter === "imported") {
@@ -85,6 +89,15 @@ export default function AdminEventTable({ events }: Props) {
 
     return events;
   }, [events, filter]);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filter]);
+
+  const visibleEvents = filteredEvents.slice(
+    0,
+    visibleCount
+  );
 
   const allFilteredSelected =
     filteredEvents.length > 0 &&
@@ -328,7 +341,7 @@ export default function AdminEventTable({ events }: Props) {
           </thead>
 
           <tbody>
-            {filteredEvents.map((event) => (
+            {visibleEvents.map((event) => (
               <tr
                 key={event.id}
                 className="border-t border-slate-100"
@@ -458,6 +471,24 @@ export default function AdminEventTable({ events }: Props) {
           </tbody>
         </table>
       </div>
+
+      {visibleCount < filteredEvents.length && (
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={() =>
+              setVisibleCount(
+                (count) => count + PAGE_SIZE
+              )
+            }
+            className="rounded-2xl border border-slate-200 bg-white px-8 py-3 font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+          >
+            Carica altri (
+            {filteredEvents.length - visibleCount}{" "}
+            rimanenti)
+          </button>
+        </div>
+      )}
     </div>
   );
 }

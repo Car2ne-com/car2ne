@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import EventSearch from "./EventSearch";
 import EventGrid from "./EventGrid";
 import EmptyState from "./EmptyState";
 
 import { Event } from "@/types/event";
+
+const PAGE_SIZE = 24;
 
 type Props = {
   events: Event[];
@@ -23,6 +25,9 @@ export default function EventsView({
 }: Props) {
   const [search, setSearch] =
     useState(initialSearch);
+
+  const [visibleCount, setVisibleCount] =
+    useState(PAGE_SIZE);
 
   const filteredEvents = useMemo(() => {
     const query =
@@ -42,6 +47,15 @@ export default function EventsView({
       return matchesSearch && matchesDate;
     });
   }, [events, search, initialDate]);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [search, initialDate]);
+
+  const visibleEvents = filteredEvents.slice(
+    0,
+    visibleCount
+  );
 
   return (
     <>
@@ -65,8 +79,29 @@ export default function EventsView({
         </div>
       )}
 
-      {filteredEvents.length > 0 ? (
-        <EventGrid events={filteredEvents} />
+      {visibleEvents.length > 0 ? (
+        <>
+          <EventGrid events={visibleEvents} />
+
+          {visibleCount < filteredEvents.length && (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() =>
+                  setVisibleCount(
+                    (count) => count + PAGE_SIZE
+                  )
+                }
+                className="rounded-2xl border border-slate-200 bg-white px-8 py-3 font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+              >
+                Carica altri eventi (
+                {filteredEvents.length -
+                  visibleCount}{" "}
+                rimanenti)
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <EmptyState />
       )}
