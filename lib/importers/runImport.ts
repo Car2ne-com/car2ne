@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { slugify } from "@/lib/utils/slug";
+import { resolveCityVenue } from "@/lib/geo/resolveCityVenue";
 
 import { ticketmasterImporter } from "./ticketmaster";
 import { decideDedup } from "./dedup";
@@ -77,9 +78,11 @@ export async function runImport(
         IMPORT_WINDOW_MONTHS
     );
 
+    const countryCode = "IT";
+
     const normalizedEvents =
       await importer.fetchNormalizedEvents({
-        countryCode: "IT",
+        countryCode,
         startDateTime:
           now
             .toISOString()
@@ -98,6 +101,7 @@ export async function runImport(
         await upsertEvent(
           supabase,
           normalized,
+          countryCode,
           result
         );
       } catch (eventError) {
@@ -170,12 +174,47 @@ export async function runImport(
 async function upsertEvent(
   supabase: SupabaseClient,
   normalized: NormalizedEvent,
+  countryCode: string,
   result: ImportResult
 ) {
   const decision = await decideDedup(
     supabase,
     normalized
   );
+
+  /*
+   * Il collegamento a cities/venues non deve mai far fallire
+   * l'import dell'evento: se il resolver va in errore, l'evento
+   * viene comunque creato/aggiornato senza city_id/venue_id,
+   * esattamente come si comportava la pipeline prima che
+   * cities/venues esistessero.
+   */
+  let cityId: string | null = null;
+  let venueId: string | null = null;
+
+  try {
+    const resolved = await resolveCityVenue(supabase, {
+      cityName: normalized.city,
+      venueName: normalized.venue,
+      countryCode,
+      source: normalized.source,
+      venueExternalId: normalized.venueExternalId,
+      address: normalized.address,
+      latitude: normalized.latitude,
+      longitude: normalized.longitude,
+    });
+
+    cityId = resolved.cityId;
+    venueId = resolved.venueId;
+  } catch (geoError) {
+    console.error(
+      "Risoluzione città/venue fallita:",
+      normalized.externalId,
+      geoError instanceof Error
+        ? geoError.message
+        : geoError
+    );
+  }
 
   const basePayload = {
     source: normalized.source,
@@ -208,6 +247,8 @@ async function upsertEvent(
       .from("events")
       .insert({
         ...basePayload,
+        city_id: cityId,
+        venue_id: venueId,
         slug,
         status,
       });
@@ -225,6 +266,19 @@ async function upsertEvent(
       string,
       unknown
     > = { ...basePayload };
+
+    /*
+     * Se il resolver non è riuscito a risolvere città/venue in
+     * questo giro (es. errore transitorio), non si tocca un
+     * eventuale collegamento già risolto in un import precedente.
+     */
+    if (cityId) {
+      updatePayload.city_id = cityId;
+    }
+
+    if (venueId) {
+      updatePayload.venue_id = venueId;
+    }
 
     /*
      * Solo transizione automatica ammessa:

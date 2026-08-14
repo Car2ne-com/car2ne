@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminEventTable from "@/components/admin/AdminEventTable";
 import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButton";
+import BackfillCityVenueButton from "@/components/admin/BackfillCityVenueButton";
 
 export default async function AdminEventsPage() {
   const supabase = await createClient();
@@ -56,6 +57,8 @@ export default async function AdminEventsPage() {
         </div>
 
         <div className="flex gap-3">
+          <BackfillCityVenueButton />
+
           <ImportTicketmasterButton />
 
           <Link

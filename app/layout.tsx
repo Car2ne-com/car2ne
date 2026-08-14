@@ -4,6 +4,8 @@ import { Toaster } from "sonner";
 
 import FloatingChat from "@/components/chat/FloatingChat";
 
+import { SITE_URL } from "@/lib/siteConfig";
+
 import "./globals.css";
 
 const manrope = Manrope({
@@ -13,6 +15,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: SITE_URL,
   title: "Car2ne",
   description:
     "Trova o offri un passaggio per il tuo prossimo evento.",

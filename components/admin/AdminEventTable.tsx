@@ -55,6 +55,10 @@ export default function AdminEventTable({ events }: Props) {
   const [busyId, setBusyId] = useState<
     string | null
   >(null);
+  const [selectedIds, setSelectedIds] = useState<
+    Set<string>
+  >(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   const filteredEvents = useMemo(() => {
     if (filter === "imported") {
@@ -81,6 +85,79 @@ export default function AdminEventTable({ events }: Props) {
 
     return events;
   }, [events, filter]);
+
+  const allFilteredSelected =
+    filteredEvents.length > 0 &&
+    filteredEvents.every((event) =>
+      selectedIds.has(event.id)
+    );
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((prev) => {
+      if (allFilteredSelected) {
+        const next = new Set(prev);
+
+        filteredEvents.forEach((event) =>
+          next.delete(event.id)
+        );
+
+        return next;
+      }
+
+      const next = new Set(prev);
+
+      filteredEvents.forEach((event) =>
+        next.add(event.id)
+      );
+
+      return next;
+    });
+  }
+
+  async function bulkUpdateStatus(
+    status: "published" | "rejected"
+  ) {
+    const ids = Array.from(selectedIds);
+
+    if (ids.length === 0) return;
+
+    setBulkBusy(true);
+
+    const { error } = await supabase
+      .from("events")
+      .update({ status })
+      .in("id", ids);
+
+    setBulkBusy(false);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success(
+      status === "published"
+        ? `${ids.length} eventi pubblicati!`
+        : `${ids.length} eventi rifiutati.`
+    );
+
+    setSelectedIds(new Set());
+    router.refresh();
+  }
 
   async function deleteEvent(id: string, title: string) {
     const confirmed = window.confirm(
@@ -167,10 +244,55 @@ export default function AdminEventTable({ events }: Props) {
         ))}
       </div>
 
+      {selectedIds.size > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3">
+          <span className="text-sm font-semibold text-emerald-800">
+            {selectedIds.size} selezionati
+          </span>
+
+          <button
+            type="button"
+            onClick={() => bulkUpdateStatus("published")}
+            disabled={bulkBusy}
+            className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Approva selezionati
+          </button>
+
+          <button
+            type="button"
+            onClick={() => bulkUpdateStatus("rejected")}
+            disabled={bulkBusy}
+            className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Rifiuta selezionati
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSelectedIds(new Set())}
+            disabled={bulkBusy}
+            className="rounded-xl px-4 py-2 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Deseleziona tutto
+          </button>
+        </div>
+      )}
+
       <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full">
           <thead className="bg-slate-50">
             <tr>
+              <th className="px-6 py-4 text-left">
+                <input
+                  type="checkbox"
+                  checked={allFilteredSelected}
+                  onChange={toggleSelectAll}
+                  className="h-4 w-4 rounded border-slate-300"
+                  aria-label="Seleziona tutti gli eventi filtrati"
+                />
+              </th>
+
               <th className="px-6 py-4 text-left">
                 Titolo
               </th>
@@ -211,6 +333,16 @@ export default function AdminEventTable({ events }: Props) {
                 key={event.id}
                 className="border-t border-slate-100"
               >
+                <td className="px-6 py-5">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(event.id)}
+                    onChange={() => toggleSelect(event.id)}
+                    className="h-4 w-4 rounded border-slate-300"
+                    aria-label={`Seleziona ${event.title}`}
+                  />
+                </td>
+
                 <td className="px-6 py-5 font-semibold">
                   {event.title}
                 </td>

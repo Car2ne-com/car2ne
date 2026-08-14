@@ -45,9 +45,14 @@ export type RawTicketmasterEvent = {
   pleaseNote?: string;
   _embedded?: {
     venues?: {
+      id?: string;
       name?: string;
       city?: { name?: string };
+      state?: { name?: string; stateCode?: string };
       country?: { countryCode?: string };
+      address?: { line1?: string; line2?: string };
+      postalCode?: string;
+      location?: { latitude?: string; longitude?: string };
     }[];
     attractions?: {
       name?: string;

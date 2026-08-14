@@ -21,6 +21,17 @@ export type NormalizedEvent = {
   city: string;
   venue: string;
 
+  /*
+   * Dati opzionali per il collegamento a cities/venues.
+   * Se assenti (fonte che non li fornisce, o venue senza id
+   * stabile), l'evento viene comunque importato: il resolver
+   * città/venue farà semplicemente fallback sul solo nome.
+   */
+  venueExternalId: string | null;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+
   eventDate: string;
   imageUrl: string | null;
 

@@ -3,6 +3,10 @@ import type { RawTicketmasterEvent } from "./client";
 
 const SOURCE = "ticketmaster";
 
+type RawVenue = NonNullable<
+  NonNullable<RawTicketmasterEvent["_embedded"]>["venues"]
+>[number];
+
 function pickImage(
   images: RawTicketmasterEvent["images"]
 ): string | null {
@@ -59,6 +63,32 @@ function resolveEventDate(
   return null;
 }
 
+function resolveAddress(
+  venue: RawVenue | undefined
+): string | null {
+  const line = venue?.address?.line1 ?? null;
+
+  if (!line) {
+    return null;
+  }
+
+  return venue?.postalCode
+    ? `${line}, ${venue.postalCode}`
+    : line;
+}
+
+function parseCoordinate(
+  value: string | undefined
+): number | null {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function resolveExternalStatus(
   event: RawTicketmasterEvent
 ): "active" | "cancelled" {
@@ -110,6 +140,11 @@ export function normalizeTicketmasterEvent(
 
     city: venue.city.name,
     venue: venue.name,
+
+    venueExternalId: venue.id ?? null,
+    address: resolveAddress(venue),
+    latitude: parseCoordinate(venue.location?.latitude),
+    longitude: parseCoordinate(venue.location?.longitude),
 
     eventDate,
     imageUrl: pickImage(event.images),

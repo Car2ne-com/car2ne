@@ -1,0 +1,124 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import VenueHero from "@/components/venues/VenueHero";
+import EventGrid from "@/components/events/EventGrid";
+import EmptyState from "@/components/events/EmptyState";
+
+import { createClient } from "@/lib/supabase/server";
+import type { City } from "@/types/city";
+import type { Venue } from "@/types/venue";
+
+type Props = {
+  params: Promise<{ slug: string; venueSlug: string }>;
+};
+
+async function getCityAndVenue(
+  citySlug: string,
+  venueSlug: string
+): Promise<{ city: City; venue: Venue } | null> {
+  const supabase = await createClient();
+
+  const { data: city, error: cityError } = await supabase
+    .from("cities")
+    .select("*")
+    .eq("slug", citySlug)
+    .maybeSingle();
+
+  if (cityError) {
+    throw new Error(cityError.message);
+  }
+
+  if (!city) {
+    return null;
+  }
+
+  const { data: venue, error: venueError } = await supabase
+    .from("venues")
+    .select("*")
+    .eq("city_id", city.id)
+    .eq("slug", venueSlug)
+    .maybeSingle();
+
+  if (venueError) {
+    throw new Error(venueError.message);
+  }
+
+  if (!venue) {
+    return null;
+  }
+
+  return { city, venue };
+}
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { slug, venueSlug } = await params;
+  const result = await getCityAndVenue(slug, venueSlug);
+
+  if (!result) {
+    return {};
+  }
+
+  const { city, venue } = result;
+
+  const title = `${venue.name}, ${city.name} | Car2ne`;
+  const description = `Tutti gli eventi al ${venue.name} di ${city.name}. Trova un passaggio auto per arrivare con Car2ne.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/citta/${city.slug}/venue/${venue.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}
+
+export default async function VenuePage({ params }: Props) {
+  const { slug, venueSlug } = await params;
+  const result = await getCityAndVenue(slug, venueSlug);
+
+  if (!result) {
+    notFound();
+  }
+
+  const { city, venue } = result;
+
+  const supabase = await createClient();
+
+  const { data: events, error: eventsError } = await supabase
+    .from("events")
+    .select("*")
+    .eq("venue_id", venue.id)
+    .eq("status", "published")
+    .order("event_date", { ascending: true });
+
+  if (eventsError) {
+    throw new Error(eventsError.message);
+  }
+
+  return (
+    <>
+      <Navbar />
+
+      <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
+        <VenueHero city={city} venue={venue} eventCount={events?.length ?? 0} />
+
+        {events && events.length > 0 ? (
+          <EventGrid events={events} />
+        ) : (
+          <EmptyState />
+        )}
+      </main>
+
+      <Footer />
+    </>
+  );
+}
