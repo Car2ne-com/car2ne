@@ -13,7 +13,7 @@ export default function EmptyState() {
       </h3>
 
       <p className="mt-3 max-w-md text-slate-500">
-        Prova a modificare la ricerca oppure cambia categoria.
+        Prova a modificare la ricerca.
       </p>
 
     </div>
