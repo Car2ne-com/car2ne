@@ -1,5 +1,6 @@
 import EventGrid from "@/components/events/EventGrid";
 import { createClient } from "@/lib/supabase/server";
+import { getRideCounts } from "@/lib/supabase/getRideCounts";
 
 export default async function FeaturedEvents() {
   const supabase = await createClient();
@@ -20,6 +21,18 @@ export default async function FeaturedEvents() {
     console.error("SUPABASE EVENTS ERROR CAUSE:", error.cause);
   }
 
+  const rideCounts = await getRideCounts(
+    supabase,
+    (events ?? []).map((event) => event.id)
+  );
+
+  const eventsWithRideCount = (events ?? []).map(
+    (event) => ({
+      ...event,
+      ride_count: rideCounts[event.id] ?? 0,
+    })
+  );
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <div className="mb-12 flex items-end justify-between">
@@ -34,7 +47,7 @@ export default async function FeaturedEvents() {
         </div>
       </div>
 
-      <EventGrid events={events ?? []} />
+      <EventGrid events={eventsWithRideCount} />
     </section>
   );
 }

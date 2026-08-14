@@ -9,6 +9,7 @@ import EventGrid from "@/components/events/EventGrid";
 import EmptyState from "@/components/events/EmptyState";
 
 import { createClient } from "@/lib/supabase/server";
+import { getRideCounts } from "@/lib/supabase/getRideCounts";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
@@ -91,6 +92,18 @@ export default async function CityPage({ params }: Props) {
     throw new Error(venuesError.message);
   }
 
+  const rideCounts = await getRideCounts(
+    supabase,
+    (events ?? []).map((event) => event.id)
+  );
+
+  const eventsWithRideCount = (events ?? []).map(
+    (event) => ({
+      ...event,
+      ride_count: rideCounts[event.id] ?? 0,
+    })
+  );
+
   return (
     <>
       <Navbar />
@@ -98,8 +111,8 @@ export default async function CityPage({ params }: Props) {
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
         <CityHero city={city} eventCount={events?.length ?? 0} />
 
-        {events && events.length > 0 ? (
-          <EventGrid events={events} />
+        {eventsWithRideCount.length > 0 ? (
+          <EventGrid events={eventsWithRideCount} />
         ) : (
           <EmptyState />
         )}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   CalendarDays,
+  Car,
   MapPin,
   Music2,
 } from "lucide-react";
@@ -58,6 +59,16 @@ export default function EventCard({ event }: Props) {
         ) : (
           <div className="flex h-full items-center justify-center bg-gradient-to-br from-emerald-500 via-emerald-400 to-emerald-300">
             <Music2 className="h-12 w-12 text-white" />
+          </div>
+        )}
+
+        {!!event.ride_count && (
+          <div className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-emerald-700 backdrop-blur">
+            <Car className="h-4 w-4" />
+            {event.ride_count}{" "}
+            {event.ride_count === 1
+              ? "passaggio"
+              : "passaggi"}
           </div>
         )}
       </div>

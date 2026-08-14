@@ -4,6 +4,7 @@ import EventHeader from "@/components/events/EventHeader";
 import EventsView from "@/components/events/EventsView";
 
 import { createClient } from "@/lib/supabase/server";
+import { getRideCounts } from "@/lib/supabase/getRideCounts";
 
 type Props = {
   searchParams: Promise<{
@@ -32,6 +33,18 @@ export default async function EventsPage({
     throw new Error(error.message);
   }
 
+  const rideCounts = await getRideCounts(
+    supabase,
+    (events ?? []).map((event) => event.id)
+  );
+
+  const eventsWithRideCount = (events ?? []).map(
+    (event) => ({
+      ...event,
+      ride_count: rideCounts[event.id] ?? 0,
+    })
+  );
+
   return (
     <>
       <Navbar />
@@ -40,7 +53,7 @@ export default async function EventsPage({
         <EventHeader />
 
         <EventsView
-          events={events ?? []}
+          events={eventsWithRideCount}
           initialSearch={params.search ?? ""}
           initialDate={params.date ?? ""}
           initialDeparture={params.from ?? ""}

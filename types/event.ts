@@ -34,4 +34,11 @@ export interface Event {
 
   created_at: string;
   updated_at: string;
+
+  /*
+   * Non è una colonna DB: allegato a runtime dalle pagine di
+   * listing (home, /events, /citta/*) con una query batch separata
+   * su rides. Assente quando la pagina non lo calcola.
+   */
+  ride_count?: number;
 }
