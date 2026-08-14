@@ -199,7 +199,7 @@ export default function AdminEventTable({ events }: Props) {
                 Stato
               </th>
 
-              <th className="px-6 py-4 text-center">
+              <th className="sticky right-0 z-10 bg-slate-50 px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
                 Azioni
               </th>
             </tr>
@@ -267,7 +267,7 @@ export default function AdminEventTable({ events }: Props) {
                   <StatusBadge status={event.status} />
                 </td>
 
-                <td className="px-6 py-5">
+                <td className="sticky right-0 z-10 bg-white px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
                   <div className="flex justify-center gap-3">
                     {event.status !== "published" && (
                       <button
