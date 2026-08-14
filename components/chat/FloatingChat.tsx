@@ -481,22 +481,33 @@ export default function FloatingChat() {
 
   /*
    * ==============================
-   * REALTIME
+   * CONTROLLO SESSIONE INIZIALE
    * ==============================
+   *
+   * Gira sempre, anche per utenti anonimi: è un singolo check,
+   * serve solo a sapere se mostrare il pulsante.
    */
 
   useEffect(() => {
-    let mounted = true;
+    void loadChats();
+  }, [loadChats]);
 
-    async function initialize() {
-      if (!mounted) {
-        return;
-      }
+  /*
+   * ==============================
+   * REALTIME
+   * ==============================
+   *
+   * Attivo SOLO per utenti autenticati. Prima girava
+   * incondizionatamente per chiunque visitasse il sito: un
+   * visitatore anonimo apriva comunque una connessione realtime
+   * e faceva un giro di rete ogni 30s all'infinito, per
+   * un pulsante che per lui non verrà mai mostrato.
+   */
 
-      await loadChats();
+  useEffect(() => {
+    if (!currentUserId) {
+      return;
     }
-
-    void initialize();
 
     const channel =
       supabase
@@ -649,8 +660,6 @@ export default function FloatingChat() {
       );
 
     return () => {
-      mounted = false;
-
       window.clearInterval(
         interval
       );

@@ -5,7 +5,7 @@ export default function HeroIllustration() {
     <div className="relative flex h-full items-center justify-center lg:translate-x-10 lg:translate-y-6">
 
       {/* Glow */}
-      <div className="absolute h-[720px] w-[720px] rounded-full bg-emerald-300/20 blur-[170px]" />
+      <div className="absolute h-[720px] w-[720px] rounded-full bg-emerald-300/20 blur-[110px]" />
 
       <Image
         src="/images/hero.png"
@@ -13,6 +13,7 @@ export default function HeroIllustration() {
         width={1400}
         height={900}
         priority
+        sizes="(min-width: 1024px) 650px, 100vw"
         className="
           relative
           z-10

@@ -46,6 +46,7 @@ export default function EventCard({ event }: Props) {
               src={event.image_url}
               alt={event.title}
               fill
+              sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
               className="
                 object-cover
                 transition-transform
