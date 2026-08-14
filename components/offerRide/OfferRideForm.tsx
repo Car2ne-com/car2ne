@@ -98,6 +98,10 @@ export default function OfferRideForm() {
         .from("events")
         .select("*")
         .eq("status", "published")
+        .gte(
+          "event_date",
+          new Date().toISOString()
+        )
         .order("event_date", {
           ascending: true,
         });

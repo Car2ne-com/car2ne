@@ -291,7 +291,7 @@ export default function BookingCard({
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
-        {booking.eventSlug && (
+        {booking.eventSlug && !booking.rideHasPassed && (
           <Link
             href={`/events/${booking.eventSlug}`}
             className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"

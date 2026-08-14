@@ -245,7 +245,10 @@ export default async function MyRidesPage() {
 
                     {/* Vedi evento */}
 
-                    {event?.slug && (
+                    {event?.slug &&
+                      event.event_date &&
+                      new Date(event.event_date) >
+                        new Date() && (
                       <Link
                         href={`/events/${event.slug}`}
                         className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"

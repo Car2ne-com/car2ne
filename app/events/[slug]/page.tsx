@@ -24,6 +24,7 @@ export default async function EventPage({ params }: Props) {
     .select("*, cities(slug), venues(slug)")
     .eq("slug", slug)
     .eq("status", "published")
+    .gte("event_date", new Date().toISOString())
     .single();
 
   if (error || !event) {
