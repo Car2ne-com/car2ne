@@ -8,10 +8,10 @@ export default function HeroIllustration() {
       <div className="absolute h-[720px] w-[720px] rounded-full bg-emerald-300/20 blur-[110px]" />
 
       <Image
-        src="/images/hero.png"
+        src="/images/hero.webp"
         alt="Car2ne Hero"
-        width={1400}
-        height={900}
+        width={1536}
+        height={1024}
         priority
         sizes="(min-width: 1024px) 650px, 100vw"
         className="
