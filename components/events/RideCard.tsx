@@ -21,6 +21,11 @@ type Props = {
     eventId: string;
     driverId: string;
 
+    driverRating: {
+      average: number;
+      count: number;
+    } | null;
+
     driver: string;
     driverSurname?: string | null;
     avatarUrl: string | null;
@@ -58,37 +63,7 @@ export default function RideCard({
   const [isDriver, setIsDriver] =
     useState(false);
 
-  const [driverRating, setDriverRating] =
-    useState<{
-      average: number;
-      count: number;
-    } | null>(null);
-
-  useEffect(() => {
-    async function loadDriverRating() {
-      const { data, error } = await supabase
-        .from("ratings")
-        .select("rating")
-        .eq("ratee_id", ride.driverId);
-
-      if (error || !data || data.length === 0) {
-        return;
-      }
-
-      const average =
-        data.reduce(
-          (total, r) => total + r.rating,
-          0
-        ) / data.length;
-
-      setDriverRating({
-        average,
-        count: data.length,
-      });
-    }
-
-    loadDriverRating();
-  }, [ride.driverId, supabase]);
+  const driverRating = ride.driverRating;
 
   useEffect(() => {
     async function loadBookingStatus() {

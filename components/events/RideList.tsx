@@ -1,6 +1,7 @@
 import RideCard from "./RideCard";
 
 import { createClient } from "@/lib/supabase/server";
+import { getDriverRatings } from "@/lib/supabase/getDriverRatings";
 import { toOne } from "@/lib/utils/relations";
 
 type Props = {
@@ -46,6 +47,11 @@ export default async function RideList({
     );
   }
 
+  const driverRatings = await getDriverRatings(
+    supabase,
+    (rides ?? []).map((ride) => ride.driver_id)
+  );
+
   const formattedRides =
     rides?.map((ride) => {
       const profile = toOne(ride.profiles);
@@ -82,6 +88,9 @@ export default async function RideList({
         eventId: ride.event_id,
 
         driverId: ride.driver_id,
+
+        driverRating:
+          driverRatings[ride.driver_id] ?? null,
 
         driver:
           profile?.name ??
