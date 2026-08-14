@@ -9,9 +9,9 @@ export default function Hero() {
   return (
     <section className="relative">
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-10 lg:py-14">
 
-      <div className="grid min-h-[80vh] items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
 
         {/* LEFT */}
 
@@ -21,7 +21,7 @@ export default function Hero() {
             🚗 Viaggia insieme. Risparmia. Conosci nuove persone.
           </span>
 
-          <h1 className="mt-8 text-5xl font-black leading-[0.92] tracking-tight text-slate-900 md:text-6xl xl:text-[5.3rem]">
+          <h1 className="mt-6 text-5xl font-black leading-[0.92] tracking-tight text-slate-900 md:text-6xl xl:text-[4.5rem]">
             Trova il tuo
             <br />
             passaggio
@@ -31,7 +31,7 @@ export default function Hero() {
             evento.
           </h1>
 
-          <p className="mt-8 text-lg leading-8 text-slate-600">
+          <p className="mt-6 text-lg leading-8 text-slate-600">
             Concerti, festival, fiere e molto altro.
             <br />
             Car2ne mette in contatto persone che stanno andando
@@ -40,7 +40,7 @@ export default function Hero() {
 
           {/* CTA */}
 
-          <div className="mt-10 flex flex-wrap gap-5">
+          <div className="mt-8 flex flex-wrap gap-5">
 
             <Link
               href="/events"
@@ -105,7 +105,7 @@ export default function Hero() {
 
       {/* SEARCH */}
 
-      <div className="mt-16">
+      <div className="mt-8">
         <SearchBox />
       </div>
 
