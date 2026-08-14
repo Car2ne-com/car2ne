@@ -297,11 +297,6 @@ export default function LoginForm() {
      * ==============================
      */
 
-    if (profile?.role === "admin") {
-      router.push("/admin/events");
-      return;
-    }
-
     router.push("/dashboard");
   }
 
