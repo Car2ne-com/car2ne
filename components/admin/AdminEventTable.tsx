@@ -417,9 +417,11 @@ export default function AdminEventTable({
                 </>
               )}
 
-              <th className="sticky right-0 z-10 bg-slate-50 px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
-                Azioni
-              </th>
+              {filter !== "past" && (
+                <th className="sticky right-0 z-10 bg-slate-50 px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
+                  Azioni
+                </th>
+              )}
             </tr>
           </thead>
 
@@ -507,60 +509,62 @@ export default function AdminEventTable({
                   </>
                 )}
 
-                <td className="sticky right-0 z-10 bg-white px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
-                  <div className="flex justify-center gap-3">
-                    {event.status !== "published" && (
-                      <button
-                        onClick={() =>
-                          updateStatus(
-                            event.id,
-                            event.title,
-                            "published"
-                          )
-                        }
-                        disabled={busyId === event.id}
-                        title="Approva e pubblica"
-                        className="rounded-xl bg-emerald-500 p-3 text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        <CheckCircle2 className="h-4 w-4" />
-                      </button>
-                    )}
-
-                    {event.status !== "rejected" &&
-                      event.status !== "published" && (
+                {filter !== "past" && (
+                  <td className="sticky right-0 z-10 bg-white px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
+                    <div className="flex justify-center gap-3">
+                      {event.status !== "published" && (
                         <button
                           onClick={() =>
                             updateStatus(
                               event.id,
                               event.title,
-                              "rejected"
+                              "published"
                             )
                           }
                           disabled={busyId === event.id}
-                          title="Rifiuta"
-                          className="rounded-xl bg-amber-500 p-3 text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+                          title="Approva e pubblica"
+                          className="rounded-xl bg-emerald-500 p-3 text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          <XCircle className="h-4 w-4" />
+                          <CheckCircle2 className="h-4 w-4" />
                         </button>
                       )}
 
-                    <Link
-                      href={`/admin/events/${event.id}`}
-                      className="rounded-xl bg-blue-500 p-3 text-white transition hover:bg-blue-600"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Link>
+                      {event.status !== "rejected" &&
+                        event.status !== "published" && (
+                          <button
+                            onClick={() =>
+                              updateStatus(
+                                event.id,
+                                event.title,
+                                "rejected"
+                              )
+                            }
+                            disabled={busyId === event.id}
+                            title="Rifiuta"
+                            className="rounded-xl bg-amber-500 p-3 text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+                          >
+                            <XCircle className="h-4 w-4" />
+                          </button>
+                        )}
 
-                    <button
-                      onClick={() =>
-                        deleteEvent(event.id, event.title)
-                      }
-                      className="rounded-xl bg-red-500 p-3 text-white transition hover:bg-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </td>
+                      <Link
+                        href={`/admin/events/${event.id}`}
+                        className="rounded-xl bg-blue-500 p-3 text-white transition hover:bg-blue-600"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Link>
+
+                      <button
+                        onClick={() =>
+                          deleteEvent(event.id, event.title)
+                        }
+                        className="rounded-xl bg-red-500 p-3 text-white transition hover:bg-red-600"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

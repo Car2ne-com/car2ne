@@ -6,6 +6,8 @@ import { SITE_URL } from "@/lib/siteConfig";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
 
+  const now = new Date().toISOString();
+
   const [
     { data: events },
     { data: cities },
@@ -15,7 +17,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     supabase
       .from("events")
       .select("slug, updated_at")
-      .eq("status", "published"),
+      .eq("status", "published")
+      .gte("event_date", now),
     supabase.from("cities").select("slug, updated_at"),
     supabase
       .from("venues")
@@ -24,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .from("events")
       .select("artist_slug, updated_at")
       .eq("status", "published")
+      .gte("event_date", now)
       .not("artist_slug", "is", null),
   ]);
 
