@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { getPastEventMetrics } from "@/lib/supabase/getPastEventMetrics";
 import AdminEventTable from "@/components/admin/AdminEventTable";
 import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButton";
 import BackfillCityVenueButton from "@/components/admin/BackfillCityVenueButton";
@@ -52,6 +53,27 @@ export default async function AdminEventsPage({
     throw new Error(error.message);
   }
 
+  const now = new Date();
+
+  const pastEventIds = (events ?? [])
+    .filter((event) => new Date(event.event_date) < now)
+    .map((event) => event.id);
+
+  const pastMetrics = await getPastEventMetrics(
+    supabase,
+    pastEventIds
+  );
+
+  const eventsWithMetrics = (events ?? []).map(
+    (event) => ({
+      ...event,
+      rides_count:
+        pastMetrics[event.id]?.ridesCount ?? 0,
+      passengers_count:
+        pastMetrics[event.id]?.passengersCount ?? 0,
+    })
+  );
+
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8 flex items-center justify-between">
@@ -83,7 +105,7 @@ export default async function AdminEventsPage({
 
       <AdminEventTable
         key={params.filter ?? "all"}
-        events={events ?? []}
+        events={eventsWithMetrics}
         initialFilter={params.filter}
       />
     </main>

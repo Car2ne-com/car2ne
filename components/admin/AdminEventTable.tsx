@@ -26,6 +26,8 @@ type Event = {
   source: string | null;
   external_id: string | null;
   imported_at: string | null;
+  rides_count?: number;
+  passengers_count?: number;
 };
 
 type Filter =
@@ -33,7 +35,8 @@ type Filter =
   | "imported"
   | "pending"
   | "published"
-  | "rejected";
+  | "rejected"
+  | "past";
 
 type Props = {
   events: Event[];
@@ -46,6 +49,7 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "pending", label: "In attesa" },
   { key: "published", label: "Pubblicati" },
   { key: "rejected", label: "Rifiutati" },
+  { key: "past", label: "Passati" },
 ];
 
 function isFilter(value: string | undefined): value is Filter {
@@ -97,8 +101,34 @@ export default function AdminEventTable({
       );
     }
 
+    if (filter === "past") {
+      const now = new Date();
+
+      return events.filter(
+        (event) => new Date(event.event_date) < now
+      );
+    }
+
     return events;
   }, [events, filter]);
+
+  const pastSummary = useMemo(() => {
+    if (filter !== "past") {
+      return null;
+    }
+
+    return filteredEvents.reduce(
+      (totals, event) => ({
+        events: totals.events + 1,
+        rides:
+          totals.rides + (event.rides_count ?? 0),
+        passengers:
+          totals.passengers +
+          (event.passengers_count ?? 0),
+      }),
+      { events: 0, rides: 0, passengers: 0 }
+    );
+  }, [filter, filteredEvents]);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
@@ -267,6 +297,37 @@ export default function AdminEventTable({
         ))}
       </div>
 
+      {pastSummary && (
+        <div className="mb-6 grid grid-cols-3 gap-4">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">
+              Eventi passati
+            </p>
+            <p className="mt-1 text-3xl font-black text-slate-900">
+              {pastSummary.events}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">
+              Passaggi offerti
+            </p>
+            <p className="mt-1 text-3xl font-black text-slate-900">
+              {pastSummary.rides}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">
+              Passeggeri trasportati
+            </p>
+            <p className="mt-1 text-3xl font-black text-slate-900">
+              {pastSummary.passengers}
+            </p>
+          </div>
+        </div>
+      )}
+
       {selectedIds.size > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3">
           <span className="text-sm font-semibold text-emerald-800">
@@ -343,6 +404,18 @@ export default function AdminEventTable({
               <th className="px-6 py-4 text-left">
                 Stato
               </th>
+
+              {filter === "past" && (
+                <>
+                  <th className="px-6 py-4 text-left">
+                    Passaggi
+                  </th>
+
+                  <th className="px-6 py-4 text-left">
+                    Passeggeri
+                  </th>
+                </>
+              )}
 
               <th className="sticky right-0 z-10 bg-slate-50 px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
                 Azioni
@@ -421,6 +494,18 @@ export default function AdminEventTable({
                 <td className="px-6 py-5">
                   <StatusBadge status={event.status} />
                 </td>
+
+                {filter === "past" && (
+                  <>
+                    <td className="px-6 py-5 font-semibold text-slate-700">
+                      {event.rides_count ?? 0}
+                    </td>
+
+                    <td className="px-6 py-5 font-semibold text-slate-700">
+                      {event.passengers_count ?? 0}
+                    </td>
+                  </>
+                )}
 
                 <td className="sticky right-0 z-10 bg-white px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
                   <div className="flex justify-center gap-3">
