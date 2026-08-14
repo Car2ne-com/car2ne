@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import EventCombobox from "./EventCombobox";
 
 import { Event } from "@/types/event";
 
@@ -575,34 +576,12 @@ export default function OfferRideForm() {
             Evento *
           </label>
 
-          <select
+          <EventCombobox
+            events={events}
             value={eventId}
-            onChange={(e) =>
-              handleEventChange(
-                e.target.value
-              )
-            }
-            className="h-14 w-full rounded-2xl border border-slate-200 bg-white px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
-          >
-            <option value="">
-              {loadingEvents
-                ? "Caricamento eventi..."
-                : "Seleziona un evento"}
-            </option>
-
-            {!loadingEvents &&
-              events.map(
-                (event) => (
-                  <option
-                    key={event.id}
-                    value={event.id}
-                  >
-                    {event.title} —{" "}
-                    {event.city}
-                  </option>
-                )
-              )}
-          </select>
+            onChange={handleEventChange}
+            loading={loadingEvents}
+          />
         </div>
 
         {/* Avviso passaggio già esistente */}
