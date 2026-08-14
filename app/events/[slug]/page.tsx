@@ -21,7 +21,7 @@ export default async function EventPage({ params }: Props) {
 
   const { data: event, error } = await supabase
     .from("events")
-    .select("*")
+    .select("*, cities(slug), venues(slug)")
     .eq("slug", slug)
     .eq("status", "published")
     .single();

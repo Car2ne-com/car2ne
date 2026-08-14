@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
 
 type Props = {
@@ -12,6 +13,8 @@ type Props = {
     description: string | null;
     image_url: string | null;
     event_date: string;
+    cities?: { slug: string } | null;
+    venues?: { slug: string } | null;
   };
 };
 
@@ -53,7 +56,27 @@ export default function EventHero({ event }: Props) {
                 <MapPin className="h-5 w-5" />
 
                 <span>
-                  {event.city} · {event.venue}
+                  {event.cities ? (
+                    <Link
+                      href={`/citta/${event.cities.slug}`}
+                      className="underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                    >
+                      {event.city}
+                    </Link>
+                  ) : (
+                    event.city
+                  )}
+                  {" · "}
+                  {event.cities && event.venues ? (
+                    <Link
+                      href={`/citta/${event.cities.slug}/venue/${event.venues.slug}`}
+                      className="underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                    >
+                      {event.venue}
+                    </Link>
+                  ) : (
+                    event.venue
+                  )}
                 </span>
               </div>
 
