@@ -12,6 +12,7 @@ export interface Event {
 
   title: string;
   artist: string;
+  artist_slug: string | null;
 
   slug: string;
 

@@ -222,6 +222,7 @@ async function upsertEvent(
     external_url: normalized.externalUrl,
     title: normalized.title,
     artist: normalized.artist,
+    artist_slug: slugify(normalized.artist),
     description: normalized.description,
     category: normalized.category,
     city: normalized.city,

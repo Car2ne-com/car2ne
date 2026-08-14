@@ -36,6 +36,7 @@ export default function EventsView({
     return events.filter((event) => {
       const matchesSearch =
         !query ||
+        event.artist.toLowerCase().includes(query) ||
         event.title.toLowerCase().includes(query) ||
         event.city.toLowerCase().includes(query) ||
         event.venue.toLowerCase().includes(query);

@@ -61,6 +61,7 @@ export default function AdminEventForm({ event }: Props) {
         .update({
           title,
           artist,
+          artist_slug: slugify(artist),
           venue,
           city,
           category,
@@ -76,6 +77,7 @@ export default function AdminEventForm({ event }: Props) {
         .insert({
           title,
           artist,
+          artist_slug: slugify(artist),
           venue,
           city,
           category,

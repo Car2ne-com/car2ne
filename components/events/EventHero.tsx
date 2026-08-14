@@ -7,6 +7,7 @@ type Props = {
     id: string;
     title: string;
     artist: string;
+    artist_slug: string | null;
     venue: string;
     city: string;
     category: string;
@@ -38,7 +39,16 @@ export default function EventHero({ event }: Props) {
             </h1>
 
             <p className="mt-3 text-2xl font-semibold text-emerald-100">
-              {event.artist}
+              {event.artist_slug ? (
+                <Link
+                  href={`/artista/${event.artist_slug}`}
+                  className="underline decoration-emerald-100/40 underline-offset-4 hover:decoration-emerald-100"
+                >
+                  {event.artist}
+                </Link>
+              ) : (
+                event.artist
+              )}
             </p>
 
             {event.description && (

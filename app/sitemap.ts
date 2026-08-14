@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { data: events },
     { data: cities },
     { data: venues },
+    { data: artistEvents },
   ] = await Promise.all([
     supabase
       .from("events")
@@ -19,6 +20,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     supabase
       .from("venues")
       .select("slug, updated_at, cities(slug)"),
+    supabase
+      .from("events")
+      .select("artist_slug, updated_at")
+      .eq("status", "published")
+      .not("artist_slug", "is", null),
   ]);
 
   const staticEntries: MetadataRoute.Sitemap = [
@@ -59,10 +65,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
+  const latestByArtistSlug = new Map<string, string>();
+
+  for (const row of artistEvents ?? []) {
+    if (!row.artist_slug) continue;
+
+    const current = latestByArtistSlug.get(
+      row.artist_slug
+    );
+
+    if (!current || row.updated_at > current) {
+      latestByArtistSlug.set(
+        row.artist_slug,
+        row.updated_at
+      );
+    }
+  }
+
+  const artistEntries: MetadataRoute.Sitemap = Array.from(
+    latestByArtistSlug.entries()
+  ).map(([slug, updatedAt]) => ({
+    url: new URL(`/artista/${slug}`, SITE_URL).toString(),
+    lastModified: updatedAt,
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
   return [
     ...staticEntries,
     ...eventEntries,
     ...cityEntries,
     ...venueEntries,
+    ...artistEntries,
   ];
 }

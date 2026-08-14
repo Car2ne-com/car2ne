@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import AdminEventTable from "@/components/admin/AdminEventTable";
 import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButton";
 import BackfillCityVenueButton from "@/components/admin/BackfillCityVenueButton";
+import BackfillArtistSlugButton from "@/components/admin/BackfillArtistSlugButton";
 
 export default async function AdminEventsPage() {
   const supabase = await createClient();
@@ -58,6 +59,8 @@ export default async function AdminEventsPage() {
 
         <div className="flex gap-3">
           <BackfillCityVenueButton />
+
+          <BackfillArtistSlugButton />
 
           <ImportTicketmasterButton />
 

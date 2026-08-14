@@ -1,0 +1,105 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import ArtistHero from "@/components/artists/ArtistHero";
+import EventGrid from "@/components/events/EventGrid";
+import EmptyState from "@/components/events/EmptyState";
+
+import { createClient } from "@/lib/supabase/server";
+import { getRideCounts } from "@/lib/supabase/getRideCounts";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+
+  const { data: sample } = await supabase
+    .from("events")
+    .select("artist")
+    .eq("artist_slug", slug)
+    .eq("status", "published")
+    .limit(1)
+    .maybeSingle();
+
+  if (!sample) {
+    return {};
+  }
+
+  const title = `Eventi di ${sample.artist} | Car2ne`;
+  const description = `Tutte le date di ${sample.artist}. Trova un passaggio auto per raggiungerle con Car2ne.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/artista/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}
+
+export default async function ArtistPage({
+  params,
+}: Props) {
+  const { slug } = await params;
+
+  const supabase = await createClient();
+
+  const { data: events, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("artist_slug", slug)
+    .eq("status", "published")
+    .order("event_date", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!events || events.length === 0) {
+    notFound();
+  }
+
+  const rideCounts = await getRideCounts(
+    supabase,
+    events.map((event) => event.id)
+  );
+
+  const eventsWithRideCount = events.map(
+    (event) => ({
+      ...event,
+      ride_count: rideCounts[event.id] ?? 0,
+    })
+  );
+
+  return (
+    <>
+      <Navbar />
+
+      <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
+        <ArtistHero
+          artistName={events[0].artist}
+          eventCount={events.length}
+        />
+
+        {eventsWithRideCount.length > 0 ? (
+          <EventGrid events={eventsWithRideCount} />
+        ) : (
+          <EmptyState />
+        )}
+      </main>
+
+      <Footer />
+    </>
+  );
+}
