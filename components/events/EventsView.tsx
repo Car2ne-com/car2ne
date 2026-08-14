@@ -3,13 +3,10 @@
 import { useMemo, useState } from "react";
 
 import EventSearch from "./EventSearch";
-import EventFilters from "./EventFilters";
 import EventGrid from "./EventGrid";
 import EmptyState from "./EmptyState";
 
-import { EventCategory, Event } from "@/types/event";
-
-type Filter = "Tutti" | EventCategory;
+import { Event } from "@/types/event";
 
 type Props = {
   events: Event[];
@@ -27,9 +24,6 @@ export default function EventsView({
   const [search, setSearch] =
     useState(initialSearch);
 
-  const [filter, setFilter] =
-    useState<Filter>("Tutti");
-
   const filteredEvents = useMemo(() => {
     const query =
       search.toLowerCase().trim();
@@ -37,38 +31,17 @@ export default function EventsView({
     return events.filter((event) => {
       const matchesSearch =
         !query ||
-        event.title
-          .toLowerCase()
-          .includes(query) ||
-        event.city
-          .toLowerCase()
-          .includes(query) ||
-        event.venue
-          .toLowerCase()
-          .includes(query);
-
-      const matchesFilter =
-        filter === "Tutti" ||
-        event.category === filter;
+        event.title.toLowerCase().includes(query) ||
+        event.city.toLowerCase().includes(query) ||
+        event.venue.toLowerCase().includes(query);
 
       const matchesDate =
         !initialDate ||
-        event.event_date.startsWith(
-          initialDate
-        );
+        event.event_date.startsWith(initialDate);
 
-      return (
-        matchesSearch &&
-        matchesFilter &&
-        matchesDate
-      );
+      return matchesSearch && matchesDate;
     });
-  }, [
-    events,
-    search,
-    filter,
-    initialDate,
-  ]);
+  }, [events, search, initialDate]);
 
   return (
     <>
@@ -92,17 +65,8 @@ export default function EventsView({
         </div>
       )}
 
-      <div className="mb-10">
-        <EventFilters
-          value={filter}
-          onChange={setFilter}
-        />
-      </div>
-
       {filteredEvents.length > 0 ? (
-        <EventGrid
-          events={filteredEvents}
-        />
+        <EventGrid events={filteredEvents} />
       ) : (
         <EmptyState />
       )}
