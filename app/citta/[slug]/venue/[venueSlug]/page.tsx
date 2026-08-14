@@ -99,6 +99,7 @@ export default async function VenuePage({ params }: Props) {
     .select("*")
     .eq("venue_id", venue.id)
     .eq("status", "published")
+    .gte("event_date", new Date().toISOString())
     .order("event_date", { ascending: true });
 
   if (eventsError) {

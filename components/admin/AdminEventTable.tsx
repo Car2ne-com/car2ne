@@ -28,16 +28,17 @@ type Event = {
   imported_at: string | null;
 };
 
-type Props = {
-  events: Event[];
-};
-
 type Filter =
   | "all"
   | "imported"
   | "pending"
   | "published"
   | "rejected";
+
+type Props = {
+  events: Event[];
+  initialFilter?: string;
+};
 
 const FILTERS: { key: Filter; label: string }[] = [
   { key: "all", label: "Tutti" },
@@ -47,13 +48,22 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "rejected", label: "Rifiutati" },
 ];
 
+function isFilter(value: string | undefined): value is Filter {
+  return FILTERS.some((item) => item.key === value);
+}
+
 const PAGE_SIZE = 50;
 
-export default function AdminEventTable({ events }: Props) {
+export default function AdminEventTable({
+  events,
+  initialFilter,
+}: Props) {
   const router = useRouter();
   const supabase = createClient();
 
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>(
+    isFilter(initialFilter) ? initialFilter : "all"
+  );
   const [busyId, setBusyId] = useState<
     string | null
   >(null);

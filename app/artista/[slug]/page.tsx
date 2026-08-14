@@ -25,6 +25,7 @@ export async function generateMetadata({
     .select("artist")
     .eq("artist_slug", slug)
     .eq("status", "published")
+    .gte("event_date", new Date().toISOString())
     .limit(1)
     .maybeSingle();
 
@@ -60,6 +61,7 @@ export default async function ArtistPage({
     .select("*")
     .eq("artist_slug", slug)
     .eq("status", "published")
+    .gte("event_date", new Date().toISOString())
     .order("event_date", { ascending: true });
 
   if (error) {

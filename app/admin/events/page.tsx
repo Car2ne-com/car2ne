@@ -7,7 +7,15 @@ import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButto
 import BackfillCityVenueButton from "@/components/admin/BackfillCityVenueButton";
 import BackfillArtistSlugButton from "@/components/admin/BackfillArtistSlugButton";
 
-export default async function AdminEventsPage() {
+type Props = {
+  searchParams: Promise<{ filter?: string }>;
+};
+
+export default async function AdminEventsPage({
+  searchParams,
+}: Props) {
+  const params = await searchParams;
+
   const supabase = await createClient();
 
   // Controlla autenticazione
@@ -73,7 +81,11 @@ export default async function AdminEventsPage() {
         </div>
       </div>
 
-      <AdminEventTable events={events ?? []} />
+      <AdminEventTable
+        key={params.filter ?? "all"}
+        events={events ?? []}
+        initialFilter={params.filter}
+      />
     </main>
   );
 }

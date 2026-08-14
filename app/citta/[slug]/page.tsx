@@ -76,6 +76,7 @@ export default async function CityPage({ params }: Props) {
         .select("*")
         .eq("city_id", city.id)
         .eq("status", "published")
+        .gte("event_date", new Date().toISOString())
         .order("event_date", { ascending: true }),
       supabase
         .from("venues")

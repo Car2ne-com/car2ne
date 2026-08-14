@@ -50,7 +50,7 @@ export default function ImportTicketmasterButton() {
         );
       }
 
-      router.refresh();
+      router.push("/admin/events?filter=pending");
     } catch (error) {
       console.error(
         "Errore importazione Ticketmaster:",
