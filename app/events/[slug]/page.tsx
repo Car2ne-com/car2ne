@@ -23,6 +23,7 @@ export default async function EventPage({ params }: Props) {
     .from("events")
     .select("*")
     .eq("slug", slug)
+    .eq("status", "published")
     .single();
 
   if (error || !event) {

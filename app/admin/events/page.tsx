@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 import AdminEventTable from "@/components/admin/AdminEventTable";
+import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButton";
 
 export default async function AdminEventsPage() {
   const supabase = await createClient();
@@ -54,12 +55,16 @@ export default async function AdminEventsPage() {
           </p>
         </div>
 
-        <Link
-          href="/admin/events/new"
-          className="rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
-        >
-          + Nuovo evento
-        </Link>
+        <div className="flex gap-3">
+          <ImportTicketmasterButton />
+
+          <Link
+            href="/admin/events/new"
+            className="rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
+          >
+            + Nuovo evento
+          </Link>
+        </div>
       </div>
 
       <AdminEventTable events={events ?? []} />

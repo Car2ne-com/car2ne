@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "mtqqvkbpulvbxjtezcqy.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "s1.ticketm.net",
+      },
     ],
   },
 };

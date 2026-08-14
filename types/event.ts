@@ -26,7 +26,11 @@ export interface Event {
 
   image_url: string | null;
 
-  status: "draft" | "published" | "cancelled";
+  status:
+    | "draft"
+    | "published"
+    | "cancelled"
+    | "rejected";
 
   created_at: string;
   updated_at: string;
