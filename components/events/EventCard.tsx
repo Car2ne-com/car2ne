@@ -82,10 +82,6 @@ export default function EventCard({ event }: Props) {
             {CategoryIcon(event.category)}
           </div>
         )}
-
-        <div className="absolute left-5 top-5 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-emerald-700 backdrop-blur">
-          {event.category}
-        </div>
       </div>
 
       <div className="space-y-6 p-6">

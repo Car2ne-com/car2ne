@@ -33,11 +33,7 @@ export default function EventHero({ event }: Props) {
       <div className="relative mx-auto flex min-h-[520px] max-w-7xl items-center px-6 py-24">
         <div className="grid w-full gap-14 lg:grid-cols-2 lg:items-center">
           <div className="text-white">
-            <span className="inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-semibold backdrop-blur">
-              {event.category}
-            </span>
-
-            <h1 className="mt-8 text-5xl font-black leading-tight md:text-6xl">
+            <h1 className="text-5xl font-black leading-tight md:text-6xl">
               {event.title}
             </h1>
 
