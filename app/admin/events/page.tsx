@@ -2,11 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { getPastEventMetrics } from "@/lib/supabase/getPastEventMetrics";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 import AdminEventTable from "@/components/admin/AdminEventTable";
-import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButton";
-import BackfillCityVenueButton from "@/components/admin/BackfillCityVenueButton";
-import BackfillArtistSlugButton from "@/components/admin/BackfillArtistSlugButton";
 
 type Props = {
   searchParams: Promise<{ filter?: string }>;
@@ -43,35 +40,35 @@ export default async function AdminEventsPage({
     redirect("/dashboard");
   }
 
-  // Carica eventi
+  /*
+   * Colonne minime per la tabella operativa: niente
+   * description/image_url/raw_payload (pesanti, usati solo dal form
+   * di modifica evento, non dalla lista).
+   */
   const { data: events, error } = await supabase
     .from("events")
-    .select("*")
+    .select(
+      "id, title, artist, city, venue, event_date, status, source, external_id, imported_at"
+    )
     .order("event_date", { ascending: true });
 
   if (error) {
     throw new Error(error.message);
   }
 
+  /*
+   * Vista operativa: esclude gli eventi già conclusi (stessa regola
+   * usata dalla pagina pubblica evento e dai promemoria recensione,
+   * vedi lib/utils/eventStatus.ts). I dati restano nel DB invariati
+   * — qui si filtra solo cosa arriva alla tabella admin, non la
+   * fonte. Vale per tutti gli eventi, importati o manuali: una volta
+   * concluso, un evento non è più operativamente gestibile a
+   * prescindere da come è stato creato.
+   */
   const now = new Date();
 
-  const pastEventIds = (events ?? [])
-    .filter((event) => new Date(event.event_date) < now)
-    .map((event) => event.id);
-
-  const pastMetrics = await getPastEventMetrics(
-    supabase,
-    pastEventIds
-  );
-
-  const eventsWithMetrics = (events ?? []).map(
-    (event) => ({
-      ...event,
-      rides_count:
-        pastMetrics[event.id]?.ridesCount ?? 0,
-      passengers_count:
-        pastMetrics[event.id]?.passengersCount ?? 0,
-    })
+  const activeEvents = (events ?? []).filter(
+    (event) => !isEventConcluded(event.event_date, now)
   );
 
   return (
@@ -88,12 +85,6 @@ export default async function AdminEventsPage({
         </div>
 
         <div className="flex gap-3">
-          <BackfillCityVenueButton />
-
-          <BackfillArtistSlugButton />
-
-          <ImportTicketmasterButton />
-
           <Link
             href="/admin/events/new"
             className="rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
@@ -105,7 +96,7 @@ export default async function AdminEventsPage({
 
       <AdminEventTable
         key={params.filter ?? "all"}
-        events={eventsWithMetrics}
+        events={activeEvents}
         initialFilter={params.filter}
       />
     </main>

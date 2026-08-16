@@ -61,6 +61,7 @@ export async function runImport(
   const result: ImportResult = {
     source: sourceKey,
     eventsFetched: 0,
+    eventsRejected: 0,
     eventsCreated: 0,
     eventsUpdated: 0,
     eventsSkipped: 0,
@@ -80,7 +81,7 @@ export async function runImport(
 
     const countryCode = "IT";
 
-    const normalizedEvents =
+    const { events: normalizedEvents, rejectedCount } =
       await importer.fetchNormalizedEvents({
         countryCode,
         startDateTime:
@@ -95,6 +96,7 @@ export async function runImport(
 
     result.eventsFetched =
       normalizedEvents.length;
+    result.eventsRejected = rejectedCount;
 
     for (const normalized of normalizedEvents) {
       try {
@@ -107,12 +109,22 @@ export async function runImport(
       } catch (eventError) {
         result.eventsFailed += 1;
 
+        const errorMessage =
+          eventError instanceof Error
+            ? eventError.message
+            : String(eventError);
+
         console.error(
           "Import evento fallito:",
           normalized.externalId,
-          eventError instanceof Error
-            ? eventError.message
-            : eventError
+          errorMessage
+        );
+
+        await logImportFailure(
+          supabase,
+          logRow.id,
+          normalized,
+          errorMessage
         );
       }
     }
@@ -123,6 +135,8 @@ export async function runImport(
         status: "success",
         events_fetched:
           result.eventsFetched,
+        events_rejected:
+          result.eventsRejected,
         events_created:
           result.eventsCreated,
         events_updated:
@@ -154,6 +168,8 @@ export async function runImport(
           result.errorMessage,
         events_fetched:
           result.eventsFetched,
+        events_rejected:
+          result.eventsRejected,
         events_created:
           result.eventsCreated,
         events_updated:
@@ -169,6 +185,42 @@ export async function runImport(
   }
 
   return result;
+}
+
+/*
+ * Log persistente di un fallimento per singolo evento. Deliberatamente
+ * "a prova di fallimento" a sua volta: se anche questo insert va in
+ * errore (es. migration non ancora applicata), non deve interrompere
+ * il resto del run — si logga soltanto, come già faceva il chiamante
+ * prima di questa funzione.
+ */
+async function logImportFailure(
+  supabase: SupabaseClient,
+  importLogId: string,
+  normalized: NormalizedEvent,
+  errorMessage: string
+) {
+  const { error } = await supabase
+    .from("import_log_failures")
+    .insert({
+      import_log_id: importLogId,
+      source: normalized.source,
+      external_id: normalized.externalId,
+      title: normalized.title,
+      artist: normalized.artist,
+      event_date: normalized.eventDate,
+      city: normalized.city,
+      venue: normalized.venue,
+      error_message: errorMessage,
+    });
+
+  if (error) {
+    console.error(
+      "Impossibile salvare il log del fallimento import per evento:",
+      normalized.externalId,
+      error.message
+    );
+  }
 }
 
 async function upsertEvent(

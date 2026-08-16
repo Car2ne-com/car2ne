@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+
+import { IMPORT_COOLDOWN_MS } from "@/lib/importers/cooldown";
 
 type ImportResult = {
   eventsFetched: number;
@@ -14,10 +17,45 @@ type ImportResult = {
   errorMessage: string | null;
 };
 
-export default function ImportTicketmasterButton() {
+type Props = {
+  initialCooldownRemainingMs: number;
+};
+
+function formatRemaining(ms: number): string {
+  const totalSeconds = Math.ceil(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+export default function ImportTicketmasterButton({
+  initialCooldownRemainingMs,
+}: Props) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+
+  const [cooldownRemainingMs, setCooldownRemainingMs] = useState(
+    initialCooldownRemainingMs
+  );
+
+  /*
+   * Il countdown è solo visualizzazione: serve a disabilitare il
+   * pulsante e spiegare perché, non è l'enforcement del cooldown
+   * (quello resta esclusivamente lato API, unica fonte di verità).
+   */
+  useEffect(() => {
+    if (cooldownRemainingMs <= 0) return;
+
+    const interval = setInterval(() => {
+      setCooldownRemainingMs((current) =>
+        Math.max(0, current - 1000)
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [cooldownRemainingMs]);
 
   async function handleImport() {
     setLoading(true);
@@ -32,9 +70,9 @@ export default function ImportTicketmasterButton() {
 
       if (!response.ok) {
         toast.error(
-          data.error ??
-            "Importazione fallita."
+          data.error ?? "Importazione fallita."
         );
+
         return;
       }
 
@@ -50,7 +88,11 @@ export default function ImportTicketmasterButton() {
         );
       }
 
-      router.push("/admin/events?filter=pending");
+      // Disabilita subito il pulsante per il nuovo cooldown, in
+      // attesa che il refresh porti il valore reale dal server.
+      setCooldownRemainingMs(IMPORT_COOLDOWN_MS);
+
+      router.refresh();
     } catch (error) {
       console.error(
         "Errore importazione Ticketmaster:",
@@ -65,19 +107,43 @@ export default function ImportTicketmasterButton() {
     }
   }
 
+  const onCooldown = cooldownRemainingMs > 0;
+
   return (
-    <button
-      type="button"
-      onClick={handleImport}
-      disabled={loading}
-      className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-    >
-      <RefreshCw
-        className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-      />
-      {loading
-        ? "Importazione..."
-        : "Importa da Ticketmaster"}
-    </button>
+    <div className="flex flex-wrap items-center gap-3">
+      <button
+        type="button"
+        onClick={handleImport}
+        disabled={loading || onCooldown}
+        title={
+          onCooldown
+            ? `Disponibile tra ${formatRemaining(cooldownRemainingMs)}: evita importazioni ravvicinate inutili.`
+            : undefined
+        }
+        className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <RefreshCw
+          className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+        />
+        {loading
+          ? "Import in corso..."
+          : onCooldown
+            ? `Disponibile tra ${formatRemaining(cooldownRemainingMs)}`
+            : "Importa da Ticketmaster"}
+      </button>
+
+      {onCooldown && !loading && (
+        <p className="text-sm text-slate-500">
+          In cooldown: evita importazioni ravvicinate inutili.
+        </p>
+      )}
+
+      <Link
+        href="/admin/events?filter=pending"
+        className="text-sm font-semibold text-emerald-700 hover:underline"
+      >
+        Rivedi eventi in attesa →
+      </Link>
+    </div>
   );
 }

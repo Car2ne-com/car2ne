@@ -2,6 +2,7 @@ import type {
   EventSource,
   FetchEventsParams,
   NormalizedEvent,
+  NormalizedEventsBatch,
 } from "@/lib/importers/types";
 
 import { fetchAllTicketmasterEvents } from "./client";
@@ -12,7 +13,7 @@ export const ticketmasterImporter: EventSource = {
 
   async fetchNormalizedEvents(
     params: FetchEventsParams
-  ): Promise<NormalizedEvent[]> {
+  ): Promise<NormalizedEventsBatch> {
     const rawEvents =
       await fetchAllTicketmasterEvents(
         params.countryCode,
@@ -21,6 +22,7 @@ export const ticketmasterImporter: EventSource = {
       );
 
     const normalized: NormalizedEvent[] = [];
+    let rejectedCount = 0;
 
     for (const rawEvent of rawEvents) {
       const event =
@@ -29,6 +31,8 @@ export const ticketmasterImporter: EventSource = {
       if (event) {
         normalized.push(event);
       } else {
+        rejectedCount += 1;
+
         console.warn(
           "Ticketmaster: evento saltato per dati mancanti",
           rawEvent.id
@@ -36,6 +40,6 @@ export const ticketmasterImporter: EventSource = {
       }
     }
 
-    return normalized;
+    return { events: normalized, rejectedCount };
   },
 };

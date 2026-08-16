@@ -2,14 +2,13 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { runImport } from "@/lib/importers/runImport";
+import { getCooldownRemainingMs } from "@/lib/importers/cooldown";
 
 /*
  * Trigger manuale dell'importazione Ticketmaster,
  * richiamabile dalla dashboard admin. Usa la stessa
  * runImport() del cron: nessuna logica duplicata.
  */
-
-const COOLDOWN_MS = 5 * 60 * 1000;
 
 export async function POST() {
   const supabase = await createClient();
@@ -71,23 +70,19 @@ export async function POST() {
     );
   }
 
-  if (lastRun) {
-    const elapsedMs =
-      Date.now() -
-      new Date(lastRun.started_at).getTime();
+  const cooldownRemainingMs = getCooldownRemainingMs(
+    lastRun?.started_at ?? null
+  );
 
-    if (elapsedMs < COOLDOWN_MS) {
-      const waitSeconds = Math.ceil(
-        (COOLDOWN_MS - elapsedMs) / 1000
-      );
+  if (cooldownRemainingMs > 0) {
+    const waitSeconds = Math.ceil(cooldownRemainingMs / 1000);
 
-      return NextResponse.json(
-        {
-          error: `Importazione già eseguita di recente. Riprova tra ${waitSeconds} secondi.`,
-        },
-        { status: 429 }
-      );
-    }
+    return NextResponse.json(
+      {
+        error: `Importazione già eseguita di recente. Riprova tra ${waitSeconds} secondi.`,
+      },
+      { status: 429 }
+    );
   }
 
   try {

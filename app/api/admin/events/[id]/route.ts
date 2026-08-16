@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAdminApi } from "@/lib/auth/requireAdmin";
 import { resolveCityVenue } from "@/lib/geo/resolveCityVenue";
 import { slugify } from "@/lib/utils/slug";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 
 type EventPayload = {
   title: string;
@@ -136,6 +138,62 @@ export async function PATCH(request: Request, { params }: Props) {
   const { error } = await adminClient
     .from("events")
     .update(updatePayload)
+    .eq("id", id);
+
+  if (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ id });
+}
+
+/*
+ * Elimina un evento. Mutazione irreversibile: stessa guardia degli
+ * altri endpoint operativi, un evento concluso non è più cancellabile
+ * da qui (per errore/uso diretto dell'API) — resta nel DB come dato
+ * storico, va eliminato solo intenzionalmente da un canale diverso
+ * se mai necessario.
+ */
+export async function DELETE(_request: Request, { params }: Props) {
+  const auth = await requireAdminApi();
+
+  if (!auth.ok) {
+    return auth.response;
+  }
+
+  const { id } = await params;
+
+  const adminClient = createAdminClient();
+
+  const { data: existing, error: fetchError } = await adminClient
+    .from("events")
+    .select("event_date")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existing) {
+    return NextResponse.json(
+      { error: "Evento non trovato." },
+      { status: 404 }
+    );
+  }
+
+  if (isEventConcluded(existing.event_date)) {
+    return NextResponse.json(
+      {
+        error:
+          "Questo evento è concluso: non è più eliminabile dalla vista operativa.",
+      },
+      { status: 409 }
+    );
+  }
+
+  const { error } = await adminClient
+    .from("events")
+    .delete()
     .eq("id", id);
 
   if (error) {

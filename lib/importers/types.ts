@@ -58,17 +58,29 @@ export type FetchEventsParams = {
  * questa interfaccia, senza toccare dedup/persistenza/
  * dashboard.
  */
+export type NormalizedEventsBatch = {
+  events: NormalizedEvent[];
+  /*
+   * Eventi grezzi scartati da normalizeTicketmasterEvent() (o
+   * equivalente per una fonte futura) per dati essenziali mancanti,
+   * prima ancora di entrare nel ciclo di dedup/scrittura. Solo un
+   * conteggio: la fonte grezza scartata non viene conservata.
+   */
+  rejectedCount: number;
+};
+
 export interface EventSource {
   key: string;
 
   fetchNormalizedEvents(
     params: FetchEventsParams
-  ): Promise<NormalizedEvent[]>;
+  ): Promise<NormalizedEventsBatch>;
 }
 
 export type ImportResult = {
   source: string;
   eventsFetched: number;
+  eventsRejected: number;
   eventsCreated: number;
   eventsUpdated: number;
   eventsSkipped: number;
