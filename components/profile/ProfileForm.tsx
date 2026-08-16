@@ -462,7 +462,7 @@ export default function ProfileForm({
           </p>
         </div>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
 
           {/* Nome */}
 

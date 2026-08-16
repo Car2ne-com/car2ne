@@ -640,7 +640,7 @@ export default function ManageRideForm({
         onSubmit={handleUpdate}
         className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
       >
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
               Città di partenza *
