@@ -4,9 +4,11 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 import EventHero from "@/components/events/EventHero";
+import EventConcluded from "@/components/events/EventConcluded";
 import RideList from "@/components/events/RideList";
 
 import { createClient } from "@/lib/supabase/server";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 
 type Props = {
   params: Promise<{
@@ -24,11 +26,24 @@ export default async function EventPage({ params }: Props) {
     .select("*, cities(slug), venues(slug)")
     .eq("slug", slug)
     .eq("status", "published")
-    .gte("event_date", new Date().toISOString())
     .single();
 
   if (error || !event) {
     notFound();
+  }
+
+  if (isEventConcluded(event.event_date)) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="pt-28">
+          <EventConcluded event={event} />
+        </main>
+
+        <Footer />
+      </>
+    );
   }
 
   const { error: viewError } = await supabase.rpc(
