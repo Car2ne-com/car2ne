@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import EventCombobox from "./EventCombobox";
+import CityCombobox from "@/components/cities/CityCombobox";
 
 import { Event } from "@/types/event";
 
@@ -21,6 +22,7 @@ const DRAFT_KEY =
 
 type RideDraft = {
   eventId: string;
+  originCityId: string;
   departureCity: string;
   departureTime: string;
   availableSeats: string;
@@ -45,8 +47,19 @@ export default function OfferRideForm() {
   const [eventId, setEventId] =
     useState("");
 
+  const [originCityId, setOriginCityId] =
+    useState("");
+
   const [departureCity, setDepartureCity] =
     useState("");
+
+  function handleOriginCityChange(
+    cityId: string,
+    cityName: string
+  ) {
+    setOriginCityId(cityId);
+    setDepartureCity(cityName);
+  }
 
   const [departureTime, setDepartureTime] =
     useState("");
@@ -136,6 +149,10 @@ export default function OfferRideForm() {
 
             setEventId(
               draft.eventId
+            );
+
+            setOriginCityId(
+              draft.originCityId
             );
 
             setDepartureCity(
@@ -277,6 +294,7 @@ export default function OfferRideForm() {
   function saveDraft() {
     const draft: RideDraft = {
       eventId,
+      originCityId,
       departureCity,
       departureTime,
       availableSeats,
@@ -307,15 +325,24 @@ export default function OfferRideForm() {
      * ==============================
      */
 
+    const missingOnlyCity =
+      eventId &&
+      !originCityId &&
+      departureTime &&
+      availableSeats &&
+      contribution;
+
     if (
       !eventId ||
-      !departureCity ||
+      !originCityId ||
       !departureTime ||
       !availableSeats ||
       !contribution
     ) {
       toast.error(
-        "Compila tutti i campi obbligatori."
+        missingOnlyCity
+          ? "Seleziona una città di partenza dai suggerimenti."
+          : "Compila tutti i campi obbligatori."
       );
 
       return;
@@ -452,6 +479,9 @@ export default function OfferRideForm() {
         event_id: event.id,
 
         driver_id: user.id,
+
+        origin_city_id:
+          originCityId,
 
         departure_city:
           departureCity,
@@ -673,18 +703,11 @@ export default function OfferRideForm() {
             Città di partenza *
           </label>
 
-          <input
-            value={departureCity}
-            onChange={(e) =>
-              setDepartureCity(
-                e.target.value
-              )
-            }
-            placeholder="Milano"
-            disabled={
-              alreadyHasRide
-            }
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 disabled:text-slate-400"
+          <CityCombobox
+            value={originCityId}
+            onChange={handleOriginCityChange}
+            initialLabel={departureCity}
+            disabled={alreadyHasRide}
           />
         </div>
 

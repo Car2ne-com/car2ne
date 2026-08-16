@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import Image from "next/image";
+
 import {
   ArrowRight,
   CalendarDays,
@@ -264,9 +266,11 @@ export default function RideCard({
       <div className="flex items-center gap-4">
 
         {ride.avatarUrl ? (
-          <img
+          <Image
             src={ride.avatarUrl}
             alt={displayName}
+            width={56}
+            height={56}
             className="h-14 w-14 rounded-full object-cover ring-2 ring-emerald-50"
           />
         ) : (

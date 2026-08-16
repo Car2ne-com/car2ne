@@ -9,8 +9,6 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
-import { createClient } from "@/lib/supabase/client";
-import { slugify } from "@/lib/utils/slug";
 import type { Event, EventCategory } from "@/types/event";
 
 type Props = {
@@ -19,7 +17,6 @@ type Props = {
 
 export default function AdminEventForm({ event }: Props) {
   const router = useRouter();
-  const supabase = createClient();
 
   const [title, setTitle] = useState(event?.title ?? "");
   const [artist, setArtist] = useState(event?.artist ?? "");
@@ -53,46 +50,34 @@ export default function AdminEventForm({ event }: Props) {
 
     setLoading(true);
 
-    let error;
+    const payload = {
+      title,
+      artist,
+      venue,
+      city,
+      category,
+      event_date: eventDate,
+      description: description || null,
+      image_url: imageUrl || null,
+    };
 
-    if (event) {
-      ({ error } = await supabase
-        .from("events")
-        .update({
-          title,
-          artist,
-          artist_slug: slugify(artist),
-          venue,
-          city,
-          category,
-          event_date: eventDate,
-          description: description || null,
-          image_url: imageUrl || null,
-          slug: slugify(title),
-        })
-        .eq("id", event.id));
-    } else {
-      ({ error } = await supabase
-        .from("events")
-        .insert({
-          title,
-          artist,
-          artist_slug: slugify(artist),
-          venue,
-          city,
-          category,
-          event_date: eventDate,
-          description: description || null,
-          image_url: imageUrl || null,
-          slug: slugify(title),
-          status: "published",
-        }));
-    }
+    const response = await fetch(
+      event
+        ? `/api/admin/events/${event.id}`
+        : "/api/admin/events",
+      {
+        method: event ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await response.json();
 
     setLoading(false);
 
-    if (error) {
-      toast.error(error.message);
+    if (!response.ok) {
+      toast.error(data.error ?? "Salvataggio fallito.");
       return;
     }
 

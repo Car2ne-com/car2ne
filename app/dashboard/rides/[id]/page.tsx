@@ -41,6 +41,7 @@ export default async function ManageRidePage({
       .select(`
         id,
         event_id,
+        origin_city_id,
         departure_city,
         destination,
         departure_date,
@@ -190,6 +191,7 @@ export default async function ManageRidePage({
         <ManageRideForm
           ride={{
             id: ride.id,
+            origin_city_id: ride.origin_city_id,
             departure_city: ride.departure_city,
             departure_date: ride.departure_date,
             departure_time: ride.departure_time,

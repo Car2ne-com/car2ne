@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import {
   Camera,
@@ -386,9 +387,11 @@ export default function ProfileForm({
                 className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
               />
             ) : avatarUrl ? (
-              <img
+              <Image
                 src={avatarUrl}
                 alt={displayName}
+                width={112}
+                height={112}
                 className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
               />
             ) : (

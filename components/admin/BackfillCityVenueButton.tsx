@@ -8,6 +8,7 @@ import { toast } from "sonner";
 type BackfillResult = {
   eventsFound: number;
   eventsUpdated: number;
+  eventsUnresolved: number;
   eventsFailed: number;
 };
 
@@ -38,6 +39,9 @@ export default function BackfillCityVenueButton() {
 
       toast.success(
         `Città/venue collegati: ${result.eventsUpdated}/${result.eventsFound}` +
+          (result.eventsUnresolved > 0
+            ? ` (${result.eventsUnresolved} comuni non riconosciuti)`
+            : "") +
           (result.eventsFailed > 0
             ? ` (${result.eventsFailed} falliti, vedi log)`
             : ".")

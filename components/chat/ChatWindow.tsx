@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import Image from "next/image";
+
 import {
   Check,
   CheckCheck,
@@ -441,9 +443,11 @@ export default function ChatWindow({
         <div className="flex items-center gap-4">
 
           {avatarUrl ? (
-            <img
+            <Image
               src={avatarUrl}
               alt={otherName}
+              width={56}
+              height={56}
               className="h-14 w-14 rounded-full object-cover ring-2 ring-emerald-50"
             />
           ) : (

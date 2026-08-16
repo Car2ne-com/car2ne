@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -71,9 +72,11 @@ export default function UserMenu({
         {/* Avatar */}
 
         {avatarUrl ? (
-          <img
+          <Image
             src={avatarUrl}
             alt={displayName}
+            width={44}
+            height={44}
             className="
               h-9
               w-9
@@ -143,9 +146,11 @@ export default function UserMenu({
               {/* Avatar dropdown */}
 
               {avatarUrl ? (
-                <img
+                <Image
                   src={avatarUrl}
                   alt={displayName}
+                  width={40}
+                  height={40}
                   className="h-10 w-10 rounded-full object-cover"
                 />
               ) : (

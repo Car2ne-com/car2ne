@@ -23,7 +23,7 @@ export default async function EventsPage({
 
   const { data: events, error } = await supabase
     .from("events")
-    .select("*")
+    .select("*, cities(id, name, slug), venues(id, name, slug)")
     .eq("status", "published")
     .gte("event_date", new Date().toISOString())
     .order("event_date", {

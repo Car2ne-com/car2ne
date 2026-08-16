@@ -73,7 +73,7 @@ export default async function CityPage({ params }: Props) {
     await Promise.all([
       supabase
         .from("events")
-        .select("*")
+        .select("*, cities(id, name, slug), venues(id, name, slug)")
         .eq("city_id", city.id)
         .eq("status", "published")
         .gte("event_date", new Date().toISOString())

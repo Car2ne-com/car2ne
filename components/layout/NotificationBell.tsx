@@ -635,7 +635,15 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-14 z-50 w-[380px] max-w-[calc(100vw-32px)] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div
+          className="
+            fixed inset-x-4 top-20 z-50 max-h-[calc(100vh-96px)]
+            overflow-hidden rounded-3xl border border-slate-200
+            bg-white shadow-2xl
+            sm:absolute sm:inset-x-auto sm:right-0 sm:top-14 sm:max-h-none
+            sm:w-[380px] sm:max-w-[calc(100vw-32px)]
+          "
+        >
 
           {/* HEADER */}
 

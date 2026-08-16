@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -542,9 +543,11 @@ export default function ChatList({
           className="flex items-center gap-5 border-b border-slate-100 p-6 transition last:border-b-0 hover:bg-slate-50"
         >
           {chat.avatarUrl ? (
-            <img
+            <Image
               src={chat.avatarUrl}
               alt={chat.otherName}
+              width={64}
+              height={64}
               className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-emerald-50"
             />
           ) : (

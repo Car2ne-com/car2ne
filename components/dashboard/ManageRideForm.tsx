@@ -21,11 +21,13 @@ import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import RatingForm from "@/components/ratings/RatingForm";
+import CityCombobox from "@/components/cities/CityCombobox";
 import { toOne } from "@/lib/utils/relations";
 
 type Props = {
   ride: {
     id: string;
+    origin_city_id: string | null;
     departure_city: string;
     departure_date: string;
     departure_time: string;
@@ -63,9 +65,21 @@ export default function ManageRideForm({
     []
   );
 
+  const [originCityId, setOriginCityId] = useState(
+    ride.origin_city_id ?? ""
+  );
+
   const [departureCity, setDepartureCity] = useState(
     ride.departure_city
   );
+
+  function handleOriginCityChange(
+    cityId: string,
+    cityName: string
+  ) {
+    setOriginCityId(cityId);
+    setDepartureCity(cityName);
+  }
 
   const [departureTime, setDepartureTime] = useState(
     ride.departure_time.slice(0, 5)
@@ -317,13 +331,23 @@ export default function ManageRideForm({
   ) {
     event.preventDefault();
 
+    const missingOnlyCity =
+      !originCityId &&
+      departureTime &&
+      availableSeats &&
+      contribution;
+
     if (
-      !departureCity ||
+      !originCityId ||
       !departureTime ||
       !availableSeats ||
       !contribution
     ) {
-      toast.error("Compila tutti i campi obbligatori.");
+      toast.error(
+        missingOnlyCity
+          ? "Seleziona una città di partenza dai suggerimenti."
+          : "Compila tutti i campi obbligatori."
+      );
       return;
     }
 
@@ -342,6 +366,7 @@ export default function ManageRideForm({
     const { error } = await supabase
       .from("rides")
       .update({
+        origin_city_id: originCityId,
         departure_city: departureCity,
         departure_time: departureTime,
         available_seats: Number(availableSeats),
@@ -621,13 +646,11 @@ export default function ManageRideForm({
               Città di partenza *
             </label>
 
-            <input
-              value={departureCity}
-              onChange={(event) =>
-                setDepartureCity(event.target.value)
-              }
+            <CityCombobox
+              value={originCityId}
+              onChange={handleOriginCityChange}
+              initialLabel={ride.departure_city}
               disabled={loading || deleting}
-              className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
             />
           </div>
 

@@ -44,4 +44,14 @@ export interface Event {
    * su rides. Assente quando la pagina non lo calcola.
    */
   ride_count?: number;
+
+  /*
+   * Non sono colonne dirette: relazioni embedded via
+   * `.select("*, cities(id,name,slug), venues(id,name,slug)")`.
+   * Presenti solo se la query le richiede esplicitamente e solo se
+   * l'evento ha city_id/venue_id risolti (assenti per eventi creati
+   * prima del resolver o non ancora collegati).
+   */
+  cities?: { id: string; name: string; slug: string } | null;
+  venues?: { id: string; name: string; slug: string } | null;
 }

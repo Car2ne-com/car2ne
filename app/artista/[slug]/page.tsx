@@ -58,7 +58,7 @@ export default async function ArtistPage({
 
   const { data: events, error } = await supabase
     .from("events")
-    .select("*")
+    .select("*, cities(id, name, slug), venues(id, name, slug)")
     .eq("artist_slug", slug)
     .eq("status", "published")
     .gte("event_date", new Date().toISOString())

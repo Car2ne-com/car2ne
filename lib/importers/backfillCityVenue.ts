@@ -24,6 +24,7 @@ export async function backfillCityVenue() {
   }
 
   let updated = 0;
+  let unresolved = 0;
   let failed = 0;
 
   for (const event of events ?? []) {
@@ -41,6 +42,20 @@ export async function backfillCityVenue() {
           longitude: null,
         }
       );
+
+      /*
+       * Il resolver non fa più get-or-create sulle città: un
+       * comune non riconosciuto torna cityId null senza lanciare
+       * un errore (già loggato da resolveCityVenue stesso). Va
+       * contato a parte da "updated" — altrimenti sembrerebbe che
+       * l'evento sia stato risolto quando in realtà è rimasto
+       * senza city_id/venue_id, semplicemente scrivendo null sopra
+       * un null già presente.
+       */
+      if (!cityId) {
+        unresolved += 1;
+        continue;
+      }
 
       const { error: updateError } = await supabase
         .from("events")
@@ -68,6 +83,7 @@ export async function backfillCityVenue() {
   return {
     eventsFound: events?.length ?? 0,
     eventsUpdated: updated,
+    eventsUnresolved: unresolved,
     eventsFailed: failed,
   };
 }

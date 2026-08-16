@@ -96,7 +96,7 @@ export default async function VenuePage({ params }: Props) {
 
   const { data: events, error: eventsError } = await supabase
     .from("events")
-    .select("*")
+    .select("*, cities(id, name, slug), venues(id, name, slug)")
     .eq("venue_id", venue.id)
     .eq("status", "published")
     .gte("event_date", new Date().toISOString())

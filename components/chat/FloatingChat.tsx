@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -651,12 +652,21 @@ export default function FloatingChat() {
         )
         .subscribe();
 
+    /*
+     * Solo un fallback di sicurezza (es. un evento realtime perso
+     * per un hiccup del websocket) — l'aggiornamento vero arriva
+     * dai listener sopra. Un giro completo di query ogni 30s per
+     * ogni utente loggato su ogni pagina era lavoro ridondante e
+     * costante in background: rallenta soprattutto su mobile
+     * (rete/batteria) senza portare reattività percepita in più,
+     * dato che il realtime copre già il caso normale.
+     */
     const interval =
       window.setInterval(
         () => {
           void loadChats();
         },
-        30000
+        180000
       );
 
     return () => {
@@ -874,13 +884,15 @@ export default function FloatingChat() {
                     }`}
                   >
                     {chat.avatarUrl ? (
-                      <img
+                      <Image
                         src={
                           chat.avatarUrl
                         }
                         alt={
                           chat.otherName
                         }
+                        width={48}
+                        height={48}
                         className={`h-12 w-12 shrink-0 rounded-full object-cover ${
                           hasUnread
                             ? "ring-2 ring-emerald-300"
