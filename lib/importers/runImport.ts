@@ -6,6 +6,10 @@ import { resolveCityVenue } from "@/lib/geo/resolveCityVenue";
 
 import { ticketmasterImporter } from "./ticketmaster";
 import { decideDedup } from "./dedup";
+import {
+  buildTicketmasterEventSlug,
+  buildFallbackSlug,
+} from "./ticketmasterEventSlug";
 import type {
   EventSource,
   ImportResult,
@@ -110,9 +114,7 @@ export async function runImport(
         result.eventsFailed += 1;
 
         const errorMessage =
-          eventError instanceof Error
-            ? eventError.message
-            : String(eventError);
+          serializeImportError(eventError);
 
         console.error(
           "Import evento fallito:",
@@ -188,6 +190,55 @@ export async function runImport(
 }
 
 /*
+ * Gli errori di Supabase (PostgrestError) sono oggetti semplici, non
+ * istanze di Error: `eventError instanceof Error` è falso per loro, e
+ * String(oggetto) produce "[object Object]" invece del messaggio
+ * reale. Qui si estraggono esplicitamente message/code/details/hint
+ * quando presenti (la forma di un PostgrestError), altrimenti si
+ * ripiega su Error.message o su una serializzazione JSON leggibile.
+ * Non cambia il comportamento dell'import: resta solo una stringa
+ * per il log, count e continuazione del ciclo restano identici.
+ */
+function serializeImportError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (error && typeof error === "object") {
+    const e = error as Record<string, unknown>;
+    const parts: string[] = [];
+
+    if (typeof e.message === "string" && e.message) {
+      parts.push(e.message);
+    }
+
+    if (typeof e.code === "string" && e.code) {
+      parts.push(`code=${e.code}`);
+    }
+
+    if (typeof e.details === "string" && e.details) {
+      parts.push(`details=${e.details}`);
+    }
+
+    if (typeof e.hint === "string" && e.hint) {
+      parts.push(`hint=${e.hint}`);
+    }
+
+    if (parts.length > 0) {
+      return parts.join(" | ");
+    }
+
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return "Errore non serializzabile.";
+    }
+  }
+
+  return String(error);
+}
+
+/*
  * Log persistente di un fallimento per singolo evento. Deliberatamente
  * "a prova di fallimento" a sua volta: se anche questo insert va in
  * errore (es. migration non ancora applicata), non deve interrompere
@@ -221,6 +272,48 @@ async function logImportFailure(
       error.message
     );
   }
+}
+
+/*
+ * Slug univoco per un nuovo evento Ticketmaster. Prima calcola lo
+ * slug "base" (titolo+città+external_id completo, vedi
+ * ticketmasterEventSlug.ts — già univoco per costruzione dato che
+ * external_id lo è). Poi verifica esplicitamente che non sia già
+ * assegnato a un evento con un external_id diverso: se lo fosse (rete
+ * di sicurezza per il caso residuo, non osservato ma non escludibile
+ * per costruzione — es. due external_id che differiscono solo per
+ * maiuscole/minuscole, annullate da slugify), usa un fallback
+ * deterministico invece di far fallire l'evento. Se lo slug base
+ * appartiene già allo STESSO external_id (stesso evento rivisto in
+ * un run successivo), va bene così — decideDedup() avrebbe comunque
+ * già deciso "update" o "skip" per quel caso, questa funzione viene
+ * chiamata solo per "create".
+ */
+async function resolveEventSlug(
+  supabase: SupabaseClient,
+  normalized: NormalizedEvent
+): Promise<string> {
+  const baseSlug = buildTicketmasterEventSlug(
+    normalized.title,
+    normalized.city,
+    normalized.externalId
+  );
+
+  const { data: slugOwner, error } = await supabase
+    .from("events")
+    .select("external_id")
+    .eq("slug", baseSlug)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (slugOwner && slugOwner.external_id !== normalized.externalId) {
+    return buildFallbackSlug(baseSlug, normalized.externalId);
+  }
+
+  return baseSlug;
 }
 
 async function upsertEvent(
@@ -286,8 +379,9 @@ async function upsertEvent(
   };
 
   if (decision.action === "create") {
-    const slug = slugify(
-      `${normalized.title}-${normalized.city}-${normalized.externalId.slice(0, 8)}`
+    const slug = await resolveEventSlug(
+      supabase,
+      normalized
     );
 
     const status =
