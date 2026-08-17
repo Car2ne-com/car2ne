@@ -1,9 +1,12 @@
 import EventGrid from "@/components/events/EventGrid";
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function FeaturedEvents() {
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
+  const t = dict.home.featuredEvents;
 
   /*
    * "In evidenza" = più viste tra gli eventi futuri, con fallback
@@ -45,16 +48,16 @@ export default async function FeaturedEvents() {
       <div className="mb-12 flex items-end justify-between">
         <div>
           <h2 className="text-4xl font-bold text-slate-900">
-            Eventi in evidenza
+            {t.title}
           </h2>
 
           <p className="mt-3 max-w-2xl text-lg text-slate-600">
-            Scopri gli eventi più interessanti della community.
+            {t.subtitle}
           </p>
         </div>
       </div>
 
-      <EventGrid events={eventsWithRideCount} />
+      <EventGrid events={eventsWithRideCount} locale={locale} dict={dict.events.card} />
     </section>
   );
 }

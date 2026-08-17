@@ -9,6 +9,7 @@ import EmptyState from "@/components/events/EmptyState";
 
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -55,6 +56,7 @@ export default async function ArtistPage({
   const { slug } = await params;
 
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
 
   const { data: events, error } = await supabase
     .from("events")
@@ -92,12 +94,13 @@ export default async function ArtistPage({
         <ArtistHero
           artistName={events[0].artist}
           eventCount={events.length}
+          dict={dict.cities.artistHero}
         />
 
         {eventsWithRideCount.length > 0 ? (
-          <EventGrid events={eventsWithRideCount} />
+          <EventGrid events={eventsWithRideCount} locale={locale} dict={dict.events.card} />
         ) : (
-          <EmptyState />
+          <EmptyState title={dict.events.empty.title} description={dict.events.empty.description} />
         )}
       </main>
 

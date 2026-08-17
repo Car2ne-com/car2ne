@@ -8,8 +8,15 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import type { it } from "@/lib/i18n/dictionaries/it";
 
-export default function LoginForm() {
+type AuthDict = (typeof it)["auth"];
+
+type Props = {
+  dict: AuthDict;
+};
+
+export default function LoginForm({ dict }: Props) {
   const router = useRouter();
 
   const supabase = useMemo(
@@ -51,12 +58,12 @@ export default function LoginForm() {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.error("Inserisci la tua email.");
+      toast.error(dict.loginForm.errors.emptyEmail);
       return;
     }
 
     if (!password) {
-      toast.error("Inserisci la tua password.");
+      toast.error(dict.loginForm.errors.emptyPassword);
       return;
     }
 
@@ -84,9 +91,7 @@ export default function LoginForm() {
 
     if (!user) {
       setLoading(false);
-      toast.error(
-        "Impossibile recuperare l'utente."
-      );
+      toast.error(dict.loginForm.errors.userFetchFailed);
       return;
     }
 
@@ -158,14 +163,12 @@ export default function LoginForm() {
     e.preventDefault();
 
     if (!mfaFactorId) {
-      toast.error(
-        "Nessun metodo di autenticazione a due fattori trovato."
-      );
+      toast.error(dict.loginForm.errors.noMfaMethod);
       return;
     }
 
     if (mfaCode.trim().length !== 6) {
-      toast.error("Inserisci il codice a 6 cifre.");
+      toast.error(dict.loginForm.errors.mfaCodeLength);
       return;
     }
 
@@ -205,7 +208,7 @@ export default function LoginForm() {
         verifyError
       );
 
-      toast.error("Codice non valido. Riprova.");
+      toast.error(dict.loginForm.errors.invalidMfaCode);
       setMfaCode("");
       return;
     }
@@ -245,7 +248,7 @@ export default function LoginForm() {
 
     if (!user) {
       setLoading(false);
-      toast.error("Impossibile recuperare l'utente.");
+      toast.error(dict.loginForm.errors.userFetchFailed);
       return;
     }
 
@@ -386,18 +389,17 @@ export default function LoginForm() {
       >
         <div>
           <h2 className="text-xl font-bold text-slate-900">
-            Verifica in due passaggi
+            {dict.loginForm.mfaTitle}
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Apri la tua app di autenticazione e
-            inserisci il codice generato.
+            {dict.loginForm.mfaSubtitle}
           </p>
         </div>
 
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Codice di verifica
+            {dict.loginForm.mfaCodeLabel}
           </label>
 
           <input
@@ -432,8 +434,7 @@ export default function LoginForm() {
             disabled={mfaLoading}
             className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
           />
-          Non chiedermelo più su questo
-          dispositivo per 14 giorni
+          {dict.loginForm.trustDevice}
         </label>
 
         <Button
@@ -441,7 +442,7 @@ export default function LoginForm() {
           disabled={mfaLoading}
           className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
         >
-          {mfaLoading ? "Verifica..." : "Verifica"}
+          {mfaLoading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
         </Button>
 
         <button
@@ -452,7 +453,7 @@ export default function LoginForm() {
           }}
           className="w-full text-center text-sm font-medium text-slate-500 hover:text-slate-700"
         >
-          Torna al login
+          {dict.common.backToLogin}
         </button>
       </form>
     );
@@ -467,12 +468,12 @@ export default function LoginForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Email
+          {dict.common.emailLabel}
         </label>
 
         <input
           type="email"
-          placeholder="nome@email.com"
+          placeholder={dict.common.emailPlaceholder}
           value={email}
           onChange={(e) =>
             setEmail(e.target.value)
@@ -490,7 +491,7 @@ export default function LoginForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Password
+          {dict.common.passwordLabel}
         </label>
 
         <div className="relative">
@@ -528,8 +529,8 @@ export default function LoginForm() {
             }
             aria-label={
               showPassword
-                ? "Nascondi password"
-                : "Mostra password"
+                ? dict.common.hidePassword
+                : dict.common.showPassword
             }
             className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
           >
@@ -555,14 +556,14 @@ export default function LoginForm() {
             className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
           />
 
-          Ricordami
+          {dict.loginForm.rememberMe}
         </label>
 
         <Link
           href="/forgot-password"
           className="font-medium text-emerald-600 hover:text-emerald-700"
         >
-          Password dimenticata?
+          {dict.loginForm.forgotPassword}
         </Link>
       </div>
 
@@ -577,8 +578,8 @@ export default function LoginForm() {
         className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
       >
         {loading
-          ? "Accesso..."
-          : "Accedi"}
+          ? dict.loginForm.loggingIn
+          : dict.loginForm.loginButton}
       </Button>
 
       {/* Separatore */}
@@ -590,7 +591,7 @@ export default function LoginForm() {
 
         <div className="relative flex justify-center">
           <span className="bg-white px-4 text-sm text-slate-500">
-            oppure
+            {dict.common.or}
           </span>
         </div>
       </div>
@@ -611,20 +612,20 @@ export default function LoginForm() {
       >
         {oauthLoading ===
         "google"
-          ? "Connessione..."
-          : "Continua con Google"}
+          ? dict.common.connecting
+          : dict.common.continueWithGoogle}
       </Button>
 
       {/* Registrazione */}
 
       <p className="text-center text-sm text-slate-600">
-        Non hai un account?{" "}
+        {dict.loginForm.noAccount}{" "}
 
         <Link
           href="/register"
           className="font-semibold text-emerald-600 hover:text-emerald-700"
         >
-          Registrati
+          {dict.loginForm.signUpLink}
         </Link>
       </p>
     </form>

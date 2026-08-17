@@ -6,8 +6,15 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import type { it } from "@/lib/i18n/dictionaries/it";
 
-export default function ForgotPasswordForm() {
+type AuthDict = (typeof it)["auth"];
+
+type Props = {
+  dict: AuthDict;
+};
+
+export default function ForgotPasswordForm({ dict }: Props) {
   const supabase = useMemo(
     () => createClient(),
     []
@@ -23,7 +30,7 @@ export default function ForgotPasswordForm() {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.error("Inserisci la tua email.");
+      toast.error(dict.forgotPasswordForm.errors.emptyEmail);
       return;
     }
 
@@ -66,21 +73,20 @@ export default function ForgotPasswordForm() {
     return (
       <div className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
         <h2 className="text-xl font-bold text-slate-900">
-          Controlla la tua email
+          {dict.forgotPasswordForm.sentTitle}
         </h2>
 
         <p className="text-sm text-slate-600">
-          Se esiste un account associato a{" "}
-          <strong>{email.trim()}</strong>, ti
-          abbiamo inviato un link per reimpostare
-          la password.
+          {dict.forgotPasswordForm.sentDescriptionPrefix}{" "}
+          <strong>{email.trim()}</strong>
+          {dict.forgotPasswordForm.sentDescriptionSuffix}
         </p>
 
         <Link
           href="/login"
           className="inline-block text-sm font-semibold text-emerald-600 hover:text-emerald-700"
         >
-          Torna al login
+          {dict.common.backToLogin}
         </Link>
       </div>
     );
@@ -93,12 +99,12 @@ export default function ForgotPasswordForm() {
     >
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Email
+          {dict.common.emailLabel}
         </label>
 
         <input
           type="email"
-          placeholder="nome@email.com"
+          placeholder={dict.common.emailPlaceholder}
           value={email}
           onChange={(e) =>
             setEmail(e.target.value)
@@ -115,8 +121,8 @@ export default function ForgotPasswordForm() {
         className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
       >
         {loading
-          ? "Invio..."
-          : "Invia link di reset"}
+          ? dict.forgotPasswordForm.sending
+          : dict.forgotPasswordForm.sendButton}
       </Button>
 
       <p className="text-center text-sm text-slate-600">
@@ -124,7 +130,7 @@ export default function ForgotPasswordForm() {
           href="/login"
           className="font-semibold text-emerald-600 hover:text-emerald-700"
         >
-          Torna al login
+          {dict.common.backToLogin}
         </Link>
       </p>
     </form>

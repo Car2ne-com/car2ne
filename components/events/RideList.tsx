@@ -3,6 +3,7 @@ import RideCard from "./RideCard";
 import { createClient } from "@/lib/supabase/server";
 import { getDriverRatings } from "@/lib/supabase/getDriverRatings";
 import { toOne } from "@/lib/utils/relations";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   eventId: string;
@@ -12,6 +13,8 @@ export default async function RideList({
   eventId,
 }: Props) {
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
+  const t = dict.events.rides;
 
   const { data: rides, error } = await supabase
     .from("rides")
@@ -111,7 +114,7 @@ export default async function RideList({
         date: new Date(
           `${ride.departure_date}T${ride.departure_time}`
         ).toLocaleDateString(
-          "it-IT"
+          locale === "en" ? "en-US" : "it-IT"
         ),
 
         departure:
@@ -135,16 +138,15 @@ export default async function RideList({
       <div className="mb-10 flex items-end justify-between">
         <div>
           <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            🚗 Passaggi disponibili
+            {t.badge}
           </span>
 
           <h2 className="mt-5 text-4xl font-black text-slate-900">
-            Scegli il tuo viaggio
+            {t.title}
           </h2>
 
           <p className="mt-3 text-lg text-slate-600">
-            Unisciti ad altri partecipanti
-            e condividi il tragitto.
+            {t.subtitle}
           </p>
         </div>
       </div>
@@ -152,13 +154,11 @@ export default async function RideList({
       {formattedRides.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-8 py-16 text-center">
           <h3 className="text-2xl font-bold text-slate-900">
-            Nessun passaggio
-            disponibile
+            {t.emptyTitle}
           </h3>
 
           <p className="mt-3 text-slate-500">
-            Sii il primo ad offrirne
-            uno.
+            {t.emptyDescription}
           </p>
         </div>
       ) : (
@@ -168,6 +168,7 @@ export default async function RideList({
               <RideCard
                 key={ride.id}
                 ride={ride}
+                dict={t}
               />
             )
           )}

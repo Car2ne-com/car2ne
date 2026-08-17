@@ -10,7 +10,11 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 
-export default function LogoutButton() {
+type Props = {
+  label: string;
+};
+
+export default function LogoutButton({ label }: Props) {
   const router = useRouter();
   const supabase = createClient();
 
@@ -27,7 +31,7 @@ export default function LogoutButton() {
       className="cursor-pointer text-red-600 focus:text-red-600"
     >
       <LogOut className="mr-2 h-4 w-4" />
-      Esci
+      {label}
     </DropdownMenuItem>
   );
 }

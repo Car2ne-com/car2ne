@@ -4,7 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
-export default function MobileMenu() {
+type Props = {
+  dict: { home: string; events: string; offerRide: string };
+  ariaOpen: string;
+  ariaClose: string;
+};
+
+export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,7 +22,7 @@ export default function MobileMenu() {
         }
         className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600 sm:h-10 sm:w-10"
         aria-label={
-          open ? "Chiudi menu" : "Apri menu"
+          open ? ariaClose : ariaOpen
         }
         aria-expanded={open}
       >
@@ -35,7 +41,7 @@ export default function MobileMenu() {
               onClick={() => setOpen(false)}
               className="rounded-xl px-4 py-3 transition hover:bg-emerald-50 hover:text-emerald-600"
             >
-              Home
+              {dict.home}
             </Link>
 
             <Link
@@ -43,7 +49,7 @@ export default function MobileMenu() {
               onClick={() => setOpen(false)}
               className="rounded-xl px-4 py-3 transition hover:bg-emerald-50 hover:text-emerald-600"
             >
-              Eventi
+              {dict.events}
             </Link>
 
             <Link
@@ -51,7 +57,7 @@ export default function MobileMenu() {
               onClick={() => setOpen(false)}
               className="rounded-xl px-4 py-3 transition hover:bg-emerald-50 hover:text-emerald-600"
             >
-              Offri un passaggio
+              {dict.offerRide}
             </Link>
           </nav>
         </div>

@@ -3,8 +3,12 @@ import Link from "next/link";
 import Logo from "./Logo";
 
 import { getCurrentYear } from "@/lib/utils/date";
+import { getTranslations } from "@/lib/i18n";
 
-export default function Footer() {
+export default async function Footer() {
+  const { dict } = await getTranslations();
+  const t = dict.layout.footer;
+
   return (
     <footer className="mt-24 border-t border-slate-200 bg-white/60">
       <div className="mx-auto max-w-7xl px-6 py-14">
@@ -13,17 +17,14 @@ export default function Footer() {
             <Logo />
 
             <p className="mt-4 text-sm leading-6 text-slate-500">
-              Car2ne mette in contatto persone
-              che vanno allo stesso evento, per
-              viaggiare insieme e dividere le
-              spese.
+              {t.description}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
             <div>
               <h3 className="text-sm font-semibold text-slate-900">
-                Prodotto
+                {t.productHeading}
               </h3>
 
               <ul className="mt-4 space-y-3 text-sm text-slate-500">
@@ -32,7 +33,7 @@ export default function Footer() {
                     href="/events"
                     className="transition hover:text-emerald-600"
                   >
-                    Eventi
+                    {t.events}
                   </Link>
                 </li>
 
@@ -41,7 +42,7 @@ export default function Footer() {
                     href="/offer-ride"
                     className="transition hover:text-emerald-600"
                   >
-                    Offri un passaggio
+                    {t.offerRide}
                   </Link>
                 </li>
               </ul>
@@ -49,7 +50,7 @@ export default function Footer() {
 
             <div>
               <h3 className="text-sm font-semibold text-slate-900">
-                Account
+                {t.accountHeading}
               </h3>
 
               <ul className="mt-4 space-y-3 text-sm text-slate-500">
@@ -58,7 +59,7 @@ export default function Footer() {
                     href="/login"
                     className="transition hover:text-emerald-600"
                   >
-                    Accedi
+                    {t.login}
                   </Link>
                 </li>
 
@@ -67,7 +68,7 @@ export default function Footer() {
                     href="/register"
                     className="transition hover:text-emerald-600"
                   >
-                    Registrati
+                    {t.register}
                   </Link>
                 </li>
               </ul>
@@ -75,7 +76,7 @@ export default function Footer() {
 
             <div>
               <h3 className="text-sm font-semibold text-slate-900">
-                Legale
+                {t.legalHeading}
               </h3>
 
               <ul className="mt-4 space-y-3 text-sm text-slate-500">
@@ -84,7 +85,7 @@ export default function Footer() {
                     href="/privacy"
                     className="transition hover:text-emerald-600"
                   >
-                    Privacy Policy
+                    {t.privacyPolicy}
                   </Link>
                 </li>
 
@@ -93,7 +94,7 @@ export default function Footer() {
                     href="/termini"
                     className="transition hover:text-emerald-600"
                   >
-                    Termini e Condizioni
+                    {t.termsAndConditions}
                   </Link>
                 </li>
 
@@ -102,7 +103,7 @@ export default function Footer() {
                     href="/cookie-policy"
                     className="transition hover:text-emerald-600"
                   >
-                    Cookie Policy
+                    {t.cookiePolicy}
                   </Link>
                 </li>
 
@@ -111,7 +112,7 @@ export default function Footer() {
                     href="/community-guidelines"
                     className="transition hover:text-emerald-600"
                   >
-                    Community Guidelines
+                    {t.communityGuidelines}
                   </Link>
                 </li>
 
@@ -120,7 +121,7 @@ export default function Footer() {
                     href="/segnala-un-problema"
                     className="transition hover:text-emerald-600"
                   >
-                    Segnala un problema
+                    {t.reportProblem}
                   </Link>
                 </li>
               </ul>
@@ -129,8 +130,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t border-slate-100 pt-6 text-sm text-slate-400">
-          © {getCurrentYear()} Car2ne. Tutti
-          i diritti riservati.
+          © {getCurrentYear()} Car2ne. {t.rightsReserved}
         </div>
       </div>
     </footer>

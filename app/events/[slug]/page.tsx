@@ -9,6 +9,7 @@ import RideList from "@/components/events/RideList";
 
 import { createClient } from "@/lib/supabase/server";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   params: Promise<{
@@ -20,6 +21,7 @@ export default async function EventPage({ params }: Props) {
   const { slug } = await params;
 
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
 
   const { data: event, error } = await supabase
     .from("events")
@@ -38,7 +40,7 @@ export default async function EventPage({ params }: Props) {
         <Navbar />
 
         <main className="pt-28">
-          <EventConcluded event={event} />
+          <EventConcluded event={event} locale={locale} dict={dict.events.concluded} />
         </main>
 
         <Footer />
@@ -63,7 +65,7 @@ export default async function EventPage({ params }: Props) {
       <Navbar />
 
       <main className="pb-24 pt-28">
-        <EventHero event={event} />
+        <EventHero event={event} locale={locale} />
 
         <div className="mx-auto mt-14 max-w-7xl px-6">
           <RideList eventId={event.id} />

@@ -5,6 +5,7 @@ import EventsView from "@/components/events/EventsView";
 
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   searchParams: Promise<{
@@ -20,6 +21,7 @@ export default async function EventsPage({
   const params = await searchParams;
 
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
 
   const { data: events, error } = await supabase
     .from("events")
@@ -58,6 +60,8 @@ export default async function EventsPage({
           initialSearch={params.search ?? ""}
           initialDate={params.date ?? ""}
           initialDeparture={params.from ?? ""}
+          locale={locale}
+          dict={dict.events}
         />
       </main>
 

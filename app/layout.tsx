@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import FloatingChat from "@/components/chat/FloatingChat";
 
 import { SITE_URL } from "@/lib/siteConfig";
+import { getLocale } from "@/lib/i18n";
 
 import "./globals.css";
 
@@ -21,14 +22,16 @@ export const metadata: Metadata = {
     "Trova o offri un passaggio per il tuo prossimo evento.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="it"
+      lang={locale}
       className={`${manrope.variable} overflow-x-hidden antialiased`}
     >
       <body className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-white via-emerald-50 to-white font-sans text-slate-900">

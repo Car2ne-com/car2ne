@@ -2,7 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
 
+import type { Locale } from "@/lib/i18n/locales";
+
 type Props = {
+  locale: Locale;
   event: {
     id: string;
     title: string;
@@ -19,8 +22,8 @@ type Props = {
   };
 };
 
-export default function EventHero({ event }: Props) {
-  const formattedDate = new Intl.DateTimeFormat("it-IT", {
+export default function EventHero({ event, locale }: Props) {
+  const formattedDate = new Intl.DateTimeFormat(locale === "en" ? "en-US" : "it-IT", {
     dateStyle: "full",
     timeStyle: "short",
   }).format(new Date(event.event_date));

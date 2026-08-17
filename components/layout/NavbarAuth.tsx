@@ -2,11 +2,14 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 import UserMenu from "./UserMenu";
 
 export default async function NavbarAuth() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
+  const { auth, userMenu } = dict.layout;
 
   const {
     data: { user },
@@ -20,13 +23,13 @@ export default async function NavbarAuth() {
             variant="outline"
             className="rounded-xl border-slate-200 bg-white px-2.5 text-xs hover:bg-slate-50 sm:px-5 sm:text-sm"
           >
-            Accedi
+            {auth.login}
           </Button>
         </Link>
 
         <Link href="/register">
           <Button className="rounded-xl bg-emerald-500 px-2.5 text-xs shadow-lg hover:bg-emerald-600 sm:px-5 sm:text-sm">
-            Registrati
+            {auth.register}
           </Button>
         </Link>
       </div>
@@ -66,6 +69,7 @@ export default async function NavbarAuth() {
       surname={surname}
       avatarUrl={avatarUrl}
       isAdmin={isAdmin}
+      dict={userMenu}
     />
   );
 }

@@ -17,6 +17,22 @@ import {
   getNotificationHref,
   getNotificationIcon,
 } from "@/lib/utils/notifications";
+import type { Locale } from "@/lib/i18n/locales";
+
+type NotificationsDict = {
+  ariaLabel: string;
+  title: string;
+  unreadItemsSuffix: string;
+  markAllRead: string;
+  messagesTitle: string;
+  unreadMessageSingular: string;
+  unreadMessagePlural: string;
+  openChats: string;
+  loading: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  viewAll: string;
+};
 
 type Notification = {
   id: string;
@@ -33,7 +49,12 @@ type AuthUser = {
   id: string;
 };
 
-export default function NotificationBell() {
+type Props = {
+  locale: Locale;
+  dict: NotificationsDict;
+};
+
+export default function NotificationBell({ locale, dict }: Props) {
   const supabase = useMemo(
     () => createClient(),
     []
@@ -572,7 +593,7 @@ export default function NotificationBell() {
     return new Date(
       date
     ).toLocaleString(
-      "it-IT",
+      locale === "en" ? "en-US" : "it-IT",
       {
         day: "2-digit",
         month: "2-digit",
@@ -621,7 +642,7 @@ export default function NotificationBell() {
           )
         }
         className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600"
-        aria-label="Notifiche"
+        aria-label={dict.ariaLabel}
       >
         <Bell className="h-5 w-5" />
 
@@ -651,12 +672,12 @@ export default function NotificationBell() {
 
             <div>
               <h3 className="font-bold text-slate-900">
-                Notifiche
+                {dict.title}
               </h3>
 
               {totalUnread > 0 && (
                 <p className="mt-0.5 text-xs text-slate-500">
-                  {totalUnread} elementi non letti
+                  {totalUnread} {dict.unreadItemsSuffix}
                 </p>
               )}
             </div>
@@ -669,7 +690,7 @@ export default function NotificationBell() {
                 }
                 className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
               >
-                Segna notifiche come lette
+                {dict.markAllRead}
               </button>
             )}
 
@@ -695,7 +716,7 @@ export default function NotificationBell() {
                 <div className="flex items-center justify-between gap-3">
 
                   <p className="text-sm font-bold text-slate-900">
-                    Messaggi
+                    {dict.messagesTitle}
                   </p>
 
                   <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -708,16 +729,14 @@ export default function NotificationBell() {
                 </div>
 
                 <p className="mt-1 text-sm text-slate-600">
-                  Hai{" "}
-                  {unreadMessagesCount}{" "}
-                  {unreadMessagesCount ===
-                  1
-                    ? "messaggio non letto"
-                    : "messaggi non letti"}.
+                  {(unreadMessagesCount === 1
+                    ? dict.unreadMessageSingular
+                    : dict.unreadMessagePlural
+                  ).replace("{count}", String(unreadMessagesCount))}
                 </p>
 
                 <p className="mt-1 text-xs font-semibold text-emerald-600">
-                  Apri le chat →
+                  {dict.openChats}
                 </p>
 
               </div>
@@ -730,7 +749,7 @@ export default function NotificationBell() {
 
             {loading ? (
               <div className="px-5 py-12 text-center text-sm text-slate-500">
-                Caricamento notifiche...
+                {dict.loading}
               </div>
             ) : notifications.length ===
               0 ? (
@@ -742,12 +761,11 @@ export default function NotificationBell() {
                 </div>
 
                 <h4 className="mt-4 font-bold text-slate-900">
-                  Nessuna notifica
+                  {dict.emptyTitle}
                 </h4>
 
                 <p className="mt-2 text-sm text-slate-500">
-                  Qui vedrai le richieste e gli
-                  aggiornamenti sui tuoi passaggi.
+                  {dict.emptyDescription}
                 </p>
 
               </div>
@@ -847,7 +865,7 @@ export default function NotificationBell() {
               }
               className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
             >
-              Vedi tutte le notifiche →
+              {dict.viewAll}
             </Link>
 
           </div>

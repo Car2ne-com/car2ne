@@ -2,7 +2,12 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RegisterForm from "@/components/auth/RegisterForm";
 
-export default function RegisterPage() {
+import { getTranslations } from "@/lib/i18n";
+
+export default async function RegisterPage() {
+  const { dict } = await getTranslations();
+  const t = dict.auth;
+
   return (
     <>
       <Navbar />
@@ -11,19 +16,19 @@ export default function RegisterPage() {
         <div className="w-full">
           <div className="mb-10 text-center">
             <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-              🚀 Benvenuto
+              {t.register.pageBadge}
             </span>
 
             <h1 className="mt-6 text-4xl font-black tracking-tight text-slate-900">
-              Crea il tuo account
+              {t.register.pageTitle}
             </h1>
 
             <p className="mt-4 text-slate-600">
-              Registrati per offrire o prenotare passaggi verso i tuoi eventi preferiti.
+              {t.register.pageSubtitle}
             </p>
           </div>
 
-          <RegisterForm />
+          <RegisterForm dict={t} />
         </div>
       </main>
 

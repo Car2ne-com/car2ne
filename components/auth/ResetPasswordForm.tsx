@@ -7,8 +7,15 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import type { it } from "@/lib/i18n/dictionaries/it";
 
-export default function ResetPasswordForm() {
+type AuthDict = (typeof it)["auth"];
+
+type Props = {
+  dict: AuthDict;
+};
+
+export default function ResetPasswordForm({ dict }: Props) {
   const router = useRouter();
 
   const supabase = useMemo(
@@ -49,14 +56,12 @@ export default function ResetPasswordForm() {
     e.preventDefault();
 
     if (!passwordIsValid) {
-      toast.error(
-        "La password non rispetta tutti i requisiti di sicurezza."
-      );
+      toast.error(dict.resetPasswordForm.errors.weakPassword);
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Le password non coincidono.");
+      toast.error(dict.resetPasswordForm.errors.passwordMismatch);
       return;
     }
 
@@ -79,9 +84,7 @@ export default function ResetPasswordForm() {
       return;
     }
 
-    toast.success(
-      "Password aggiornata con successo!"
-    );
+    toast.success(dict.resetPasswordForm.success);
 
     router.push("/login");
   }
@@ -93,7 +96,7 @@ export default function ResetPasswordForm() {
     >
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Nuova password
+          {dict.resetPasswordForm.newPasswordLabel}
         </label>
 
         <div className="relative">
@@ -121,8 +124,8 @@ export default function ResetPasswordForm() {
             disabled={loading}
             aria-label={
               showPassword
-                ? "Nascondi password"
-                : "Mostra password"
+                ? dict.common.hidePassword
+                : dict.common.showPassword
             }
             className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
           >
@@ -136,33 +139,33 @@ export default function ResetPasswordForm() {
 
         <div className="mt-4 rounded-2xl bg-slate-50 p-4">
           <p className="mb-3 text-xs font-semibold text-slate-600">
-            La password deve contenere:
+            {dict.common.passwordRequirementsTitle}
           </p>
 
           <div className="grid gap-2 sm:grid-cols-2">
             <PasswordRule
               valid={passwordRules.minLength}
-              text="Almeno 8 caratteri"
+              text={dict.common.ruleMinLength}
             />
 
             <PasswordRule
               valid={passwordRules.number}
-              text="Almeno un numero"
+              text={dict.common.ruleNumber}
             />
 
             <PasswordRule
               valid={passwordRules.uppercase}
-              text="Una lettera maiuscola"
+              text={dict.common.ruleUppercase}
             />
 
             <PasswordRule
               valid={passwordRules.lowercase}
-              text="Una lettera minuscola"
+              text={dict.common.ruleLowercase}
             />
 
             <PasswordRule
               valid={passwordRules.special}
-              text="Un carattere speciale"
+              text={dict.common.ruleSpecial}
             />
           </div>
         </div>
@@ -170,7 +173,7 @@ export default function ResetPasswordForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Conferma nuova password
+          {dict.resetPasswordForm.confirmNewPasswordLabel}
         </label>
 
         <input
@@ -190,7 +193,7 @@ export default function ResetPasswordForm() {
         {confirmPassword.length > 0 &&
           password !== confirmPassword && (
             <p className="mt-2 text-xs font-medium text-red-500">
-              Le password non coincidono.
+              {dict.common.passwordsDontMatch}
             </p>
           )}
       </div>
@@ -205,8 +208,8 @@ export default function ResetPasswordForm() {
         className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
       >
         {loading
-          ? "Aggiornamento..."
-          : "Aggiorna password"}
+          ? dict.resetPasswordForm.updating
+          : dict.resetPasswordForm.updateButton}
       </Button>
     </form>
   );

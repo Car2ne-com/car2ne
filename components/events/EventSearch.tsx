@@ -5,11 +5,13 @@ import { Search } from "lucide-react";
 type Props = {
   value: string;
   onChange: (value: string) => void;
+  placeholder: string;
 };
 
 export default function EventSearch({
   value,
   onChange,
+  placeholder,
 }: Props) {
   return (
     <div className="relative">
@@ -30,7 +32,7 @@ export default function EventSearch({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Cerca un evento, una città o una location..."
+        placeholder={placeholder}
         className="
           h-16
           w-full

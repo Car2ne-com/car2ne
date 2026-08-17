@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { CalendarCheck, MapPin } from "lucide-react";
 
+import type { Locale } from "@/lib/i18n/locales";
+
+type ConcludedDict = {
+  badge: string;
+  description: string;
+  browseEvents: string;
+};
+
 type Props = {
+  locale: Locale;
+  dict: ConcludedDict;
   event: {
     title: string;
     artist: string;
@@ -13,9 +23,11 @@ type Props = {
 
 export default function EventConcluded({
   event,
+  locale,
+  dict,
 }: Props) {
   const formattedDate = new Intl.DateTimeFormat(
-    "it-IT",
+    locale === "en" ? "en-US" : "it-IT",
     {
       dateStyle: "full",
     }
@@ -28,7 +40,7 @@ export default function EventConcluded({
       </div>
 
       <span className="mt-6 inline-flex rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">
-        Evento concluso
+        {dict.badge}
       </span>
 
       <h1 className="mt-6 text-4xl font-black tracking-tight text-slate-900">
@@ -51,16 +63,14 @@ export default function EventConcluded({
       </p>
 
       <p className="mx-auto mt-8 max-w-md text-slate-500">
-        Questo evento si è già svolto, quindi non è più
-        possibile cercare o offrire passaggi. Trova il tuo
-        prossimo evento qui sotto.
+        {dict.description}
       </p>
 
       <Link
         href="/events"
         className="mt-8 inline-flex rounded-2xl bg-emerald-500 px-8 py-4 font-semibold text-white transition hover:bg-emerald-600"
       >
-        Sfoglia gli eventi
+        {dict.browseEvents}
       </Link>
     </section>
   );

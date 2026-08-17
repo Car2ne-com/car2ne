@@ -7,14 +7,37 @@ import EventGrid from "./EventGrid";
 import EmptyState from "./EmptyState";
 
 import { Event } from "@/types/event";
+import type { Locale } from "@/lib/i18n/locales";
 
 const PAGE_SIZE = 24;
+
+type EventsDict = {
+  search: { placeholder: string };
+  filters: {
+    cityAriaLabel: string;
+    allCities: string;
+    venueAriaLabel: string;
+    allVenues: string;
+    departureBadge: string;
+    departureSearching: string;
+    loadMore: string;
+    remaining: string;
+  };
+  card: {
+    ridesSingular: string;
+    ridesPlural: string;
+    viewEvent: string;
+  };
+  empty: { title: string; description: string };
+};
 
 type Props = {
   events: Event[];
   initialSearch?: string;
   initialDate?: string;
   initialDeparture?: string;
+  locale: Locale;
+  dict: EventsDict;
 };
 
 export default function EventsView({
@@ -22,6 +45,8 @@ export default function EventsView({
   initialSearch = "",
   initialDate = "",
   initialDeparture = "",
+  locale,
+  dict,
 }: Props) {
   const [search, setSearch] =
     useState(initialSearch);
@@ -132,6 +157,7 @@ export default function EventsView({
         <EventSearch
           value={search}
           onChange={setSearch}
+          placeholder={dict.search.placeholder}
         />
 
         {cityOptions.length > 0 && (
@@ -139,10 +165,10 @@ export default function EventsView({
             <select
               value={cityId}
               onChange={(e) => setCityId(e.target.value)}
-              aria-label="Filtra per città"
+              aria-label={dict.filters.cityAriaLabel}
               className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
             >
-              <option value="">Tutte le città</option>
+              <option value="">{dict.filters.allCities}</option>
 
               {cityOptions.map((city) => (
                 <option key={city.id} value={city.id}>
@@ -155,10 +181,10 @@ export default function EventsView({
               <select
                 value={effectiveVenueId}
                 onChange={(e) => setVenueId(e.target.value)}
-                aria-label="Filtra per venue"
+                aria-label={dict.filters.venueAriaLabel}
                 className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
               >
-                <option value="">Tutti i venue</option>
+                <option value="">{dict.filters.allVenues}</option>
 
                 {venueOptions.map((venue) => (
                   <option key={venue.id} value={venue.id}>
@@ -174,11 +200,11 @@ export default function EventsView({
       {initialDeparture && (
         <div className="mb-8 rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-4">
           <p className="text-sm font-semibold text-emerald-800">
-            📍 Partenza cercata
+            {dict.filters.departureBadge}
           </p>
 
           <p className="mt-1 text-sm text-emerald-700">
-            Stai cercando passaggi con partenza da{" "}
+            {dict.filters.departureSearching}{" "}
             <strong>{initialDeparture}</strong>.
           </p>
         </div>
@@ -186,7 +212,7 @@ export default function EventsView({
 
       {visibleEvents.length > 0 ? (
         <>
-          <EventGrid events={visibleEvents} />
+          <EventGrid events={visibleEvents} locale={locale} dict={dict.card} />
 
           {visibleCount < filteredEvents.length && (
             <div className="mt-10 flex justify-center">
@@ -199,16 +225,16 @@ export default function EventsView({
                 }
                 className="rounded-2xl border border-slate-200 bg-white px-8 py-3 font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
               >
-                Carica altri eventi (
+                {dict.filters.loadMore} (
                 {filteredEvents.length -
                   visibleCount}{" "}
-                rimanenti)
+                {dict.filters.remaining})
               </button>
             </div>
           )}
         </>
       ) : (
-        <EmptyState />
+        <EmptyState title={dict.empty.title} description={dict.empty.description} />
       )}
     </>
   );

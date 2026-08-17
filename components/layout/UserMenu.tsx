@@ -25,11 +25,24 @@ import {
 
 import LogoutButton from "./LogoutButton";
 
+type UserMenuDict = {
+  welcomeBack: string;
+  accountLabel: string;
+  dashboard: string;
+  myChats: string;
+  myRides: string;
+  myBookings: string;
+  myProfile: string;
+  admin: string;
+  logout: string;
+};
+
 type Props = {
   name: string;
   surname: string;
   avatarUrl: string | null;
   isAdmin: boolean;
+  dict: UserMenuDict;
 };
 
 export default function UserMenu({
@@ -37,6 +50,7 @@ export default function UserMenu({
   surname,
   avatarUrl,
   isAdmin,
+  dict,
 }: Props) {
   const displayName =
     `${name} ${surname}`.trim();
@@ -115,7 +129,7 @@ export default function UserMenu({
 
         <div className="text-left">
           <p className="text-[10px] text-slate-500 sm:text-xs">
-            Bentornato
+            {dict.welcomeBack}
           </p>
 
           <p className="max-w-[80px] truncate text-sm font-semibold text-slate-900 sm:max-w-none sm:text-base">
@@ -165,7 +179,7 @@ export default function UserMenu({
                 </span>
 
                 <span className="text-xs text-slate-500">
-                  Account Car2ne
+                  {dict.accountLabel}
                 </span>
               </div>
 
@@ -181,7 +195,7 @@ export default function UserMenu({
           render={
             <Link href="/dashboard">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
+              {dict.dashboard}
             </Link>
           }
         />
@@ -192,7 +206,7 @@ export default function UserMenu({
           render={
             <Link href="/chat">
               <MessageCircle className="mr-2 h-4 w-4 text-emerald-600" />
-              Le mie chat
+              {dict.myChats}
             </Link>
           }
         />
@@ -203,7 +217,7 @@ export default function UserMenu({
           render={
             <Link href="/dashboard/rides">
               <Car className="mr-2 h-4 w-4" />
-              I miei passaggi
+              {dict.myRides}
             </Link>
           }
         />
@@ -214,7 +228,7 @@ export default function UserMenu({
           render={
             <Link href="/dashboard/bookings">
               <Ticket className="mr-2 h-4 w-4" />
-              Le mie prenotazioni
+              {dict.myBookings}
             </Link>
           }
         />
@@ -225,7 +239,7 @@ export default function UserMenu({
           render={
             <Link href="/profile">
               <User className="mr-2 h-4 w-4" />
-              Il mio profilo
+              {dict.myProfile}
             </Link>
           }
         />
@@ -240,7 +254,7 @@ export default function UserMenu({
               render={
                 <Link href="/admin/events">
                   <CalendarDays className="mr-2 h-4 w-4 text-emerald-600" />
-                  Admin
+                  {dict.admin}
                 </Link>
               }
             />
@@ -249,7 +263,7 @@ export default function UserMenu({
 
         <DropdownMenuSeparator />
 
-        <LogoutButton />
+        <LogoutButton label={dict.logout} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

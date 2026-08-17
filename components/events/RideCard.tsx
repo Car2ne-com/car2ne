@@ -17,7 +17,25 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import RatingStars from "@/components/ratings/RatingStars";
 
+type RidesDict = {
+  driverFallback: string;
+  driverLabel: string;
+  seatsLabel: string;
+  statusPendingBanner: string;
+  statusConfirmedBanner: string;
+  statusRejectedBanner: string;
+  buttonSending: string;
+  buttonYourRide: string;
+  buttonRequestSent: string;
+  buttonConfirmed: string;
+  buttonRequestAgain: string;
+  buttonRequestSeat: string;
+  errorOwnRide: string;
+  successRequestSent: string;
+};
+
 type Props = {
+  dict: RidesDict;
   ride: {
     id: string;
     eventId: string;
@@ -50,6 +68,7 @@ type BookingStatus =
 
 export default function RideCard({
   ride,
+  dict,
 }: Props) {
   const supabase = createClient();
 
@@ -142,9 +161,7 @@ export default function RideCard({
     }
 
     if (isDriver) {
-      toast.error(
-        "Non puoi richiedere un posto sul tuo stesso passaggio."
-      );
+      toast.error(dict.errorOwnRide);
 
       return;
     }
@@ -178,45 +195,43 @@ export default function RideCard({
       data?.status ?? "pending"
     );
 
-    toast.success(
-      "Richiesta inviata! Il conducente dovrà confermare il tuo posto."
-    );
+    toast.success(dict.successRequestSent);
   }
 
   function getButtonContent() {
     if (loading) {
-      return "Invio richiesta...";
+      return dict.buttonSending;
     }
 
     if (isDriver) {
-      return "Il tuo passaggio";
+      return dict.buttonYourRide;
     }
 
     if (
       bookingStatus === "pending"
     ) {
-      return "Richiesta inviata";
+      return dict.buttonRequestSent;
     }
 
     if (
       bookingStatus === "confirmed"
     ) {
-      return "Posto confermato";
+      return dict.buttonConfirmed;
     }
 
     if (
       bookingStatus === "rejected"
     ) {
-      return "Richiedi nuovamente";
+      return dict.buttonRequestAgain;
     }
 
     if (
       bookingStatus === "cancelled"
     ) {
-      return "Richiedi posto";
+      return dict.buttonRequestSeat;
     }
 
-    return "Richiedi posto";
+    return dict.buttonRequestSeat;
   }
 
   const isDisabled =
@@ -232,7 +247,7 @@ export default function RideCard({
    */
 
   const driverName =
-    ride.driver || "Conducente";
+    ride.driver || dict.driverFallback;
 
   const driverSurname =
     ride.driverSurname ?? "";
@@ -288,7 +303,7 @@ export default function RideCard({
           </h3>
 
           <p className="text-sm text-slate-500">
-            Conducente
+            {dict.driverLabel}
           </p>
 
           {driverRating && (
@@ -352,7 +367,7 @@ export default function RideCard({
         <div className="flex items-center gap-2 text-sm text-slate-600">
           <CarFront className="h-4 w-4 text-emerald-600" />
 
-          {ride.seats} posti
+          {ride.seats} {dict.seatsLabel}
         </div>
 
         <div className="text-right text-xl font-black text-emerald-600">
@@ -366,24 +381,21 @@ export default function RideCard({
       {bookingStatus ===
         "pending" && (
         <div className="mt-6 rounded-2xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">
-          ⏳ Richiesta in attesa di
-          conferma del conducente.
+          {dict.statusPendingBanner}
         </div>
       )}
 
       {bookingStatus ===
         "confirmed" && (
         <div className="mt-6 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-          ✓ Il conducente ha
-          confermato il tuo posto.
+          {dict.statusConfirmedBanner}
         </div>
       )}
 
       {bookingStatus ===
         "rejected" && (
         <div className="mt-6 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-          La richiesta precedente è
-          stata rifiutata.
+          {dict.statusRejectedBanner}
         </div>
       )}
 

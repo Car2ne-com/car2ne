@@ -2,7 +2,12 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 
-export default function ForgotPasswordPage() {
+import { getTranslations } from "@/lib/i18n";
+
+export default async function ForgotPasswordPage() {
+  const { dict } = await getTranslations();
+  const t = dict.auth;
+
   return (
     <>
       <Navbar />
@@ -11,20 +16,19 @@ export default function ForgotPasswordPage() {
         <div className="w-full">
           <div className="mb-10 text-center">
             <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-              🔑 Recupero password
+              {t.forgotPassword.pageBadge}
             </span>
 
             <h1 className="mt-6 text-4xl font-black text-slate-900">
-              Password dimenticata?
+              {t.forgotPassword.pageTitle}
             </h1>
 
             <p className="mt-4 text-slate-600">
-              Inserisci la tua email e ti invieremo
-              un link per reimpostarla.
+              {t.forgotPassword.pageSubtitle}
             </p>
           </div>
 
-          <ForgotPasswordForm />
+          <ForgotPasswordForm dict={t} />
         </div>
       </main>
 

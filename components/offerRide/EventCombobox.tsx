@@ -5,11 +5,20 @@ import { Check, ChevronDown, Search } from "lucide-react";
 
 import { Event } from "@/types/event";
 
+type EventComboboxDict = {
+  loading: string;
+  placeholder: string;
+  searchPlaceholder: string;
+  noResults: string;
+  moreResults: string;
+};
+
 type Props = {
   events: Event[];
   value: string;
   onChange: (eventId: string) => void;
   loading?: boolean;
+  dict: EventComboboxDict;
 };
 
 const MAX_RESULTS = 50;
@@ -19,6 +28,7 @@ export default function EventCombobox({
   value,
   onChange,
   loading,
+  dict,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -85,10 +95,10 @@ export default function EventCombobox({
           }
         >
           {loading
-            ? "Caricamento eventi..."
+            ? dict.loading
             : selectedEvent
               ? `${selectedEvent.title} — ${selectedEvent.city}`
-              : "Seleziona un evento"}
+              : dict.placeholder}
         </span>
 
         <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
@@ -106,7 +116,7 @@ export default function EventCombobox({
               onChange={(e) =>
                 setQuery(e.target.value)
               }
-              placeholder="Cerca per titolo, artista o città..."
+              placeholder={dict.searchPlaceholder}
               className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
             />
           </div>
@@ -114,7 +124,7 @@ export default function EventCombobox({
           <div className="max-h-72 overflow-y-auto py-1">
             {filteredEvents.length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-slate-500">
-                Nessun evento trovato.
+                {dict.noResults}
               </p>
             ) : (
               filteredEvents
@@ -148,10 +158,10 @@ export default function EventCombobox({
 
             {filteredEvents.length > MAX_RESULTS && (
               <p className="px-4 py-2 text-center text-xs text-slate-400">
-                Altri{" "}
-                {filteredEvents.length -
-                  MAX_RESULTS}{" "}
-                risultati, affina la ricerca.
+                {dict.moreResults.replace(
+                  "{count}",
+                  String(filteredEvents.length - MAX_RESULTS)
+                )}
               </p>
             )}
           </div>

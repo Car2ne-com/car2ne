@@ -9,6 +9,26 @@ type City = {
   region: string | null;
 };
 
+type CityComboboxDict = {
+  changeCityAriaLabel: string;
+  searching: string;
+  searchFailed: string;
+  noCityFound: string;
+  minCharsHint: string;
+  selectSuggestion: string;
+  placeholder: string;
+};
+
+const defaultDict: CityComboboxDict = {
+  changeCityAriaLabel: "Cambia città",
+  searching: "Ricerca in corso...",
+  searchFailed: "Ricerca non riuscita. Riprova.",
+  noCityFound: "Nessun comune trovato.",
+  minCharsHint: "Scrivi almeno {count} caratteri per cercare.",
+  selectSuggestion: "Seleziona un comune dai suggerimenti.",
+  placeholder: "Cerca un comune...",
+};
+
 type Props = {
   value: string;
   onChange: (cityId: string, cityName: string) => void;
@@ -20,6 +40,7 @@ type Props = {
   initialLabel?: string;
   placeholder?: string;
   disabled?: boolean;
+  dict?: CityComboboxDict;
 };
 
 const MIN_QUERY_LENGTH = 2;
@@ -41,9 +62,11 @@ export default function CityCombobox({
   value,
   onChange,
   initialLabel,
-  placeholder = "Cerca un comune...",
+  placeholder,
   disabled,
+  dict = defaultDict,
 }: Props) {
+  const resolvedPlaceholder = placeholder ?? dict.placeholder;
   const [selected, setSelected] = useState<City | null>(
     value && initialLabel
       ? { id: value, name: initialLabel, region: null }
@@ -181,7 +204,7 @@ export default function CityCombobox({
           <button
             type="button"
             onClick={handleClear}
-            aria-label="Cambia città"
+            aria-label={dict.changeCityAriaLabel}
             className="text-emerald-600 transition hover:text-emerald-800"
           >
             <X className="h-4 w-4" />
@@ -206,7 +229,7 @@ export default function CityCombobox({
           }}
           onFocus={() => setOpen(true)}
           onBlur={() => setTouched(true)}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           className="h-full w-full bg-transparent outline-none disabled:cursor-not-allowed"
         />
       </div>
@@ -215,11 +238,11 @@ export default function CityCombobox({
         <div className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
           {searching ? (
             <p className="px-4 py-2.5 text-sm text-slate-500">
-              Ricerca in corso...
+              {dict.searching}
             </p>
           ) : searchError ? (
             <p className="px-4 py-2.5 text-sm text-red-600">
-              Ricerca non riuscita. Riprova.
+              {dict.searchFailed}
             </p>
           ) : results.length > 0 ? (
             results.map((city) => (
@@ -243,7 +266,7 @@ export default function CityCombobox({
             ))
           ) : (
             <p className="px-4 py-2.5 text-sm text-slate-500">
-              Nessun comune trovato.
+              {dict.noCityFound}
             </p>
           )}
         </div>
@@ -251,13 +274,13 @@ export default function CityCombobox({
 
       {showTooShortHint && (
         <p className="mt-2 text-xs text-slate-400">
-          Scrivi almeno {MIN_QUERY_LENGTH} caratteri per cercare.
+          {dict.minCharsHint.replace("{count}", String(MIN_QUERY_LENGTH))}
         </p>
       )}
 
       {showUnconfirmedError && (
         <p className="mt-2 text-xs font-medium text-red-600">
-          Seleziona un comune dai suggerimenti.
+          {dict.selectSuggestion}
         </p>
       )}
     </div>

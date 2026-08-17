@@ -11,8 +11,15 @@ import {
   calculateAge,
   MINIMUM_AGE,
 } from "@/lib/utils/age";
+import type { it } from "@/lib/i18n/dictionaries/it";
 
-export default function RegisterForm() {
+type AuthDict = (typeof it)["auth"];
+
+type Props = {
+  dict: AuthDict;
+};
+
+export default function RegisterForm({ dict }: Props) {
   const supabase = useMemo(
     () => createClient(),
     []
@@ -94,50 +101,42 @@ export default function RegisterForm() {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("Inserisci il nome.");
+      toast.error(dict.registerForm.errors.emptyName);
       return;
     }
 
     if (!surname.trim()) {
-      toast.error("Inserisci il cognome.");
+      toast.error(dict.registerForm.errors.emptySurname);
       return;
     }
 
     if (!birthDate) {
-      toast.error(
-        "Inserisci la tua data di nascita."
-      );
+      toast.error(dict.registerForm.errors.emptyBirthDate);
       return;
     }
 
     if (!isAdult) {
-      toast.error(
-        "Devi avere almeno 18 anni per registrarti a Car2ne."
-      );
+      toast.error(dict.registerForm.errors.notAdult);
       return;
     }
 
     if (!email.trim()) {
-      toast.error("Inserisci la tua email.");
+      toast.error(dict.registerForm.errors.emptyEmail);
       return;
     }
 
     if (!passwordIsValid) {
-      toast.error(
-        "La password non rispetta tutti i requisiti di sicurezza."
-      );
+      toast.error(dict.registerForm.errors.weakPassword);
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Le password non coincidono.");
+      toast.error(dict.registerForm.errors.passwordMismatch);
       return;
     }
 
     if (!acceptedTerms) {
-      toast.error(
-        "Devi accettare i Termini e Condizioni e la Privacy Policy per registrarti."
-      );
+      toast.error(dict.registerForm.errors.termsNotAccepted);
       return;
     }
 
@@ -168,9 +167,7 @@ export default function RegisterForm() {
       return;
     }
 
-    toast.success(
-      "Registrazione completata! Controlla la tua email per confermare l'account."
-    );
+    toast.success(dict.registerForm.success);
   }
 
   /*
@@ -187,9 +184,7 @@ export default function RegisterForm() {
     }
 
     if (!acceptedTerms) {
-      toast.error(
-        "Devi accettare i Termini e Condizioni e la Privacy Policy per registrarti."
-      );
+      toast.error(dict.registerForm.errors.termsNotAccepted);
       return;
     }
 
@@ -232,12 +227,12 @@ export default function RegisterForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Nome
+          {dict.registerForm.nameLabel}
         </label>
 
         <input
           type="text"
-          placeholder="Mario"
+          placeholder={dict.registerForm.namePlaceholder}
           value={name}
           onChange={(e) =>
             setName(e.target.value)
@@ -253,12 +248,12 @@ export default function RegisterForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Cognome
+          {dict.registerForm.surnameLabel}
         </label>
 
         <input
           type="text"
-          placeholder="Rossi"
+          placeholder={dict.registerForm.surnamePlaceholder}
           value={surname}
           onChange={(e) =>
             setSurname(e.target.value)
@@ -274,7 +269,7 @@ export default function RegisterForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Data di nascita
+          {dict.registerForm.birthDateLabel}
         </label>
 
         <input
@@ -295,16 +290,14 @@ export default function RegisterForm() {
         />
 
         <p className="mt-2 text-xs text-slate-500">
-          Car2ne è riservato a chi ha almeno
-          18 anni.
+          {dict.registerForm.ageNotice}
         </p>
 
         {birthDate.length > 0 &&
           age !== null &&
           !isAdult && (
             <p className="mt-2 text-xs font-medium text-red-500">
-              Devi avere almeno 18 anni per
-              registrarti.
+              {dict.registerForm.ageError}
             </p>
           )}
       </div>
@@ -313,12 +306,12 @@ export default function RegisterForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Email
+          {dict.common.emailLabel}
         </label>
 
         <input
           type="email"
-          placeholder="nome@email.com"
+          placeholder={dict.common.emailPlaceholder}
           value={email}
           onChange={(e) =>
             setEmail(e.target.value)
@@ -334,7 +327,7 @@ export default function RegisterForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Password
+          {dict.common.passwordLabel}
         </label>
 
         <div className="relative">
@@ -369,8 +362,8 @@ export default function RegisterForm() {
             }
             aria-label={
               showPassword
-                ? "Nascondi password"
-                : "Mostra password"
+                ? dict.common.hidePassword
+                : dict.common.showPassword
             }
             className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
           >
@@ -386,7 +379,7 @@ export default function RegisterForm() {
 
         <div className="mt-4 rounded-2xl bg-slate-50 p-4">
           <p className="mb-3 text-xs font-semibold text-slate-600">
-            La password deve contenere:
+            {dict.common.passwordRequirementsTitle}
           </p>
 
           <div className="grid gap-2 sm:grid-cols-2">
@@ -394,35 +387,35 @@ export default function RegisterForm() {
               valid={
                 passwordRules.minLength
               }
-              text="Almeno 8 caratteri"
+              text={dict.common.ruleMinLength}
             />
 
             <PasswordRule
               valid={
                 passwordRules.number
               }
-              text="Almeno un numero"
+              text={dict.common.ruleNumber}
             />
 
             <PasswordRule
               valid={
                 passwordRules.uppercase
               }
-              text="Una lettera maiuscola"
+              text={dict.common.ruleUppercase}
             />
 
             <PasswordRule
               valid={
                 passwordRules.lowercase
               }
-              text="Una lettera minuscola"
+              text={dict.common.ruleLowercase}
             />
 
             <PasswordRule
               valid={
                 passwordRules.special
               }
-              text="Un carattere speciale"
+              text={dict.common.ruleSpecial}
             />
           </div>
         </div>
@@ -432,7 +425,7 @@ export default function RegisterForm() {
 
       <div>
         <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Conferma password
+          {dict.registerForm.confirmPasswordLabel}
         </label>
 
         <div className="relative">
@@ -467,8 +460,8 @@ export default function RegisterForm() {
             }
             aria-label={
               showConfirmPassword
-                ? "Nascondi conferma password"
-                : "Mostra conferma password"
+                ? dict.registerForm.hideConfirmPassword
+                : dict.registerForm.showConfirmPassword
             }
             className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
           >
@@ -484,7 +477,7 @@ export default function RegisterForm() {
           password !==
             confirmPassword && (
             <p className="mt-2 text-xs font-medium text-red-500">
-              Le password non coincidono.
+              {dict.common.passwordsDontMatch}
             </p>
           )}
 
@@ -492,7 +485,7 @@ export default function RegisterForm() {
           password ===
             confirmPassword && (
             <p className="mt-2 text-xs font-medium text-emerald-600">
-              ✓ Le password coincidono.
+              {dict.common.passwordsMatch}
             </p>
           )}
       </div>
@@ -515,21 +508,21 @@ export default function RegisterForm() {
         />
 
         <span>
-          Accetto i{" "}
+          {dict.registerForm.acceptTermsPrefix}{" "}
           <Link
             href="/termini"
             target="_blank"
             className="font-semibold text-emerald-600 hover:text-emerald-700"
           >
-            Termini e Condizioni
+            {dict.registerForm.termsAndConditions}
           </Link>{" "}
-          e ho letto la{" "}
+          {dict.registerForm.acceptPrivacyMiddle}{" "}
           <Link
             href="/privacy"
             target="_blank"
             className="font-semibold text-emerald-600 hover:text-emerald-700"
           >
-            Privacy Policy
+            {dict.registerForm.privacyPolicy}
           </Link>
           .
         </span>
@@ -551,8 +544,8 @@ export default function RegisterForm() {
         className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
       >
         {loading
-          ? "Creazione account..."
-          : "Crea account"}
+          ? dict.registerForm.creatingAccount
+          : dict.registerForm.createAccountButton}
       </Button>
 
       {/* Separatore */}
@@ -564,7 +557,7 @@ export default function RegisterForm() {
 
         <div className="relative flex justify-center">
           <span className="bg-white px-4 text-sm text-slate-500">
-            oppure
+            {dict.common.or}
           </span>
         </div>
       </div>
@@ -586,19 +579,19 @@ export default function RegisterForm() {
       >
         {oauthLoading ===
         "google"
-          ? "Connessione..."
-          : "Continua con Google"}
+          ? dict.common.connecting
+          : dict.common.continueWithGoogle}
       </Button>
 
       {/* Login */}
 
       <p className="text-center text-sm text-slate-600">
-        Hai già un account?{" "}
+        {dict.registerForm.haveAccount}{" "}
         <Link
           href="/login"
           className="font-semibold text-emerald-600 hover:text-emerald-700"
         >
-          Accedi
+          {dict.registerForm.loginLink}
         </Link>
       </p>
     </form>

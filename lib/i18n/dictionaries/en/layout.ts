@@ -1,0 +1,62 @@
+import type { it } from "../it";
+
+export const layout: (typeof it)["layout"] = {
+  nav: {
+    home: "Home",
+    events: "Events",
+    offerRide: "Offer a ride",
+  },
+  mobileMenu: {
+    open: "Open menu",
+    close: "Close menu",
+  },
+  auth: {
+    login: "Log in",
+    register: "Sign up",
+  },
+  userMenu: {
+    welcomeBack: "Welcome back",
+    accountLabel: "Car2ne account",
+    dashboard: "Dashboard",
+    myChats: "My chats",
+    myRides: "My rides",
+    myBookings: "My bookings",
+    myProfile: "My profile",
+    admin: "Admin",
+    logout: "Log out",
+  },
+  notifications: {
+    ariaLabel: "Notifications",
+    title: "Notifications",
+    unreadItemsSuffix: "unread items",
+    markAllRead: "Mark notifications as read",
+    messagesTitle: "Messages",
+    unreadMessageSingular: "You have {count} unread message.",
+    unreadMessagePlural: "You have {count} unread messages.",
+    openChats: "Open chats →",
+    loading: "Loading notifications...",
+    emptyTitle: "No notifications",
+    emptyDescription: "You'll see requests and updates about your rides here.",
+    viewAll: "View all notifications →",
+  },
+  footer: {
+    description:
+      "Car2ne connects people heading to the same event, so they can travel together and split the cost.",
+    productHeading: "Product",
+    accountHeading: "Account",
+    legalHeading: "Legal",
+    events: "Events",
+    offerRide: "Offer a ride",
+    login: "Log in",
+    register: "Sign up",
+    privacyPolicy: "Privacy Policy",
+    termsAndConditions: "Terms and Conditions",
+    cookiePolicy: "Cookie Policy",
+    communityGuidelines: "Community Guidelines",
+    reportProblem: "Report a problem",
+    rightsReserved: "All rights reserved.",
+  },
+  languageSwitcher: {
+    label: "Language",
+  },
+};

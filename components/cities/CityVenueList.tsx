@@ -4,12 +4,17 @@ import { Building2, ChevronRight } from "lucide-react";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
+type VenueListDict = {
+  title: string;
+};
+
 type Props = {
   city: City;
   venues: Venue[];
+  dict: VenueListDict;
 };
 
-export default function CityVenueList({ city, venues }: Props) {
+export default function CityVenueList({ city, venues, dict }: Props) {
   if (venues.length === 0) {
     return null;
   }
@@ -17,7 +22,7 @@ export default function CityVenueList({ city, venues }: Props) {
   return (
     <section className="mt-16">
       <h2 className="text-2xl font-bold text-slate-900">
-        Venue a {city.name}
+        {dict.title.replace("{city}", city.name)}
       </h2>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

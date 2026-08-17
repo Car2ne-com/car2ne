@@ -4,7 +4,15 @@ import { FormEvent, useState } from "react";
 import { CalendarDays, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function SearchBox() {
+type Props = {
+  dict: {
+    eventPlaceholder: string;
+    departurePlaceholder: string;
+    searchButton: string;
+  };
+};
+
+export default function SearchBox({ dict }: Props) {
   const router = useRouter();
 
   const [search, setSearch] = useState("");
@@ -55,7 +63,7 @@ export default function SearchBox() {
             onChange={(event) =>
               setSearch(event.target.value)
             }
-            placeholder="Cerca un evento"
+            placeholder={dict.eventPlaceholder}
             className="h-14 w-full bg-transparent outline-none placeholder:text-gray-400"
           />
         </div>
@@ -71,7 +79,7 @@ export default function SearchBox() {
             onChange={(event) =>
               setDeparture(event.target.value)
             }
-            placeholder="Partenza"
+            placeholder={dict.departurePlaceholder}
             className="h-14 w-full bg-transparent outline-none placeholder:text-gray-400"
           />
         </div>
@@ -97,7 +105,7 @@ export default function SearchBox() {
           type="submit"
           className="h-14 rounded-2xl bg-emerald-500 px-8 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-emerald-600 hover:shadow-xl"
         >
-          Cerca
+          {dict.searchButton}
         </button>
 
       </div>

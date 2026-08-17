@@ -3,12 +3,19 @@ import { MapPin, ChevronRight } from "lucide-react";
 
 import type { City } from "@/types/city";
 
+type CardDict = {
+  eventsSingular: string;
+  eventsPlural: string;
+  noEvents: string;
+};
+
 type Props = {
   city: City;
   eventCount: number;
+  dict: CardDict;
 };
 
-export default function CityCard({ city, eventCount }: Props) {
+export default function CityCard({ city, eventCount, dict }: Props) {
   return (
     <Link
       href={`/citta/${city.slug}`}
@@ -26,8 +33,11 @@ export default function CityCard({ city, eventCount }: Props) {
 
           <p className="text-sm text-slate-500">
             {eventCount > 0
-              ? `${eventCount} ${eventCount === 1 ? "evento" : "eventi"} in programma`
-              : "Nessun evento in programma"}
+              ? (eventCount === 1 ? dict.eventsSingular : dict.eventsPlural).replace(
+                  "{count}",
+                  String(eventCount)
+                )
+              : dict.noEvents}
           </p>
         </div>
       </div>

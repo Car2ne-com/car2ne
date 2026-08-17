@@ -4,7 +4,11 @@ import Footer from "@/components/layout/Footer";
 import OfferRideHeader from "@/components/offerRide/OfferRideHeader";
 import OfferRideForm from "@/components/offerRide/OfferRideForm";
 
-export default function OfferRidePage() {
+import { getTranslations } from "@/lib/i18n";
+
+export default async function OfferRidePage() {
+  const { locale, dict } = await getTranslations();
+
   return (
     <>
       <Navbar />
@@ -12,7 +16,7 @@ export default function OfferRidePage() {
       <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
         <OfferRideHeader />
 
-        <OfferRideForm />
+        <OfferRideForm locale={locale} dict={dict.offerRide} />
       </main>
 
       <Footer />

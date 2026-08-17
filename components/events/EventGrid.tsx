@@ -1,12 +1,21 @@
 import EventCard from "./EventCard";
 
 import { Event } from "@/types/event";
+import type { Locale } from "@/lib/i18n/locales";
+
+type CardDict = {
+  ridesSingular: string;
+  ridesPlural: string;
+  viewEvent: string;
+};
 
 type Props = {
   events: Event[];
+  locale: Locale;
+  dict: CardDict;
 };
 
-export default function EventGrid({ events }: Props) {
+export default function EventGrid({ events, locale, dict }: Props) {
   return (
     <div
       className="
@@ -20,6 +29,8 @@ export default function EventGrid({ events }: Props) {
         <EventCard
           key={event.id}
           event={event}
+          locale={locale}
+          dict={dict}
         />
       ))}
     </div>

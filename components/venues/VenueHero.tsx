@@ -4,13 +4,27 @@ import { MapPin, Building2 } from "lucide-react";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
+type VenueHeroDict = {
+  withEventsSingular: string;
+  withEventsPlural: string;
+  noEvents: string;
+};
+
 type Props = {
   city: City;
   venue: Venue;
   eventCount: number;
+  dict: VenueHeroDict;
 };
 
-export default function VenueHero({ city, venue, eventCount }: Props) {
+export default function VenueHero({ city, venue, eventCount, dict }: Props) {
+  const description =
+    eventCount > 0
+      ? (eventCount === 1 ? dict.withEventsSingular : dict.withEventsPlural)
+          .replace("{count}", String(eventCount))
+          .replace("{venue}", venue.name)
+      : dict.noEvents.replace("{venue}", venue.name);
+
   return (
     <section className="mb-16">
       <Link
@@ -31,9 +45,7 @@ export default function VenueHero({ city, venue, eventCount }: Props) {
       )}
 
       <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-        {eventCount > 0
-          ? `${eventCount} ${eventCount === 1 ? "evento in programma" : "eventi in programma"} al ${venue.name}.`
-          : `Nessun evento in programma al momento al ${venue.name}.`}
+        {description}
       </p>
     </section>
   );

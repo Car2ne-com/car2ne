@@ -10,6 +10,7 @@ import EmptyState from "@/components/events/EmptyState";
 
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
+import { getTranslations } from "@/lib/i18n";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
@@ -68,6 +69,7 @@ export default async function CityPage({ params }: Props) {
   }
 
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
 
   const [{ data: events, error: eventsError }, { data: venues, error: venuesError }] =
     await Promise.all([
@@ -110,15 +112,15 @@ export default async function CityPage({ params }: Props) {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
-        <CityHero city={city} eventCount={events?.length ?? 0} />
+        <CityHero city={city} eventCount={events?.length ?? 0} dict={dict.cities.hero} />
 
         {eventsWithRideCount.length > 0 ? (
-          <EventGrid events={eventsWithRideCount} />
+          <EventGrid events={eventsWithRideCount} locale={locale} dict={dict.events.card} />
         ) : (
-          <EmptyState />
+          <EmptyState title={dict.events.empty.title} description={dict.events.empty.description} />
         )}
 
-        <CityVenueList city={city} venues={(venues ?? []) as Venue[]} />
+        <CityVenueList city={city} venues={(venues ?? []) as Venue[]} dict={dict.cities.venueList} />
       </main>
 
       <Footer />

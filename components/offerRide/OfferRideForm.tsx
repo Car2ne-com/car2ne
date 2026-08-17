@@ -16,6 +16,7 @@ import EventCombobox from "./EventCombobox";
 import CityCombobox from "@/components/cities/CityCombobox";
 
 import { Event } from "@/types/event";
+import type { Locale } from "@/lib/i18n/locales";
 
 const DRAFT_KEY =
   "car2ne_offer_ride_draft";
@@ -30,7 +31,64 @@ type RideDraft = {
   description: string;
 };
 
-export default function OfferRideForm() {
+type OfferRideDict = {
+  loginNotice: string;
+  eventLabel: string;
+  eventCombobox: {
+    loading: string;
+    placeholder: string;
+    searchPlaceholder: string;
+    noResults: string;
+    moreResults: string;
+  };
+  alreadyHasRide: {
+    title: string;
+    description: string;
+    cta: string;
+  };
+  eventInfo: {
+    destination: string;
+    eventDate: string;
+    note: string;
+  };
+  fields: {
+    originCityLabel: string;
+    departureTimeLabel: string;
+    departureTimeHint: string;
+    seatsLabel: string;
+    contributionLabel: string;
+    descriptionLabel: string;
+    descriptionPlaceholder: string;
+  };
+  submit: {
+    publishing: string;
+    publish: string;
+  };
+  toasts: {
+    selectDepartureCity: string;
+    fillRequiredFields: string;
+    selectValidEvent: string;
+    checkExistingRideFailed: string;
+    publishFailed: string;
+    publishSuccess: string;
+  };
+  cityCombobox: {
+    changeCityAriaLabel: string;
+    searching: string;
+    searchFailed: string;
+    noCityFound: string;
+    minCharsHint: string;
+    selectSuggestion: string;
+    placeholder: string;
+  };
+};
+
+type Props = {
+  locale: Locale;
+  dict: OfferRideDict;
+};
+
+export default function OfferRideForm({ locale, dict }: Props) {
   const router = useRouter();
 
   const supabase = createClient();
@@ -341,8 +399,8 @@ export default function OfferRideForm() {
     ) {
       toast.error(
         missingOnlyCity
-          ? "Seleziona una città di partenza dai suggerimenti."
-          : "Compila tutti i campi obbligatori."
+          ? dict.toasts.selectDepartureCity
+          : dict.toasts.fillRequiredFields
       );
 
       return;
@@ -381,9 +439,7 @@ export default function OfferRideForm() {
       );
 
     if (!event) {
-      toast.error(
-        "Seleziona un evento valido."
-      );
+      toast.error(dict.toasts.selectValidEvent);
 
       return;
     }
@@ -420,9 +476,7 @@ export default function OfferRideForm() {
         checkError.message
       );
 
-      toast.error(
-        "Non è stato possibile verificare i tuoi passaggi. Riprova."
-      );
+      toast.error(dict.toasts.checkExistingRideFailed);
 
       return;
     }
@@ -553,8 +607,7 @@ export default function OfferRideForm() {
       );
 
       toast.error(
-        error.message ||
-          "Non è stato possibile pubblicare il passaggio."
+        error.message || dict.toasts.publishFailed
       );
 
       return;
@@ -570,9 +623,7 @@ export default function OfferRideForm() {
       DRAFT_KEY
     );
 
-    toast.success(
-      "Passaggio pubblicato con successo!"
-    );
+    toast.success(dict.toasts.publishSuccess);
 
     router.push(
       `/events/${event.slug}`
@@ -594,10 +645,7 @@ export default function OfferRideForm() {
     >
       {isLoggedIn === false && (
         <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm leading-6 text-emerald-800">
-          Puoi compilare il form liberamente:
-          i dati non andranno persi, ti
-          chiederemo di accedere solo al
-          momento di pubblicare il passaggio.
+          {dict.loginNotice}
         </div>
       )}
 
@@ -607,7 +655,7 @@ export default function OfferRideForm() {
 
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Evento *
+            {dict.eventLabel}
           </label>
 
           <EventCombobox
@@ -615,6 +663,7 @@ export default function OfferRideForm() {
             value={eventId}
             onChange={handleEventChange}
             loading={loadingEvents}
+            dict={dict.eventCombobox}
           />
         </div>
 
@@ -629,21 +678,18 @@ export default function OfferRideForm() {
 
               <div>
                 <h3 className="font-bold text-amber-900">
-                  Hai già un passaggio attivo
+                  {dict.alreadyHasRide.title}
                 </h3>
 
                 <p className="mt-1 text-sm leading-6 text-amber-800">
-                  Hai già pubblicato un
-                  passaggio per questo evento.
-                  Puoi modificarlo o eliminarlo
-                  dalla sezione I miei passaggi.
+                  {dict.alreadyHasRide.description}
                 </p>
 
                 <Link
                   href="/dashboard/rides"
                   className="mt-4 inline-flex rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
                 >
-                  Vai ai miei passaggi
+                  {dict.alreadyHasRide.cta}
                 </Link>
               </div>
             </div>
@@ -658,7 +704,7 @@ export default function OfferRideForm() {
 
               <div>
                 <p className="text-sm font-semibold text-emerald-700">
-                  📍 Destinazione
+                  {dict.eventInfo.destination}
                 </p>
 
                 <p className="mt-1 text-base font-semibold text-slate-900">
@@ -668,12 +714,12 @@ export default function OfferRideForm() {
 
               <div>
                 <p className="text-sm font-semibold text-emerald-700">
-                  📅 Data evento
+                  {dict.eventInfo.eventDate}
                 </p>
 
                 <p className="mt-1 text-base font-semibold text-slate-900">
                   {new Intl.DateTimeFormat(
-                    "it-IT",
+                    locale === "en" ? "en-US" : "it-IT",
                     {
                       dateStyle:
                         "long",
@@ -689,9 +735,7 @@ export default function OfferRideForm() {
             </div>
 
             <p className="mt-4 text-sm text-slate-500">
-              Destinazione e data sono
-              impostate automaticamente
-              dall&apos;evento.
+              {dict.eventInfo.note}
             </p>
           </div>
         )}
@@ -700,7 +744,7 @@ export default function OfferRideForm() {
 
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Città di partenza *
+            {dict.fields.originCityLabel}
           </label>
 
           <CityCombobox
@@ -708,6 +752,7 @@ export default function OfferRideForm() {
             onChange={handleOriginCityChange}
             initialLabel={departureCity}
             disabled={alreadyHasRide}
+            dict={dict.cityCombobox}
           />
         </div>
 
@@ -715,7 +760,7 @@ export default function OfferRideForm() {
 
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Ora di partenza *
+            {dict.fields.departureTimeLabel}
           </label>
 
           <input
@@ -733,8 +778,7 @@ export default function OfferRideForm() {
           />
 
           <p className="mt-2 text-xs text-slate-500">
-            Scegli l&apos;orario in cui prevedi
-            di partire.
+            {dict.fields.departureTimeHint}
           </p>
         </div>
 
@@ -742,7 +786,7 @@ export default function OfferRideForm() {
 
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Posti disponibili *
+            {dict.fields.seatsLabel}
           </label>
 
           <input
@@ -767,7 +811,7 @@ export default function OfferRideForm() {
 
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Contributo (€) *
+            {dict.fields.contributionLabel}
           </label>
 
           <input
@@ -792,7 +836,7 @@ export default function OfferRideForm() {
 
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Descrizione
+            {dict.fields.descriptionLabel}
           </label>
 
           <textarea
@@ -803,7 +847,7 @@ export default function OfferRideForm() {
                 e.target.value
               )
             }
-            placeholder="Aggiungi informazioni utili per i passeggeri..."
+            placeholder={dict.fields.descriptionPlaceholder}
             disabled={
               alreadyHasRide
             }
@@ -823,8 +867,8 @@ export default function OfferRideForm() {
             className="h-12 rounded-2xl bg-emerald-500 px-8 text-base hover:bg-emerald-600"
           >
             {loading
-              ? "Pubblicazione..."
-              : "Pubblica passaggio"}
+              ? dict.submit.publishing
+              : dict.submit.publish}
           </Button>
         </div>
       )}

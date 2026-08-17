@@ -4,8 +4,14 @@ import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
 import NavbarAuth from "./NavbarAuth";
 import NotificationBell from "./NotificationBell";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-export default function Navbar() {
+import { getTranslations } from "@/lib/i18n";
+
+export default async function Navbar() {
+  const { locale, dict } = await getTranslations();
+  const { nav, languageSwitcher, notifications } = dict.layout;
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-2 pt-2 sm:px-4 sm:pt-4">
       <div
@@ -56,21 +62,21 @@ export default function Navbar() {
             href="/"
             className="transition-colors hover:text-emerald-600"
           >
-            Home
+            {nav.home}
           </Link>
 
           <Link
             href="/events"
             className="transition-colors hover:text-emerald-600"
           >
-            Eventi
+            {nav.events}
           </Link>
 
           <Link
             href="/offer-ride"
             className="transition-colors hover:text-emerald-600"
           >
-            Offri un passaggio
+            {nav.offerRide}
           </Link>
         </nav>
 
@@ -86,11 +92,13 @@ export default function Navbar() {
             md:gap-3
           "
         >
-          <NotificationBell />
+          <LanguageSwitcher locale={locale} srLabel={languageSwitcher.label} />
+
+          <NotificationBell locale={locale} dict={notifications} />
 
           <NavbarAuth />
 
-          <MobileMenu />
+          <MobileMenu dict={nav} ariaOpen={dict.layout.mobileMenu.open} ariaClose={dict.layout.mobileMenu.close} />
         </div>
 
       </div>

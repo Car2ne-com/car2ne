@@ -5,7 +5,13 @@ import { Search, CarFront } from "lucide-react";
 import HeroIllustration from "./HeroIllustration";
 import SearchBox from "./SearchBox";
 
-export default function Hero() {
+import { getTranslations } from "@/lib/i18n";
+
+export default async function Hero() {
+  const { dict } = await getTranslations();
+  const t = dict.home.hero;
+  const searchBoxDict = dict.home.searchBox;
+
   return (
     <section className="relative">
 
@@ -18,24 +24,21 @@ export default function Hero() {
         <div className="max-w-xl">
 
           <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-100/80 px-5 py-2 text-sm font-medium text-emerald-700 backdrop-blur">
-            🚗 Viaggia insieme. Risparmia. Conosci nuove persone.
+            {t.badge}
           </span>
 
           <h1 className="mt-6 text-5xl font-black leading-[0.92] tracking-tight text-slate-900 md:text-6xl xl:text-[4.5rem]">
-            Trova il tuo
+            {t.titleLine1}
             <br />
-            passaggio
+            {t.titleLine2}
             <br />
-            per il prossimo
+            {t.titleLine3}
             <br />
-            evento.
+            {t.titleLine4}
           </h1>
 
           <p className="mt-6 text-lg leading-8 text-slate-600">
-            Concerti, festival, fiere e molto altro.
-            <br />
-            Car2ne mette in contatto persone che stanno andando
-            allo stesso evento per condividere il viaggio.
+            {t.description}
           </p>
 
           {/* CTA */}
@@ -63,7 +66,7 @@ export default function Hero() {
               "
             >
               <Search className="h-6 w-6" />
-              Cerca un evento
+              {t.searchEvent}
             </Link>
 
             <Link
@@ -90,7 +93,7 @@ export default function Hero() {
               "
             >
               <CarFront className="h-6 w-6" />
-              Offri un passaggio
+              {t.offerRide}
             </Link>
 
           </div>
@@ -106,7 +109,7 @@ export default function Hero() {
       {/* SEARCH */}
 
       <div className="mt-8">
-        <SearchBox />
+        <SearchBox dict={searchBoxDict} />
       </div>
 
       </div>

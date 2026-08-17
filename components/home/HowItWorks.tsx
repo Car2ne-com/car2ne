@@ -1,49 +1,34 @@
 import { Search, CarFront, PartyPopper } from "lucide-react";
 
-const steps = [
-  {
-    icon: Search,
-    title: "Trova un evento",
-    description:
-      "Cerca concerti, festival, fiere e qualsiasi evento disponibile.",
-  },
-  {
-    icon: CarFront,
-    title: "Trova un passaggio",
-    description:
-      "Visualizza i passaggi disponibili e scegli quello più adatto a te.",
-  },
-  {
-    icon: PartyPopper,
-    title: "Parti insieme",
-    description:
-      "Condividi il viaggio, risparmia e conosci nuove persone.",
-  },
-];
+import { getTranslations } from "@/lib/i18n";
 
-export default function HowItWorks() {
+const stepIcons = [Search, CarFront, PartyPopper];
+
+export default async function HowItWorks() {
+  const { dict } = await getTranslations();
+  const t = dict.home.howItWorks;
+
   return (
     <section className="bg-slate-50 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         <div className="mb-16 text-center">
           <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            Come funziona
+            {t.badge}
           </span>
 
           <h2 className="mt-6 text-4xl font-bold text-slate-900">
-            Bastano 3 semplici passaggi
+            {t.title}
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-500">
-            Car2ne rende semplice trovare persone che stanno andando
-            al tuo stesso evento.
+            {t.subtitle}
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
-          {steps.map((step) => {
-            const Icon = step.icon;
+          {t.steps.map((step, index) => {
+            const Icon = stepIcons[index];
 
             return (
               <div

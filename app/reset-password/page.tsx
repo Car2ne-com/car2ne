@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function ResetPasswordPage() {
   const supabase = await createClient();
@@ -17,6 +18,9 @@ export default async function ResetPasswordPage() {
     redirect("/forgot-password");
   }
 
+  const { dict } = await getTranslations();
+  const t = dict.auth;
+
   return (
     <>
       <Navbar />
@@ -25,20 +29,19 @@ export default async function ResetPasswordPage() {
         <div className="w-full">
           <div className="mb-10 text-center">
             <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-              🔑 Nuova password
+              {t.resetPassword.pageBadge}
             </span>
 
             <h1 className="mt-6 text-4xl font-black text-slate-900">
-              Imposta una nuova password
+              {t.resetPassword.pageTitle}
             </h1>
 
             <p className="mt-4 text-slate-600">
-              Scegli una password sicura per il
-              tuo account.
+              {t.resetPassword.pageSubtitle}
             </p>
           </div>
 
-          <ResetPasswordForm />
+          <ResetPasswordForm dict={t} />
         </div>
       </main>
 

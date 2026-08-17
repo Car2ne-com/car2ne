@@ -10,13 +10,22 @@ import {
 } from "lucide-react";
 
 import { Event } from "@/types/event";
+import type { Locale } from "@/lib/i18n/locales";
+
+type CardDict = {
+  ridesSingular: string;
+  ridesPlural: string;
+  viewEvent: string;
+};
 
 type Props = {
   event: Event;
+  locale: Locale;
+  dict: CardDict;
 };
 
-export default function EventCard({ event }: Props) {
-  const formattedDate = new Intl.DateTimeFormat("it-IT", {
+export default function EventCard({ event, locale, dict }: Props) {
+  const formattedDate = new Intl.DateTimeFormat(locale === "en" ? "en-US" : "it-IT", {
     dateStyle: "long",
     timeStyle: "short",
   }).format(new Date(event.event_date));
@@ -80,8 +89,8 @@ export default function EventCard({ event }: Props) {
             <Car className="h-4 w-4" />
             {event.ride_count}{" "}
             {event.ride_count === 1
-              ? "passaggio"
-              : "passaggi"}
+              ? dict.ridesSingular
+              : dict.ridesPlural}
           </div>
         )}
       </div>
@@ -160,7 +169,7 @@ export default function EventCard({ event }: Props) {
               group-hover:bg-emerald-100
             "
           >
-            <span>Vedi evento</span>
+            <span>{dict.viewEvent}</span>
 
             <ArrowRight className="h-4 w-4" />
           </div>

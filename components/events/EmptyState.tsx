@@ -1,6 +1,11 @@
 import { SearchX } from "lucide-react";
 
-export default function EmptyState() {
+type Props = {
+  title: string;
+  description: string;
+};
+
+export default function EmptyState({ title, description }: Props) {
   return (
     <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-8 py-20 text-center">
 
@@ -9,11 +14,11 @@ export default function EmptyState() {
       </div>
 
       <h3 className="text-2xl font-bold text-slate-900">
-        Nessun evento trovato
+        {title}
       </h3>
 
       <p className="mt-3 max-w-md text-slate-500">
-        Prova a modificare la ricerca.
+        {description}
       </p>
 
     </div>

@@ -1,0 +1,15 @@
+import { layout } from "./layout";
+import { home } from "./home";
+import { events } from "./events";
+import { offerRide } from "./offerRide";
+import { auth } from "./auth";
+import { cities } from "./cities";
+
+export const it = {
+  layout,
+  home,
+  events,
+  offerRide,
+  auth,
+  cities,
+};

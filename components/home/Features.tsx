@@ -1,33 +1,13 @@
 import { ShieldCheck, Wallet, Users, MapPinned } from "lucide-react";
 
-const features = [
-  {
-    icon: Wallet,
-    title: "Risparmia sul viaggio",
-    description:
-      "Dividi le spese di carburante e pedaggi con chi va al tuo stesso evento.",
-  },
-  {
-    icon: Users,
-    title: "Conosci nuove persone",
-    description:
-      "Viaggia con persone che condividono le tue stesse passioni.",
-  },
-  {
-    icon: MapPinned,
-    title: "Eventi ovunque",
-    description:
-      "Concerti, festival, fiere, sport e molto altro in tutta Italia.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Community sicura",
-    description:
-      "Profili verificati e recensioni per viaggiare in tranquillità.",
-  },
-];
+import { getTranslations } from "@/lib/i18n";
 
-export default function Features() {
+const featureIcons = [Wallet, Users, MapPinned, ShieldCheck];
+
+export default async function Features() {
+  const { dict } = await getTranslations();
+  const t = dict.home.features;
+
   return (
     <section className="bg-white py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
@@ -35,24 +15,23 @@ export default function Features() {
         <div>
 
           <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            Perché Car2ne
+            {t.badge}
           </span>
 
           <h2 className="mt-6 text-5xl font-bold text-slate-900">
-            Il modo più semplice per raggiungere il tuo evento.
+            {t.title}
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-slate-500">
-            Car2ne mette in contatto persone che stanno andando allo stesso
-            evento per condividere il viaggio, risparmiare e divertirsi insieme.
+            {t.description}
           </p>
 
         </div>
 
         <div className="grid gap-6">
 
-          {features.map((feature) => {
-            const Icon = feature.icon;
+          {t.items.map((feature, index) => {
+            const Icon = featureIcons[index];
 
             return (
               <div

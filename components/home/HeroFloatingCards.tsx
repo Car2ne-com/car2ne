@@ -5,7 +5,20 @@ import {
   Users,
 } from "lucide-react";
 
-export default function HeroFloatingCards() {
+type Props = {
+  dict: {
+    eventName: string;
+    eventLocation: string;
+    rating: string;
+    reviews: string;
+    seatsAvailable: string;
+    departureFrom: string;
+    destination: string;
+    destinationLocation: string;
+  };
+};
+
+export default function HeroFloatingCards({ dict }: Props) {
   return (
     <>
       {/* Evento */}
@@ -19,11 +32,11 @@ export default function HeroFloatingCards() {
 
           <div>
             <p className="font-semibold text-slate-900">
-              Coldplay World Tour
+              {dict.eventName}
             </p>
 
             <p className="text-sm text-slate-500">
-              Milano • 18 Settembre
+              {dict.eventLocation}
             </p>
           </div>
 
@@ -43,11 +56,11 @@ export default function HeroFloatingCards() {
 
           <div>
             <p className="font-semibold text-slate-900">
-              4.9 / 5
+              {dict.rating}
             </p>
 
             <p className="text-sm text-slate-500">
-              120 recensioni
+              {dict.reviews}
             </p>
           </div>
 
@@ -64,11 +77,11 @@ export default function HeroFloatingCards() {
 
           <div>
             <p className="font-semibold text-slate-900">
-              3 posti disponibili
+              {dict.seatsAvailable}
             </p>
 
             <p className="text-sm text-slate-500">
-              Partenza da Milano
+              {dict.departureFrom}
             </p>
           </div>
 
@@ -85,11 +98,11 @@ export default function HeroFloatingCards() {
 
           <div>
             <p className="font-semibold text-slate-900">
-              Tomorrowland
+              {dict.destination}
             </p>
 
             <p className="text-sm text-slate-500">
-              Boom, Belgio
+              {dict.destinationLocation}
             </p>
           </div>
 

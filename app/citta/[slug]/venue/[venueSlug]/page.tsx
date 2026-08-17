@@ -9,6 +9,7 @@ import EmptyState from "@/components/events/EmptyState";
 
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
+import { getTranslations } from "@/lib/i18n";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
@@ -93,6 +94,7 @@ export default async function VenuePage({ params }: Props) {
   const { city, venue } = result;
 
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
 
   const { data: events, error: eventsError } = await supabase
     .from("events")
@@ -123,12 +125,12 @@ export default async function VenuePage({ params }: Props) {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
-        <VenueHero city={city} venue={venue} eventCount={events?.length ?? 0} />
+        <VenueHero city={city} venue={venue} eventCount={events?.length ?? 0} dict={dict.cities.venueHero} />
 
         {eventsWithRideCount.length > 0 ? (
-          <EventGrid events={eventsWithRideCount} />
+          <EventGrid events={eventsWithRideCount} locale={locale} dict={dict.events.card} />
         ) : (
-          <EmptyState />
+          <EmptyState title={dict.events.empty.title} description={dict.events.empty.description} />
         )}
       </main>
 
