@@ -38,8 +38,8 @@ export default async function RootLayout({
       className={`${manrope.variable} overflow-x-hidden antialiased`}
     >
       <body className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-white via-emerald-50 to-white font-sans text-slate-900">
-        <div className="pointer-events-none absolute -left-64 top-10 -z-10 h-[700px] w-[700px] rounded-full bg-emerald-200/25 blur-[110px]" />
-        <div className="pointer-events-none absolute -right-64 top-0 -z-10 h-[700px] w-[700px] rounded-full bg-emerald-100/30 blur-[110px]" />
+        <div className="pointer-events-none absolute -left-64 top-10 -z-10 hidden h-[700px] w-[700px] rounded-full bg-emerald-200/25 blur-[110px] md:block" />
+        <div className="pointer-events-none absolute -right-64 top-0 -z-10 hidden h-[700px] w-[700px] rounded-full bg-emerald-100/30 blur-[110px] md:block" />
 
         {children}
 

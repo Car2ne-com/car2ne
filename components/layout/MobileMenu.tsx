@@ -34,7 +34,7 @@ export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
       </button>
 
       {open && (
-        <div className="absolute inset-x-2 top-full mt-2 rounded-2xl border border-white/40 bg-white/95 p-2 shadow-[0_10px_40px_rgba(15,23,42,.08)] backdrop-blur-2xl sm:inset-x-4">
+        <div className="absolute inset-x-2 top-full mt-2 rounded-2xl border border-white/40 bg-white p-2 shadow-[0_10px_40px_rgba(15,23,42,.08)] sm:inset-x-4">
           <nav className="flex flex-col text-sm font-medium text-slate-600">
             <Link
               href="/"

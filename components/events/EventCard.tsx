@@ -85,7 +85,7 @@ export default function EventCard({ event, locale, dict }: Props) {
         )}
 
         {!!event.ride_count && (
-          <div className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-emerald-700 backdrop-blur">
+          <div className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-emerald-700">
             <Car className="h-4 w-4" />
             {event.ride_count}{" "}
             {event.ride_count === 1

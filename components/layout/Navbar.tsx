@@ -26,10 +26,9 @@ export default async function Navbar() {
           rounded-2xl
           border
           border-white/40
-          bg-white/70
+          bg-white/95
           px-3
           shadow-[0_10px_40px_rgba(15,23,42,.06)]
-          backdrop-blur-2xl
           sm:h-18
           sm:px-5
           md:px-6
