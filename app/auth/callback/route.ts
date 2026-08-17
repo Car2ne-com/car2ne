@@ -62,6 +62,38 @@ export async function GET(request: Request) {
 
   /*
    * ==============================
+   * VERIFICA ETÀ (SERVIZIO 18+)
+   * ==============================
+   *
+   * Google non fornisce la data di nascita:
+   * al primo accesso OAuth la chiediamo
+   * esplicitamente prima di lasciar proseguire.
+   */
+
+  if (!user.user_metadata?.birth_date) {
+    const verifyAgeUrl = new URL(
+      "/verifica-eta",
+      requestUrl.origin
+    );
+
+    if (
+      next &&
+      next.startsWith("/") &&
+      !next.startsWith("//")
+    ) {
+      verifyAgeUrl.searchParams.set(
+        "next",
+        next
+      );
+    }
+
+    return NextResponse.redirect(
+      verifyAgeUrl
+    );
+  }
+
+  /*
+   * ==============================
    * VERIFICA MFA (AAL2)
    * ==============================
    */

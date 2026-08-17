@@ -72,6 +72,59 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">
+                Legale
+              </h3>
+
+              <ul className="mt-4 space-y-3 text-sm text-slate-500">
+                <li>
+                  <Link
+                    href="/privacy"
+                    className="transition hover:text-emerald-600"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/termini"
+                    className="transition hover:text-emerald-600"
+                  >
+                    Termini e Condizioni
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/cookie-policy"
+                    className="transition hover:text-emerald-600"
+                  >
+                    Cookie Policy
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/community-guidelines"
+                    className="transition hover:text-emerald-600"
+                  >
+                    Community Guidelines
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/segnala-un-problema"
+                    className="transition hover:text-emerald-600"
+                  >
+                    Segnala un problema
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 

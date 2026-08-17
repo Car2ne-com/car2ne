@@ -7,6 +7,10 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import {
+  calculateAge,
+  MINIMUM_AGE,
+} from "@/lib/utils/age";
 
 export default function RegisterForm() {
   const supabase = useMemo(
@@ -16,6 +20,8 @@ export default function RegisterForm() {
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const [birthDate, setBirthDate] =
+    useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] =
@@ -34,6 +40,9 @@ export default function RegisterForm() {
 
   const [oauthLoading, setOauthLoading] =
     useState<"google" | null>(null);
+
+  const [acceptedTerms, setAcceptedTerms] =
+    useState(false);
 
   /*
    * ==============================
@@ -61,6 +70,20 @@ export default function RegisterForm() {
 
   /*
    * ==============================
+   * VERIFICA ETÀ (SERVIZIO 18+)
+   * ==============================
+   */
+
+  const age = useMemo(
+    () => calculateAge(birthDate),
+    [birthDate]
+  );
+
+  const isAdult =
+    age !== null && age >= MINIMUM_AGE;
+
+  /*
+   * ==============================
    * REGISTRAZIONE
    * ==============================
    */
@@ -77,6 +100,20 @@ export default function RegisterForm() {
 
     if (!surname.trim()) {
       toast.error("Inserisci il cognome.");
+      return;
+    }
+
+    if (!birthDate) {
+      toast.error(
+        "Inserisci la tua data di nascita."
+      );
+      return;
+    }
+
+    if (!isAdult) {
+      toast.error(
+        "Devi avere almeno 18 anni per registrarti a Car2ne."
+      );
       return;
     }
 
@@ -97,6 +134,13 @@ export default function RegisterForm() {
       return;
     }
 
+    if (!acceptedTerms) {
+      toast.error(
+        "Devi accettare i Termini e Condizioni e la Privacy Policy per registrarti."
+      );
+      return;
+    }
+
     setLoading(true);
 
     const { error } =
@@ -107,6 +151,7 @@ export default function RegisterForm() {
           data: {
             name: name.trim(),
             surname: surname.trim(),
+            birth_date: birthDate,
           },
         },
       });
@@ -138,6 +183,13 @@ export default function RegisterForm() {
     provider: "google"
   ) {
     if (oauthLoading) {
+      return;
+    }
+
+    if (!acceptedTerms) {
+      toast.error(
+        "Devi accettare i Termini e Condizioni e la Privacy Policy per registrarti."
+      );
       return;
     }
 
@@ -216,6 +268,45 @@ export default function RegisterForm() {
           }
           className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
         />
+      </div>
+
+      {/* Data di nascita */}
+
+      <div>
+        <label className="mb-2 block text-sm font-semibold text-slate-700">
+          Data di nascita
+        </label>
+
+        <input
+          type="date"
+          value={birthDate}
+          onChange={(e) =>
+            setBirthDate(e.target.value)
+          }
+          max={
+            new Date()
+              .toISOString()
+              .split("T")[0]
+          }
+          disabled={
+            loading || !!oauthLoading
+          }
+          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+        />
+
+        <p className="mt-2 text-xs text-slate-500">
+          Car2ne è riservato a chi ha almeno
+          18 anni.
+        </p>
+
+        {birthDate.length > 0 &&
+          age !== null &&
+          !isAdult && (
+            <p className="mt-2 text-xs font-medium text-red-500">
+              Devi avere almeno 18 anni per
+              registrarti.
+            </p>
+          )}
       </div>
 
       {/* Email */}
@@ -406,6 +497,44 @@ export default function RegisterForm() {
           )}
       </div>
 
+      {/* Accettazione Termini + Privacy */}
+
+      <label className="flex items-start gap-3 text-sm text-slate-600">
+        <input
+          type="checkbox"
+          checked={acceptedTerms}
+          onChange={(e) =>
+            setAcceptedTerms(
+              e.target.checked
+            )
+          }
+          disabled={
+            loading || !!oauthLoading
+          }
+          className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+        />
+
+        <span>
+          Accetto i{" "}
+          <Link
+            href="/termini"
+            target="_blank"
+            className="font-semibold text-emerald-600 hover:text-emerald-700"
+          >
+            Termini e Condizioni
+          </Link>{" "}
+          e ho letto la{" "}
+          <Link
+            href="/privacy"
+            target="_blank"
+            className="font-semibold text-emerald-600 hover:text-emerald-700"
+          >
+            Privacy Policy
+          </Link>
+          .
+        </span>
+      </label>
+
       {/* Registrazione */}
 
       <Button
@@ -415,7 +544,9 @@ export default function RegisterForm() {
           !!oauthLoading ||
           !passwordIsValid ||
           password !==
-            confirmPassword
+            confirmPassword ||
+          !acceptedTerms ||
+          !isAdult
         }
         className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
       >
@@ -445,7 +576,8 @@ export default function RegisterForm() {
         variant="outline"
         disabled={
           loading ||
-          !!oauthLoading
+          !!oauthLoading ||
+          !acceptedTerms
         }
         onClick={() =>
           handleOAuth("google")

@@ -95,6 +95,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: new URL("/", SITE_URL).toString(), changeFrequency: "daily", priority: 1 },
     { url: new URL("/events", SITE_URL).toString(), changeFrequency: "daily", priority: 0.9 },
     { url: new URL("/citta", SITE_URL).toString(), changeFrequency: "daily", priority: 0.8 },
+    { url: new URL("/privacy", SITE_URL).toString(), changeFrequency: "yearly", priority: 0.2 },
+    { url: new URL("/termini", SITE_URL).toString(), changeFrequency: "yearly", priority: 0.2 },
+    { url: new URL("/cookie-policy", SITE_URL).toString(), changeFrequency: "yearly", priority: 0.2 },
+    { url: new URL("/community-guidelines", SITE_URL).toString(), changeFrequency: "yearly", priority: 0.2 },
+    { url: new URL("/segnala-un-problema", SITE_URL).toString(), changeFrequency: "yearly", priority: 0.2 },
   ];
 
   const eventEntries: MetadataRoute.Sitemap = events.map(
