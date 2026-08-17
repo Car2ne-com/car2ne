@@ -58,4 +58,8 @@ export const offerRide: (typeof it)["offerRide"] = {
     selectSuggestion: "Select a city from the suggestions.",
     placeholder: "Search a city...",
   },
+  fairPrice: {
+    title: "Contribution above average",
+    body: "For a trip of about {distance} km, a fair cost-sharing contribution is up to about {threshold} €. Car2ne is meant for splitting travel costs, not for profit: you can still publish, but consider lowering the contribution.",
+  },
 };

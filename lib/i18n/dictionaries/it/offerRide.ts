@@ -57,4 +57,8 @@ export const offerRide = {
     selectSuggestion: "Seleziona un comune dai suggerimenti.",
     placeholder: "Cerca un comune...",
   },
+  fairPrice: {
+    title: "Contributo più alto della media",
+    body: "Per una tratta di circa {distance} km il contributo indicativo per condividere le spese è fino a circa {threshold} €. Car2ne è pensato per dividere i costi del viaggio, non per generare profitto: puoi comunque pubblicare, ma valuta di abbassare il contributo.",
+  },
 };

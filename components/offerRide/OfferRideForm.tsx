@@ -3,6 +3,7 @@
 import {
   FormEvent,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -17,6 +18,18 @@ import CityCombobox from "@/components/cities/CityCombobox";
 
 import { Event } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
+import { haversineKm } from "@/lib/utils/distance";
+
+/*
+ * Soglia indicativa di prezzo equo, in stile BlaBlaCar: un
+ * contributo pensato per dividere le spese reali del viaggio
+ * (carburante, pedaggi), non per generare profitto. Sotto i
+ * MIN_DISTANCE_FOR_CAP_KM il calcolo per km è poco significativo
+ * (es. costi fissi come il parcheggio), quindi usiamo comunque
+ * quella distanza minima come base del calcolo.
+ */
+const FAIR_PRICE_PER_KM = 0.15;
+const MIN_DISTANCE_FOR_CAP_KM = 15;
 
 const DRAFT_KEY =
   "car2ne_offer_ride_draft";
@@ -81,6 +94,10 @@ type OfferRideDict = {
     selectSuggestion: string;
     placeholder: string;
   };
+  fairPrice: {
+    title: string;
+    body: string;
+  };
 };
 
 type Props = {
@@ -111,13 +128,70 @@ export default function OfferRideForm({ locale, dict }: Props) {
   const [departureCity, setDepartureCity] =
     useState("");
 
+  const [originCoords, setOriginCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
   function handleOriginCityChange(
     cityId: string,
     cityName: string
   ) {
     setOriginCityId(cityId);
     setDepartureCity(cityName);
+
+    if (!cityId) {
+      setOriginCoords(null);
+    }
   }
+
+  /*
+   * ==============================
+   * COORDINATE CITTÀ DI PARTENZA
+   * ==============================
+   *
+   * Servono solo per la soglia di prezzo equo (avviso non
+   * bloccante): se manca la selezione o le coordinate non
+   * sono disponibili, semplicemente non mostriamo l'avviso.
+   * Lo svuotamento della selezione è gestito direttamente in
+   * handleOriginCityChange, non qui: un setState sincrono nel
+   * corpo dell'effect andrebbe evitato.
+   */
+
+  useEffect(() => {
+    if (!originCityId) {
+      return;
+    }
+
+    let cancelled = false;
+
+    supabase
+      .from("cities")
+      .select("latitude, longitude")
+      .eq("id", originCityId)
+      .single()
+      .then(({ data }) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (
+          data?.latitude != null &&
+          data?.longitude != null
+        ) {
+          setOriginCoords({
+            latitude: data.latitude,
+            longitude: data.longitude,
+          });
+        } else {
+          setOriginCoords(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [originCityId, supabase]);
 
   const [departureTime, setDepartureTime] =
     useState("");
@@ -139,6 +213,67 @@ export default function OfferRideForm({ locale, dict }: Props) {
 
   const [isLoggedIn, setIsLoggedIn] =
     useState<boolean | null>(null);
+
+  /*
+   * ==============================
+   * SOGLIA PREZZO EQUO
+   * ==============================
+   *
+   * Preferiamo le coordinate della venue (più precise), con
+   * fallback su quelle della città evento. Se nessuna delle due
+   * è disponibile (evento non ancora risolto da città/venue),
+   * niente avviso: non blocchiamo mai la pubblicazione per un
+   * dato mancante.
+   */
+
+  const destinationCoords = useMemo(() => {
+    const venue = selectedEvent?.venues;
+    const city = selectedEvent?.cities;
+
+    if (venue?.latitude != null && venue?.longitude != null) {
+      return {
+        latitude: venue.latitude,
+        longitude: venue.longitude,
+      };
+    }
+
+    if (city?.latitude != null && city?.longitude != null) {
+      return {
+        latitude: city.latitude,
+        longitude: city.longitude,
+      };
+    }
+
+    return null;
+  }, [selectedEvent]);
+
+  const distanceKm = useMemo(() => {
+    if (!originCoords || !destinationCoords) {
+      return null;
+    }
+
+    return haversineKm(
+      originCoords.latitude,
+      originCoords.longitude,
+      destinationCoords.latitude,
+      destinationCoords.longitude
+    );
+  }, [originCoords, destinationCoords]);
+
+  const fairPriceThreshold = useMemo(() => {
+    if (distanceKm === null) {
+      return null;
+    }
+
+    return (
+      Math.max(distanceKm, MIN_DISTANCE_FOR_CAP_KM) *
+      FAIR_PRICE_PER_KM
+    );
+  }, [distanceKm]);
+
+  const contributionAboveFairPrice =
+    fairPriceThreshold !== null &&
+    Number(contribution) > fairPriceThreshold;
 
   /*
    * ==============================
@@ -167,7 +302,9 @@ export default function OfferRideForm({ locale, dict }: Props) {
         error,
       } = await supabase
         .from("events")
-        .select("*")
+        .select(
+          "*, cities(id,name,slug,latitude,longitude), venues(id,name,slug,latitude,longitude)"
+        )
         .eq("status", "published")
         .gte(
           "event_date",
@@ -831,6 +968,30 @@ export default function OfferRideForm({ locale, dict }: Props) {
             className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 disabled:text-slate-400"
           />
         </div>
+
+        {/* Avviso prezzo equo (non bloccante) */}
+
+        {contributionAboveFairPrice &&
+          distanceKm !== null &&
+          fairPriceThreshold !== null && (
+            <div className="md:col-span-2 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+              <h4 className="font-bold text-amber-900">
+                {dict.fairPrice.title}
+              </h4>
+
+              <p className="mt-1 text-sm leading-6 text-amber-800">
+                {dict.fairPrice.body
+                  .replace(
+                    "{distance}",
+                    String(Math.round(distanceKm))
+                  )
+                  .replace(
+                    "{threshold}",
+                    fairPriceThreshold.toFixed(2)
+                  )}
+              </p>
+            </div>
+          )}
 
         {/* Descrizione */}
 

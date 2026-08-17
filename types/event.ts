@@ -52,6 +52,18 @@ export interface Event {
    * l'evento ha city_id/venue_id risolti (assenti per eventi creati
    * prima del resolver o non ancora collegati).
    */
-  cities?: { id: string; name: string; slug: string } | null;
-  venues?: { id: string; name: string; slug: string } | null;
+  cities?: {
+    id: string;
+    name: string;
+    slug: string;
+    latitude: number | null;
+    longitude: number | null;
+  } | null;
+  venues?: {
+    id: string;
+    name: string;
+    slug: string;
+    latitude: number | null;
+    longitude: number | null;
+  } | null;
 }
