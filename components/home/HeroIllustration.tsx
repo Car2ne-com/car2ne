@@ -20,7 +20,7 @@ export default function HeroIllustration() {
           w-full
           max-w-[1250px]
           object-contain
-          transition-all
+          transition
           duration-500
           hover:scale-[1.02]
           drop-shadow-[0_45px_90px_rgba(16,185,129,.20)]

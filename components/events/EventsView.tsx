@@ -166,7 +166,7 @@ export default function EventsView({
               value={cityId}
               onChange={(e) => setCityId(e.target.value)}
               aria-label={dict.filters.cityAriaLabel}
-              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
             >
               <option value="">{dict.filters.allCities}</option>
 
@@ -182,7 +182,7 @@ export default function EventsView({
                 value={effectiveVenueId}
                 onChange={(e) => setVenueId(e.target.value)}
                 aria-label={dict.filters.venueAriaLabel}
-                className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition-all focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
               >
                 <option value="">{dict.filters.allVenues}</option>
 

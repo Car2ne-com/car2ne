@@ -48,13 +48,13 @@ export default function SearchBox({ dict }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[32px] border border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-xl"
+      className="rounded-[32px] border border-white/70 bg-white p-4 shadow-2xl"
     >
       <div className="grid gap-4 md:grid-cols-[1.5fr_1.2fr_1fr_auto]">
 
         {/* Evento */}
 
-        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition-all focus-within:border-emerald-400 focus-within:bg-white">
+        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-emerald-400 focus-within:bg-white">
           <Search className="mr-3 h-5 w-5 shrink-0 text-gray-400" />
 
           <input
@@ -70,7 +70,7 @@ export default function SearchBox({ dict }: Props) {
 
         {/* Partenza */}
 
-        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition-all focus-within:border-emerald-400 focus-within:bg-white">
+        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-emerald-400 focus-within:bg-white">
           <MapPin className="mr-3 h-5 w-5 shrink-0 text-gray-400" />
 
           <input
@@ -86,7 +86,7 @@ export default function SearchBox({ dict }: Props) {
 
         {/* Data */}
 
-        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition-all focus-within:border-emerald-400 focus-within:bg-white">
+        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-emerald-400 focus-within:bg-white">
           <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-gray-400" />
 
           <input
@@ -103,7 +103,7 @@ export default function SearchBox({ dict }: Props) {
 
         <button
           type="submit"
-          className="h-14 rounded-2xl bg-emerald-500 px-8 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-emerald-600 hover:shadow-xl"
+          className="h-14 rounded-2xl bg-emerald-500 px-8 font-semibold text-white shadow-lg transition duration-300 hover:scale-105 hover:bg-emerald-600 hover:shadow-xl"
         >
           {dict.searchButton}
         </button>

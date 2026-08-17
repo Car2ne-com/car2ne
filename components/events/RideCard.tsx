@@ -268,7 +268,7 @@ export default function RideCard({
         bg-white
         p-6
         shadow-sm
-        transition-all
+        transition
         duration-300
         hover:-translate-y-1
         hover:border-emerald-200
@@ -417,7 +417,7 @@ export default function RideCard({
           py-4
           font-semibold
           text-white
-          transition-all
+          transition
           duration-300
           disabled:cursor-not-allowed
           disabled:opacity-60

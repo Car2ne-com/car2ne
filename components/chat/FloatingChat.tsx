@@ -486,11 +486,40 @@ export default function FloatingChat() {
    * ==============================
    *
    * Gira sempre, anche per utenti anonimi: è un singolo check,
-   * serve solo a sapere se mostrare il pulsante.
+   * serve solo a sapere se mostrare il pulsante. Rimandata a
+   * quando il thread principale è libero (o dopo un breve
+   * timeout) per non competere con l'idratazione/rendering
+   * iniziale della pagina, specialmente su mobile.
    */
 
   useEffect(() => {
-    void loadChats();
+    const win = window as typeof window & {
+      requestIdleCallback?: (
+        callback: () => void
+      ) => number;
+      cancelIdleCallback?: (
+        handle: number
+      ) => void;
+    };
+
+    if (win.requestIdleCallback) {
+      const handle = win.requestIdleCallback(
+        () => void loadChats()
+      );
+
+      return () => {
+        win.cancelIdleCallback?.(handle);
+      };
+    }
+
+    const timeoutId = window.setTimeout(
+      () => void loadChats(),
+      200
+    );
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, [loadChats]);
 
   /*

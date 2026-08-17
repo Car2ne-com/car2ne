@@ -13,7 +13,7 @@ export default function DashboardActions() {
 
       <Link
         href="/profile"
-        className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl"
+        className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl"
       >
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100">
           <User className="h-8 w-8 text-emerald-600" />
@@ -38,7 +38,7 @@ export default function DashboardActions() {
 
       <Link
         href="/offer-ride"
-        className="group rounded-3xl bg-emerald-500 p-8 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-600 hover:shadow-xl"
+        className="group rounded-3xl bg-emerald-500 p-8 text-white transition duration-300 hover:-translate-y-1 hover:bg-emerald-600 hover:shadow-xl"
       >
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
           <CarFront className="h-8 w-8" />
@@ -63,7 +63,7 @@ export default function DashboardActions() {
 
       <Link
         href="/events"
-        className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl"
+        className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl"
       >
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100">
           <Search className="h-8 w-8 text-emerald-600" />

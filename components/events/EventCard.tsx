@@ -41,7 +41,7 @@ export default function EventCard({ event, locale, dict }: Props) {
         border-slate-200
         bg-white
         shadow-lg
-        transition-all
+        transition
         duration-300
         hover:-translate-y-2
         hover:border-emerald-200
@@ -163,7 +163,7 @@ export default function EventCard({ event, locale, dict }: Props) {
               text-sm
               font-semibold
               text-emerald-700
-              transition-all
+              transition-[gap,background-color]
               duration-300
               group-hover:gap-3
               group-hover:bg-emerald-100

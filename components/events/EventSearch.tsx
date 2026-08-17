@@ -46,7 +46,7 @@ export default function EventSearch({
           text-slate-900
           shadow-sm
           outline-none
-          transition-all
+          transition
           duration-300
           placeholder:text-slate-400
           placeholder:truncate

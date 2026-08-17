@@ -13,7 +13,7 @@ export default async function Navbar() {
   const { nav, languageSwitcher, notifications } = dict.layout;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-2 pt-2 sm:px-4 sm:pt-4">
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-2 pt-[max(0.5rem,env(safe-area-inset-top))] sm:px-4 sm:pt-[max(1rem,env(safe-area-inset-top))]">
       <div
         className="
           relative

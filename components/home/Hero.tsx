@@ -60,7 +60,7 @@ export default async function Hero() {
                 font-semibold
                 text-white
                 shadow-lg
-                transition-all
+                transition
                 hover:bg-emerald-600
                 hover:shadow-xl
               "
@@ -86,7 +86,7 @@ export default async function Hero() {
                 font-semibold
                 text-slate-900
                 shadow-sm
-                transition-all
+                transition
                 hover:border-emerald-200
                 hover:bg-emerald-50
                 hover:shadow-lg
