@@ -34,7 +34,10 @@ export function getNotificationIcon(
     );
   }
 
-  if (type === "booking_rejected") {
+  if (
+    type === "booking_rejected" ||
+    type === "ride_cancelled"
+  ) {
     return (
       <div className={`${wrapperClass} bg-red-100`}>
         <XCircle
@@ -92,6 +95,7 @@ export function getNotificationHref(
 
   if (
     notification.type === "review_reminder_passenger" ||
+    notification.type === "ride_cancelled" ||
     notification.booking_id
   ) {
     return "/dashboard/bookings";

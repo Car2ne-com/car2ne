@@ -115,7 +115,16 @@ export default function ManageRideForm({
   const [processingRequest, setProcessingRequest] =
     useState<string | null>(null);
 
+  const [confirmingRejectId, setConfirmingRejectId] =
+    useState<string | null>(null);
+
+  const [confirmingDelete, setConfirmingDelete] =
+    useState(false);
+
   const rideHasPassed = ride.rideHasPassed;
+
+  const affectedPassengerCount =
+    requests.length + confirmedPassengers.length;
 
   async function loadRequests() {
     setLoadingRequests(true);
@@ -291,14 +300,12 @@ export default function ManageRideForm({
       return;
     }
 
-    const confirmed = window.confirm(
-      "Sei sicuro di voler rifiutare questa richiesta?"
-    );
-
-    if (!confirmed) {
+    if (confirmingRejectId !== bookingId) {
+      setConfirmingRejectId(bookingId);
       return;
     }
 
+    setConfirmingRejectId(null);
     setProcessingRequest(bookingId);
 
     const { error } = await supabase.rpc(
@@ -391,11 +398,8 @@ export default function ManageRideForm({
   }
 
   async function handleDelete() {
-    const confirmed = window.confirm(
-      "Sei sicuro di voler eliminare questo passaggio?\n\nIl passaggio verrà eliminato definitivamente e non sarà più disponibile agli altri utenti."
-    );
-
-    if (!confirmed) {
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
       return;
     }
 
@@ -411,11 +415,17 @@ export default function ManageRideForm({
       return;
     }
 
-    const { error } = await supabase
-      .from("rides")
-      .delete()
-      .eq("id", ride.id)
-      .eq("driver_id", user.id);
+    /*
+     * cancel_ride (RPC, security definer) invece di una DELETE
+     * diretta: marca il passaggio come cancelled senza cancellare
+     * la riga, e avvisa con una notifica ogni passeggero con una
+     * richiesta pending o confermata su questo passaggio.
+     */
+
+    const { error } = await supabase.rpc(
+      "cancel_ride",
+      { p_ride_id: ride.id }
+    );
 
     setDeleting(false);
 
@@ -425,7 +435,11 @@ export default function ManageRideForm({
       return;
     }
 
-    toast.success("Passaggio eliminato con successo.");
+    toast.success(
+      affectedPassengerCount > 0
+        ? `Passaggio annullato. ${affectedPassengerCount} passegg${affectedPassengerCount === 1 ? "ero avvisato" : "eri avvisati"}.`
+        : "Passaggio annullato con successo."
+    );
 
     router.push("/dashboard/rides");
     router.refresh();
@@ -486,6 +500,9 @@ export default function ManageRideForm({
               const processing =
                 processingRequest === request.id;
 
+              const confirmingReject =
+                confirmingRejectId === request.id;
+
               return (
                 <div
                   key={request.id}
@@ -518,6 +535,19 @@ export default function ManageRideForm({
                     </div>
 
                     <div className="flex gap-3">
+                      {confirmingReject && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setConfirmingRejectId(null)
+                          }
+                          disabled={processing}
+                          className="flex-1 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+                        >
+                          Annulla
+                        </button>
+                      )}
+
                       <button
                         type="button"
                         onClick={() =>
@@ -530,28 +560,32 @@ export default function ManageRideForm({
                           <XCircle className="h-4 w-4" />
                           {processing
                             ? "..."
-                            : "Rifiuta"}
+                            : confirmingReject
+                              ? "Confermi il rifiuto?"
+                              : "Rifiuta"}
                         </span>
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleConfirm(request.id)
-                        }
-                        disabled={
-                          processing ||
-                          ride.available_seats <= 0
-                        }
-                        className="flex-1 rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
-                      >
-                        <span className="flex items-center justify-center gap-2">
-                          <CheckCircle2 className="h-4 w-4" />
-                          {processing
-                            ? "..."
-                            : "Accetta"}
-                        </span>
-                      </button>
+                      {!confirmingReject && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleConfirm(request.id)
+                          }
+                          disabled={
+                            processing ||
+                            ride.available_seats <= 0
+                          }
+                          className="flex-1 rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+                        >
+                          <span className="flex items-center justify-center gap-2">
+                            <CheckCircle2 className="h-4 w-4" />
+                            {processing
+                              ? "..."
+                              : "Accetta"}
+                          </span>
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -739,25 +773,46 @@ export default function ManageRideForm({
 
       <div className="rounded-3xl border border-red-200 bg-red-50 p-6">
         <h2 className="text-lg font-bold text-red-900">
-          Elimina passaggio
+          Annulla passaggio
         </h2>
 
         <p className="mt-2 text-sm leading-6 text-red-700">
-          Il passaggio verrà eliminato definitivamente
-          dalla piattaforma e non sarà più disponibile
-          agli altri utenti.
+          {affectedPassengerCount > 0
+            ? `Il passaggio non sarà più visibile né prenotabile da altri utenti. ${affectedPassengerCount} passegg${affectedPassengerCount === 1 ? "ero con una richiesta o prenotazione su questo passaggio riceverà" : "eri con una richiesta o prenotazione su questo passaggio riceveranno"} una notifica dell'annullamento.`
+            : "Il passaggio non sarà più visibile né prenotabile da altri utenti."}
         </p>
 
-        <button
-          type="button"
-          onClick={handleDelete}
-          disabled={loading || deleting}
-          className="mt-5 rounded-2xl bg-red-500 px-6 py-3 font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {deleting
-            ? "Eliminazione..."
-            : "Elimina passaggio"}
-        </button>
+        {confirmingDelete && (
+          <p className="mt-4 text-sm font-bold text-red-900">
+            Confermi l&apos;annullamento?
+          </p>
+        )}
+
+        <div className="mt-5 flex gap-3">
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={loading || deleting}
+            className="rounded-2xl bg-red-500 px-6 py-3 font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {deleting
+              ? "Annullamento..."
+              : confirmingDelete
+                ? "Sì, annulla il passaggio"
+                : "Annulla passaggio"}
+          </button>
+
+          {confirmingDelete && (
+            <button
+              type="button"
+              onClick={() => setConfirmingDelete(false)}
+              disabled={deleting}
+              className="rounded-2xl border border-red-200 bg-white px-6 py-3 font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Torna indietro
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
