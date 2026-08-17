@@ -5,6 +5,7 @@ import { offerRide } from "./offerRide";
 import { auth } from "./auth";
 import { cities } from "./cities";
 import { legal } from "./legal";
+import { profile } from "./profile";
 
 export const it = {
   layout,
@@ -14,4 +15,5 @@ export const it = {
   auth,
   cities,
   legal,
+  profile,
 };

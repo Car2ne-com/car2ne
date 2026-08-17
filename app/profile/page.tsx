@@ -5,11 +5,14 @@ import Footer from "@/components/layout/Footer";
 import ProfileForm from "@/components/profile/ProfileForm";
 import ChangePasswordForm from "@/components/profile/ChangePasswordForm";
 import MfaSettings from "@/components/profile/MfaSettings";
+import DeleteAccountForm from "@/components/profile/DeleteAccountForm";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user },
@@ -55,6 +58,10 @@ export default async function ProfilePage() {
           <ChangePasswordForm />
 
           <MfaSettings />
+
+          <DeleteAccountForm
+            dict={dict.profile.deleteAccount}
+          />
         </div>
       </main>
 
