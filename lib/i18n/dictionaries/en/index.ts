@@ -4,6 +4,7 @@ import { events } from "./events";
 import { offerRide } from "./offerRide";
 import { auth } from "./auth";
 import { cities } from "./cities";
+import { legal } from "./legal";
 
 export const en = {
   layout,
@@ -12,4 +13,5 @@ export const en = {
   offerRide,
   auth,
   cities,
+  legal,
 };

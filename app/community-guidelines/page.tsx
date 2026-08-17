@@ -4,7 +4,115 @@ import LegalPageLayout, {
   LegalSection,
 } from "@/components/legal/LegalPageLayout";
 
-export default function CommunityGuidelinesPage() {
+import { getLocale } from "@/lib/i18n";
+
+export default async function CommunityGuidelinesPage() {
+  const locale = await getLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalPageLayout
+        title="Community Guidelines"
+        updatedAt="August 17, 2026"
+      >
+        <LegalSection title="1. Our goal">
+          <p>
+            Car2ne exists to help people reach the same
+            event together, safely, affordably and
+            enjoyably. These guidelines explain how to
+            behave on the platform.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="2. Mutual respect">
+          <p>
+            Treat other users politely and respectfully,
+            in chat, in reviews and during the shared
+            ride. Offensive language, discrimination,
+            harassment or intimidating behavior are not
+            tolerated.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="3. Honesty in information">
+          <p>
+            The information you publish (time, available
+            seats, departure city, cost contribution)
+            must be real and up to date. Do not post
+            fake rides.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="4. Safety">
+          <p>
+            Car2ne connects people, but is not
+            physically present during the ride: use
+            common sense, share your trip details with
+            someone you trust, and make sure you know
+            the details of the person you&apos;re
+            traveling with before departure.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="5. Communication">
+          <p>
+            Use the internal chat to arrange details
+            with the driver or passengers. It is not
+            allowed to use chat for spam, unsolicited
+            advertising or illegal content.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="6. Reviews">
+          <p>
+            Reviews must honestly reflect your
+            experience. False, offensive or retaliatory
+            reviews are not allowed.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="7. What is not allowed">
+          <p>
+            In particular, the following are not
+            allowed: creating fake or multiple accounts,
+            offering rides you don&apos;t actually
+            intend to carry out, fraudulent behavior,
+            advertising commercial services unrelated to
+            Car2ne&apos;s purpose, illegal content or
+            content that infringes third-party rights.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="8. Consequences">
+          <p>
+            Violating these guidelines or the{" "}
+            <Link
+              href="/termini"
+              className="font-semibold text-emerald-600 hover:text-emerald-700"
+            >
+              Terms and Conditions
+            </Link>{" "}
+            may result in account suspension.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="9. Reports">
+          <p>
+            If you witness inappropriate behavior or
+            have a problem with another user, use the{" "}
+            <Link
+              href="/segnala-un-problema"
+              className="font-semibold text-emerald-600 hover:text-emerald-700"
+            >
+              Report a problem
+            </Link>{" "}
+            page to let us know.
+          </p>
+        </LegalSection>
+      </LegalPageLayout>
+    );
+  }
+
   return (
     <LegalPageLayout
       title="Community Guidelines"

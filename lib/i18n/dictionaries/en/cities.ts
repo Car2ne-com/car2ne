@@ -43,4 +43,26 @@ export const cities: (typeof it)["cities"] = {
       "{count} dates scheduled. Find a ride or share your trip with other attendees.",
     noEvents: "No dates scheduled for {artist} at the moment.",
   },
+  meta: {
+    index: {
+      title: "Cities | Car2ne",
+      description:
+        "Discover concerts, festivals and shows city by city and find a car ride with Car2ne.",
+    },
+    city: {
+      title: "Events in {city} | Car2ne",
+      description:
+        "Discover upcoming concerts, festivals and shows in {city} and find a car ride to get there with Car2ne.",
+    },
+    venue: {
+      title: "{venue}, {city} | Car2ne",
+      description:
+        "All events at {venue} in {city}. Find a car ride to get there with Car2ne.",
+    },
+    artist: {
+      title: "Events by {artist} | Car2ne",
+      description:
+        "All of {artist}'s tour dates. Find a car ride to get there with Car2ne.",
+    },
+  },
 };

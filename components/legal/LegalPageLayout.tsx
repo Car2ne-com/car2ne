@@ -1,17 +1,21 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
+import { getTranslations } from "@/lib/i18n";
+
 type Props = {
   title: string;
   updatedAt: string;
   children: React.ReactNode;
 };
 
-export default function LegalPageLayout({
+export default async function LegalPageLayout({
   title,
   updatedAt,
   children,
 }: Props) {
+  const { dict } = await getTranslations();
+
   return (
     <>
       <Navbar />
@@ -22,7 +26,7 @@ export default function LegalPageLayout({
         </h1>
 
         <p className="mt-3 text-sm text-slate-500">
-          Ultimo aggiornamento: {updatedAt}
+          {dict.legal.lastUpdated}: {updatedAt}
         </p>
 
         <div className="mt-10 space-y-10">

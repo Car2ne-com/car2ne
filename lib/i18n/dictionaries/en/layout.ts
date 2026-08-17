@@ -59,4 +59,6 @@ export const layout: (typeof it)["layout"] = {
   languageSwitcher: {
     label: "Language",
   },
+  loading: "Loading",
+  siteDescription: "Find or offer a ride to your next event.",
 };

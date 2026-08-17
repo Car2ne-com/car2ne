@@ -2,7 +2,99 @@ import LegalPageLayout, {
   LegalSection,
 } from "@/components/legal/LegalPageLayout";
 
-export default function CookiePolicyPage() {
+import { getLocale } from "@/lib/i18n";
+
+export default async function CookiePolicyPage() {
+  const locale = await getLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalPageLayout
+        title="Cookie Policy"
+        updatedAt="August 17, 2026"
+      >
+        <LegalSection title="1. What cookies are">
+          <p>
+            Cookies are small text files that visited
+            websites send to the user&apos;s device,
+            where they are stored to be sent back to
+            the same websites on the next visit.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="2. Cookies used by Car2ne">
+          <p>
+            Car2ne uses exclusively technical cookies,
+            necessary for the service to function.{" "}
+            <strong>
+              We do not use profiling, advertising or
+              third-party analytics/statistics cookies.
+            </strong>
+          </p>
+
+          <p>Specifically:</p>
+
+          <ul className="list-disc space-y-2 pl-5">
+            <li>
+              <strong>
+                Authentication session cookies
+              </strong>{" "}
+              (managed by the provider Supabase),
+              necessary to keep you logged into your
+              account.
+            </li>
+
+            <li>
+              <strong>car2ne_trusted_device</strong> —
+              stored only if you choose to
+              &quot;remember this device&quot; during
+              two-step verification (2FA); it lasts 14
+              days and is used to avoid asking you for
+              the verification code again on that
+              device.
+            </li>
+          </ul>
+        </LegalSection>
+
+        <LegalSection title="3. Legal basis">
+          <p>
+            Since these are exclusively technical
+            cookies, necessary to provide the requested
+            service, their use does not require prior
+            consent under current regulations.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="4. Third-party cookies">
+          <p>
+            Car2ne currently does not use third-party
+            cookies for analytics, marketing or
+            advertising purposes.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="5. How to manage cookies">
+          <p>
+            You can delete or block cookies through
+            your browser settings; this may prevent the
+            service from working properly (e.g.
+            inability to stay logged in).
+          </p>
+        </LegalSection>
+
+        <LegalSection title="6. Updates">
+          <p>
+            If Car2ne introduces non-technical cookies
+            in the future (e.g. for statistical
+            analysis), this page will be updated and
+            consent will be requested where required by
+            law.
+          </p>
+        </LegalSection>
+      </LegalPageLayout>
+    );
+  }
+
   return (
     <LegalPageLayout
       title="Cookie Policy"

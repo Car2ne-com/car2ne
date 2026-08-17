@@ -4,7 +4,129 @@ import LegalPageLayout, {
   LegalSection,
 } from "@/components/legal/LegalPageLayout";
 
-export default function TerminiPage() {
+import { getLocale } from "@/lib/i18n";
+
+export default async function TerminiPage() {
+  const locale = await getLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalPageLayout
+        title="Terms and Conditions"
+        updatedAt="August 17, 2026"
+      >
+        <LegalSection title="1. Purpose">
+          <p>
+            Car2ne is a platform that connects people
+            attending the same event, so they can
+            arrange a shared car ride and split the
+            costs.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="2. Who can register">
+          <p>
+            You may register and use Car2ne only if you
+            are at least 18 years old.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="3. The service">
+          <p>
+            Car2ne merely connects drivers and
+            passengers. Car2ne is not a party to the
+            arrangements made between users, does not
+            organize or physically manage
+            transportation, and{" "}
+            <strong>
+              does not manage or process any payment
+            </strong>{" "}
+            between the parties: any financial
+            arrangements regarding the cost
+            contribution are concluded directly and
+            under the responsibility of the users
+            involved.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="4. Liability">
+          <p>
+            Car2ne is not responsible for the conduct
+            of users, the accuracy of the information
+            they provide (e.g. times, available seats),
+            or what happens during the shared ride,
+            which remains an independent agreement
+            between users.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="5. Account">
+          <p>
+            You are responsible for the accuracy of the
+            data provided during registration and for
+            the confidentiality of your login
+            credentials.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="6. User-generated content">
+          <p>
+            By publishing a ride, a chat message or a
+            review, you declare that the content is
+            truthful and does not infringe third-party
+            rights. See our{" "}
+            <Link
+              href="/community-guidelines"
+              className="font-semibold text-emerald-600 hover:text-emerald-700"
+            >
+              Community Guidelines
+            </Link>{" "}
+            for the rules of conduct on the platform.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="7. Account suspension">
+          <p>
+            We reserve the right to suspend or restrict
+            an account in case of violation of these
+            Terms or the Community Guidelines.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="8. Changes to the service">
+          <p>
+            Car2ne may modify or discontinue, in whole
+            or in part, the features offered.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="9. Governing law and jurisdiction">
+          <p>
+            These Terms are governed by Italian law.
+            Any dispute shall be subject to the
+            jurisdiction of the consumer&apos;s court
+            where applicable, in accordance with
+            current Italian law.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="10. Contact">
+          <p>
+            For any question regarding these Terms you
+            can write to{" "}
+            <a
+              href="mailto:privacy@car2ne.com"
+              className="font-semibold text-emerald-600 hover:text-emerald-700"
+            >
+              privacy@car2ne.com
+            </a>
+            .
+          </p>
+        </LegalSection>
+      </LegalPageLayout>
+    );
+  }
+
   return (
     <LegalPageLayout
       title="Termini e Condizioni"

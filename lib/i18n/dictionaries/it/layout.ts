@@ -58,4 +58,6 @@ export const layout = {
   languageSwitcher: {
     label: "Lingua",
   },
+  loading: "Caricamento",
+  siteDescription: "Trova o offri un passaggio per il tuo prossimo evento.",
 };

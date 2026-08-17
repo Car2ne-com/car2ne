@@ -2,7 +2,221 @@ import LegalPageLayout, {
   LegalSection,
 } from "@/components/legal/LegalPageLayout";
 
-export default function PrivacyPolicyPage() {
+import { getLocale } from "@/lib/i18n";
+
+export default async function PrivacyPolicyPage() {
+  const locale = await getLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalPageLayout
+        title="Privacy Policy"
+        updatedAt="August 17, 2026"
+      >
+        <LegalSection title="1. Data Controller">
+          <p>
+            The data controller for personal data
+            collected through Car2ne is Riccardo Di
+            Pasquale, a private individual.
+          </p>
+
+          <p>
+            For any request regarding the processing
+            of your personal data (access,
+            rectification, erasure, objection,
+            portability) you can write to{" "}
+            <a
+              href="mailto:privacy@car2ne.com"
+              className="font-semibold text-emerald-600 hover:text-emerald-700"
+            >
+              privacy@car2ne.com
+            </a>
+            .
+          </p>
+
+          <p>
+            No Data Protection Officer (DPO) has been
+            appointed, as it is not mandatory for the
+            activity carried out.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="2. Data collected">
+          <p>
+            Depending on the features you use, Car2ne
+            collects the following categories of
+            personal data:
+          </p>
+
+          <ul className="list-disc space-y-2 pl-5">
+            <li>
+              <strong>Registration data:</strong> name,
+              surname, email address, password (stored
+              encrypted by the authentication provider
+              Supabase). If you choose to register via
+              Google, we receive your name, email and,
+              if available, your profile picture from
+              Google.
+            </li>
+
+            <li>
+              <strong>Date of birth:</strong> requested
+              during registration (or, if you register
+              via Google, right after your first
+              login) solely to verify that you are at
+              least 18 years old, the minimum
+              requirement to use Car2ne.
+            </li>
+
+            <li>
+              <strong>Profile data (optional):</strong>{" "}
+              city, text bio, profile photo you
+              voluntarily upload.
+            </li>
+
+            <li>
+              <strong>Ride data:</strong> if you offer
+              a ride, we record the selected event, the
+              departure city, the departure time, the
+              available seats, the indicated cost
+              contribution and an optional description.
+              If you book a ride, we record your
+              request and its status (pending,
+              confirmed, etc.).
+            </li>
+
+            <li>
+              <strong>Reviews:</strong> if you leave or
+              receive a review after a ride, we record
+              the rating (1-5) and any text comment,
+              made publicly visible to other users.
+            </li>
+
+            <li>
+              <strong>Chat messages:</strong> messages
+              you exchange with other users via the
+              internal chat are stored to enable the
+              conversation.
+            </li>
+
+            <li>
+              <strong>Account security data:</strong> if
+              you enable two-factor authentication
+              (2FA), we record the status of the
+              configured factor; if you choose to
+              &quot;remember this device&quot;, we
+              store a unique device identifier
+              (encrypted) for 14 days.
+            </li>
+
+            <li>
+              <strong>Technical data:</strong> IP
+              address and technical browsing
+              information automatically collected by
+              the hosting provider (Vercel) and the
+              database provider (Supabase) for the
+              service to function.
+            </li>
+          </ul>
+
+          <p>
+            Car2ne does not process or manage payments:
+            the cost contribution indicated in rides is
+            purely informational and any financial
+            arrangements take place directly between
+            users, outside the platform.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="3. Purpose of processing">
+          <p>
+            Your data is processed to: create and
+            manage your account; verify that you meet
+            the minimum age required to use Car2ne (18
+            years); allow you to offer or book a ride;
+            enable communication between users via
+            chat; display reviews to other users;
+            ensure account security (2FA); respond to
+            the reports you send us.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="4. Legal basis">
+          <p>
+            Processing is based on the performance of a
+            contract (the service you request by
+            registering and using Car2ne) and, for
+            optional data you choose to provide (e.g.
+            bio, photo), on your consent.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="5. Data recipients and third-party providers">
+          <p>
+            Your data is processed with the help of the
+            following providers:
+          </p>
+
+          <ul className="list-disc space-y-2 pl-5">
+            <li>
+              <strong>Supabase</strong> —
+              authentication, database and image
+              storage; infrastructure hosted in the
+              Europe (Frankfurt) region.
+            </li>
+
+            <li>
+              <strong>Vercel</strong> — application
+              hosting; infrastructure hosted in the
+              Europe (Frankfurt) region.
+            </li>
+
+            <li>
+              <strong>Google</strong> — only if you
+              choose to sign in via Google OAuth.
+            </li>
+          </ul>
+        </LegalSection>
+
+        <LegalSection title="6. Data retention">
+          <p>
+            Data is retained for the entire duration of
+            the account. Upon account deletion, data is
+            removed, except as necessary to comply with
+            legal obligations.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="7. Your rights">
+          <p>
+            You have the right to access, rectify and
+            erase your data, to object to processing
+            and to request its portability, by writing
+            to{" "}
+            <a
+              href="mailto:privacy@car2ne.com"
+              className="font-semibold text-emerald-600 hover:text-emerald-700"
+            >
+              privacy@car2ne.com
+            </a>
+            . You also have the right to lodge a
+            complaint with the Italian Data Protection
+            Authority (Garante per la protezione dei
+            dati personali).
+          </p>
+        </LegalSection>
+
+        <LegalSection title="8. Changes to this policy">
+          <p>
+            This Privacy Policy may be updated over
+            time. The date of the last update is shown
+            at the top of the page.
+          </p>
+        </LegalSection>
+      </LegalPageLayout>
+    );
+  }
+
   return (
     <LegalPageLayout
       title="Privacy Policy"

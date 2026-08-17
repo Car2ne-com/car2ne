@@ -44,8 +44,12 @@ export async function generateMetadata({
     return {};
   }
 
-  const title = `Eventi a ${city.name} | Car2ne`;
-  const description = `Scopri i prossimi concerti, festival e spettacoli a ${city.name} e trova un passaggio auto per raggiungerli con Car2ne.`;
+  const { dict } = await getTranslations();
+  const title = dict.cities.meta.city.title.replace("{city}", city.name);
+  const description = dict.cities.meta.city.description.replace(
+    "{city}",
+    city.name
+  );
 
   return {
     title,

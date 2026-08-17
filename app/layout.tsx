@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 import FloatingChat from "@/components/chat/FloatingChat";
 
 import { SITE_URL } from "@/lib/siteConfig";
-import { getLocale } from "@/lib/i18n";
+import { getTranslations } from "@/lib/i18n";
 
 import "./globals.css";
 
@@ -15,19 +15,22 @@ const manrope = Manrope({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: SITE_URL,
-  title: "Car2ne",
-  description:
-    "Trova o offri un passaggio per il tuo prossimo evento.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getTranslations();
+
+  return {
+    metadataBase: SITE_URL,
+    title: "Car2ne",
+    description: dict.layout.siteDescription,
+  };
+}
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
+  const { locale } = await getTranslations();
 
   return (
     <html

@@ -10,21 +10,22 @@ import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
 import type { City } from "@/types/city";
 
-const title = "Città | Car2ne";
-const description =
-  "Scopri concerti, festival e spettacoli città per città e trova un passaggio auto con Car2ne.";
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getTranslations();
+  const { title, description } = dict.cities.meta.index;
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: {
-    canonical: "/citta",
-  },
-  openGraph: {
+  return {
     title,
     description,
-  },
-};
+    alternates: {
+      canonical: "/citta",
+    },
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}
 
 const PAGE_SIZE = 60;
 

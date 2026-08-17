@@ -67,8 +67,13 @@ export async function generateMetadata({
 
   const { city, venue } = result;
 
-  const title = `${venue.name}, ${city.name} | Car2ne`;
-  const description = `Tutti gli eventi al ${venue.name} di ${city.name}. Trova un passaggio auto per arrivare con Car2ne.`;
+  const { dict } = await getTranslations();
+  const title = dict.cities.meta.venue.title
+    .replace("{venue}", venue.name)
+    .replace("{city}", city.name);
+  const description = dict.cities.meta.venue.description
+    .replace("{venue}", venue.name)
+    .replace("{city}", city.name);
 
   return {
     title,
