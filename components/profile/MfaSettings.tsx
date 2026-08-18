@@ -28,6 +28,9 @@ export default function MfaSettings() {
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const [confirmingDisable, setConfirmingDisable] =
+    useState(false);
+
   async function loadFactors() {
     const { data, error } =
       await supabase.auth.mfa.listFactors();
@@ -165,6 +168,15 @@ export default function MfaSettings() {
       "Autenticazione a due fattori attivata!"
     );
 
+    fetch("/api/mfa/notify-enabled", {
+      method: "POST",
+    }).catch((error) => {
+      console.error(
+        "Errore invio email conferma MFA:",
+        error
+      );
+    });
+
     setEnrollState(null);
     setCode("");
     setLoadingFactors(true);
@@ -182,14 +194,12 @@ export default function MfaSettings() {
       return;
     }
 
-    const confirmed = window.confirm(
-      "Sei sicuro di voler disattivare l'autenticazione a due fattori?"
-    );
-
-    if (!confirmed) {
+    if (!confirmingDisable) {
+      setConfirmingDisable(true);
       return;
     }
 
+    setConfirmingDisable(false);
     setBusy(true);
 
     const { error } =
@@ -212,6 +222,15 @@ export default function MfaSettings() {
     toast.success(
       "Autenticazione a due fattori disattivata."
     );
+
+    fetch("/api/mfa/notify-disabled", {
+      method: "POST",
+    }).catch((error) => {
+      console.error(
+        "Errore invio email conferma disattivazione MFA:",
+        error
+      );
+    });
 
     setVerifiedFactorId(null);
   }
@@ -328,15 +347,33 @@ export default function MfaSettings() {
               Attiva
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              disabled={busy}
-              onClick={handleDisable}
-              className="h-11 rounded-2xl px-6 font-semibold text-red-600 hover:bg-red-50"
-            >
-              Disattiva
-            </Button>
+            <div className="flex gap-3">
+              {confirmingDisable && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={busy}
+                  onClick={() =>
+                    setConfirmingDisable(false)
+                  }
+                  className="h-11 rounded-2xl px-6 font-semibold"
+                >
+                  Annulla
+                </Button>
+              )}
+
+              <Button
+                type="button"
+                variant="outline"
+                disabled={busy}
+                onClick={handleDisable}
+                className="h-11 rounded-2xl px-6 font-semibold text-red-600 hover:bg-red-50"
+              >
+                {confirmingDisable
+                  ? "Confermi la disattivazione?"
+                  : "Disattiva"}
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">

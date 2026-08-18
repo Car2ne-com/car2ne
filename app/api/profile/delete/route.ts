@@ -3,6 +3,12 @@ import { randomUUID } from "crypto";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getTranslations } from "@/lib/i18n";
+import {
+  getUserDisplayName,
+  renderEmailHtml,
+  sendTransactionalEmail,
+} from "@/lib/email/brevo";
 
 /*
  * ==============================
@@ -128,6 +134,21 @@ export async function POST() {
       { error: authError.message },
       { status: 500 }
     );
+  }
+
+  if (user.email) {
+    const { dict, locale } = await getTranslations();
+    const copy = dict.email.accountDeleted;
+    const name = getUserDisplayName(user, locale);
+
+    await sendTransactionalEmail({
+      to: { email: user.email },
+      subject: copy.subject,
+      htmlContent: renderEmailHtml({
+        heading: copy.heading,
+        body: copy.body.replace("{name}", name),
+      }),
+    });
   }
 
   await supabase.auth.signOut();

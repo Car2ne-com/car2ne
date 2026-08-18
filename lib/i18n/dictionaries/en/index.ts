@@ -6,6 +6,7 @@ import { auth } from "./auth";
 import { cities } from "./cities";
 import { legal } from "./legal";
 import { profile } from "./profile";
+import { email } from "./email";
 
 export const en = {
   layout,
@@ -16,4 +17,5 @@ export const en = {
   cities,
   legal,
   profile,
+  email,
 };
