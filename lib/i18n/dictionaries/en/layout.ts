@@ -22,6 +22,7 @@ export const layout: (typeof it)["layout"] = {
     myRides: "My rides",
     myBookings: "My bookings",
     myProfile: "My profile",
+    betaChecklist: "Beta checklist",
     admin: "Admin",
     logout: "Log out",
   },

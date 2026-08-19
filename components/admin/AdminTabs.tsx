@@ -3,11 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { isBetaChecklistEnabled } from "@/lib/betaChecklist/config";
+
 const TABS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/events", label: "Eventi" },
   { href: "/admin/users", label: "Utenti" },
   { href: "/admin/import", label: "Import" },
+  ...(isBetaChecklistEnabled
+    ? [{ href: "/admin/beta-checklist", label: "Beta checklist" }]
+    : []),
 ];
 
 export default function AdminTabs() {

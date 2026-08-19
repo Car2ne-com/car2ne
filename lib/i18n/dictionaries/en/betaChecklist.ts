@@ -1,0 +1,180 @@
+import type { it } from "../it";
+
+export const betaChecklist: (typeof it)["betaChecklist"] = {
+  meta: {
+    eyebrow: "Car2ne · beta test",
+    title: "Beta tester checklist",
+    subtitle:
+      "End-to-end test path for Car2ne: authentication, rides, bookings, chat, notifications/emails, reviews, admin area, IT/EN language and mobile.",
+    howToTitle: "How to use this",
+    howToBody:
+      'For each test, try the scenario and mark the outcome as "OK" or "Problem". If you mark a problem, briefly describe it in the field that appears: what you did, what you expected, what actually happened. Your status is saved automatically to your account.',
+  },
+  progress: {
+    tested: "Tested",
+    ok: "OK",
+    problem: "Problems",
+    untested: "To test",
+  },
+  states: {
+    untested: "Not tested",
+    ok: "OK",
+    problem: "Problem",
+  },
+  expectedLabel: "Expected",
+  notePlaceholder: "What you did, what you expected, what actually happened...",
+  savedToast: "Saved",
+  saveErrorToast: "Couldn't save. Please try again.",
+  sections: [
+    {
+      id: "auth",
+      title: "Authentication & onboarding",
+      note: "Try this both in Italian and in English where indicated.",
+      items: [
+        { id: "register-it", title: "Sign up with valid data (email, compliant password, adult date of birth) — in Italian." },
+        { id: "register-en", title: "Sign up with valid data — in English, with the site language set to EN." },
+        { id: "register-weak-password", title: "Sign up with a weak password (e.g. no uppercase letter or special character).", expected: "The error message clearly explains what's missing." },
+        { id: "register-underage", title: "Sign up entering an underage date of birth.", expected: "The user is blocked/redirected to the age check, no account is created." },
+        { id: "register-no-terms", title: "Try to sign up without accepting the Terms." },
+        { id: "login-password", title: "Log in with a correct email and password." },
+        { id: "login-google", title: "Log in with Google (OAuth)." },
+        { id: "password-reset", title: "Password recovery: request email, receive link, set a new password, log in with the new password." },
+        { id: "mfa-enroll", title: "Enable MFA from /profile: scan the QR code with an authenticator app and confirm the code." },
+        { id: "mfa-challenge", title: "Log in with MFA enabled.", expected: "After email/password, an OTP code is requested on /mfa-challenge." },
+        { id: "mfa-trusted-device", title: "\"Remember this device\" during the MFA challenge.", expected: "The next login from the same device does not ask for the OTP." },
+        { id: "mfa-disable", title: "Disable MFA from /profile.", expected: "An in-page confirmation appears (not a browser popup) before actually disabling it." },
+        { id: "mfa-emails", title: "Confirmation email arrives when MFA is enabled and when it is disabled." },
+        { id: "logout", title: "Log out." },
+      ],
+    },
+    {
+      id: "events",
+      title: "Events & public pages",
+      items: [
+        { id: "search-home", title: "Search for an event from the homepage." },
+        { id: "events-filters", title: "/events page: filter by departure city and date, \"load more\" button." },
+        { id: "event-detail", title: "Open an event: correct details and list of available rides." },
+        { id: "event-concluded", title: "Open an event that has already ended.", expected: "A message like \"event ended\" appears, not a generic error." },
+        { id: "city-pages", title: "City pages (/citta and /citta/[city]) with their linked events." },
+        { id: "venue-page", title: "A specific venue page." },
+        { id: "artist-page", title: "An artist page with their linked events." },
+        { id: "legal-pages", title: "Legal pages: Privacy, Terms, Cookie policy, Community guidelines, Report a problem — readable in both IT and EN." },
+      ],
+    },
+    {
+      id: "ride-driver",
+      title: "Publish a ride (as driver)",
+      items: [
+        { id: "offer-ride-create", title: "Create a new ride from \"Offer a ride\": departure city, time, available seats, cost contribution." },
+        { id: "offer-ride-fair-price", title: "Enter a cost contribution that's very high relative to the distance.", expected: "A non-blocking warning appears, flagging the above-average contribution." },
+        { id: "ride-edit", title: "Edit an already-published ride from your dashboard." },
+        { id: "booking-request-received", title: "Receive a booking request from a passenger.", expected: "An in-app notification arrives." },
+        { id: "booking-accept", title: "Accept a booking request." },
+        { id: "booking-reject", title: "Reject a booking request.", expected: "An in-page confirmation appears before rejecting, not a browser popup." },
+        { id: "ride-cancel", title: "Cancel a ride that already has confirmed passengers.", expected: "A two-step in-page confirmation appears; after cancellation, passengers get a notification and an email." },
+        { id: "ride-driver-emails", title: "The passenger receives the correct email after acceptance, rejection and cancellation." },
+      ],
+    },
+    {
+      id: "ride-passenger",
+      title: "Book a ride (as passenger)",
+      items: [
+        { id: "booking-create", title: "Book a seat on an available ride." },
+        { id: "booking-list", title: "List of your own bookings in the dashboard." },
+        { id: "booking-status-notification", title: "In-app notification when your request is accepted or rejected." },
+        { id: "booking-status-email", title: "Matching email received for acceptance/rejection." },
+        { id: "ride-cancelled-as-passenger", title: "The ride you booked gets cancelled by the driver.", expected: "The passenger receives a notification and an email, and the booking is clearly shown as cancelled in their dashboard." },
+      ],
+    },
+    {
+      id: "chat",
+      title: "Chat",
+      items: [
+        { id: "chat-open", title: "Open the chat linked to a ride/booking." },
+        { id: "chat-realtime", title: "Send and receive messages in real time, testing from two accounts/devices in parallel." },
+        { id: "chat-widget", title: "The floating chat widget is present and works on pages other than /chat." },
+      ],
+    },
+    {
+      id: "notifications",
+      title: "Notifications & email",
+      items: [
+        { id: "notification-center", title: "The notification center correctly shows every type: booking request, confirmation, rejection, ride cancellation, review reminder." },
+        { id: "email-locale", title: "Transactional emails arrive in the language matching the last language set on the site, not a fixed language." },
+      ],
+    },
+    {
+      id: "reviews",
+      title: "Reviews",
+      items: [
+        { id: "review-reminder", title: "After a completed ride, a reminder to leave a review arrives, for both driver and passenger." },
+        { id: "review-submit", title: "Submit a review with stars and a comment." },
+        { id: "review-public-profile", title: "Received reviews show up correctly on the user's public profile." },
+      ],
+    },
+    {
+      id: "account",
+      title: "Profile & account",
+      items: [
+        { id: "profile-edit", title: "Edit your own profile data." },
+        { id: "password-change", title: "Change password from the profile." },
+        { id: "account-delete", title: "Self-service account deletion.", expected: "The profile is anonymized instead of disappearing abruptly; linked rides/reviews stay consistent, not broken or orphaned." },
+        { id: "account-delete-email", title: "Confirmation email received after account deletion." },
+      ],
+    },
+    {
+      id: "admin",
+      title: "Admin area (testers with the admin role only)",
+      items: [
+        { id: "admin-login", title: "Log in as admin.", expected: "You land on the admin dashboard with the general metrics." },
+        { id: "admin-events-crud", title: "Manually create an event and edit an existing one." },
+        { id: "admin-events-past", title: "Past events section with its metrics." },
+        { id: "admin-import", title: "Import events from Ticketmaster.", expected: "Import logs and diagnostics are readable and consistent with the actual outcome." },
+        { id: "admin-users-role", title: "User management, including changing another user's role." },
+        { id: "admin-cities", title: "City and venue management." },
+      ],
+    },
+    {
+      id: "i18n",
+      title: "Italian / English language",
+      items: [
+        { id: "i18n-switch-public", title: "Switch language from the navbar on several different public pages.", expected: "No text stays in Italian when switching to EN (or vice versa)." },
+        { id: "i18n-switch-logged-in", title: "Switch language as a logged-in user.", expected: "The preference stays saved after a new login, and subsequent emails arrive in the chosen language." },
+        { id: "i18n-dates-numbers", title: "Dates and numbers are shown in the correct format in both languages." },
+      ],
+    },
+    {
+      id: "mobile",
+      title: "Mobile & responsive",
+      items: [
+        { id: "mobile-ios-notch", title: "Test on a real iPhone with a notch/Dynamic Island (Safari).", expected: "The fixed navbar is not covered by the notch." },
+        { id: "mobile-android", title: "Test on Android (Chrome)." },
+        { id: "mobile-performance", title: "No noticeable lag when scrolling the page or opening chat on mobile." },
+        { id: "responsive-tablet-desktop", title: "Layout is readable and usable on tablet and on a wide desktop screen." },
+      ],
+    },
+    {
+      id: "edge-cases",
+      title: "Edge cases",
+      items: [
+        { id: "edge-offline-submit", title: "Fill out a form and lose connection while submitting it.", expected: "A clear error message appears, not a blank page or a silent freeze." },
+        { id: "edge-back-button", title: "Use the browser's back button after submitting a form or cancelling something.", expected: "The displayed state stays consistent, no ghost data or duplicate submissions." },
+        { id: "edge-unauthorized-access", title: "Try to open an admin or dashboard page without being authorized.", expected: "You get redirected or blocked, the content is never shown." },
+      ],
+    },
+  ],
+  admin: {
+    title: "Beta checklist — results",
+    subtitle: "Outcomes reported by beta testers, aggregated by tester and by test.",
+    noResults: "No tester has filled out the checklist yet.",
+    testersHeading: "Testers",
+    testerColumn: "Tester",
+    testedColumn: "Tested",
+    okColumn: "OK",
+    problemColumn: "Problems",
+    problemsHeading: "Reported problems",
+    noProblems: "No problems reported yet.",
+    noteFallback: "(no note added)",
+    unnamedTester: "Unnamed user",
+  },
+};

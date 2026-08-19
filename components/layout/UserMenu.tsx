@@ -11,6 +11,7 @@ import {
   Ticket,
   User,
   CalendarDays,
+  ClipboardCheck,
 } from "lucide-react";
 
 import {
@@ -25,6 +26,8 @@ import {
 
 import LogoutButton from "./LogoutButton";
 
+import { isBetaChecklistEnabled } from "@/lib/betaChecklist/config";
+
 type UserMenuDict = {
   welcomeBack: string;
   accountLabel: string;
@@ -33,6 +36,7 @@ type UserMenuDict = {
   myRides: string;
   myBookings: string;
   myProfile: string;
+  betaChecklist: string;
   admin: string;
   logout: string;
 };
@@ -243,6 +247,19 @@ export default function UserMenu({
             </Link>
           }
         />
+
+        {/* Beta checklist */}
+
+        {isBetaChecklistEnabled && (
+          <DropdownMenuItem
+            render={
+              <Link href="/dashboard/beta-checklist">
+                <ClipboardCheck className="mr-2 h-4 w-4 text-emerald-600" />
+                {dict.betaChecklist}
+              </Link>
+            }
+          />
+        )}
 
         {/* Admin */}
 

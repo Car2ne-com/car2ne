@@ -20,6 +20,7 @@ export const layout = {
     myRides: "I miei passaggi",
     myBookings: "Le mie prenotazioni",
     myProfile: "Il mio profilo",
+    betaChecklist: "Beta checklist",
     admin: "Admin",
     logout: "Esci",
   },

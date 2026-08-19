@@ -7,6 +7,7 @@ import { cities } from "./cities";
 import { legal } from "./legal";
 import { profile } from "./profile";
 import { email } from "./email";
+import { betaChecklist } from "./betaChecklist";
 
 export const en = {
   layout,
@@ -18,4 +19,5 @@ export const en = {
   legal,
   profile,
   email,
+  betaChecklist,
 };
