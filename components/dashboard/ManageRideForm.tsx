@@ -21,10 +21,74 @@ import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import RatingForm from "@/components/ratings/RatingForm";
+import ReportNoShowButton, {
+  type NoShowDict,
+} from "@/components/dashboard/ReportNoShowButton";
 import CityCombobox from "@/components/cities/CityCombobox";
 import { toOne } from "@/lib/utils/relations";
 
+type Dict = {
+  requests: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    seatsAvailable: string;
+    loading: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    requestFrom: string;
+    passengerFallback: string;
+    pendingBadge: string;
+    cancel: string;
+    reject: string;
+    rejectConfirm: string;
+    accept: string;
+    processing: string;
+    noSeatsWarning: string;
+    confirmSuccess: string;
+    rejectSuccess: string;
+  };
+  confirmedPassengers: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    passengerLabel: string;
+    openChat: string;
+  };
+  form: {
+    originCityLabel: string;
+    departureTimeLabel: string;
+    seatsLabel: string;
+    contributionLabel: string;
+    descriptionLabel: string;
+    descriptionPlaceholder: string;
+    save: string;
+    saving: string;
+    missingCity: string;
+    missingFields: string;
+    updateSuccess: string;
+  };
+  cancelRide: {
+    title: string;
+    descriptionWithPassengersSingular: string;
+    descriptionWithPassengersPlural: string;
+    descriptionNoPassengers: string;
+    confirmQuestion: string;
+    button: string;
+    buttonConfirm: string;
+    cancelling: string;
+    goBack: string;
+    successWithPassengersSingular: string;
+    successWithPassengersPlural: string;
+    successNoPassengers: string;
+  };
+};
+
+type NoShowDictProp = NoShowDict;
+
 type Props = {
+  dict: Dict;
+  noShowDict?: NoShowDictProp;
   ride: {
     id: string;
     origin_city_id: string | null;
@@ -56,6 +120,8 @@ type ConfirmedPassenger = {
 };
 
 export default function ManageRideForm({
+  dict,
+  noShowDict,
   ride,
 }: Props) {
   const router = useRouter();
@@ -194,7 +260,8 @@ export default function ManageRideForm({
             passenger: profile
               ? {
                   name:
-                    profile.name ?? "Passeggero",
+                    profile.name ??
+                    dict.requests.passengerFallback,
                 }
               : null,
           };
@@ -232,7 +299,8 @@ export default function ManageRideForm({
             id: booking.id,
             passengerId: booking.passenger_id,
             passengerName:
-              profile?.name ?? "Passeggero",
+              profile?.name ??
+              dict.requests.passengerFallback,
             conversationId:
               conversationByPassenger.get(
                 booking.passenger_id
@@ -285,9 +353,7 @@ export default function ManageRideForm({
       return;
     }
 
-    toast.success(
-      "Richiesta accettata. Il posto è stato confermato."
-    );
+    toast.success(dict.requests.confirmSuccess);
 
     await loadRequests();
     router.refresh();
@@ -327,7 +393,7 @@ export default function ManageRideForm({
       return;
     }
 
-    toast.success("Richiesta rifiutata.");
+    toast.success(dict.requests.rejectSuccess);
 
     await loadRequests();
     router.refresh();
@@ -352,8 +418,8 @@ export default function ManageRideForm({
     ) {
       toast.error(
         missingOnlyCity
-          ? "Seleziona una città di partenza dai suggerimenti."
-          : "Compila tutti i campi obbligatori."
+          ? dict.form.missingCity
+          : dict.form.missingFields
       );
       return;
     }
@@ -391,7 +457,7 @@ export default function ManageRideForm({
       return;
     }
 
-    toast.success("Passaggio aggiornato con successo.");
+    toast.success(dict.form.updateSuccess);
 
     router.push("/dashboard/rides");
     router.refresh();
@@ -435,10 +501,18 @@ export default function ManageRideForm({
       return;
     }
 
+    const c = dict.cancelRide;
+
     toast.success(
       affectedPassengerCount > 0
-        ? `Passaggio annullato. ${affectedPassengerCount} passegg${affectedPassengerCount === 1 ? "ero avvisato" : "eri avvisati"}.`
-        : "Passaggio annullato con successo."
+        ? (affectedPassengerCount === 1
+            ? c.successWithPassengersSingular
+            : c.successWithPassengersPlural
+          ).replace(
+            "{count}",
+            String(affectedPassengerCount)
+          )
+        : c.successNoPassengers
     );
 
     router.push("/dashboard/rides");
@@ -451,22 +525,21 @@ export default function ManageRideForm({
         <div className="flex items-start justify-between gap-4">
           <div>
             <span className="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
-              🔔 Richieste
+              {dict.requests.badge}
             </span>
 
             <h2 className="mt-4 text-2xl font-black text-slate-900">
-              Richieste di prenotazione
+              {dict.requests.title}
             </h2>
 
             <p className="mt-2 text-slate-500">
-              I passeggeri interessati al tuo passaggio
-              devono essere confermati da te.
+              {dict.requests.subtitle}
             </p>
           </div>
 
           <div className="shrink-0 rounded-2xl bg-emerald-50 px-4 py-3 text-center">
             <p className="text-xs font-semibold text-emerald-600">
-              Posti disponibili
+              {dict.requests.seatsAvailable}
             </p>
 
             <p className="mt-1 text-2xl font-black text-emerald-700">
@@ -477,7 +550,7 @@ export default function ManageRideForm({
 
         {loadingRequests ? (
           <div className="mt-8 rounded-2xl bg-slate-50 px-6 py-10 text-center text-sm text-slate-500">
-            Caricamento richieste...
+            {dict.requests.loading}
           </div>
         ) : requests.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center">
@@ -486,12 +559,11 @@ export default function ManageRideForm({
             </div>
 
             <h3 className="mt-4 text-lg font-bold text-slate-900">
-              Nessuna richiesta in attesa
+              {dict.requests.emptyTitle}
             </h3>
 
             <p className="mt-2 text-sm text-slate-500">
-              Quando qualcuno richiederà un posto,
-              apparirà qui.
+              {dict.requests.emptyDescription}
             </p>
           </div>
         ) : (
@@ -516,7 +588,7 @@ export default function ManageRideForm({
 
                       <div>
                         <p className="text-xs font-medium text-slate-500">
-                          Richiesta da
+                          {dict.requests.requestFrom}
                         </p>
 
                         <Link
@@ -524,12 +596,12 @@ export default function ManageRideForm({
                           className="text-lg font-bold text-slate-900 underline-offset-2 hover:underline"
                         >
                           {request.passenger?.name ??
-                            "Passeggero"}
+                            dict.requests.passengerFallback}
                         </Link>
 
                         <p className="mt-1 flex items-center gap-1.5 text-xs text-amber-600">
                           <Clock3 className="h-3.5 w-3.5" />
-                          In attesa di conferma
+                          {dict.requests.pendingBadge}
                         </p>
                       </div>
                     </div>
@@ -544,7 +616,7 @@ export default function ManageRideForm({
                           disabled={processing}
                           className="flex-1 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
                         >
-                          Annulla
+                          {dict.requests.cancel}
                         </button>
                       )}
 
@@ -559,10 +631,10 @@ export default function ManageRideForm({
                         <span className="flex items-center justify-center gap-2">
                           <XCircle className="h-4 w-4" />
                           {processing
-                            ? "..."
+                            ? dict.requests.processing
                             : confirmingReject
-                              ? "Confermi il rifiuto?"
-                              : "Rifiuta"}
+                              ? dict.requests.rejectConfirm
+                              : dict.requests.reject}
                         </span>
                       </button>
 
@@ -581,8 +653,8 @@ export default function ManageRideForm({
                           <span className="flex items-center justify-center gap-2">
                             <CheckCircle2 className="h-4 w-4" />
                             {processing
-                              ? "..."
-                              : "Accetta"}
+                              ? dict.requests.processing
+                              : dict.requests.accept}
                           </span>
                         </button>
                       )}
@@ -591,8 +663,7 @@ export default function ManageRideForm({
 
                   {ride.available_seats <= 0 && (
                     <div className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
-                      Non ci sono posti disponibili.
-                      Non puoi accettare questa richiesta.
+                      {dict.requests.noSeatsWarning}
                     </div>
                   )}
                 </div>
@@ -605,16 +676,15 @@ export default function ManageRideForm({
       {confirmedPassengers.length > 0 && (
         <section className="rounded-3xl border border-emerald-100 bg-white p-8 shadow-sm">
           <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            ✓ Passeggeri confermati
+            {dict.confirmedPassengers.badge}
           </span>
 
           <h2 className="mt-4 text-2xl font-black text-slate-900">
-            Chat del passaggio
+            {dict.confirmedPassengers.title}
           </h2>
 
           <p className="mt-2 text-slate-500">
-            Contatta direttamente i passeggeri con
-            prenotazione confermata.
+            {dict.confirmedPassengers.subtitle}
           </p>
 
           <div className="mt-6 space-y-3">
@@ -631,7 +701,7 @@ export default function ManageRideForm({
 
                     <div>
                       <p className="text-xs font-medium text-slate-500">
-                        Passeggero confermato
+                        {dict.confirmedPassengers.passengerLabel}
                       </p>
 
                       <Link
@@ -649,20 +719,30 @@ export default function ManageRideForm({
                       className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
                     >
                       <MessageCircle className="h-4 w-4" />
-                      Apri chat
+                      {dict.confirmedPassengers.openChat}
                     </Link>
                   )}
                 </div>
 
                 {rideHasPassed && (
-                  <RatingForm
-                    bookingId={passenger.id}
-                    rideId={ride.id}
-                    rateeId={passenger.passengerId}
-                    rateeName={
-                      passenger.passengerName
-                    }
-                  />
+                  <>
+                    <RatingForm
+                      bookingId={passenger.id}
+                      rideId={ride.id}
+                      rateeId={passenger.passengerId}
+                      rateeName={
+                        passenger.passengerName
+                      }
+                    />
+
+                    {noShowDict && (
+                      <ReportNoShowButton
+                        dict={noShowDict}
+                        bookingId={passenger.id}
+                        rideId={ride.id}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             ))}
@@ -677,7 +757,7 @@ export default function ManageRideForm({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Città di partenza *
+              {dict.form.originCityLabel}
             </label>
 
             <CityCombobox
@@ -690,7 +770,7 @@ export default function ManageRideForm({
 
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Ora di partenza *
+              {dict.form.departureTimeLabel}
             </label>
 
             <input
@@ -706,7 +786,7 @@ export default function ManageRideForm({
 
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Posti disponibili *
+              {dict.form.seatsLabel}
             </label>
 
             <input
@@ -724,7 +804,7 @@ export default function ManageRideForm({
 
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Contributo (€) *
+              {dict.form.contributionLabel}
             </label>
 
             <input
@@ -742,7 +822,7 @@ export default function ManageRideForm({
 
           <div className="md:col-span-2">
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Descrizione
+              {dict.form.descriptionLabel}
             </label>
 
             <textarea
@@ -752,7 +832,7 @@ export default function ManageRideForm({
                 setDescription(event.target.value)
               }
               disabled={loading || deleting}
-              placeholder="Aggiungi informazioni utili per i passeggeri..."
+              placeholder={dict.form.descriptionPlaceholder}
               className="w-full rounded-2xl border border-slate-200 px-4 py-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
             />
           </div>
@@ -765,26 +845,32 @@ export default function ManageRideForm({
             className="rounded-2xl bg-emerald-500 px-7 py-3 font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading
-              ? "Salvataggio..."
-              : "Salva modifiche"}
+              ? dict.form.saving
+              : dict.form.save}
           </button>
         </div>
       </form>
 
       <div className="rounded-3xl border border-red-200 bg-red-50 p-6">
         <h2 className="text-lg font-bold text-red-900">
-          Annulla passaggio
+          {dict.cancelRide.title}
         </h2>
 
         <p className="mt-2 text-sm leading-6 text-red-700">
           {affectedPassengerCount > 0
-            ? `Il passaggio non sarà più visibile né prenotabile da altri utenti. ${affectedPassengerCount} passegg${affectedPassengerCount === 1 ? "ero con una richiesta o prenotazione su questo passaggio riceverà" : "eri con una richiesta o prenotazione su questo passaggio riceveranno"} una notifica dell'annullamento.`
-            : "Il passaggio non sarà più visibile né prenotabile da altri utenti."}
+            ? (affectedPassengerCount === 1
+                ? dict.cancelRide.descriptionWithPassengersSingular
+                : dict.cancelRide.descriptionWithPassengersPlural
+              ).replace(
+                "{count}",
+                String(affectedPassengerCount)
+              )
+            : dict.cancelRide.descriptionNoPassengers}
         </p>
 
         {confirmingDelete && (
           <p className="mt-4 text-sm font-bold text-red-900">
-            Confermi l&apos;annullamento?
+            {dict.cancelRide.confirmQuestion}
           </p>
         )}
 
@@ -796,10 +882,10 @@ export default function ManageRideForm({
             className="rounded-2xl bg-red-500 px-6 py-3 font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {deleting
-              ? "Annullamento..."
+              ? dict.cancelRide.cancelling
               : confirmingDelete
-                ? "Sì, annulla il passaggio"
-                : "Annulla passaggio"}
+                ? dict.cancelRide.buttonConfirm
+                : dict.cancelRide.button}
           </button>
 
           {confirmingDelete && (
@@ -809,7 +895,7 @@ export default function ManageRideForm({
               disabled={deleting}
               className="rounded-2xl border border-red-200 bg-white px-6 py-3 font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Torna indietro
+              {dict.cancelRide.goBack}
             </button>
           )}
         </div>

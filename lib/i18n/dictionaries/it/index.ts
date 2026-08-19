@@ -8,6 +8,12 @@ import { legal } from "./legal";
 import { profile } from "./profile";
 import { email } from "./email";
 import { betaChecklist } from "./betaChecklist";
+import { driverVerification } from "./driverVerification";
+import { reports } from "./reports";
+import { admin } from "./admin";
+import { push } from "./push";
+import { dashboardBookings } from "./dashboardBookings";
+import { dashboardRides } from "./dashboardRides";
 
 export const it = {
   layout,
@@ -20,4 +26,10 @@ export const it = {
   profile,
   email,
   betaChecklist,
+  driverVerification,
+  reports,
+  admin,
+  push,
+  dashboardBookings,
+  dashboardRides,
 };

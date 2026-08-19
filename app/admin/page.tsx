@@ -3,19 +3,9 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
+import { romeDay } from "@/lib/utils/date";
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-
-const ROME_DAY_FORMATTER = new Intl.DateTimeFormat("en-CA", {
-  timeZone: "Europe/Rome",
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
-
-function romeDay(date: Date): string {
-  return ROME_DAY_FORMATTER.format(date);
-}
 
 export default async function AdminDashboardPage() {
   const { supabase } = await requireAdmin();
@@ -361,6 +351,13 @@ export default async function AdminDashboardPage() {
           className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
         >
           Vai agli import
+        </Link>
+
+        <Link
+          href="/admin/analytics"
+          className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+        >
+          Vai ad analytics
         </Link>
       </div>
     </main>

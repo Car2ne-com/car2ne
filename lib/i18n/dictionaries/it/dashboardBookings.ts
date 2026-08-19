@@ -1,0 +1,29 @@
+export const dashboardBookings = {
+  page: {
+    badge: "🎟️ Le mie prenotazioni",
+    title: "Le mie prenotazioni",
+    subtitle: "Gestisci i passaggi che hai prenotato su Car2ne.",
+  },
+  empty: {
+    title: "Non hai ancora prenotazioni",
+    description:
+      "Quando prenoterai un passaggio, lo troverai qui e potrai gestirlo direttamente dal tuo account.",
+    cta: "Cerca un evento",
+  },
+  card: {
+    statusConfirmed: "Confermata",
+    statusCancelled: "Annullata",
+    eventLabel: "Evento",
+    driverLabel: "Conducente",
+    driverFallback: "Conducente",
+    rideLabel: "Passaggio prenotato",
+    viewEvent: "Vedi evento",
+    openChat: "Apri chat",
+    cancelButton: "Annulla prenotazione",
+    cancelling: "Annullamento...",
+    cancelConfirmMessage:
+      "Sei sicuro di voler annullare questa prenotazione?\n\nIl posto tornerà disponibile per gli altri utenti.",
+    cancelSuccess: "Prenotazione annullata con successo.",
+    cancelError: "Impossibile annullare la prenotazione.",
+  },
+};

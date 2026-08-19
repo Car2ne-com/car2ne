@@ -43,6 +43,7 @@ export const events: (typeof it)["events"] = {
     emptyDescription: "Be the first to offer one.",
     driverFallback: "Driver",
     driverLabel: "Driver",
+    driverVerifiedBadge: "Verified",
     seatsLabel: "seats",
     statusPendingBanner: "⏳ Request awaiting driver confirmation.",
     statusConfirmedBanner: "✓ The driver confirmed your seat.",

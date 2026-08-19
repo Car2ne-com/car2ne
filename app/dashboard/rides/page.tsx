@@ -5,10 +5,13 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 import { toOne } from "@/lib/utils/relations";
 
 export default async function MyRidesPage() {
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
+  const t = dict.dashboardRides.listPage;
 
   const {
     data: { user },
@@ -62,15 +65,15 @@ export default async function MyRidesPage() {
 
         <div className="mb-10">
           <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            🚗 I miei passaggi
+            {t.badge}
           </span>
 
           <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
-            I miei passaggi
+            {t.title}
           </h1>
 
           <p className="mt-4 text-lg text-slate-600">
-            Gestisci i passaggi che hai pubblicato su Car2ne.
+            {t.subtitle}
           </p>
         </div>
 
@@ -84,20 +87,18 @@ export default async function MyRidesPage() {
             </div>
 
             <h2 className="mt-6 text-2xl font-bold text-slate-900">
-              Non hai ancora pubblicato passaggi
+              {t.emptyTitle}
             </h2>
 
             <p className="mx-auto mt-3 max-w-lg text-slate-500">
-              Quando offrirai un passaggio, lo troverai
-              qui e potrai gestirlo direttamente dal tuo
-              account.
+              {t.emptyDescription}
             </p>
 
             <Link
               href="/offer-ride"
               className="mt-8 inline-flex rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
             >
-              Offri un passaggio
+              {t.emptyCta}
             </Link>
 
           </div>
@@ -109,7 +110,7 @@ export default async function MyRidesPage() {
 
               const formattedDate =
                 new Intl.DateTimeFormat(
-                  "it-IT",
+                  locale === "en" ? "en-US" : "it-IT",
                   {
                     dateStyle: "long",
                   }
@@ -119,9 +120,9 @@ export default async function MyRidesPage() {
 
               const statusLabel =
                 ride.status === "active"
-                  ? "Attivo"
+                  ? t.statusActive
                   : ride.status === "cancelled"
-                    ? "Annullato"
+                    ? t.statusCancelled
                     : ride.status;
 
               return (
@@ -136,7 +137,7 @@ export default async function MyRidesPage() {
 
                     <div>
                       <p className="text-sm font-semibold text-emerald-600">
-                        {event?.title ?? "Evento"}
+                        {event?.title ?? t.eventLabel}
                       </p>
 
                       <h2 className="mt-1 text-2xl font-black text-slate-900">
@@ -163,11 +164,11 @@ export default async function MyRidesPage() {
                   <div className="mt-6 rounded-2xl bg-slate-50 p-5">
 
                     <p className="text-sm font-semibold text-slate-700">
-                      Evento
+                      {t.eventLabel}
                     </p>
 
                     <p className="mt-1 font-bold text-slate-900">
-                      {event?.title ?? "Evento"}
+                      {event?.title ?? t.eventLabel}
                     </p>
 
                     <p className="mt-1 text-sm text-slate-500">
@@ -186,7 +187,7 @@ export default async function MyRidesPage() {
 
                     <div>
                       <p className="text-sm text-slate-500">
-                        Data
+                        {t.dateLabel}
                       </p>
 
                       <p className="mt-1 font-semibold text-slate-900">
@@ -196,7 +197,7 @@ export default async function MyRidesPage() {
 
                     <div>
                       <p className="text-sm text-slate-500">
-                        Partenza
+                        {t.departureLabel}
                       </p>
 
                       <p className="mt-1 font-semibold text-slate-900">
@@ -206,7 +207,7 @@ export default async function MyRidesPage() {
 
                     <div>
                       <p className="text-sm text-slate-500">
-                        Posti disponibili
+                        {t.seatsLabel}
                       </p>
 
                       <p className="mt-1 font-semibold text-slate-900">
@@ -216,7 +217,7 @@ export default async function MyRidesPage() {
 
                     <div>
                       <p className="text-sm text-slate-500">
-                        Contributo
+                        {t.contributionLabel}
                       </p>
 
                       <p className="mt-1 text-xl font-black text-emerald-600">
@@ -253,7 +254,7 @@ export default async function MyRidesPage() {
                         href={`/events/${event.slug}`}
                         className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
                       >
-                        Vedi evento
+                        {t.viewEvent}
                       </Link>
                     )}
 
@@ -265,7 +266,7 @@ export default async function MyRidesPage() {
                         target="_self"
                         className="flex-1 rounded-2xl bg-emerald-500 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-600"
                       >
-                        Gestisci
+                        {t.manage}
                       </a>
                     )}
 

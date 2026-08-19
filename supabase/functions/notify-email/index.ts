@@ -29,13 +29,21 @@ const EMAIL_NOTIFICATION_TYPES = new Set([
   "booking_rejected",
   "booking_request",
   "ride_cancelled",
+  "driver_verification_approved",
+  "driver_verification_rejected",
+  "report_resolved",
+  "report_dismissed",
 ]);
 
 type NotificationType =
   | "booking_confirmed"
   | "booking_rejected"
   | "booking_request"
-  | "ride_cancelled";
+  | "ride_cancelled"
+  | "driver_verification_approved"
+  | "driver_verification_rejected"
+  | "report_resolved"
+  | "report_dismissed";
 
 type NotificationRecord = {
   user_id: string;
@@ -112,11 +120,78 @@ const EMAIL_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       ctaLabel: "Go to bookings",
     },
   },
+  driver_verification_approved: {
+    it: {
+      subject: "Verifica conducente approvata",
+      heading: "Sei un conducente verificato!",
+      body: "Ciao {name},\n\nAbbiamo verificato i tuoi dati e il tuo veicolo. Il badge \"Conducente verificato\" è ora visibile sul tuo profilo.",
+      ctaLabel: "Vai al tuo profilo",
+    },
+    en: {
+      subject: "Driver verification approved",
+      heading: "You're a verified driver!",
+      body: "Hi {name},\n\nWe've verified your details and vehicle. The \"Verified driver\" badge is now visible on your profile.",
+      ctaLabel: "Go to your profile",
+    },
+  },
+  driver_verification_rejected: {
+    it: {
+      subject: "Verifica conducente rifiutata",
+      heading: "Verifica non approvata",
+      body: "Ciao {name},\n\nNon siamo riusciti ad approvare la tua richiesta di verifica conducente. Puoi controllare la motivazione e inviare una nuova richiesta.",
+      ctaLabel: "Controlla la verifica",
+    },
+    en: {
+      subject: "Driver verification declined",
+      heading: "Verification not approved",
+      body: "Hi {name},\n\nWe couldn't approve your driver verification request. You can check the reason and submit a new request.",
+      ctaLabel: "Check your verification",
+    },
+  },
+  report_resolved: {
+    it: {
+      subject: "Segnalazione risolta",
+      heading: "La tua segnalazione è stata gestita",
+      body: "Ciao {name},\n\nAbbiamo esaminato la tua segnalazione e l'abbiamo contrassegnata come risolta.",
+      ctaLabel: "Vai alla pagina segnalazioni",
+    },
+    en: {
+      subject: "Report resolved",
+      heading: "Your report has been handled",
+      body: "Hi {name},\n\nWe've reviewed your report and marked it as resolved.",
+      ctaLabel: "Go to reports",
+    },
+  },
+  report_dismissed: {
+    it: {
+      subject: "Segnalazione archiviata",
+      heading: "La tua segnalazione è stata archiviata",
+      body: "Ciao {name},\n\nAbbiamo esaminato la tua segnalazione e l'abbiamo archiviata senza ulteriori azioni.",
+      ctaLabel: "Vai alla pagina segnalazioni",
+    },
+    en: {
+      subject: "Report dismissed",
+      heading: "Your report has been dismissed",
+      body: "Hi {name},\n\nWe've reviewed your report and dismissed it with no further action.",
+      ctaLabel: "Go to reports",
+    },
+  },
 };
 
 function getHref(type: string) {
   if (type === "booking_request") {
     return "/dashboard/rides";
+  }
+
+  if (
+    type === "driver_verification_approved" ||
+    type === "driver_verification_rejected"
+  ) {
+    return "/dashboard/verification";
+  }
+
+  if (type === "report_resolved" || type === "report_dismissed") {
+    return "/segnala-un-problema";
   }
 
   return "/dashboard/bookings";

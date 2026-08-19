@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import Image from "next/image";
-
 import {
   ArrowRight,
+  BadgeCheck,
   CalendarDays,
   CarFront,
   Clock3,
@@ -16,10 +15,12 @@ import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import RatingStars from "@/components/ratings/RatingStars";
+import VerifiedAvatar from "@/components/ui/VerifiedAvatar";
 
 type RidesDict = {
   driverFallback: string;
   driverLabel: string;
+  driverVerifiedBadge: string;
   seatsLabel: string;
   statusPendingBanner: string;
   statusConfirmedBanner: string;
@@ -48,6 +49,7 @@ type Props = {
 
     driver: string;
     driverSurname?: string | null;
+    isVerifiedDriver?: boolean;
     avatarUrl: string | null;
 
     from: string;
@@ -280,27 +282,32 @@ export default function RideCard({
 
       <div className="flex items-center gap-4">
 
-        {ride.avatarUrl ? (
-          <Image
-            src={ride.avatarUrl}
-            alt={displayName}
-            width={56}
-            height={56}
-            className="h-14 w-14 rounded-full object-cover ring-2 ring-emerald-50"
-          />
-        ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-lg font-bold text-emerald-600">
-            {initials ||
-              driverName
-                .charAt(0)
-                .toUpperCase()}
-          </div>
-        )}
+        <VerifiedAvatar
+          src={ride.avatarUrl}
+          alt={displayName}
+          initials={
+            initials || driverName.charAt(0).toUpperCase()
+          }
+          isVerified={!!ride.isVerifiedDriver}
+          verifiedLabel={dict.driverVerifiedBadge}
+        />
 
         <div>
-          <h3 className="text-lg font-bold text-slate-900">
-            {displayName}
-          </h3>
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-lg font-bold text-slate-900">
+              {displayName}
+            </h3>
+
+            {ride.isVerifiedDriver && (
+              <span
+                title={dict.driverVerifiedBadge}
+                className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700"
+              >
+                <BadgeCheck className="h-3.5 w-3.5" />
+                {dict.driverVerifiedBadge}
+              </span>
+            )}
+          </div>
 
           <p className="text-sm text-slate-500">
             {dict.driverLabel}

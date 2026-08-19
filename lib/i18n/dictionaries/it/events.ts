@@ -41,6 +41,7 @@ export const events = {
     emptyDescription: "Sii il primo ad offrirne uno.",
     driverFallback: "Conducente",
     driverLabel: "Conducente",
+    driverVerifiedBadge: "Verificato",
     seatsLabel: "posti",
     statusPendingBanner: "⏳ Richiesta in attesa di conferma del conducente.",
     statusConfirmedBanner: "✓ Il conducente ha confermato il tuo posto.",

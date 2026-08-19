@@ -25,8 +25,30 @@ import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import RatingForm from "@/components/ratings/RatingForm";
+import ReportNoShowButton, {
+  type NoShowDict,
+} from "@/components/dashboard/ReportNoShowButton";
+
+type Dict = {
+  statusConfirmed: string;
+  statusCancelled: string;
+  eventLabel: string;
+  driverLabel: string;
+  driverFallback: string;
+  rideLabel: string;
+  viewEvent: string;
+  openChat: string;
+  cancelButton: string;
+  cancelling: string;
+  cancelConfirmMessage: string;
+  cancelSuccess: string;
+  cancelError: string;
+};
 
 type Props = {
+  dict: Dict;
+  noShowDict: NoShowDict;
+  locale: "it" | "en";
   booking: {
     id: string;
     status: string;
@@ -53,6 +75,9 @@ type Props = {
 };
 
 export default function BookingCard({
+  dict,
+  noShowDict,
+  locale,
   booking,
 }: Props) {
   const router = useRouter();
@@ -123,7 +148,7 @@ export default function BookingCard({
     }
 
     const confirmed = window.confirm(
-      "Sei sicuro di voler annullare questa prenotazione?\n\nIl posto tornerà disponibile per gli altri utenti."
+      dict.cancelConfirmMessage
     );
 
     if (!confirmed) {
@@ -148,8 +173,7 @@ export default function BookingCard({
       setCancelling(false);
 
       toast.error(
-        error.message ||
-          "Impossibile annullare la prenotazione."
+        error.message || dict.cancelError
       );
 
       return;
@@ -157,17 +181,16 @@ export default function BookingCard({
 
     setCancelling(false);
 
-    toast.success(
-      "Prenotazione annullata con successo."
-    );
+    toast.success(dict.cancelSuccess);
 
     router.refresh();
   }
 
   const formattedDate =
-    new Intl.DateTimeFormat("it-IT", {
-      dateStyle: "long",
-    }).format(
+    new Intl.DateTimeFormat(
+      locale === "en" ? "en-US" : "it-IT",
+      { dateStyle: "long" }
+    ).format(
       new Date(booking.departureDate)
     );
 
@@ -198,19 +221,19 @@ export default function BookingCard({
         {isConfirmed ? (
           <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-700">
             <CheckCircle2 className="h-3.5 w-3.5" />
-            Confermata
+            {dict.statusConfirmed}
           </span>
         ) : (
           <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
             <XCircle className="h-3.5 w-3.5" />
-            Annullata
+            {dict.statusCancelled}
           </span>
         )}
       </div>
 
       <div className="mt-6 rounded-2xl bg-slate-50 p-5">
         <p className="text-sm font-semibold text-slate-700">
-          Evento
+          {dict.eventLabel}
         </p>
 
         <p className="mt-1 font-bold text-slate-900">
@@ -238,7 +261,7 @@ export default function BookingCard({
 
         <div>
           <p className="text-xs text-slate-500">
-            Conducente
+            {dict.driverLabel}
           </p>
 
           <p className="font-semibold text-slate-900 underline-offset-2 hover:underline">
@@ -260,7 +283,7 @@ export default function BookingCard({
 
         <div className="flex items-center gap-2 text-sm text-slate-600">
           <CarFront className="h-4 w-4 text-emerald-600" />
-          Passaggio prenotato
+          {dict.rideLabel}
         </div>
 
         <div className="text-right text-xl font-black text-emerald-600">
@@ -296,7 +319,7 @@ export default function BookingCard({
             href={`/events/${booking.eventSlug}`}
             className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
           >
-            Vedi evento
+            {dict.viewEvent}
             <ArrowRight className="h-4 w-4" />
           </Link>
         )}
@@ -307,7 +330,7 @@ export default function BookingCard({
             className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
           >
             <MessageCircle className="h-4 w-4" />
-            Apri chat
+            {dict.openChat}
           </Link>
         )}
 
@@ -319,19 +342,27 @@ export default function BookingCard({
             className="flex-1 rounded-2xl bg-red-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {cancelling
-              ? "Annullamento..."
-              : "Annulla prenotazione"}
+              ? dict.cancelling
+              : dict.cancelButton}
           </button>
         )}
       </div>
 
       {isConfirmed && rideHasPassed && (
-        <RatingForm
-          bookingId={booking.id}
-          rideId={booking.rideId}
-          rateeId={booking.driverId}
-          rateeName={booking.driverName}
-        />
+        <>
+          <RatingForm
+            bookingId={booking.id}
+            rideId={booking.rideId}
+            rateeId={booking.driverId}
+            rateeName={booking.driverName}
+          />
+
+          <ReportNoShowButton
+            dict={noShowDict}
+            bookingId={booking.id}
+            rideId={booking.rideId}
+          />
+        </>
       )}
     </div>
   );

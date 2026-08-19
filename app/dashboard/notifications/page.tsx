@@ -5,8 +5,10 @@ import { Bell } from "lucide-react";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import PushNotificationToggle from "@/components/notifications/PushNotificationToggle";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 import {
   getNotificationHref,
   getNotificationIcon,
@@ -14,6 +16,7 @@ import {
 
 export default async function NotificationsPage() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user },
@@ -91,6 +94,8 @@ export default async function NotificationsPage() {
           )}
 
         </div>
+
+        <PushNotificationToggle dict={dict.push} />
 
         {/* Nessuna notifica */}
 

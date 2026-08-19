@@ -6,11 +6,13 @@ import Footer from "@/components/layout/Footer";
 import BookingCard from "@/components/dashboard/BookingCard";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 import { isPastDateTime } from "@/lib/utils/date";
 import { toOne } from "@/lib/utils/relations";
 
 export default async function MyBookingsPage() {
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
 
   const {
     data: { user },
@@ -74,15 +76,15 @@ export default async function MyBookingsPage() {
 
         <div className="mb-10">
           <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            🎟️ Le mie prenotazioni
+            {dict.dashboardBookings.page.badge}
           </span>
 
           <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
-            Le mie prenotazioni
+            {dict.dashboardBookings.page.title}
           </h1>
 
           <p className="mt-4 text-lg text-slate-600">
-            Gestisci i passaggi che hai prenotato su Car2ne.
+            {dict.dashboardBookings.page.subtitle}
           </p>
         </div>
 
@@ -96,20 +98,18 @@ export default async function MyBookingsPage() {
             </div>
 
             <h2 className="mt-6 text-2xl font-bold text-slate-900">
-              Non hai ancora prenotazioni
+              {dict.dashboardBookings.empty.title}
             </h2>
 
             <p className="mx-auto mt-3 max-w-lg text-slate-500">
-              Quando prenoterai un passaggio, lo troverai
-              qui e potrai gestirlo direttamente dal tuo
-              account.
+              {dict.dashboardBookings.empty.description}
             </p>
 
             <Link
               href="/events"
               className="mt-8 inline-flex rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
             >
-              Cerca un evento
+              {dict.dashboardBookings.empty.cta}
             </Link>
 
           </div>
@@ -132,6 +132,9 @@ export default async function MyBookingsPage() {
               return (
                 <BookingCard
                   key={booking.id}
+                  dict={dict.dashboardBookings.card}
+                  noShowDict={dict.reports.noShow}
+                  locale={locale}
                   booking={{
                     id: booking.id,
 
@@ -169,7 +172,7 @@ export default async function MyBookingsPage() {
                     driverId: ride.driver_id,
 
                     driverName:
-                      profile?.name ?? "Conducente",
+                      profile?.name ?? dict.dashboardBookings.card.driverFallback,
 
                     rideHasPassed:
                       isPastDateTime(

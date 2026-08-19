@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import ManageRideForm from "@/components/dashboard/ManageRideForm";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 import { isPastDateTime } from "@/lib/utils/date";
 
 type Props = {
@@ -19,6 +20,8 @@ export default async function ManageRidePage({
   const { id } = await params;
 
   const supabase = await createClient();
+  const { locale, dict } = await getTranslations();
+  const t = dict.dashboardRides;
 
   const {
     data: { user },
@@ -43,7 +46,6 @@ export default async function ManageRidePage({
         event_id,
         origin_city_id,
         departure_city,
-        destination,
         departure_date,
         departure_time,
         available_seats,
@@ -99,7 +101,7 @@ export default async function ManageRidePage({
   }
 
   const formattedDate = new Intl.DateTimeFormat(
-    "it-IT",
+    locale === "en" ? "en-US" : "it-IT",
     {
       dateStyle: "long",
     }
@@ -115,15 +117,15 @@ export default async function ManageRidePage({
 
         <div className="mb-10">
           <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-            🚗 Gestisci passaggio
+            {t.managePage.badge}
           </span>
 
           <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
-            Modifica il tuo passaggio
+            {t.managePage.title}
           </h1>
 
           <p className="mt-4 text-lg text-slate-600">
-            Aggiorna le informazioni del tuo viaggio.
+            {t.managePage.subtitle}
           </p>
         </div>
 
@@ -132,7 +134,7 @@ export default async function ManageRidePage({
         <div className="mb-8 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
 
           <p className="text-sm font-semibold text-emerald-600">
-            Evento
+            {t.managePage.eventLabel}
           </p>
 
           <h2 className="mt-1 text-2xl font-black text-slate-900">
@@ -145,7 +147,7 @@ export default async function ManageRidePage({
 
             <div>
               <p className="text-sm text-slate-500">
-                Destinazione
+                {t.managePage.destinationLabel}
               </p>
 
               <p className="mt-1 font-semibold text-slate-900">
@@ -157,7 +159,7 @@ export default async function ManageRidePage({
 
             <div>
               <p className="text-sm text-slate-500">
-                Data evento
+                {t.managePage.eventDateLabel}
               </p>
 
               <p className="mt-1 font-semibold text-slate-900">
@@ -169,7 +171,7 @@ export default async function ManageRidePage({
 
             <div>
               <p className="text-sm text-slate-500">
-                Città
+                {t.managePage.cityLabel}
               </p>
 
               <p className="mt-1 font-semibold text-slate-900">
@@ -180,15 +182,15 @@ export default async function ManageRidePage({
           </div>
 
           <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">
-            ℹ️ Evento, destinazione e data sono
-            determinati dall&apos;evento e non possono essere
-            modificati.
+            {t.managePage.infoLocked}
           </div>
         </div>
 
         {/* Form */}
 
         <ManageRideForm
+          dict={t}
+          noShowDict={dict.reports.noShow}
           ride={{
             id: ride.id,
             origin_city_id: ride.origin_city_id,

@@ -1,14 +1,31 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
   CarFront,
   Search,
   User,
 } from "lucide-react";
 
-export default function DashboardActions() {
+type Dict = {
+  title: string;
+  description: string;
+  cta: string;
+  ctaPending: string;
+  ctaVerified: string;
+};
+
+type Props = {
+  dict: Dict;
+  verificationStatus: string | null;
+};
+
+export default function DashboardActions({
+  dict,
+  verificationStatus,
+}: Props) {
   return (
-    <section className="mt-12 grid gap-6 lg:grid-cols-3">
+    <section className="mt-12 grid gap-6 lg:grid-cols-2">
       {/* Modifica profilo */}
 
       <Link
@@ -79,6 +96,35 @@ export default function DashboardActions() {
 
         <div className="mt-8 flex items-center gap-2 font-semibold text-emerald-600">
           Esplora eventi
+
+          <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+        </div>
+      </Link>
+
+      {/* Verifica conducente */}
+
+      <Link
+        href="/dashboard/verification"
+        className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl"
+      >
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100">
+          <BadgeCheck className="h-8 w-8 text-emerald-600" />
+        </div>
+
+        <h2 className="mt-8 text-3xl font-black text-slate-900">
+          {dict.title}
+        </h2>
+
+        <p className="mt-3 max-w-sm text-slate-600">
+          {dict.description}
+        </p>
+
+        <div className="mt-8 flex items-center gap-2 font-semibold text-emerald-600">
+          {verificationStatus === "approved"
+            ? dict.ctaVerified
+            : verificationStatus === "pending"
+              ? dict.ctaPending
+              : dict.cta}
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>

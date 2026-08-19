@@ -3,8 +3,10 @@ import { notFound, redirect } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RatingStars from "@/components/ratings/RatingStars";
+import VerifiedAvatar from "@/components/ui/VerifiedAvatar";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -16,6 +18,7 @@ export default async function PublicProfilePage({
   const { id } = await params;
 
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user },
@@ -78,7 +81,9 @@ export default async function PublicProfilePage({
 
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("id, name, surname, avatar_url, city, bio")
+    .select(
+      "id, name, surname, avatar_url, city, bio, is_verified_driver"
+    )
     .eq("id", id)
     .single();
 
@@ -138,17 +143,14 @@ export default async function PublicProfilePage({
       <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
         <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
           <div className="flex flex-col items-center text-center">
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={displayName}
-                className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
-              />
-            ) : (
-              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-600 ring-4 ring-emerald-50">
-                {initials}
-              </div>
-            )}
+            <VerifiedAvatar
+              src={profile.avatar_url}
+              alt={displayName}
+              initials={initials}
+              isVerified={!!profile.is_verified_driver}
+              verifiedLabel={dict.driverVerification.badge}
+              size="lg"
+            />
 
             <h1 className="mt-6 text-3xl font-black text-slate-900">
               {displayName}

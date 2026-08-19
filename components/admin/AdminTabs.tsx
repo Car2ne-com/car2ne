@@ -5,18 +5,39 @@ import { usePathname } from "next/navigation";
 
 import { isBetaChecklistEnabled } from "@/lib/betaChecklist/config";
 
-const TABS = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/events", label: "Eventi" },
-  { href: "/admin/users", label: "Utenti" },
-  { href: "/admin/import", label: "Import" },
-  ...(isBetaChecklistEnabled
-    ? [{ href: "/admin/beta-checklist", label: "Beta checklist" }]
-    : []),
-];
+type Tabs = {
+  dashboard: string;
+  events: string;
+  users: string;
+  import: string;
+  driverVerifications: string;
+  reports: string;
+  analytics: string;
+  betaChecklist: string;
+};
 
-export default function AdminTabs() {
+type Props = {
+  tabs: Tabs;
+};
+
+export default function AdminTabs({ tabs }: Props) {
   const pathname = usePathname();
+
+  const TABS = [
+    { href: "/admin", label: tabs.dashboard },
+    { href: "/admin/events", label: tabs.events },
+    { href: "/admin/users", label: tabs.users },
+    { href: "/admin/import", label: tabs.import },
+    {
+      href: "/admin/driver-verifications",
+      label: tabs.driverVerifications,
+    },
+    { href: "/admin/reports", label: tabs.reports },
+    { href: "/admin/analytics", label: tabs.analytics },
+    ...(isBetaChecklistEnabled
+      ? [{ href: "/admin/beta-checklist", label: tabs.betaChecklist }]
+      : []),
+  ];
 
   return (
     <nav className="flex gap-2 overflow-x-auto border-b border-slate-200">

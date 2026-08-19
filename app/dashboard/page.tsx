@@ -8,9 +8,11 @@ import DashboardActions from "@/components/dashboard/DashboardActions";
 import MyBookings from "@/components/dashboard/MyBookings";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user },
@@ -26,6 +28,7 @@ export default async function DashboardPage() {
     activeRidesResult,
     bookingsResult,
     ratingsResult,
+    verificationResult,
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -59,6 +62,12 @@ export default async function DashboardPage() {
       .from("ratings")
       .select("rating")
       .eq("ratee_id", user.id),
+
+    supabase
+      .from("driver_verifications")
+      .select("status")
+      .eq("user_id", user.id)
+      .maybeSingle(),
   ]);
 
   const seatsOffered =
@@ -101,7 +110,12 @@ export default async function DashboardPage() {
           ratingsCount={ratings.length}
         />
 
-        <DashboardActions />
+        <DashboardActions
+          dict={dict.driverVerification.dashboardCard}
+          verificationStatus={
+            verificationResult.data?.status ?? null
+          }
+        />
 
         <div className="mt-12">
           <MyBookings />

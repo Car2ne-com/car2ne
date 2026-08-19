@@ -1,6 +1,8 @@
 import {
+  BadgeCheck,
   CheckCircle2,
   Clock3,
+  Flag,
   Star,
   User2,
   XCircle,
@@ -70,6 +72,42 @@ export function getNotificationIcon(
     );
   }
 
+  if (type === "driver_verification_approved") {
+    return (
+      <div className={`${wrapperClass} bg-emerald-100`}>
+        <BadgeCheck
+          className={`${iconClass} text-emerald-600`}
+        />
+      </div>
+    );
+  }
+
+  if (
+    type === "driver_verification_rejected" ||
+    type === "driver_verification_expired"
+  ) {
+    return (
+      <div className={`${wrapperClass} bg-red-100`}>
+        <XCircle
+          className={`${iconClass} text-red-500`}
+        />
+      </div>
+    );
+  }
+
+  if (
+    type === "report_resolved" ||
+    type === "report_dismissed"
+  ) {
+    return (
+      <div className={`${wrapperClass} bg-slate-100`}>
+        <Flag
+          className={`${iconClass} text-slate-500`}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={`${wrapperClass} bg-slate-100`}>
       <Clock3
@@ -99,6 +137,21 @@ export function getNotificationHref(
     notification.booking_id
   ) {
     return "/dashboard/bookings";
+  }
+
+  if (
+    notification.type === "driver_verification_approved" ||
+    notification.type === "driver_verification_rejected" ||
+    notification.type === "driver_verification_expired"
+  ) {
+    return "/dashboard/verification";
+  }
+
+  if (
+    notification.type === "report_resolved" ||
+    notification.type === "report_dismissed"
+  ) {
+    return "/segnala-un-problema";
   }
 
   return "/dashboard";

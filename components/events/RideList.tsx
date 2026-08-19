@@ -31,7 +31,8 @@ export default async function RideList({
       profiles (
         name,
         surname,
-        avatar_url
+        avatar_url,
+        is_verified_driver
       )
     `)
     .eq("event_id", eventId)
@@ -102,6 +103,9 @@ export default async function RideList({
         driverSurname:
           profile?.surname ??
           "",
+
+        isVerifiedDriver:
+          profile?.is_verified_driver ?? false,
 
         avatarUrl,
 
