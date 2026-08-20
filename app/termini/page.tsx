@@ -13,7 +13,7 @@ export default async function TerminiPage() {
     return (
       <LegalPageLayout
         title="Terms and Conditions"
-        updatedAt="August 17, 2026"
+        updatedAt="August 20, 2026"
       >
         <LegalSection title="1. Purpose">
           <p>
@@ -57,6 +57,20 @@ export default async function TerminiPage() {
             or what happens during the shared ride,
             which remains an independent agreement
             between users.
+          </p>
+
+          <p>
+            Some drivers may optionally request
+            verification of their driving license and
+            vehicle by submitting the relevant documents
+            for review. A &quot;verified driver&quot;
+            badge only confirms that the submitted
+            documents were reviewed and found consistent;
+            it is not a guarantee by Car2ne of the
+            driver&apos;s conduct, reliability or of the
+            actual condition of the vehicle, and does not
+            reduce the independence of the agreement
+            between users described above.
           </p>
         </LegalSection>
 
@@ -130,7 +144,7 @@ export default async function TerminiPage() {
   return (
     <LegalPageLayout
       title="Termini e Condizioni"
-      updatedAt="17 agosto 2026"
+      updatedAt="20 agosto 2026"
     >
       <LegalSection title="1. Oggetto">
         <p>
@@ -177,6 +191,23 @@ export default async function TerminiPage() {
           avviene durante il passaggio
           condiviso, che rimane un accordo
           autonomo tra gli utenti.
+        </p>
+
+        <p>
+          Alcuni conducenti possono richiedere
+          facoltativamente la verifica della
+          patente e del veicolo, inviando i
+          relativi documenti per la revisione. Il
+          badge &quot;conducente verificato&quot;
+          attesta solo che i documenti inviati
+          sono stati esaminati e risultano
+          coerenti; non costituisce una garanzia
+          di Car2ne sulla condotta o
+          l&apos;affidabilità del conducente né
+          sulle reali condizioni del veicolo, e
+          non riduce l&apos;autonomia
+          dell&apos;accordo tra utenti descritta
+          sopra.
         </p>
       </LegalSection>
 

@@ -11,7 +11,7 @@ export default async function PrivacyPolicyPage() {
     return (
       <LegalPageLayout
         title="Privacy Policy"
-        updatedAt="August 17, 2026"
+        updatedAt="August 20, 2026"
       >
         <LegalSection title="1. Data Controller">
           <p>
@@ -86,6 +86,21 @@ export default async function PrivacyPolicyPage() {
             </li>
 
             <li>
+              <strong>Driver verification data (optional):</strong>{" "}
+              if you request driver verification, we
+              collect your driving license number,
+              vehicle plate, make and model, and a copy
+              of your driving license or ID document.
+              The document is stored in a private,
+              access-restricted archive and is deleted
+              once your request has been reviewed, or
+              automatically after 14 days if still
+              pending; only the outcome of the
+              verification (approved/rejected) is kept
+              afterwards.
+            </li>
+
+            <li>
               <strong>Reviews:</strong> if you leave or
               receive a review after a ride, we record
               the rating (1-5) and any text comment,
@@ -100,6 +115,17 @@ export default async function PrivacyPolicyPage() {
             </li>
 
             <li>
+              <strong>Reports and reliability data:</strong>{" "}
+              if you or another user submit a report
+              about a ride (including a no-show report),
+              we record the ride/booking concerned, the
+              report category, any free-text description
+              and the identity of the user the report
+              concerns — even when that user is not the
+              one who submitted it.
+            </li>
+
+            <li>
               <strong>Account security data:</strong> if
               you enable two-factor authentication
               (2FA), we record the status of the
@@ -107,6 +133,15 @@ export default async function PrivacyPolicyPage() {
               &quot;remember this device&quot;, we
               store a unique device identifier
               (encrypted) for 14 days.
+            </li>
+
+            <li>
+              <strong>Push notification data:</strong> if
+              you enable push notifications, we store
+              the subscription your browser generates
+              (a delivery endpoint and encryption keys)
+              in order to send notifications to your
+              device.
             </li>
 
             <li>
@@ -134,10 +169,13 @@ export default async function PrivacyPolicyPage() {
             manage your account; verify that you meet
             the minimum age required to use Car2ne (18
             years); allow you to offer or book a ride;
-            enable communication between users via
-            chat; display reviews to other users;
-            ensure account security (2FA); respond to
-            the reports you send us.
+            review and manage driver verification
+            requests; enable communication between users
+            via chat; display reviews to other users;
+            handle reports between users, including
+            no-show reports, to keep the community safe;
+            ensure account security (2FA); send you the
+            push notifications you have enabled.
           </p>
         </LegalSection>
 
@@ -175,6 +213,16 @@ export default async function PrivacyPolicyPage() {
               <strong>Google</strong> — only if you
               choose to sign in via Google OAuth.
             </li>
+
+            <li>
+              <strong>Browser push notification services</strong>{" "}
+              — if you enable push notifications, the
+              notification is relayed through your
+              browser vendor&apos;s own push service
+              (e.g. Google, Mozilla, Apple), which only
+              handles delivery to your device and does
+              not have access to your Car2ne account.
+            </li>
           </ul>
         </LegalSection>
 
@@ -183,7 +231,9 @@ export default async function PrivacyPolicyPage() {
             Data is retained for the entire duration of
             the account. Upon account deletion, data is
             removed, except as necessary to comply with
-            legal obligations.
+            legal obligations. Driver verification
+            documents follow a shorter, dedicated
+            retention period described in Section 2.
           </p>
         </LegalSection>
 
@@ -220,7 +270,7 @@ export default async function PrivacyPolicyPage() {
   return (
     <LegalPageLayout
       title="Privacy Policy"
-      updatedAt="17 agosto 2026"
+      updatedAt="20 agosto 2026"
     >
       <LegalSection title="1. Titolare del trattamento">
         <p>
@@ -301,6 +351,23 @@ export default async function PrivacyPolicyPage() {
           </li>
 
           <li>
+            <strong>Dati di verifica conducente (facoltativi):</strong>{" "}
+            se richiedi la verifica come
+            conducente, raccogliamo il numero di
+            patente, la targa, marca e modello
+            del veicolo e una copia della patente
+            o di un documento d&apos;identità.
+            Il documento è conservato in un
+            archivio privato e ad accesso
+            limitato e viene cancellato al
+            termine della revisione, oppure
+            automaticamente dopo 14 giorni se
+            resta in attesa; in seguito viene
+            conservato solo l&apos;esito della
+            verifica (approvata/rifiutata).
+          </li>
+
+          <li>
             <strong>Recensioni:</strong> se
             lasci o ricevi una recensione al
             termine di un passaggio, registriamo
@@ -318,6 +385,21 @@ export default async function PrivacyPolicyPage() {
           </li>
 
           <li>
+            <strong>Segnalazioni e dati di affidabilità:</strong>{" "}
+            se tu o un altro utente inviate una
+            segnalazione relativa a un passaggio
+            (inclusa una segnalazione di
+            no-show), registriamo il
+            passaggio/prenotazione interessati,
+            la categoria della segnalazione, un
+            eventuale testo descrittivo e
+            l&apos;identità dell&apos;utente a
+            cui la segnalazione si riferisce —
+            anche quando non è lui ad averla
+            inviata.
+          </li>
+
+          <li>
             <strong>Dati di sicurezza dell&apos;account:</strong>{" "}
             se attivi l&apos;autenticazione a due
             fattori (2FA), registriamo lo stato
@@ -327,6 +409,16 @@ export default async function PrivacyPolicyPage() {
             identificatore univoco del
             dispositivo (in forma cifrata) per
             14 giorni.
+          </li>
+
+          <li>
+            <strong>Dati delle notifiche push:</strong>{" "}
+            se attivi le notifiche push,
+            memorizziamo la sottoscrizione
+            generata dal tuo browser (un
+            endpoint di consegna e chiavi di
+            cifratura) necessaria per inviarti
+            le notifiche sul tuo dispositivo.
           </li>
 
           <li>
@@ -358,12 +450,17 @@ export default async function PrivacyPolicyPage() {
           che tu abbia l&apos;età minima
           richiesta per usare Car2ne (18 anni);
           permetterti di offrire o prenotare un
-          passaggio; consentire la comunicazione
-          tra utenti tramite la chat; mostrare
-          le recensioni ad altri utenti;
-          garantire la sicurezza
-          dell&apos;account (2FA); rispondere
-          alle segnalazioni che ci invii.
+          passaggio; esaminare e gestire le
+          richieste di verifica conducente;
+          consentire la comunicazione tra utenti
+          tramite la chat; mostrare le recensioni
+          ad altri utenti; gestire le
+          segnalazioni tra utenti, incluse
+          quelle di no-show, per garantire la
+          sicurezza della community; garantire la
+          sicurezza dell&apos;account (2FA);
+          inviarti le notifiche push che hai
+          attivato.
         </p>
       </LegalSection>
 
@@ -406,6 +503,17 @@ export default async function PrivacyPolicyPage() {
             scegli l&apos;accesso tramite Google
             OAuth.
           </li>
+
+          <li>
+            <strong>Servizi di notifica push del browser</strong>{" "}
+            — se attivi le notifiche push, la
+            notifica viene trasmessa attraverso
+            il servizio push del produttore del
+            tuo browser (es. Google, Mozilla,
+            Apple), che gestisce solo la consegna
+            al dispositivo e non ha accesso al
+            tuo account Car2ne.
+          </li>
         </ul>
       </LegalSection>
 
@@ -416,7 +524,10 @@ export default async function PrivacyPolicyPage() {
           cancellazione dell&apos;account, i
           dati vengono rimossi, salvo quanto
           necessario per adempiere a obblighi di
-          legge.
+          legge. I documenti di verifica
+          conducente seguono un periodo di
+          conservazione più breve e dedicato,
+          descritto al punto 2.
         </p>
       </LegalSection>
 
