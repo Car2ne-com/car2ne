@@ -13,4 +13,8 @@ export const push = {
   enableSuccess: "Notifiche push attivate.",
   disableSuccess: "Notifiche push disattivate.",
   genericError: "Non è stato possibile aggiornare le notifiche push.",
+  promptTitle: "Vuoi attivare le notifiche push?",
+  promptDescription:
+    "Ti avvisiamo su richieste di prenotazione, conferme e aggiornamenti anche quando non hai Car2ne aperto.",
+  dismiss: "Non ora",
 };

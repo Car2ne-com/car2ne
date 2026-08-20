@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Bell, BellOff } from "lucide-react";
 import { toast } from "sonner";
+
+import { usePushSubscription } from "@/lib/hooks/usePushSubscription";
 
 export type PushDict = {
   title: string;
@@ -17,128 +18,31 @@ export type PushDict = {
   enableSuccess: string;
   disableSuccess: string;
   genericError: string;
+  promptTitle: string;
+  promptDescription: string;
+  dismiss: string;
 };
 
 type Props = {
   dict: PushDict;
 };
 
-function urlBase64ToUint8Array(base64String: string): Uint8Array {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, "+")
-    .replace(/_/g, "/");
-
-  const rawData = atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; i += 1) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-
-  return outputArray;
-}
-
 export default function PushNotificationToggle({ dict }: Props) {
-  const [supported, setSupported] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
-  const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      !("serviceWorker" in navigator) ||
-      !("PushManager" in window)
-    ) {
-      return;
-    }
-
-    setSupported(true);
-
-    navigator.serviceWorker
-      .register("/sw.js")
-      .then(async (registration) => {
-        const existing = await registration.pushManager.getSubscription();
-        setSubscribed(!!existing);
-      })
-      .catch(() => {
-        setSupported(false);
-      });
-  }, []);
+  const { supported, subscribed, busy, enable, disable } =
+    usePushSubscription();
 
   async function handleEnable() {
-    const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-
-    if (!vapidPublicKey) {
-      toast.error(dict.genericError);
-      return;
-    }
-
-    setBusy(true);
-
-    try {
-      const permission = await Notification.requestPermission();
-
-      if (permission !== "granted") {
-        toast.error(dict.permissionDenied);
-        return;
-      }
-
-      const registration = await navigator.serviceWorker.ready;
-
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(
-          vapidPublicKey
-        ) as BufferSource,
-      });
-
-      const json = subscription.toJSON();
-
-      const response = await fetch("/api/push/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(json),
-      });
-
-      if (!response.ok) {
-        throw new Error("subscribe failed");
-      }
-
-      setSubscribed(true);
-      toast.success(dict.enableSuccess);
-    } catch {
-      toast.error(dict.genericError);
-    } finally {
-      setBusy(false);
-    }
+    const ok = await enable();
+    toast[ok ? "success" : "error"](
+      ok ? dict.enableSuccess : dict.genericError
+    );
   }
 
   async function handleDisable() {
-    setBusy(true);
-
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-
-      if (subscription) {
-        const endpoint = subscription.endpoint;
-        await subscription.unsubscribe();
-
-        await fetch("/api/push/subscribe", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ endpoint }),
-        });
-      }
-
-      setSubscribed(false);
-      toast.success(dict.disableSuccess);
-    } catch {
-      toast.error(dict.genericError);
-    } finally {
-      setBusy(false);
-    }
+    const ok = await disable();
+    toast[ok ? "success" : "error"](
+      ok ? dict.disableSuccess : dict.genericError
+    );
   }
 
   if (!supported) {

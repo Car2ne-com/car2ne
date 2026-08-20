@@ -6,6 +6,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import DashboardActions from "@/components/dashboard/DashboardActions";
 import MyBookings from "@/components/dashboard/MyBookings";
+import PushNotificationPrompt from "@/components/notifications/PushNotificationPrompt";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -97,6 +98,8 @@ export default async function DashboardPage() {
             profileResult.data?.name ?? "👋"
           }
         />
+
+        <PushNotificationPrompt dict={dict.push} />
 
         <DashboardStats
           ridesCount={

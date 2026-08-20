@@ -15,4 +15,8 @@ export const push: (typeof it)["push"] = {
   enableSuccess: "Push notifications enabled.",
   disableSuccess: "Push notifications disabled.",
   genericError: "Couldn't update push notifications.",
+  promptTitle: "Want to turn on push notifications?",
+  promptDescription:
+    "We'll let you know about booking requests, confirmations and updates even when Car2ne isn't open.",
+  dismiss: "Not now",
 };
