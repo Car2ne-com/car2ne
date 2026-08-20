@@ -77,8 +77,8 @@ export default function EventCard({ event, locale, dict }: Props) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           </>
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-emerald-500 via-emerald-400 to-emerald-300">
-            <Music2 className="h-12 w-12 text-white" />
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary via-primary/90 to-primary/70">
+            <Music2 className="h-12 w-12 text-primary-foreground" />
           </div>
         )}
 

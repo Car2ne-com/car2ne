@@ -87,7 +87,7 @@ export default function ForgotPasswordForm({ dict }: Props) {
 
         <Link
           href="/login"
-          className="inline-block text-sm font-semibold text-primary hover:text-emerald-700"
+          className="inline-block text-sm font-semibold text-primary hover:text-primary/80"
         >
           {dict.common.backToLogin}
         </Link>
@@ -120,7 +120,7 @@ export default function ForgotPasswordForm({ dict }: Props) {
         <Button
           type="submit"
           disabled={loading}
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
           {loading
             ? dict.forgotPasswordForm.sending
@@ -130,7 +130,7 @@ export default function ForgotPasswordForm({ dict }: Props) {
         <p className="text-center text-sm text-muted-foreground">
           <Link
             href="/login"
-            className="font-semibold text-primary hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             {dict.common.backToLogin}
           </Link>

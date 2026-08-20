@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,6 +24,8 @@ type Props = {
 };
 
 export default function RegisterForm({ dict }: Props) {
+  const router = useRouter();
+
   const supabase = useMemo(
     () => createClient(),
     []
@@ -171,6 +174,7 @@ export default function RegisterForm({ dict }: Props) {
     }
 
     toast.success(dict.registerForm.success);
+    router.push("/verifica-email");
   }
 
   /*
@@ -476,7 +480,7 @@ export default function RegisterForm({ dict }: Props) {
           {confirmPassword.length > 0 &&
             password ===
               confirmPassword && (
-              <p className="mt-1.5 text-xs font-medium text-emerald-600">
+              <p className="mt-1.5 text-xs font-medium text-primary">
                 {dict.common.passwordsMatch}
               </p>
             )}
@@ -496,7 +500,7 @@ export default function RegisterForm({ dict }: Props) {
             disabled={
               loading || !!oauthLoading
             }
-            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+            className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary"
           />
 
           <span>
@@ -504,7 +508,7 @@ export default function RegisterForm({ dict }: Props) {
             <Link
               href="/termini"
               target="_blank"
-              className="font-semibold text-primary hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               {dict.registerForm.termsAndConditions}
             </Link>{" "}
@@ -512,7 +516,7 @@ export default function RegisterForm({ dict }: Props) {
             <Link
               href="/privacy"
               target="_blank"
-              className="font-semibold text-primary hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               {dict.registerForm.privacyPolicy}
             </Link>
@@ -533,7 +537,7 @@ export default function RegisterForm({ dict }: Props) {
             !acceptedTerms ||
             !isAdult
           }
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
           {loading
             ? dict.registerForm.creatingAccount
@@ -581,7 +585,7 @@ export default function RegisterForm({ dict }: Props) {
           {dict.registerForm.haveAccount}{" "}
           <Link
             href="/login"
-            className="font-semibold text-primary hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             {dict.registerForm.loginLink}
           </Link>
@@ -608,15 +612,15 @@ function PasswordRule({
     <div
       className={`flex items-center gap-2 text-xs font-medium ${
         valid
-          ? "text-emerald-600"
-          : "text-slate-400"
+          ? "text-primary"
+          : "text-muted-foreground"
       }`}
     >
       <span
         className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold ${
           valid
-            ? "bg-emerald-100"
-            : "bg-slate-200"
+            ? "bg-accent"
+            : "bg-muted"
         }`}
       >
         {valid ? "✓" : "•"}

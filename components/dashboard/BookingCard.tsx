@@ -51,6 +51,7 @@ type Dict = {
 };
 
 type RatingFormDict = {
+  starLabel: string;
   selectStar: string;
   submitted: string;
   yourReview: string;

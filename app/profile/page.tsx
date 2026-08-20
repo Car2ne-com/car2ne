@@ -42,7 +42,7 @@ export default async function ProfilePage() {
             {dict.profile.title}
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             {dict.profile.subtitle}
           </p>
         </div>

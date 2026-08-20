@@ -243,7 +243,7 @@ export default function AdminReportTable({
                       title={dict.dismiss}
                       aria-label={dict.dismiss}
                       size="icon-lg"
-                      className="rounded-xl bg-slate-400 text-white hover:bg-slate-500"
+                      className="rounded-xl bg-muted-foreground text-background hover:bg-foreground"
                     >
                       <XCircle className="h-4 w-4" />
                     </Button>

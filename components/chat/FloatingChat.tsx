@@ -836,7 +836,7 @@ export default function FloatingChat({
     <div className="fixed bottom-6 right-6 z-[60]">
       {open && (
         <div className="absolute bottom-16 right-0 mb-3 w-[380px] max-w-[calc(100vw-32px)] overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
-          <div className="flex items-center justify-between border-b border-slate-100 bg-card px-5 py-4">
+          <div className="flex items-center justify-between border-b border-border bg-card px-5 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent">
                 <MessageCircle className="h-5 w-5 text-accent-foreground" />
@@ -860,7 +860,7 @@ export default function FloatingChat({
               onClick={() =>
                 setOpen(false)
               }
-              className="h-9 w-9 rounded-full text-slate-400 hover:text-slate-700"
+              className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground/90"
               aria-label={dict.closeAriaLabel}
             >
               <X className="h-5 w-5" />
@@ -924,7 +924,7 @@ export default function FloatingChat({
                         }
                       );
                     }}
-                    className={`flex items-center gap-3 border-b border-slate-100 px-5 py-4 transition last:border-b-0 ${
+                    className={`flex items-center gap-3 border-b border-border px-5 py-4 transition last:border-b-0 ${
                       hasUnread
                         ? "bg-accent/50 hover:bg-accent"
                         : "hover:bg-muted"
@@ -942,7 +942,7 @@ export default function FloatingChat({
                         height={48}
                         className={`h-12 w-12 shrink-0 rounded-full object-cover ${
                           hasUnread
-                            ? "ring-2 ring-emerald-300"
+                            ? "ring-2 ring-primary/50"
                             : "ring-2 ring-accent"
                         }`}
                       />
@@ -950,7 +950,7 @@ export default function FloatingChat({
                       <div
                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold ${
                           hasUnread
-                            ? "bg-emerald-200 text-emerald-700"
+                            ? "bg-primary/20 text-primary"
                             : "bg-accent text-accent-foreground"
                         }`}
                       >
@@ -966,7 +966,7 @@ export default function FloatingChat({
                           className={`truncate text-sm ${
                             hasUnread
                               ? "font-black text-foreground"
-                              : "font-bold text-slate-800"
+                              : "font-bold text-foreground"
                           }`}
                         >
                           {
@@ -978,7 +978,7 @@ export default function FloatingChat({
                           className={`shrink-0 text-[10px] ${
                             hasUnread
                               ? "font-semibold text-primary"
-                              : "text-slate-400"
+                              : "text-muted-foreground"
                           }`}
                         >
                           {formatDate(
@@ -991,7 +991,7 @@ export default function FloatingChat({
                         <p
                           className={`min-w-0 flex-1 truncate text-xs ${
                             hasUnread
-                              ? "font-semibold text-slate-700"
+                              ? "font-semibold text-foreground/90"
                               : "text-muted-foreground"
                           }`}
                         >
@@ -1028,14 +1028,14 @@ export default function FloatingChat({
                       </div>
                     </div>
 
-                    <ChevronRight className="h-4 w-4 shrink-0 text-slate-300" />
+                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/60" />
                   </Link>
                 );
               })
             )}
           </div>
 
-          <div className="border-t border-slate-100 bg-muted px-5 py-3 text-center">
+          <div className="border-t border-border bg-muted px-5 py-3 text-center">
             <Link
               href="/chat"
               onClick={() =>

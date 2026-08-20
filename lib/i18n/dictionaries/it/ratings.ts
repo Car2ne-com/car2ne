@@ -1,5 +1,6 @@
 export const ratings = {
   form: {
+    starLabel: "{count} stelle",
     selectStar: "Seleziona almeno una stella.",
     submitted: "Recensione inviata!",
     yourReview: "La tua recensione",

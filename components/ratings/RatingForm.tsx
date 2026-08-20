@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import RatingStars from "@/components/ratings/RatingStars";
 import { createClient } from "@/lib/supabase/client";
 
 type Dict = {
+  starLabel: string;
   selectStar: string;
   submitted: string;
   yourReview: string;
@@ -135,21 +138,21 @@ export default function RatingForm({
 
   if (existing) {
     return (
-      <div className="mt-6 rounded-2xl bg-slate-50 p-4">
-        <p className="text-xs font-semibold text-slate-500">
+      <Card className="mt-6 bg-muted p-4">
+        <p className="text-xs font-semibold text-muted-foreground">
           {dict.yourReview}
         </p>
 
         <div className="mt-2">
-          <RatingStars value={existing.rating} />
+          <RatingStars value={existing.rating} starLabel={dict.starLabel} />
         </div>
 
         {existing.comment && (
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-muted-foreground">
             {existing.comment}
           </p>
         )}
-      </div>
+      </Card>
     );
   }
 
@@ -167,8 +170,8 @@ export default function RatingForm({
   }
 
   return (
-    <div className="mt-6 space-y-3 rounded-2xl bg-slate-50 p-4">
-      <p className="text-sm font-semibold text-slate-700">
+    <Card className="mt-6 space-y-3 bg-muted p-4">
+      <p className="text-sm font-semibold text-foreground/90">
         {dict.reviewPrompt.replace("{name}", rateeName)}
       </p>
 
@@ -176,9 +179,10 @@ export default function RatingForm({
         value={rating}
         onChange={setRating}
         size={24}
+        starLabel={dict.starLabel}
       />
 
-      <textarea
+      <Textarea
         value={comment}
         onChange={(e) =>
           setComment(e.target.value)
@@ -186,7 +190,7 @@ export default function RatingForm({
         rows={3}
         maxLength={300}
         placeholder={dict.commentPlaceholder}
-        className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+        className="bg-background"
       />
 
       <div className="flex gap-2">
@@ -194,7 +198,7 @@ export default function RatingForm({
           type="button"
           disabled={submitting}
           onClick={handleSubmit}
-          className="h-10 rounded-2xl bg-emerald-500 px-5 text-sm font-semibold hover:bg-emerald-600"
+          className="h-10 rounded-2xl bg-primary px-5 text-sm font-semibold hover:bg-primary/90"
         >
           {submitting
             ? dict.sending
@@ -211,6 +215,6 @@ export default function RatingForm({
           {dict.cancelButton}
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }

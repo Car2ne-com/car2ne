@@ -204,7 +204,7 @@ export default function VerifyAgeForm({
         <Button
           type="submit"
           disabled={loading || !birthDate}
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
           {loading
             ? dict.verifyAge.verifying

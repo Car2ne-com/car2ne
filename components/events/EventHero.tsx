@@ -30,7 +30,7 @@ export default function EventHero({ event, locale }: Props) {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-emerald-500 to-emerald-400" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-primary/75" />
 
       <div className="absolute inset-0 bg-black/20" />
 
@@ -41,11 +41,11 @@ export default function EventHero({ event, locale }: Props) {
               {event.title}
             </h1>
 
-            <p className="mt-3 text-2xl font-semibold text-emerald-100">
+            <p className="mt-3 text-2xl font-semibold text-primary-foreground/85">
               {event.artist_slug ? (
                 <Link
                   href={`/artista/${event.artist_slug}`}
-                  className="underline decoration-emerald-100/40 underline-offset-4 hover:decoration-emerald-100"
+                  className="underline decoration-primary-foreground/40 underline-offset-4 hover:decoration-primary-foreground"
                 >
                   {event.artist}
                 </Link>

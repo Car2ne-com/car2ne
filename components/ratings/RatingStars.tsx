@@ -6,12 +6,14 @@ type Props = {
   value: number;
   onChange?: (value: number) => void;
   size?: number;
+  starLabel?: string;
 };
 
 export default function RatingStars({
   value,
   onChange,
   size = 20,
+  starLabel,
 }: Props) {
   const interactive = !!onChange;
 
@@ -23,7 +25,11 @@ export default function RatingStars({
           type="button"
           disabled={!interactive}
           onClick={() => onChange?.(star)}
-          aria-label={`${star} stelle`}
+          aria-label={
+            starLabel
+              ? starLabel.replace("{count}", String(star))
+              : String(star)
+          }
           className={
             interactive
               ? "cursor-pointer"
@@ -38,7 +44,7 @@ export default function RatingStars({
             className={
               star <= Math.round(value)
                 ? "fill-amber-400 text-amber-400"
-                : "fill-transparent text-slate-300"
+                : "fill-transparent text-muted-foreground/60"
             }
           />
         </button>

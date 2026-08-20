@@ -195,7 +195,7 @@ export default function MfaChallengeForm({
               )
             }
             disabled={loading}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+            className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
           />
           {dict.loginForm.trustDevice}
         </label>
@@ -203,7 +203,7 @@ export default function MfaChallengeForm({
         <Button
           type="submit"
           disabled={loading || !factorId}
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
           {loading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
         </Button>

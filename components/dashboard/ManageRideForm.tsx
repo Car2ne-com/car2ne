@@ -92,6 +92,7 @@ type Dict = {
 type NoShowDictProp = NoShowDict;
 
 type RatingFormDict = {
+  starLabel: string;
   selectStar: string;
   submitted: string;
   yourReview: string;

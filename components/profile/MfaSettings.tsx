@@ -284,7 +284,7 @@ export default function MfaSettings({ dict }: Props) {
 
       <div className="mt-6">
         {loadingFactors ? (
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-muted-foreground">
             {dict.loading}
           </p>
         ) : enrollState ? (
@@ -345,7 +345,7 @@ export default function MfaSettings({ dict }: Props) {
               <Button
                 type="submit"
                 disabled={busy}
-                className="h-11 rounded-2xl bg-emerald-500 px-6 font-semibold hover:bg-emerald-600"
+                className="h-11 rounded-2xl bg-primary px-6 font-semibold hover:bg-primary/90"
               >
                 {dict.verifyAndEnableButton}
               </Button>
@@ -363,7 +363,7 @@ export default function MfaSettings({ dict }: Props) {
           </form>
         ) : verifiedFactorId ? (
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+            <div className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
               <ShieldCheck className="h-4 w-4" />
               {dict.activeLabel}
             </div>
@@ -398,7 +398,7 @@ export default function MfaSettings({ dict }: Props) {
           </div>
         ) : (
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">
+            <div className="flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-semibold text-muted-foreground">
               <ShieldOff className="h-4 w-4" />
               {dict.inactiveLabel}
             </div>
@@ -407,7 +407,7 @@ export default function MfaSettings({ dict }: Props) {
               type="button"
               disabled={busy}
               onClick={handleStartEnroll}
-              className="h-11 rounded-2xl bg-emerald-500 px-6 font-semibold hover:bg-emerald-600"
+              className="h-11 rounded-2xl bg-primary px-6 font-semibold hover:bg-primary/90"
             >
               {dict.enableButton}
             </Button>

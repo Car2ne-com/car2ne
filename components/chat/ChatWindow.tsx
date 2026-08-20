@@ -440,7 +440,7 @@ export default function ChatWindow({
     if (message.delivered_at) {
       return (
         <CheckCheck
-          className="h-4 w-4 text-emerald-100"
+          className="h-4 w-4 text-primary-foreground/80"
           aria-label={dict.statusDelivered}
         />
       );
@@ -448,7 +448,7 @@ export default function ChatWindow({
 
     return (
       <Check
-        className="h-4 w-4 text-emerald-100"
+        className="h-4 w-4 text-primary-foreground/80"
         aria-label={dict.statusSent}
       />
     );
@@ -459,7 +459,7 @@ export default function ChatWindow({
 
       {/* HEADER */}
 
-      <div className="border-b border-slate-100 p-6">
+      <div className="border-b border-border p-6">
         <div className="flex items-center gap-4">
 
           {avatarUrl ? (
@@ -506,7 +506,7 @@ export default function ChatWindow({
               {ride.destination}
             </p>
 
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-muted-foreground">
               {ride.departure_date}
               {" · "}
               {ride.departure_time.slice(
@@ -557,7 +557,7 @@ export default function ChatWindow({
                   className={`max-w-[75%] rounded-2xl px-4 py-3 ${
                     isMine
                       ? "rounded-br-md bg-primary text-primary-foreground"
-                      : "rounded-bl-md bg-card text-slate-700 shadow-sm"
+                      : "rounded-bl-md bg-card text-foreground/90 shadow-sm"
                   }`}
                 >
 
@@ -568,8 +568,8 @@ export default function ChatWindow({
                   <div
                     className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${
                       isMine
-                        ? "text-emerald-100"
-                        : "text-slate-400"
+                        ? "text-primary-foreground/80"
+                        : "text-muted-foreground"
                     }`}
                   >
 
@@ -607,7 +607,7 @@ export default function ChatWindow({
 
         <form
           onSubmit={handleSend}
-          className="border-t border-slate-100 bg-card p-4"
+          className="border-t border-border bg-card p-4"
         >
 
           <div className="flex items-end gap-3">
@@ -655,7 +655,7 @@ export default function ChatWindow({
 
           </div>
 
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2 text-xs text-muted-foreground">
             {dict.inputHint}
           </p>
 
@@ -663,17 +663,17 @@ export default function ChatWindow({
 
       ) : (
 
-        <div className="border-t border-slate-100 bg-muted p-5">
+        <div className="border-t border-border bg-muted p-5">
 
           <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4">
 
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
               <LockKeyhole className="h-5 w-5 text-muted-foreground" />
             </div>
 
             <div>
 
-              <p className="font-semibold text-slate-800">
+              <p className="font-semibold text-foreground">
                 {dict.closedTitle}
               </p>
 

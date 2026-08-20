@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import { createClient } from "@/lib/supabase/client";
+import CityCombobox from "@/components/cities/CityCombobox";
 
 type Profile = {
   id: string;
@@ -32,6 +33,7 @@ type Profile = {
   avatar_url: string | null;
   phone: string | null;
   city: string | null;
+  city_id: string | null;
   bio: string | null;
 };
 
@@ -49,6 +51,15 @@ type Dict = {
   publicProfileDescription: string;
   cityLabel: string;
   cityPlaceholder: string;
+  cityCombobox: {
+    changeCityAriaLabel: string;
+    searching: string;
+    searchFailed: string;
+    noCityFound: string;
+    minCharsHint: string;
+    selectSuggestion: string;
+    placeholder: string;
+  };
   bioLabel: string;
   bioPlaceholder: string;
   bioHint: string;
@@ -81,7 +92,11 @@ export default function ProfileForm({
   const router = useRouter();
   const supabase = createClient();
 
-  const [city, setCity] = useState(
+  const [cityId, setCityId] = useState(
+    profile.city_id ?? ""
+  );
+
+  const [cityName, setCityName] = useState(
     profile.city ?? ""
   );
 
@@ -363,7 +378,8 @@ export default function ProfileForm({
     const { error } = await supabase
       .from("profiles")
       .update({
-        city: city.trim() || null,
+        city: cityName.trim() || null,
+        city_id: cityId || null,
         bio: bio.trim() || null,
       })
       .eq("id", profile.id);
@@ -408,7 +424,7 @@ export default function ProfileForm({
               <img
                 src={previewUrl}
                 alt={dict.avatarPreviewAlt}
-                className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
+                className="h-28 w-28 rounded-full object-cover ring-4 ring-accent"
               />
             ) : avatarUrl ? (
               <Image
@@ -416,17 +432,17 @@ export default function ProfileForm({
                 alt={displayName}
                 width={112}
                 height={112}
-                className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
+                className="h-28 w-28 rounded-full object-cover ring-4 ring-accent"
               />
             ) : (
-              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-600 ring-4 ring-emerald-50">
+              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-accent text-3xl font-black text-primary ring-4 ring-accent">
                 {initials}
               </div>
             )}
 
             <label
               htmlFor="avatar-upload"
-              className="absolute bottom-0 right-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-4 border-white bg-emerald-500 text-white shadow-md transition hover:bg-emerald-600"
+              className="absolute bottom-0 right-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-4 border-white bg-primary text-white shadow-md transition hover:bg-primary/90"
             >
               <Camera className="h-5 w-5" />
 
@@ -447,7 +463,7 @@ export default function ProfileForm({
           </p>
 
           {selectedFile && (
-            <p className="mt-2 text-sm font-semibold text-emerald-600">
+            <p className="mt-2 text-sm font-semibold text-primary">
               {dict.newPhotoSelected}
             </p>
           )}
@@ -460,7 +476,7 @@ export default function ProfileForm({
             {profile.email}
           </p>
 
-          <span className="mt-4 rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-semibold text-emerald-700">
+          <span className="mt-4 rounded-full bg-accent px-4 py-1.5 text-xs font-semibold text-accent-foreground">
             {dict.memberBadge}
           </span>
 
@@ -548,15 +564,16 @@ export default function ProfileForm({
 
           <Label>{dict.cityLabel}</Label>
 
-          <Input
-            value={city}
-            onChange={(e) =>
-              setCity(e.target.value)
-            }
+          <CityCombobox
+            value={cityId}
+            onChange={(id, name) => {
+              setCityId(id);
+              setCityName(name);
+            }}
+            initialLabel={profile.city ?? undefined}
             disabled={isSaving}
             placeholder={dict.cityPlaceholder}
-            maxLength={100}
-            className="h-14 rounded-2xl"
+            dict={dict.cityCombobox}
           />
 
         </div>
@@ -579,7 +596,7 @@ export default function ProfileForm({
             className="rounded-2xl p-4"
           />
 
-          <div className="mt-2 flex justify-between text-xs text-slate-400">
+          <div className="mt-2 flex justify-between text-xs text-muted-foreground">
 
             <span>
               {dict.bioHint}
@@ -601,7 +618,7 @@ export default function ProfileForm({
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="h-12 rounded-2xl bg-emerald-500 px-8 font-semibold hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-12 rounded-2xl bg-primary px-8 font-semibold hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSaving ? (
               <>

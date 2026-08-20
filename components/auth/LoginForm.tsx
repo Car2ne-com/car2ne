@@ -434,7 +434,7 @@ export default function LoginForm({ dict }: Props) {
                 )
               }
               disabled={mfaLoading}
-              className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+              className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
             />
             {dict.loginForm.trustDevice}
           </label>
@@ -442,7 +442,7 @@ export default function LoginForm({ dict }: Props) {
           <Button
             type="submit"
             disabled={mfaLoading}
-            className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+            className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
           >
             {mfaLoading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
           </Button>
@@ -556,7 +556,7 @@ export default function LoginForm({ dict }: Props) {
                 loading ||
                 !!oauthLoading
               }
-              className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+              className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
             />
 
             {dict.loginForm.rememberMe}
@@ -564,7 +564,7 @@ export default function LoginForm({ dict }: Props) {
 
           <Link
             href="/forgot-password"
-            className="font-medium text-primary hover:text-emerald-700"
+            className="font-medium text-primary hover:text-primary/80"
           >
             {dict.loginForm.forgotPassword}
           </Link>
@@ -578,7 +578,7 @@ export default function LoginForm({ dict }: Props) {
             loading ||
             !!oauthLoading
           }
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
           {loading
             ? dict.loginForm.loggingIn
@@ -626,7 +626,7 @@ export default function LoginForm({ dict }: Props) {
 
           <Link
             href="/register"
-            className="font-semibold text-primary hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             {dict.loginForm.signUpLink}
           </Link>

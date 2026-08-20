@@ -168,22 +168,23 @@ export default async function PublicProfilePage({
                 <>
                   <RatingStars
                     value={ratingAverage}
+                    starLabel={dict.ratings.form.starLabel}
                   />
 
-                  <span className="text-sm font-semibold text-slate-600">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     {ratingAverage.toFixed(1)} (
                     {ratings.length})
                   </span>
                 </>
               ) : (
-                <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-muted-foreground">
+                <span className="rounded-full bg-muted px-4 py-1.5 text-xs font-semibold text-muted-foreground">
                   {dict.profile.publicProfile.noReviewsYet}
                 </span>
               )}
             </div>
 
             {profile.bio && (
-              <p className="mt-6 max-w-xl text-slate-600">
+              <p className="mt-6 max-w-xl text-muted-foreground">
                 {profile.bio}
               </p>
             )}
@@ -200,7 +201,7 @@ export default async function PublicProfilePage({
               {ratings.map((rating, index) => (
                 <div
                   key={index}
-                  className="border-t border-slate-100 pt-5 first:border-t-0 first:pt-0"
+                  className="border-t border-border pt-5 first:border-t-0 first:pt-0"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <p className="font-semibold text-foreground">
@@ -212,11 +213,12 @@ export default async function PublicProfilePage({
                     <RatingStars
                       value={rating.rating}
                       size={16}
+                      starLabel={dict.ratings.form.starLabel}
                     />
                   </div>
 
                   {rating.comment && (
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 text-sm text-muted-foreground">
                       {rating.comment}
                     </p>
                   )}

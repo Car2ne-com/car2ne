@@ -205,7 +205,7 @@ export default function ResetPasswordForm({ dict }: Props) {
             !passwordIsValid ||
             password !== confirmPassword
           }
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
           {loading
             ? dict.resetPasswordForm.updating
@@ -227,15 +227,15 @@ function PasswordRule({
     <div
       className={`flex items-center gap-2 text-xs font-medium ${
         valid
-          ? "text-emerald-600"
-          : "text-slate-400"
+          ? "text-primary"
+          : "text-muted-foreground"
       }`}
     >
       <span
         className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold ${
           valid
-            ? "bg-emerald-100"
-            : "bg-slate-200"
+            ? "bg-accent"
+            : "bg-muted"
         }`}
       >
         {valid ? "✓" : "•"}

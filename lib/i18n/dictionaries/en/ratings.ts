@@ -2,6 +2,7 @@ import type { it } from "../it";
 
 export const ratings: (typeof it)["ratings"] = {
   form: {
+    starLabel: "{count} stars",
     selectStar: "Select at least one star.",
     submitted: "Review submitted!",
     yourReview: "Your review",

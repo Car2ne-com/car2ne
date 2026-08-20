@@ -550,7 +550,7 @@ export default function ChatList({
         <Link
           key={chat.id}
           href={`/chat/${chat.id}`}
-          className="flex items-center gap-5 border-b border-slate-100 p-6 transition last:border-b-0 hover:bg-muted"
+          className="flex items-center gap-5 border-b border-border p-6 transition last:border-b-0 hover:bg-muted"
         >
           {chat.avatarUrl ? (
             <Image
@@ -573,7 +573,7 @@ export default function ChatList({
               </h2>
 
               <div className="flex items-center gap-3">
-                <span className="shrink-0 text-xs text-slate-400">
+                <span className="shrink-0 text-xs text-muted-foreground">
                   {formatDate(
                     chat.lastActivity
                   )}
@@ -604,7 +604,7 @@ export default function ChatList({
             <p
               className={`mt-2 truncate text-sm ${
                 chat.unreadCount > 0
-                  ? "font-semibold text-slate-700"
+                  ? "font-semibold text-foreground/90"
                   : "text-muted-foreground"
               }`}
             >
@@ -623,7 +623,7 @@ export default function ChatList({
             </p>
           </div>
 
-          <ChevronRight className="h-5 w-5 shrink-0 text-slate-300" />
+          <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/60" />
         </Link>
       ))}
     </Card>
