@@ -404,7 +404,10 @@ export default function OfferRideForm({ locale, dict }: Props) {
     }
 
     void loadEvents();
-  }, []);
+    // supabase è un client singleton (createBrowserClient di @supabase/ssr
+    // restituisce sempre la stessa istanza lato client), quindi includerlo
+    // qui non cambia quando l'effect viene eseguito rispetto a `[]`.
+  }, [supabase]);
 
   /*
    * ==============================

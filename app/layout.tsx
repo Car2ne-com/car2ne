@@ -36,7 +36,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { locale } = await getTranslations();
+  const { locale, dict } = await getTranslations();
 
   return (
     <html
@@ -49,7 +49,7 @@ export default async function RootLayout({
 
         {children}
 
-        <FloatingChat />
+        <FloatingChat dict={dict.chat.floating} />
 
         <Toaster
           position="bottom-right"

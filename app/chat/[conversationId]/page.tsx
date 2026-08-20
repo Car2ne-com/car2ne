@@ -9,6 +9,7 @@ import Footer from "@/components/layout/Footer";
 import ChatWindow from "@/components/chat/ChatWindow";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   params: Promise<{
@@ -22,6 +23,7 @@ export default async function ConversationPage({
   const { conversationId } = await params;
 
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   /*
    * ==============================
@@ -252,7 +254,7 @@ export default async function ConversationPage({
     ? `${otherProfile.name ?? ""} ${
         otherProfile.surname ?? ""
       }`.trim()
-    : "Utente";
+    : dict.chat.conversationPage.otherUserFallback;
 
   /*
    * ==============================
@@ -267,7 +269,7 @@ export default async function ConversationPage({
   let canSendMessages = false;
 
   let chatClosedReason: string | null =
-    "Non è più possibile inviare nuovi messaggi in questa conversazione.";
+    dict.chat.window.closedDefaultReason;
 
   if (ride) {
     const {
@@ -296,7 +298,7 @@ export default async function ConversationPage({
       chatClosedReason = null;
     } else {
       chatClosedReason =
-        "La prenotazione non è più attiva.";
+        dict.chat.conversationPage.bookingInactiveReason;
     }
   }
 
@@ -313,10 +315,10 @@ export default async function ConversationPage({
       <main className="mx-auto max-w-5xl px-6 pb-24 pt-32">
         <Link
           href="/chat"
-          className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-emerald-600"
+          className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition hover:text-primary"
         >
           <ChevronLeft className="h-4 w-4" />
-          Torna alle chat
+          {dict.chat.conversationPage.backLink}
         </Link>
 
         <ChatWindow
@@ -330,6 +332,7 @@ export default async function ConversationPage({
           initialMessages={messages ?? []}
           canSendMessages={canSendMessages}
           chatClosedReason={chatClosedReason}
+          dict={dict.chat.window}
         />
       </main>
 

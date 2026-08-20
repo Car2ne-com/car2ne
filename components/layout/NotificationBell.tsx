@@ -328,6 +328,10 @@ export default function NotificationBell({ locale, dict }: Props) {
      */
 
     if (!user) {
+      // Reset dello stato locale specchio della sottoscrizione realtime
+      // quando l'utente esce (sync con lo stato esterno di auth), non
+      // derivazione da altro stato/props renderizzato.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNotifications([]);
       setUnreadCount(0);
       setUnreadMessagesCount(0);

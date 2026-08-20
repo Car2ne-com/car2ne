@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import EventSearch from "./EventSearch";
 import EventGrid from "./EventGrid";
@@ -144,9 +144,19 @@ export default function EventsView({
     });
   }, [events, search, initialDate, cityId, effectiveVenueId]);
 
-  useEffect(() => {
+  /*
+   * Reset della paginazione quando cambiano i filtri, calcolato
+   * durante il render (pattern "Adjusting state when a prop
+   * changes" di React) invece che con un effect + setState, per
+   * evitare un render extra a cascata.
+   */
+  const filterKey = `${search}|${initialDate}|${cityId}|${effectiveVenueId}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
     setVisibleCount(PAGE_SIZE);
-  }, [search, initialDate, cityId, effectiveVenueId]);
+  }
 
   const visibleEvents = filteredEvents.slice(
     0,

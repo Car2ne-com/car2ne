@@ -14,6 +14,7 @@ import { admin } from "./admin";
 import { push } from "./push";
 import { dashboardBookings } from "./dashboardBookings";
 import { dashboardRides } from "./dashboardRides";
+import { chat } from "./chat";
 
 export const en = {
   layout,
@@ -32,4 +33,5 @@ export const en = {
   push,
   dashboardBookings,
   dashboardRides,
+  chat,
 };

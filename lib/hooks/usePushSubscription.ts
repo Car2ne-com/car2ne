@@ -40,6 +40,10 @@ export function usePushSubscription() {
       return;
     }
 
+    // Feature detection + lettura dei permessi Notification (external
+    // browser APIs) al mount: sync legittima, non derivazione da altro
+    // stato/props.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSupported(true);
     setPermission(Notification.permission);
 

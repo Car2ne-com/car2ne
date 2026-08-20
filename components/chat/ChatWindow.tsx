@@ -52,6 +52,21 @@ type Event = {
   event_date: string;
 } | null;
 
+type ChatWindowDict = {
+  subtitle: string;
+  statusRead: string;
+  statusDelivered: string;
+  statusSent: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  inputPlaceholder: string;
+  sendAriaLabel: string;
+  inputHint: string;
+  closedTitle: string;
+  closedDefaultReason: string;
+  sendError: string;
+};
+
 type Props = {
   conversationId: string;
   currentUserId: string;
@@ -63,6 +78,7 @@ type Props = {
   initialMessages: Message[];
   canSendMessages?: boolean;
   chatClosedReason?: string | null;
+  dict: ChatWindowDict;
 };
 
 export default function ChatWindow({
@@ -76,6 +92,7 @@ export default function ChatWindow({
   initialMessages,
   canSendMessages = true,
   chatClosedReason = null,
+  dict,
 }: Props) {
   const supabase = useMemo(
     () => createClient(),
@@ -365,7 +382,7 @@ export default function ChatWindow({
       );
 
       toast.error(
-        "Non è stato possibile inviare il messaggio."
+        dict.sendError
       );
 
       return;
@@ -415,7 +432,7 @@ export default function ChatWindow({
       return (
         <CheckCheck
           className="h-4 w-4 text-sky-200"
-          aria-label="Letto"
+          aria-label={dict.statusRead}
         />
       );
     }
@@ -424,7 +441,7 @@ export default function ChatWindow({
       return (
         <CheckCheck
           className="h-4 w-4 text-emerald-100"
-          aria-label="Consegnato"
+          aria-label={dict.statusDelivered}
         />
       );
     }
@@ -432,7 +449,7 @@ export default function ChatWindow({
     return (
       <Check
         className="h-4 w-4 text-emerald-100"
-        aria-label="Inviato"
+        aria-label={dict.statusSent}
       />
     );
   }
@@ -465,7 +482,7 @@ export default function ChatWindow({
             </h1>
 
             <p className="text-sm text-muted-foreground">
-              Conversazione Car2ne
+              {dict.subtitle}
             </p>
           </div>
 
@@ -512,8 +529,8 @@ export default function ChatWindow({
           <div className="flex min-h-[380px] items-center justify-center">
             <EmptyState
               icon={MessageCircle}
-              title="Nessun messaggio ancora"
-              description="Inizia la conversazione."
+              title={dict.emptyTitle}
+              description={dict.emptyDescription}
               className="border-none bg-transparent shadow-none"
             />
           </div>
@@ -605,7 +622,7 @@ export default function ChatWindow({
               disabled={loading}
               rows={1}
               maxLength={1000}
-              placeholder="Scrivi un messaggio..."
+              placeholder={dict.inputPlaceholder}
               className="min-h-12 flex-1 resize-none rounded-2xl border border-border px-4 py-3 text-sm outline-none transition focus:border-ring focus:ring-4 focus:ring-ring/20 disabled:cursor-not-allowed disabled:bg-muted"
               onKeyDown={(event) => {
 
@@ -631,7 +648,7 @@ export default function ChatWindow({
               }
               size="icon"
               className="h-12 w-12 shrink-0 rounded-2xl"
-              aria-label="Invia messaggio"
+              aria-label={dict.sendAriaLabel}
             >
               <Send className="h-5 w-5" />
             </Button>
@@ -639,7 +656,7 @@ export default function ChatWindow({
           </div>
 
           <p className="mt-2 text-xs text-slate-400">
-            Invio con Enter · Shift + Enter per andare a capo
+            {dict.inputHint}
           </p>
 
         </form>
@@ -657,12 +674,12 @@ export default function ChatWindow({
             <div>
 
               <p className="font-semibold text-slate-800">
-                Conversazione chiusa
+                {dict.closedTitle}
               </p>
 
               <p className="mt-1 text-sm leading-5 text-muted-foreground">
                 {chatClosedReason ??
-                  "Non è più possibile inviare nuovi messaggi in questa conversazione."}
+                  dict.closedDefaultReason}
               </p>
 
             </div>

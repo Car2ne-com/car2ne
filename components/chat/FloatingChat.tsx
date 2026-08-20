@@ -54,7 +54,27 @@ type ChatItem = {
   lastActivity: string;
 };
 
-export default function FloatingChat() {
+type FloatingChatDict = {
+  title: string;
+  subtitle: string;
+  closeAriaLabel: string;
+  openAriaLabel: string;
+  loading: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  otherUserFallback: string;
+  youPrefix: string;
+  noMessageYet: string;
+  viewAllLink: string;
+};
+
+type Props = {
+  dict: FloatingChatDict;
+};
+
+export default function FloatingChat({
+  dict,
+}: Props) {
   const supabase = useMemo(
     () => createClient(),
     []
@@ -403,7 +423,7 @@ export default function FloatingChat() {
             const otherName =
               `${profile?.name ?? ""} ${
                 profile?.surname ?? ""
-              }`.trim() || "Utente";
+              }`.trim() || dict.otherUserFallback;
 
             const initials =
               otherName
@@ -480,7 +500,7 @@ export default function FloatingChat() {
       setChats(chatItems);
       setLoading(false);
     },
-    [supabase]
+    [supabase, dict.otherUserFallback]
   );
 
   /*
@@ -824,11 +844,11 @@ export default function FloatingChat() {
 
               <div>
                 <h2 className="font-bold text-foreground">
-                  Chat
+                  {dict.title}
                 </h2>
 
                 <p className="text-xs text-muted-foreground">
-                  Le tue conversazioni
+                  {dict.subtitle}
                 </p>
               </div>
             </div>
@@ -841,7 +861,7 @@ export default function FloatingChat() {
                 setOpen(false)
               }
               className="h-9 w-9 rounded-full text-slate-400 hover:text-slate-700"
-              aria-label="Chiudi chat"
+              aria-label={dict.closeAriaLabel}
             >
               <X className="h-5 w-5" />
             </Button>
@@ -851,14 +871,14 @@ export default function FloatingChat() {
             {loading ? (
               <div className="flex items-center justify-center gap-2 px-5 py-12 text-center text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Caricamento chat...</span>
+                <span>{dict.loading}</span>
               </div>
             ) : chats.length ===
               0 ? (
               <EmptyState
                 icon={MessageCircle}
-                title="Nessuna conversazione"
-                description="Le tue chat appariranno qui."
+                title={dict.emptyTitle}
+                description={dict.emptyDescription}
                 className="rounded-none border-none bg-transparent px-5 py-12 shadow-none"
               />
             ) : (
@@ -982,7 +1002,7 @@ export default function FloatingChat() {
                                 .sender_id ===
                                 currentUserId && (
                                 <span className="font-semibold">
-                                  Tu:{" "}
+                                  {dict.youPrefix}
                                 </span>
                               )}
 
@@ -993,7 +1013,7 @@ export default function FloatingChat() {
                               }
                             </>
                           ) : (
-                            "Nessun messaggio ancora"
+                            dict.noMessageYet
                           )}
                         </p>
 
@@ -1023,7 +1043,7 @@ export default function FloatingChat() {
               }
               className="text-sm font-semibold text-primary transition hover:text-primary/80"
             >
-              Vedi tutte le chat →
+              {dict.viewAllLink}
             </Link>
           </div>
         </div>
@@ -1040,8 +1060,8 @@ export default function FloatingChat() {
         className="relative h-14 w-14 rounded-full shadow-xl shadow-primary/25 hover:scale-105 active:scale-95"
         aria-label={
           open
-            ? "Chiudi chat"
-            : "Apri chat"
+            ? dict.closeAriaLabel
+            : dict.openAriaLabel
         }
       >
         {open ? (

@@ -327,7 +327,16 @@ export default function ManageRideForm({
   }
 
   useEffect(() => {
+    // Caricamento richieste/passeggeri al mount e quando cambia la ride:
+    // sync legittima coi dati remoti. loadRequests è async e chiama
+    // setLoadingRequests(true) in modo sincrono prima del primo await,
+    // il che fa scattare la regola anche se il pattern è corretto.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadRequests();
+    // loadRequests viene ricreata a ogni render: la si omette
+    // volutamente dalle dipendenze, l'effect deve rieseguire solo al
+    // cambio di ride.id, non ad ogni render (comportamento invariato).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ride.id]);
 
   async function handleConfirm(

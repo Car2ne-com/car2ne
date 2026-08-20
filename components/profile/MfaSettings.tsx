@@ -57,6 +57,8 @@ export default function MfaSettings() {
   }
 
   useEffect(() => {
+    // Caricamento fattori MFA al mount: sync legittima con dati remoti.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadFactors();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -29,6 +29,9 @@ export default function PushNotificationPrompt({ dict }: Props) {
   const [dismissed, setDismissed] = useState(true);
 
   useEffect(() => {
+    // Lettura di localStorage (external store, non disponibile in SSR):
+    // sync legittima al mount, non derivazione da altro stato/props.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
   }, []);
 

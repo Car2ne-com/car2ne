@@ -69,12 +69,23 @@ type ChatItem = {
   lastActivity: string;
 };
 
+type ChatListDict = {
+  loading: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  otherUserFallback: string;
+  youPrefix: string;
+  noMessageYet: string;
+};
+
 type Props = {
   currentUserId: string;
+  dict: ChatListDict;
 };
 
 export default function ChatList({
   currentUserId,
+  dict,
 }: Props) {
   const supabase = useMemo(
     () => createClient(),
@@ -381,7 +392,7 @@ export default function ChatList({
             const otherName =
               otherProfile
                 ? `${otherProfile.name} ${otherProfile.surname}`.trim()
-                : "Utente";
+                : dict.otherUserFallback;
 
             let avatarUrl =
               otherProfile?.avatar_url ??
@@ -460,10 +471,15 @@ export default function ChatList({
     [
       currentUserId,
       supabase,
+      dict.otherUserFallback,
     ]
   );
 
   useEffect(() => {
+    // Caricamento chat al mount + sottoscrizione realtime: sync
+    // legittima con dati remoti (fetch iniziale), non derivazione di
+    // stato da altro stato/props.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadChats();
 
     const channel =
@@ -513,7 +529,7 @@ export default function ChatList({
     return (
       <Card className="flex flex-col items-center justify-center gap-3 px-8 py-20 text-center text-muted-foreground">
         <Loader2 className="h-6 w-6 animate-spin" />
-        <span>Caricamento chat...</span>
+        <span>{dict.loading}</span>
       </Card>
     );
   }
@@ -522,8 +538,8 @@ export default function ChatList({
     return (
       <EmptyState
         icon={MessageCircle}
-        title="Nessuna conversazione"
-        description="Quando una prenotazione verrà confermata, la conversazione apparirà qui."
+        title={dict.emptyTitle}
+        description={dict.emptyDescription}
       />
     );
   }
@@ -597,13 +613,13 @@ export default function ChatList({
                     chat.lastMessage
                       .sender_id ===
                     currentUserId
-                      ? "Tu: "
+                      ? dict.youPrefix
                       : ""
                   }${
                     chat.lastMessage
                       .content
                   }`
-                : "Nessun messaggio ancora"}
+                : dict.noMessageYet}
             </p>
           </div>
 
