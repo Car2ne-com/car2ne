@@ -82,6 +82,38 @@ export async function updateSession(request: NextRequest) {
       pathname.startsWith(`${prefix}/`)
   );
 
+  /*
+   * ==============================
+   * GATE VERIFICA EMAIL
+   * ==============================
+   *
+   * Se l'utente si è registrato via email/password e non ha ancora
+   * confermato l'indirizzo con il codice OTP inviato via Brevo,
+   * blocchiamo l'accesso alle aree autenticate. Gli utenti OAuth
+   * (Google verifica già l'email) hanno email_verified_at valorizzato
+   * al primo accesso in app/auth/callback/route.ts, quindi non
+   * vengono mai bloccati qui.
+   */
+
+  if (user && isProtectedPath) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("email_verified_at")
+      .eq("id", user.id)
+      .single();
+
+    if (profile && !profile.email_verified_at) {
+      const redirectUrl = new URL(
+        "/verifica-email",
+        request.url
+      );
+
+      redirectUrl.searchParams.set("next", pathname);
+
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
   if (user && isProtectedPath) {
     const { data: aal } =
       await supabase.auth.mfa.getAuthenticatorAssuranceLevel();

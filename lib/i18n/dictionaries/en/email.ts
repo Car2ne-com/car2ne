@@ -1,6 +1,12 @@
 import type { it } from "../it";
 
 export const email: (typeof it)["email"] = {
+  verifyEmail: {
+    subject: "Your Car2ne verification code",
+    heading: "Verify your email",
+    body:
+      "Hi {name},\n\nthanks for signing up to Car2ne! Use the code below to verify your email address. The code is valid for 10 minutes.\n\nIf you didn't create this account, you can safely ignore this email.",
+  },
   mfaEnabled: {
     subject: "Two-factor authentication enabled",
     heading: "Two-factor authentication enabled",

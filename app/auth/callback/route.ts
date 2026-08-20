@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   TRUSTED_DEVICE_COOKIE,
   isDeviceTrusted,
@@ -59,6 +60,27 @@ export async function GET(request: Request) {
       new URL("/login?error=oauth", requestUrl.origin)
     );
   }
+
+  /*
+   * ==============================
+   * EMAIL GIÀ VERIFICATA (OAUTH)
+   * ==============================
+   *
+   * Google verifica già l'indirizzo email: gli utenti che passano da
+   * qui non devono affrontare il flusso OTP via Brevo riservato alla
+   * registrazione email/password. Il filtro .is(...) rende
+   * l'operazione un no-op per gli accessi successivi al primo.
+   *
+   * Serve il client admin: un trigger DB (migration 0021) blocca le
+   * scritture su questa colonna da parte del client autenticato
+   * normale, proprio per impedire che un utente si auto-verifichi.
+   */
+
+  await createAdminClient()
+    .from("profiles")
+    .update({ email_verified_at: new Date().toISOString() })
+    .eq("id", user.id)
+    .is("email_verified_at", null);
 
   /*
    * ==============================

@@ -41,6 +41,31 @@ export const auth = {
       "Il tuo account ha l'autenticazione a due fattori attiva.",
     signingOut: "Disconnessione...",
   },
+  verifyEmail: {
+    pageBadge: "📧 Ultimo passaggio",
+    pageTitle: "Verifica la tua email",
+    pageSubtitle:
+      "Ti abbiamo inviato un codice a {email}. Inseriscilo qui sotto per attivare il tuo account.",
+    codeLabel: "Codice di verifica",
+    verifyButton: "Verifica",
+    verifying: "Verifica...",
+    resendButton: "Rinvia codice",
+    resendCooldown: "Rinvia tra {seconds}s",
+    resending: "Invio...",
+    emailSent: "Codice inviato! Controlla la tua casella di posta.",
+    signOut: "Esci",
+    success: "Email verificata con successo!",
+    errors: {
+      codeLength: "Inserisci il codice a 6 cifre.",
+      invalid: "Codice non valido. Riprova.",
+      not_found: "Nessun codice trovato. Richiedine uno nuovo.",
+      expired: "Il codice è scaduto. Richiedine uno nuovo.",
+      too_many_attempts:
+        "Troppi tentativi falliti. Richiedi un nuovo codice.",
+      generic: "Qualcosa è andato storto. Riprova.",
+      cooldown: "Attendi qualche secondo prima di richiedere un nuovo codice.",
+    },
+  },
   common: {
     emailLabel: "Email",
     emailPlaceholder: "nome@email.com",
@@ -114,7 +139,7 @@ export const auth = {
         "Devi accettare i Termini e Condizioni e la Privacy Policy per registrarti.",
     },
     success:
-      "Registrazione completata! Controlla la tua email per confermare l'account.",
+      "Registrazione completata! Ti abbiamo inviato un codice per verificare la tua email.",
   },
   forgotPasswordForm: {
     sentTitle: "Controlla la tua email",

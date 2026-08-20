@@ -40,6 +40,30 @@ export const auth: (typeof it)["auth"] = {
     pageSubtitle: "Your account has two-factor authentication enabled.",
     signingOut: "Signing out...",
   },
+  verifyEmail: {
+    pageBadge: "📧 Last step",
+    pageTitle: "Verify your email",
+    pageSubtitle:
+      "We sent a code to {email}. Enter it below to activate your account.",
+    codeLabel: "Verification code",
+    verifyButton: "Verify",
+    verifying: "Verifying...",
+    resendButton: "Resend code",
+    resendCooldown: "Resend in {seconds}s",
+    resending: "Sending...",
+    emailSent: "Code sent! Check your inbox.",
+    signOut: "Sign out",
+    success: "Email verified successfully!",
+    errors: {
+      codeLength: "Enter the 6-digit code.",
+      invalid: "Invalid code. Please try again.",
+      not_found: "No code found. Request a new one.",
+      expired: "The code has expired. Request a new one.",
+      too_many_attempts: "Too many failed attempts. Request a new code.",
+      generic: "Something went wrong. Please try again.",
+      cooldown: "Please wait a few seconds before requesting a new code.",
+    },
+  },
   common: {
     emailLabel: "Email",
     emailPlaceholder: "name@email.com",
@@ -111,7 +135,8 @@ export const auth: (typeof it)["auth"] = {
       termsNotAccepted:
         "You must accept the Terms and Conditions and the Privacy Policy to sign up.",
     },
-    success: "Registration complete! Check your email to confirm your account.",
+    success:
+      "Registration complete! We've sent you a code to verify your email.",
   },
   forgotPasswordForm: {
     sentTitle: "Check your email",

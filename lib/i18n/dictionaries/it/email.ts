@@ -1,4 +1,10 @@
 export const email = {
+  verifyEmail: {
+    subject: "Il tuo codice di verifica Car2ne",
+    heading: "Verifica la tua email",
+    body:
+      "Ciao {name},\n\ngrazie per esserti registrato su Car2ne! Usa il codice qui sotto per verificare il tuo indirizzo email. Il codice è valido per 10 minuti.\n\nSe non hai creato tu questo account, ignora pure questa email.",
+  },
   mfaEnabled: {
     subject: "Autenticazione a due fattori attivata",
     heading: "Autenticazione a due fattori attivata",

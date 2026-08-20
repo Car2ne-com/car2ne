@@ -93,11 +93,13 @@ export function renderEmailHtml({
   body,
   ctaLabel,
   ctaHref,
+  code,
 }: {
   heading: string;
   body: string;
   ctaLabel?: string;
   ctaHref?: string;
+  code?: string;
 }) {
   const paragraphs = body
     .split("\n\n")
@@ -106,6 +108,10 @@ export function renderEmailHtml({
         `<p style="margin:0 0 16px;color:#334155;font-size:15px;line-height:1.6;">${paragraph.replace(/\n/g, "<br/>")}</p>`
     )
     .join("");
+
+  const codeBlock = code
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px auto 24px;"><tr><td style="background:#f0fdf4;border:2px solid #10b981;border-radius:16px;padding:16px 32px;"><span style="font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif;font-size:32px;font-weight:800;letter-spacing:0.3em;color:#059669;">${code}</span></td></tr></table>`
+    : "";
 
   const cta =
     ctaLabel && ctaHref
@@ -142,6 +148,7 @@ export function renderEmailHtml({
               <td style="padding:4px 32px 32px;">
                 <h1 style="margin:0 0 16px;font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif;font-size:19px;font-weight:700;color:#0f172a;text-align:center;">${heading}</h1>
                 ${paragraphs}
+                ${codeBlock}
                 ${cta}
               </td>
             </tr>
