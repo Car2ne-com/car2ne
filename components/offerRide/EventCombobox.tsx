@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, Search } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 import { Event } from "@/types/event";
 
 type EventComboboxDict = {
@@ -82,16 +84,17 @@ export default function EventCombobox({
 
   return (
     <div ref={containerRef} className="relative">
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={() => setOpen((current) => !current)}
-        className="flex h-14 w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 text-left outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+        className="h-14 w-full justify-between rounded-2xl px-4 text-left font-normal"
       >
         <span
           className={
             selectedEvent
-              ? "truncate text-slate-900"
-              : "text-slate-400"
+              ? "truncate text-foreground"
+              : "text-muted-foreground"
           }
         >
           {loading
@@ -101,13 +104,13 @@ export default function EventCombobox({
               : dict.placeholder}
         </span>
 
-        <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
-      </button>
+        <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+      </Button>
 
       {open && (
-        <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-          <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
-            <Search className="h-4 w-4 shrink-0 text-slate-400" />
+        <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-border bg-popover shadow-xl">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
 
             <input
               autoFocus
@@ -117,13 +120,13 @@ export default function EventCombobox({
                 setQuery(e.target.value)
               }
               placeholder={dict.searchPlaceholder}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+              className="w-full bg-transparent text-sm text-popover-foreground outline-none placeholder:text-muted-foreground"
             />
           </div>
 
           <div className="max-h-72 overflow-y-auto py-1">
             {filteredEvents.length === 0 ? (
-              <p className="px-4 py-6 text-center text-sm text-slate-500">
+              <p className="px-4 py-6 text-center text-sm text-muted-foreground">
                 {dict.noResults}
               </p>
             ) : (
@@ -136,28 +139,28 @@ export default function EventCombobox({
                     onClick={() =>
                       handleSelect(event.id)
                     }
-                    className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm transition hover:bg-emerald-50"
+                    className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm transition hover:bg-accent"
                   >
                     <span className="min-w-0">
-                      <span className="block truncate font-medium text-slate-900">
+                      <span className="block truncate font-medium text-popover-foreground">
                         {event.title}
                       </span>
 
-                      <span className="block truncate text-xs text-slate-500">
+                      <span className="block truncate text-xs text-muted-foreground">
                         {event.artist} ·{" "}
                         {event.city}
                       </span>
                     </span>
 
                     {event.id === value && (
-                      <Check className="h-4 w-4 shrink-0 text-emerald-600" />
+                      <Check className="h-4 w-4 shrink-0 text-primary" />
                     )}
                   </button>
                 ))
             )}
 
             {filteredEvents.length > MAX_RESULTS && (
-              <p className="px-4 py-2 text-center text-xs text-slate-400">
+              <p className="px-4 py-2 text-center text-xs text-muted-foreground">
                 {dict.moreResults.replace(
                   "{count}",
                   String(filteredEvents.length - MAX_RESULTS)

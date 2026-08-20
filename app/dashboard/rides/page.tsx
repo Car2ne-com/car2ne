@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -56,23 +56,20 @@ export default async function MyRidesPage() {
   }
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
 
         {/* Header */}
 
         <div className="mb-10">
-          <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
             {t.badge}
           </span>
 
-          <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-5 text-2xl font-bold text-foreground">
             {t.title}
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             {t.subtitle}
           </p>
         </div>
@@ -80,27 +77,18 @@ export default async function MyRidesPage() {
         {/* Nessun passaggio */}
 
         {rides.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-8 py-20 text-center">
-
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-4xl">
-              🚗
-            </div>
-
-            <h2 className="mt-6 text-2xl font-bold text-slate-900">
-              {t.emptyTitle}
-            </h2>
-
-            <p className="mx-auto mt-3 max-w-lg text-slate-500">
-              {t.emptyDescription}
-            </p>
+          <div className="text-center">
+            <EmptyState
+              title={t.emptyTitle}
+              description={t.emptyDescription}
+            />
 
             <Link
               href="/offer-ride"
-              className="mt-8 inline-flex rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
+              className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               {t.emptyCta}
             </Link>
-
           </div>
         ) : (
           <div className="grid gap-6 lg:grid-cols-2">
@@ -126,9 +114,9 @@ export default async function MyRidesPage() {
                     : ride.status;
 
               return (
-                <div
+                <Card
                   key={ride.id}
-                  className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:border-emerald-200 hover:shadow-lg"
+                  className="p-7 transition hover:border-primary/30 hover:shadow-lg"
                 >
 
                   {/* Header */}
@@ -136,11 +124,11 @@ export default async function MyRidesPage() {
                   <div className="flex items-start justify-between gap-4">
 
                     <div>
-                      <p className="text-sm font-semibold text-emerald-600">
+                      <p className="text-sm font-semibold text-primary">
                         {event?.title ?? t.eventLabel}
                       </p>
 
-                      <h2 className="mt-1 text-2xl font-black text-slate-900">
+                      <h2 className="mt-1 text-2xl font-black text-foreground">
                         {ride.departure_city}
                         {" → "}
                         {ride.destination}
@@ -150,8 +138,8 @@ export default async function MyRidesPage() {
                     <span
                       className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
                         ride.status === "active"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-slate-100 text-slate-600"
+                          ? "bg-accent text-accent-foreground"
+                          : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {statusLabel}
@@ -161,17 +149,17 @@ export default async function MyRidesPage() {
 
                   {/* Evento */}
 
-                  <div className="mt-6 rounded-2xl bg-slate-50 p-5">
+                  <div className="mt-6 rounded-2xl bg-muted p-5">
 
-                    <p className="text-sm font-semibold text-slate-700">
+                    <p className="text-sm font-semibold text-foreground">
                       {t.eventLabel}
                     </p>
 
-                    <p className="mt-1 font-bold text-slate-900">
+                    <p className="mt-1 font-bold text-foreground">
                       {event?.title ?? t.eventLabel}
                     </p>
 
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       {event?.venue ?? ride.destination}
 
                       {event?.city
@@ -186,41 +174,41 @@ export default async function MyRidesPage() {
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
 
                     <div>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted-foreground">
                         {t.dateLabel}
                       </p>
 
-                      <p className="mt-1 font-semibold text-slate-900">
+                      <p className="mt-1 font-semibold text-foreground">
                         {formattedDate}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted-foreground">
                         {t.departureLabel}
                       </p>
 
-                      <p className="mt-1 font-semibold text-slate-900">
+                      <p className="mt-1 font-semibold text-foreground">
                         {ride.departure_time.slice(0, 5)}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted-foreground">
                         {t.seatsLabel}
                       </p>
 
-                      <p className="mt-1 font-semibold text-slate-900">
+                      <p className="mt-1 font-semibold text-foreground">
                         {ride.available_seats}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted-foreground">
                         {t.contributionLabel}
                       </p>
 
-                      <p className="mt-1 text-xl font-black text-emerald-600">
+                      <p className="mt-1 text-xl font-black text-primary">
                         €{" "}
                         {Number(
                           ride.contribution
@@ -233,8 +221,8 @@ export default async function MyRidesPage() {
                   {/* Descrizione */}
 
                   {ride.description && (
-                    <div className="mt-6 border-t border-slate-100 pt-5">
-                      <p className="text-sm leading-6 text-slate-600">
+                    <div className="mt-6 border-t border-border pt-5">
+                      <p className="text-sm leading-6 text-muted-foreground">
                         {ride.description}
                       </p>
                     </div>
@@ -242,7 +230,7 @@ export default async function MyRidesPage() {
 
                   {/* Azioni */}
 
-                  <div className="mt-6 flex gap-3 border-t border-slate-100 pt-5">
+                  <div className="mt-6 flex gap-3 border-t border-border pt-5">
 
                     {/* Vedi evento */}
 
@@ -252,7 +240,7 @@ export default async function MyRidesPage() {
                         new Date() && (
                       <Link
                         href={`/events/${event.slug}`}
-                        className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+                        className="flex-1 rounded-2xl border border-border px-4 py-3 text-center text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
                       >
                         {t.viewEvent}
                       </Link>
@@ -264,7 +252,7 @@ export default async function MyRidesPage() {
                       <a
                         href={`/dashboard/rides/${ride.id}`}
                         target="_self"
-                        className="flex-1 rounded-2xl bg-emerald-500 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-600"
+                        className="flex-1 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                       >
                         {t.manage}
                       </a>
@@ -272,16 +260,13 @@ export default async function MyRidesPage() {
 
                   </div>
 
-                </div>
+                </Card>
               );
             })}
 
           </div>
         )}
 
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

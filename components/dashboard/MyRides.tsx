@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, MapPin, Users } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
 const rides = [
   {
     id: 1,
@@ -20,21 +23,21 @@ const rides = [
 
 export default function MyRides() {
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <Card className="p-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-black text-slate-900">
+          <h2 className="text-lg font-semibold text-foreground">
             I miei passaggi
           </h2>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-muted-foreground">
             Gestisci i passaggi che hai pubblicato.
           </p>
         </div>
 
         <Link
           href="/offer-ride"
-          className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+          className="text-sm font-semibold text-primary hover:text-primary/80"
         >
           Nuovo →
         </Link>
@@ -44,37 +47,40 @@ export default function MyRides() {
         {rides.map((ride) => (
           <div
             key={ride.id}
-            className="rounded-2xl border border-slate-200 p-5 transition hover:border-emerald-200 hover:shadow-md"
+            className="rounded-2xl border border-border p-5 transition hover:border-primary/30 hover:shadow-md"
           >
-            <h3 className="text-lg font-bold text-slate-900">
+            <h3 className="text-lg font-bold text-foreground">
               {ride.event}
             </h3>
 
-            <div className="mt-4 space-y-2 text-sm text-slate-600">
+            <div className="mt-4 space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-emerald-600" />
+                <MapPin className="h-4 w-4 text-primary" />
                 {ride.route}
               </div>
 
               <div className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-emerald-600" />
+                <CalendarDays className="h-4 w-4 text-primary" />
                 {ride.date}
               </div>
 
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-emerald-600" />
+                <Users className="h-4 w-4 text-primary" />
                 {ride.seats}
               </div>
             </div>
 
-            <button className="mt-5 flex items-center gap-2 font-semibold text-emerald-600 hover:text-emerald-700">
+            <Button
+              variant="link"
+              className="mt-5 h-auto p-0 gap-2 font-semibold text-primary hover:text-primary/80"
+            >
               Gestisci
 
               <ArrowRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         ))}
       </div>
-    </section>
+    </Card>
   );
 }

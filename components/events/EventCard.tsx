@@ -9,6 +9,8 @@ import {
   Music2,
 } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
+
 import { Event } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
 
@@ -31,20 +33,16 @@ export default function EventCard({ event, locale, dict }: Props) {
   }).format(new Date(event.event_date));
 
   return (
-    <div
+    <Card
       className="
         group
         relative
         overflow-hidden
-        rounded-3xl
-        border
-        border-slate-200
-        bg-white
         shadow-lg
         transition
         duration-300
         hover:-translate-y-2
-        hover:border-emerald-200
+        hover:border-primary/30
         hover:shadow-2xl
       "
     >
@@ -85,7 +83,7 @@ export default function EventCard({ event, locale, dict }: Props) {
         )}
 
         {!!event.ride_count && (
-          <div className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-emerald-700">
+          <div className="absolute right-5 top-5 flex items-center gap-1.5 rounded-full bg-card px-4 py-2 text-sm font-semibold text-primary">
             <Car className="h-4 w-4" />
             {event.ride_count}{" "}
             {event.ride_count === 1
@@ -97,30 +95,30 @@ export default function EventCard({ event, locale, dict }: Props) {
 
       <div className="space-y-6 p-6">
         <div>
-          <h3 className="line-clamp-2 text-xl font-bold text-slate-900">
+          <h3 className="line-clamp-2 text-xl font-bold text-foreground">
             {event.title}
           </h3>
 
-          <p className="mt-1 text-sm font-medium text-emerald-600">
+          <p className="mt-1 text-sm font-medium text-primary">
             {event.artist}
           </p>
 
           {event.description && (
-            <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">
+            <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
               {event.description}
             </p>
           )}
         </div>
 
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-slate-600">
-            <MapPin className="h-4 w-4 text-emerald-600" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-4 w-4 text-primary" />
 
             <span className="relative z-20">
               {event.cities ? (
                 <Link
                   href={`/citta/${event.cities.slug}`}
-                  className="hover:text-emerald-700 hover:underline"
+                  className="hover:text-primary hover:underline"
                 >
                   {event.city}
                 </Link>
@@ -131,7 +129,7 @@ export default function EventCard({ event, locale, dict }: Props) {
               {event.cities && event.venues ? (
                 <Link
                   href={`/citta/${event.cities.slug}/venue/${event.venues.slug}`}
-                  className="hover:text-emerald-700 hover:underline"
+                  className="hover:text-primary hover:underline"
                 >
                   {event.venue}
                 </Link>
@@ -141,14 +139,14 @@ export default function EventCard({ event, locale, dict }: Props) {
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-slate-600">
-            <CalendarDays className="h-4 w-4 text-emerald-600" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <CalendarDays className="h-4 w-4 text-primary" />
 
             <span>{formattedDate}</span>
           </div>
         </div>
 
-        <div className="h-px bg-slate-100" />
+        <div className="h-px bg-border" />
 
         <div className="flex justify-end">
           <div
@@ -157,16 +155,16 @@ export default function EventCard({ event, locale, dict }: Props) {
               items-center
               gap-2
               rounded-full
-              bg-emerald-50
+              bg-accent
               px-4
               py-2
               text-sm
               font-semibold
-              text-emerald-700
+              text-accent-foreground
               transition-[gap,background-color]
               duration-300
               group-hover:gap-3
-              group-hover:bg-emerald-100
+              group-hover:bg-primary/15
             "
           >
             <span>{dict.viewEvent}</span>
@@ -175,6 +173,6 @@ export default function EventCard({ event, locale, dict }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

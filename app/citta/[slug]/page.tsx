@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 import CityHero from "@/components/cities/CityHero";
 import CityVenueList from "@/components/cities/CityVenueList";
 import EventGrid from "@/components/events/EventGrid";
-import EmptyState from "@/components/events/EmptyState";
+import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";

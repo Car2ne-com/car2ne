@@ -19,7 +19,7 @@ export default async function RegisterPage() {
               {t.register.pageBadge}
             </span>
 
-            <h1 className="mt-6 text-4xl font-black tracking-tight text-slate-900">
+            <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground">
               {t.register.pageTitle}
             </h1>
 

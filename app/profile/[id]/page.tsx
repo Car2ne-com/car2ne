@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RatingStars from "@/components/ratings/RatingStars";
 import VerifiedAvatar from "@/components/ui/VerifiedAvatar";
+import { Card } from "@/components/ui/card";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -141,7 +142,7 @@ export default async function PublicProfilePage({
       <Navbar />
 
       <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
-        <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+        <Card className="p-10">
           <div className="flex flex-col items-center text-center">
             <VerifiedAvatar
               src={profile.avatar_url}
@@ -152,12 +153,12 @@ export default async function PublicProfilePage({
               size="lg"
             />
 
-            <h1 className="mt-6 text-3xl font-black text-slate-900">
+            <h1 className="mt-6 text-3xl font-black text-foreground">
               {displayName}
             </h1>
 
             {profile.city && (
-              <p className="mt-2 text-slate-500">
+              <p className="mt-2 text-muted-foreground">
                 {profile.city}
               </p>
             )}
@@ -175,7 +176,7 @@ export default async function PublicProfilePage({
                   </span>
                 </>
               ) : (
-                <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-500">
+                <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-muted-foreground">
                   Nessuna recensione ancora
                 </span>
               )}
@@ -187,11 +188,11 @@ export default async function PublicProfilePage({
               </p>
             )}
           </div>
-        </div>
+        </Card>
 
         {ratings.length > 0 && (
-          <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900">
+          <Card className="mt-8 p-8">
+            <h2 className="text-lg font-semibold text-foreground">
               Recensioni
             </h2>
 
@@ -202,7 +203,7 @@ export default async function PublicProfilePage({
                   className="border-t border-slate-100 pt-5 first:border-t-0 first:pt-0"
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold text-foreground">
                       {raterNameById.get(
                         rating.rater_id
                       ) ?? "Utente Car2ne"}
@@ -222,7 +223,7 @@ export default async function PublicProfilePage({
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         )}
       </main>
 

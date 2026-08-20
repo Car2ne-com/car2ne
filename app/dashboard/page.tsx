@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import DashboardActions from "@/components/dashboard/DashboardActions";
@@ -89,10 +87,7 @@ export default async function DashboardPage() {
       : null;
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
         <DashboardHeader
           name={
             profileResult.data?.name ?? "👋"
@@ -123,9 +118,6 @@ export default async function DashboardPage() {
         <div className="mt-12">
           <MyBookings />
         </div>
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

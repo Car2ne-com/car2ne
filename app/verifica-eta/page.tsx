@@ -40,7 +40,7 @@ export default async function VerificaEtaPage({
               🎂 Ultimo passaggio
             </span>
 
-            <h1 className="mt-6 text-4xl font-black text-slate-900">
+            <h1 className="mt-6 text-4xl font-black text-foreground">
               Completa la registrazione
             </h1>
 

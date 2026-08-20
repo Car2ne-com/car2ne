@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui/card";
+
 type Point = {
   date: string;
   count: number;
@@ -30,12 +32,12 @@ export default function AdminTrendChart({
   const total = data.reduce((sum, point) => sum + point.count, 0);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <Card className="p-6">
       <div className="flex items-baseline justify-between">
-        <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
 
-        <p className="text-sm text-slate-500">
-          {total} <span className="text-slate-400">ultimi 30gg</span>
+        <p className="text-sm text-muted-foreground">
+          {total} <span className="text-muted-foreground/70">ultimi 30gg</span>
         </p>
       </div>
 
@@ -79,10 +81,10 @@ export default function AdminTrendChart({
         />
       </svg>
 
-      <div className="mt-1 flex justify-between text-xs text-slate-400">
+      <div className="mt-1 flex justify-between text-xs text-muted-foreground">
         <span>{data[0]?.date}</span>
         <span>{data[data.length - 1]?.date}</span>
       </div>
-    </div>
+    </Card>
   );
 }

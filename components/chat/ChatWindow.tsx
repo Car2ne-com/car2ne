@@ -14,11 +14,14 @@ import {
   Check,
   CheckCheck,
   LockKeyhole,
+  MessageCircle,
   Send,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type Message = {
   id: string;
@@ -435,7 +438,7 @@ export default function ChatWindow({
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
 
       {/* HEADER */}
 
@@ -448,20 +451,20 @@ export default function ChatWindow({
               alt={otherName}
               width={56}
               height={56}
-              className="h-14 w-14 rounded-full object-cover ring-2 ring-emerald-50"
+              className="h-14 w-14 rounded-full object-cover ring-2 ring-accent"
             />
           ) : (
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-lg font-black text-emerald-600">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-lg font-black text-accent-foreground">
               {initials}
             </div>
           )}
 
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-bold text-slate-900">
+            <h1 className="truncate text-xl font-bold text-foreground">
               {otherName}
             </h1>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               Conversazione Car2ne
             </p>
           </div>
@@ -469,10 +472,10 @@ export default function ChatWindow({
         </div>
 
         {ride && (
-          <div className="mt-5 rounded-2xl bg-slate-50 p-4">
+          <div className="mt-5 rounded-2xl bg-muted p-4">
 
             {event && (
-              <p className="font-bold text-slate-900">
+              <p className="font-bold text-foreground">
                 {event.title}
                 {event.artist
                   ? ` · ${event.artist}`
@@ -480,7 +483,7 @@ export default function ChatWindow({
               </p>
             )}
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               {ride.departure_city}
               {" → "}
               {ride.destination}
@@ -502,28 +505,17 @@ export default function ChatWindow({
 
       {/* MESSAGGI */}
 
-      <div className="min-h-[420px] space-y-4 bg-slate-50 p-6">
+      <div className="min-h-[420px] space-y-4 bg-muted p-6">
 
         {messages.length === 0 ? (
 
-          <div className="flex min-h-[380px] items-center justify-center text-center">
-
-            <div>
-
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
-                💬
-              </div>
-
-              <p className="mt-4 font-semibold text-slate-700">
-                Nessun messaggio ancora
-              </p>
-
-              <p className="mt-1 text-sm text-slate-400">
-                Inizia la conversazione.
-              </p>
-
-            </div>
-
+          <div className="flex min-h-[380px] items-center justify-center">
+            <EmptyState
+              icon={MessageCircle}
+              title="Nessun messaggio ancora"
+              description="Inizia la conversazione."
+              className="border-none bg-transparent shadow-none"
+            />
           </div>
 
         ) : (
@@ -547,8 +539,8 @@ export default function ChatWindow({
                 <div
                   className={`max-w-[75%] rounded-2xl px-4 py-3 ${
                     isMine
-                      ? "rounded-br-md bg-emerald-500 text-white"
-                      : "rounded-bl-md bg-white text-slate-700 shadow-sm"
+                      ? "rounded-br-md bg-primary text-primary-foreground"
+                      : "rounded-bl-md bg-card text-slate-700 shadow-sm"
                   }`}
                 >
 
@@ -598,7 +590,7 @@ export default function ChatWindow({
 
         <form
           onSubmit={handleSend}
-          className="border-t border-slate-100 bg-white p-4"
+          className="border-t border-slate-100 bg-card p-4"
         >
 
           <div className="flex items-end gap-3">
@@ -614,7 +606,7 @@ export default function ChatWindow({
               rows={1}
               maxLength={1000}
               placeholder="Scrivi un messaggio..."
-              className="min-h-12 flex-1 resize-none rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+              className="min-h-12 flex-1 resize-none rounded-2xl border border-border px-4 py-3 text-sm outline-none transition focus:border-ring focus:ring-4 focus:ring-ring/20 disabled:cursor-not-allowed disabled:bg-muted"
               onKeyDown={(event) => {
 
                 if (
@@ -631,17 +623,18 @@ export default function ChatWindow({
               }}
             />
 
-            <button
+            <Button
               type="submit"
               disabled={
                 loading ||
                 !content.trim()
               }
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
+              size="icon"
+              className="h-12 w-12 shrink-0 rounded-2xl"
               aria-label="Invia messaggio"
             >
               <Send className="h-5 w-5" />
-            </button>
+            </Button>
 
           </div>
 
@@ -653,12 +646,12 @@ export default function ChatWindow({
 
       ) : (
 
-        <div className="border-t border-slate-100 bg-slate-50 p-5">
+        <div className="border-t border-slate-100 bg-muted p-5">
 
-          <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4">
 
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100">
-              <LockKeyhole className="h-5 w-5 text-slate-500" />
+              <LockKeyhole className="h-5 w-5 text-muted-foreground" />
             </div>
 
             <div>
@@ -667,7 +660,7 @@ export default function ChatWindow({
                 Conversazione chiusa
               </p>
 
-              <p className="mt-1 text-sm leading-5 text-slate-500">
+              <p className="mt-1 text-sm leading-5 text-muted-foreground">
                 {chatClosedReason ??
                   "Non è più possibile inviare nuovi messaggi in questa conversazione."}
               </p>

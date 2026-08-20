@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getTranslations } from "@/lib/i18n";
 import { isBetaChecklistEnabled } from "@/lib/betaChecklist/config";
 import type { BetaChecklistStatus } from "@/types/betaChecklist";
+import { Card } from "@/components/ui/card";
 
 type ResultRow = {
   user_id: string;
@@ -102,21 +103,21 @@ export default async function AdminBetaChecklistPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-foreground">
           {dict.betaChecklist.admin.title}
         </h1>
-        <p className="mt-2 text-slate-500">{dict.betaChecklist.admin.subtitle}</p>
+        <p className="mt-2 text-muted-foreground">{dict.betaChecklist.admin.subtitle}</p>
       </div>
 
       {testers.length === 0 ? (
-        <p className="rounded-3xl border border-slate-200 bg-white p-8 text-slate-500">
+        <Card className="p-8 text-muted-foreground">
           {dict.betaChecklist.admin.noResults}
-        </p>
+        </Card>
       ) : (
         <>
-          <section className="rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 p-6">
-              <h2 className="text-lg font-bold text-slate-900">
+          <Card className="p-0">
+            <div className="border-b border-border p-6">
+              <h2 className="text-lg font-semibold text-foreground">
                 {dict.betaChecklist.admin.testersHeading}
               </h2>
             </div>
@@ -124,54 +125,54 @@ export default async function AdminBetaChecklistPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs font-semibold text-slate-500 uppercase">
+                  <tr className="border-b border-border text-left text-xs font-semibold text-muted-foreground uppercase">
                     <th className="px-6 py-3">{dict.betaChecklist.admin.testerColumn}</th>
                     <th className="px-6 py-3">{dict.betaChecklist.admin.testedColumn}</th>
-                    <th className="px-6 py-3 text-emerald-600">
+                    <th className="px-6 py-3 text-primary">
                       {dict.betaChecklist.admin.okColumn}
                     </th>
-                    <th className="px-6 py-3 text-red-600">
+                    <th className="px-6 py-3 text-destructive">
                       {dict.betaChecklist.admin.problemColumn}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {testers.map((tester) => (
-                    <tr key={tester.userId} className="border-b border-slate-50 last:border-0">
-                      <td className="px-6 py-3 font-medium text-slate-800">{tester.label}</td>
-                      <td className="px-6 py-3 text-slate-600">
+                    <tr key={tester.userId} className="border-b border-border/60 last:border-0">
+                      <td className="px-6 py-3 font-medium text-foreground/90">{tester.label}</td>
+                      <td className="px-6 py-3 text-muted-foreground">
                         {tester.tested} / {totalItems}
                       </td>
-                      <td className="px-6 py-3 font-semibold text-emerald-600">{tester.ok}</td>
-                      <td className="px-6 py-3 font-semibold text-red-600">{tester.problem}</td>
+                      <td className="px-6 py-3 font-semibold text-primary">{tester.ok}</td>
+                      <td className="px-6 py-3 font-semibold text-destructive">{tester.problem}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </section>
+          </Card>
 
           <section className="mt-8">
-            <h2 className="mb-4 text-lg font-bold text-slate-900">
+            <h2 className="mb-4 text-lg font-semibold text-foreground">
               {dict.betaChecklist.admin.problemsHeading}
             </h2>
 
             {problems.length === 0 ? (
-              <p className="rounded-3xl border border-slate-200 bg-white p-8 text-slate-500">
+              <Card className="p-8 text-muted-foreground">
                 {dict.betaChecklist.admin.noProblems}
-              </p>
+              </Card>
             ) : (
               <ul className="space-y-3">
                 {problems.map((problem) => (
                   <li
                     key={`${problem.user_id}-${problem.item_id}`}
-                    className="rounded-2xl border border-red-200 bg-red-50/50 p-5"
+                    className="rounded-2xl border border-destructive/20 bg-destructive/5 p-5"
                   >
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <p className="text-sm font-semibold text-slate-800">
+                      <p className="text-sm font-semibold text-foreground/90">
                         {problem.sectionTitle} · {problem.itemTitle}
                       </p>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-muted-foreground/70">
                         {problem.testerLabel} ·{" "}
                         {new Date(problem.updated_at).toLocaleString("it-IT", {
                           day: "2-digit",
@@ -183,7 +184,7 @@ export default async function AdminBetaChecklistPage() {
                       </span>
                     </div>
 
-                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                    <p className="mt-2 text-sm leading-6 text-foreground/80">
                       {problem.note?.trim() || dict.betaChecklist.admin.noteFallback}
                     </p>
                   </li>

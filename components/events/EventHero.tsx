@@ -98,7 +98,7 @@ export default function EventHero({ event, locale }: Props) {
           </div>
 
           <div>
-            <div className="overflow-hidden rounded-[32px] border border-white/10 bg-white/10 shadow-2xl backdrop-blur">
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-2xl backdrop-blur">
               {event.image_url ? (
                 <Image
                   src={event.image_url}

@@ -11,7 +11,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import EventCombobox from "./EventCombobox";
 import CityCombobox from "@/components/cities/CityCombobox";
@@ -778,10 +781,10 @@ export default function OfferRideForm({ locale, dict }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
+      className="rounded-3xl border border-border bg-card p-8 shadow-sm"
     >
       {isLoggedIn === false && (
-        <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm leading-6 text-emerald-800">
+        <div className="mb-6 rounded-2xl bg-accent p-5 text-sm leading-6 text-accent-foreground">
           {dict.loginNotice}
         </div>
       )}
@@ -791,9 +794,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
         {/* Evento */}
 
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.eventLabel}
-          </label>
+          <Label>{dict.eventLabel}</Label>
 
           <EventCombobox
             events={events}
@@ -824,7 +825,10 @@ export default function OfferRideForm({ locale, dict }: Props) {
 
                 <Link
                   href="/dashboard/rides"
-                  className="mt-4 inline-flex rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "mt-4 h-auto rounded-xl bg-amber-600 px-4 py-2 text-sm hover:bg-amber-700",
+                  })}
                 >
                   {dict.alreadyHasRide.cta}
                 </Link>
@@ -836,25 +840,25 @@ export default function OfferRideForm({ locale, dict }: Props) {
         {/* Informazioni evento */}
 
         {selectedEvent && (
-          <div className="md:col-span-2 rounded-2xl bg-emerald-50 p-5">
+          <div className="md:col-span-2 rounded-2xl bg-accent p-5">
             <div className="grid gap-3 sm:grid-cols-2">
 
               <div>
-                <p className="text-sm font-semibold text-emerald-700">
+                <p className="text-sm font-semibold text-accent-foreground">
                   {dict.eventInfo.destination}
                 </p>
 
-                <p className="mt-1 text-base font-semibold text-slate-900">
+                <p className="mt-1 text-base font-semibold text-foreground">
                   {selectedEvent.venue}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-emerald-700">
+                <p className="text-sm font-semibold text-accent-foreground">
                   {dict.eventInfo.eventDate}
                 </p>
 
-                <p className="mt-1 text-base font-semibold text-slate-900">
+                <p className="mt-1 text-base font-semibold text-foreground">
                   {new Intl.DateTimeFormat(
                     locale === "en" ? "en-US" : "it-IT",
                     {
@@ -871,7 +875,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
 
             </div>
 
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-muted-foreground">
               {dict.eventInfo.note}
             </p>
           </div>
@@ -880,9 +884,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
         {/* Partenza */}
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.fields.originCityLabel}
-          </label>
+          <Label>{dict.fields.originCityLabel}</Label>
 
           <CityCombobox
             value={originCityId}
@@ -896,11 +898,9 @@ export default function OfferRideForm({ locale, dict }: Props) {
         {/* Ora */}
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.fields.departureTimeLabel}
-          </label>
+          <Label>{dict.fields.departureTimeLabel}</Label>
 
-          <input
+          <Input
             type="time"
             value={departureTime}
             onChange={(e) =>
@@ -911,10 +911,10 @@ export default function OfferRideForm({ locale, dict }: Props) {
             disabled={
               alreadyHasRide
             }
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 disabled:text-slate-400"
+            className="h-14 rounded-2xl"
           />
 
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-muted-foreground">
             {dict.fields.departureTimeHint}
           </p>
         </div>
@@ -922,11 +922,9 @@ export default function OfferRideForm({ locale, dict }: Props) {
         {/* Posti */}
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.fields.seatsLabel}
-          </label>
+          <Label>{dict.fields.seatsLabel}</Label>
 
-          <input
+          <Input
             type="number"
             min="1"
             max="8"
@@ -940,18 +938,16 @@ export default function OfferRideForm({ locale, dict }: Props) {
             disabled={
               alreadyHasRide
             }
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 disabled:text-slate-400"
+            className="h-14 rounded-2xl"
           />
         </div>
 
         {/* Contributo */}
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.fields.contributionLabel}
-          </label>
+          <Label>{dict.fields.contributionLabel}</Label>
 
-          <input
+          <Input
             type="number"
             min="0"
             step="0.01"
@@ -965,7 +961,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
             disabled={
               alreadyHasRide
             }
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 disabled:text-slate-400"
+            className="h-14 rounded-2xl"
           />
         </div>
 
@@ -996,11 +992,9 @@ export default function OfferRideForm({ locale, dict }: Props) {
         {/* Descrizione */}
 
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.fields.descriptionLabel}
-          </label>
+          <Label>{dict.fields.descriptionLabel}</Label>
 
-          <textarea
+          <Textarea
             rows={5}
             value={description}
             onChange={(e) =>
@@ -1012,7 +1006,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
             disabled={
               alreadyHasRide
             }
-            className="w-full rounded-2xl border border-slate-200 px-4 py-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:bg-slate-50 disabled:text-slate-400"
+            className="rounded-2xl py-4"
           />
         </div>
       </div>
@@ -1025,7 +1019,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
               loading ||
               loadingEvents
             }
-            className="h-12 rounded-2xl bg-emerald-500 px-8 text-base hover:bg-emerald-600"
+            className="h-12 rounded-2xl px-8 text-base"
           >
             {loading
               ? dict.submit.publishing

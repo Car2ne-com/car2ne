@@ -14,6 +14,12 @@ import {
 import { toast } from "sonner";
 
 import ConfirmDialog from "./ConfirmDialog";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/utils";
 
 type Event = {
   id: string;
@@ -381,13 +387,10 @@ export default function AdminEventTable({
 
   if (events.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-        <h2 className="text-2xl font-bold">Nessun evento</h2>
-
-        <p className="mt-2 text-slate-500">
-          Crea il primo evento dal pulsante in alto.
-        </p>
-      </div>
+      <EmptyState
+        title="Nessun evento"
+        description="Crea il primo evento dal pulsante in alto."
+      />
     );
   }
 
@@ -396,25 +399,25 @@ export default function AdminEventTable({
       {/* Ricerca */}
 
       <div className="relative mb-4">
-        <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-        <input
+        <Input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Cerca per titolo, artista, venue o città..."
-          className="h-12 w-full rounded-xl border border-slate-300 pl-11 pr-4 outline-none focus:border-emerald-500"
+          className="h-12 pl-11"
         />
       </div>
 
       {/* Filtri */}
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <select
+        <Select
           value={cityFilter}
           onChange={(e) => setCityFilter(e.target.value)}
           aria-label="Filtra per città"
-          className="h-11 rounded-xl border border-slate-300 px-3 text-sm text-slate-700 outline-none focus:border-emerald-500"
+          containerClassName="w-auto"
         >
           <option value="">Tutte le città</option>
           {cityOptions.map((city) => (
@@ -422,13 +425,13 @@ export default function AdminEventTable({
               {city}
             </option>
           ))}
-        </select>
+        </Select>
 
-        <select
+        <Select
           value={venueFilter}
           onChange={(e) => setVenueFilter(e.target.value)}
           aria-label="Filtra per venue"
-          className="h-11 rounded-xl border border-slate-300 px-3 text-sm text-slate-700 outline-none focus:border-emerald-500"
+          containerClassName="w-auto"
         >
           <option value="">Tutti i venue</option>
           {venueOptions.map((venue) => (
@@ -436,13 +439,13 @@ export default function AdminEventTable({
               {venue}
             </option>
           ))}
-        </select>
+        </Select>
 
-        <select
+        <Select
           value={artistFilter}
           onChange={(e) => setArtistFilter(e.target.value)}
           aria-label="Filtra per artista"
-          className="h-11 rounded-xl border border-slate-300 px-3 text-sm text-slate-700 outline-none focus:border-emerald-500"
+          containerClassName="w-auto"
         >
           <option value="">Tutti gli artisti</option>
           {artistOptions.map((artist) => (
@@ -450,9 +453,9 @@ export default function AdminEventTable({
               {artist}
             </option>
           ))}
-        </select>
+        </Select>
 
-        <select
+        <Select
           value={sourceFilter}
           onChange={(e) =>
             setSourceFilter(
@@ -460,43 +463,44 @@ export default function AdminEventTable({
             )
           }
           aria-label="Filtra per fonte"
-          className="h-11 rounded-xl border border-slate-300 px-3 text-sm text-slate-700 outline-none focus:border-emerald-500"
+          containerClassName="w-auto"
         >
           <option value="all">Tutte le fonti</option>
           <option value="ticketmaster">Ticketmaster</option>
           <option value="manual">Manuale</option>
-        </select>
+        </Select>
 
-        <label className="flex items-center gap-1.5 text-sm text-slate-500">
+        <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
           Da
-          <input
+          <Input
             type="date"
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             aria-label="Data evento da"
-            className="h-11 rounded-xl border border-slate-300 px-2 text-sm text-slate-700 outline-none focus:border-emerald-500"
+            className="w-auto px-2"
           />
         </label>
 
-        <label className="flex items-center gap-1.5 text-sm text-slate-500">
+        <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
           A
-          <input
+          <Input
             type="date"
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
             aria-label="Data evento a"
-            className="h-11 rounded-xl border border-slate-300 px-2 text-sm text-slate-700 outline-none focus:border-emerald-500"
+            className="w-auto px-2"
           />
         </label>
 
         {hasActiveFilters && (
-          <button
+          <Button
             type="button"
+            variant="link"
             onClick={resetFilters}
-            className="text-sm font-semibold text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
+            className="text-muted-foreground hover:text-foreground"
           >
             Cancella filtri
-          </button>
+          </Button>
         )}
       </div>
 
@@ -504,81 +508,78 @@ export default function AdminEventTable({
 
       <div className="mb-4 flex flex-wrap gap-2">
         {FILTERS.map((item) => (
-          <button
+          <Button
             key={item.key}
             type="button"
             onClick={() => setFilter(item.key)}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+            className={cn(
+              "h-auto rounded-xl px-4 py-2",
               filter === item.key
-                ? "bg-slate-900 text-white"
-                : "bg-white text-slate-600 hover:bg-slate-100"
-            }`}
+                ? "bg-foreground text-background hover:bg-foreground/90"
+                : "bg-card text-muted-foreground hover:bg-muted"
+            )}
           >
             {item.label}
-          </button>
+          </Button>
         ))}
       </div>
 
       {selectedIds.size > 0 && (
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3">
-          <span className="text-sm font-semibold text-emerald-800">
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-accent bg-accent px-5 py-3">
+          <span className="text-sm font-semibold text-accent-foreground">
             {selectedIds.size} selezionati
           </span>
 
-          <button
+          <Button
             type="button"
             onClick={() =>
               setPendingConfirm({ kind: "bulk", status: "published" })
             }
             disabled={bulkBusy}
-            className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-auto rounded-xl px-4 py-2"
           >
             Approva selezionati
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
             onClick={() =>
               setPendingConfirm({ kind: "bulk", status: "rejected" })
             }
             disabled={bulkBusy}
-            className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-auto rounded-xl bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
           >
             Rifiuta selezionati
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => setSelectedIds(new Set())}
             disabled={bulkBusy}
-            className="rounded-xl px-4 py-2 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-auto rounded-xl px-4 py-2 text-accent-foreground hover:bg-accent-foreground/10"
           >
             Deseleziona tutto
-          </button>
+          </Button>
         </div>
       )}
 
       {filteredEvents.length === 0 ? (
-        <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-          <h2 className="text-xl font-bold">
-            Nessun evento corrisponde ai filtri
-          </h2>
-
-          <p className="mt-2 text-slate-500">
-            Prova a modificare ricerca o filtri.
-          </p>
-        </div>
+        <EmptyState
+          title="Nessun evento corrisponde ai filtri"
+          description="Prova a modificare ricerca o filtri."
+        />
       ) : (
-        <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <Card className="overflow-x-auto p-0">
           <table className="w-full">
-            <thead className="bg-slate-50">
+            <thead className="bg-muted">
               <tr>
                 <th className="px-6 py-4 text-left">
                   <input
                     type="checkbox"
                     checked={allFilteredSelected}
                     onChange={toggleSelectAll}
-                    className="h-4 w-4 rounded border-slate-300"
+                    className="h-4 w-4 rounded border-border"
                     aria-label="Seleziona tutti gli eventi filtrati"
                   />
                 </th>
@@ -591,7 +592,7 @@ export default function AdminEventTable({
                 <th className="px-6 py-4 text-left">Fonte</th>
                 <th className="px-6 py-4 text-left">Stato</th>
 
-                <th className="sticky right-0 z-10 bg-slate-50 px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
+                <th className="sticky right-0 z-10 bg-muted px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
                   Azioni
                 </th>
               </tr>
@@ -601,14 +602,14 @@ export default function AdminEventTable({
               {visibleEvents.map((event) => (
                 <tr
                   key={event.id}
-                  className="border-t border-slate-100"
+                  className="border-t border-border"
                 >
                   <td className="px-6 py-5">
                     <input
                       type="checkbox"
                       checked={selectedIds.has(event.id)}
                       onChange={() => toggleSelect(event.id)}
-                      className="h-4 w-4 rounded border-slate-300"
+                      className="h-4 w-4 rounded border-border"
                       aria-label={`Seleziona ${event.title}`}
                     />
                   </td>
@@ -637,13 +638,13 @@ export default function AdminEventTable({
                           : event.source}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
                         Manuale
                       </span>
                     )}
 
                     {event.external_id && (
-                      <p className="mt-1 text-[11px] text-slate-400">
+                      <p className="mt-1 text-[11px] text-muted-foreground">
                         ID: {event.external_id}
                       </p>
                     )}
@@ -653,10 +654,10 @@ export default function AdminEventTable({
                     <StatusBadge status={event.status} />
                   </td>
 
-                  <td className="sticky right-0 z-10 bg-white px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
+                  <td className="sticky right-0 z-10 bg-card px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
                     <div className="flex justify-center gap-3">
                       {event.status !== "published" && (
-                        <button
+                        <Button
                           onClick={() =>
                             updateStatus(
                               event.id,
@@ -667,15 +668,16 @@ export default function AdminEventTable({
                           disabled={busyId === event.id}
                           title="Approva e pubblica"
                           aria-label={`Approva e pubblica ${event.title}`}
-                          className="rounded-xl bg-emerald-500 p-3 text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+                          size="icon-lg"
+                          className="rounded-xl"
                         >
                           <CheckCircle2 className="h-4 w-4" />
-                        </button>
+                        </Button>
                       )}
 
                       {event.status !== "rejected" &&
                         event.status !== "published" && (
-                          <button
+                          <Button
                             onClick={() =>
                               updateStatus(
                                 event.id,
@@ -686,22 +688,26 @@ export default function AdminEventTable({
                             disabled={busyId === event.id}
                             title="Rifiuta"
                             aria-label={`Rifiuta ${event.title}`}
-                            className="rounded-xl bg-amber-500 p-3 text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+                            size="icon-lg"
+                            className="rounded-xl bg-amber-500 text-white hover:bg-amber-600"
                           >
                             <XCircle className="h-4 w-4" />
-                          </button>
+                          </Button>
                         )}
 
                       <Link
                         href={`/admin/events/${event.id}`}
                         title="Modifica"
                         aria-label={`Modifica ${event.title}`}
-                        className="rounded-xl bg-blue-500 p-3 text-white transition hover:bg-blue-600"
+                        className={cn(
+                          buttonVariants({ size: "icon-lg" }),
+                          "rounded-xl bg-blue-500 hover:bg-blue-600"
+                        )}
                       >
                         <Pencil className="h-4 w-4" />
                       </Link>
 
-                      <button
+                      <Button
                         onClick={() =>
                           setPendingConfirm({
                             kind: "delete",
@@ -712,31 +718,33 @@ export default function AdminEventTable({
                         disabled={busyId === event.id}
                         title="Elimina"
                         aria-label={`Elimina ${event.title}`}
-                        className="rounded-xl bg-red-500 p-3 text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        size="icon-lg"
+                        className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
                         <Trash2 className="h-4 w-4" />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </Card>
       )}
 
       {visibleCount < filteredEvents.length && (
         <div className="mt-6 flex justify-center">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() =>
               setVisibleCount((count) => count + PAGE_SIZE)
             }
-            className="rounded-2xl border border-slate-200 bg-white px-8 py-3 font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+            className="h-auto rounded-2xl px-8 py-3"
           >
             Carica altri (
             {filteredEvents.length - visibleCount} rimanenti)
-          </button>
+          </Button>
         </div>
       )}
 
@@ -793,7 +801,7 @@ export default function AdminEventTable({
 function StatusBadge({ status }: { status: string }) {
   if (status === "published") {
     return (
-      <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
         Pubblicato
       </span>
     );
@@ -809,7 +817,7 @@ function StatusBadge({ status }: { status: string }) {
 
   if (status === "rejected") {
     return (
-      <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
+      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
         Rifiutato
       </span>
     );

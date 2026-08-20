@@ -77,15 +77,15 @@ export default async function AdminAnalyticsPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">Analytics</h1>
+        <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted-foreground">
           Andamento degli ultimi 30 giorni.
         </p>
       </div>
 
       {hasError ? (
-        <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+        <div className="rounded-3xl border border-destructive/20 bg-destructive/10 p-6 text-sm text-destructive">
           Dato non disponibile.
         </div>
       ) : (

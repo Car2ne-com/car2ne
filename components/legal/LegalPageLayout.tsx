@@ -21,11 +21,11 @@ export default async function LegalPageLayout({
       <Navbar />
 
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-20">
-        <h1 className="text-4xl font-black text-slate-900">
+        <h1 className="text-4xl font-black text-foreground">
           {title}
         </h1>
 
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-muted-foreground">
           {dict.legal.lastUpdated}: {updatedAt}
         </p>
 
@@ -48,11 +48,11 @@ export function LegalSection({
 }) {
   return (
     <section>
-      <h2 className="text-xl font-bold text-slate-900">
+      <h2 className="text-xl font-bold text-foreground">
         {title}
       </h2>
 
-      <div className="mt-3 space-y-4 text-sm leading-7 text-slate-600">
+      <div className="mt-3 space-y-4 text-sm leading-7 text-muted-foreground">
         {children}
       </div>
     </section>

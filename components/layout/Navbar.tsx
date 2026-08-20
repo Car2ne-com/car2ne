@@ -25,8 +25,8 @@ export default async function Navbar() {
           justify-between
           rounded-2xl
           border
-          border-white/40
-          bg-white/95
+          border-border
+          bg-background/95
           px-3
           shadow-[0_10px_40px_rgba(15,23,42,.06)]
           sm:h-18
@@ -49,7 +49,7 @@ export default async function Navbar() {
             whitespace-nowrap
             text-xs
             font-medium
-            text-slate-600
+            text-muted-foreground
             sm:gap-5
             sm:text-sm
             md:flex
@@ -59,21 +59,21 @@ export default async function Navbar() {
         >
           <Link
             href="/"
-            className="transition-colors hover:text-emerald-600"
+            className="transition-colors hover:text-primary"
           >
             {nav.home}
           </Link>
 
           <Link
             href="/events"
-            className="transition-colors hover:text-emerald-600"
+            className="transition-colors hover:text-primary"
           >
             {nav.events}
           </Link>
 
           <Link
             href="/offer-ride"
-            className="transition-colors hover:text-emerald-600"
+            className="transition-colors hover:text-primary"
           >
             {nav.offerRide}
           </Link>

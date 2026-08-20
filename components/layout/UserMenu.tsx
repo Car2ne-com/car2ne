@@ -73,13 +73,13 @@ export default function UserMenu({
           gap-2
           rounded-2xl
           border
-          border-slate-200
-          bg-white
+          border-border
+          bg-card
           px-2
           py-1.5
           shadow-sm
           transition
-          hover:border-emerald-300
+          hover:border-primary/40
           hover:shadow-md
           sm:gap-3
           sm:px-3
@@ -101,7 +101,7 @@ export default function UserMenu({
               rounded-full
               object-cover
               ring-2
-              ring-emerald-50
+              ring-accent
               sm:h-11
               sm:w-11
             "
@@ -116,10 +116,10 @@ export default function UserMenu({
               items-center
               justify-center
               rounded-full
-              bg-emerald-100
+              bg-accent
               text-sm
               font-bold
-              text-emerald-600
+              text-accent-foreground
               sm:h-11
               sm:w-11
               sm:text-lg
@@ -132,11 +132,11 @@ export default function UserMenu({
         {/* Nome */}
 
         <div className="text-left">
-          <p className="text-[10px] text-slate-500 sm:text-xs">
+          <p className="text-[10px] text-muted-foreground sm:text-xs">
             {dict.welcomeBack}
           </p>
 
-          <p className="max-w-[80px] truncate text-sm font-semibold text-slate-900 sm:max-w-none sm:text-base">
+          <p className="max-w-[80px] truncate text-sm font-semibold text-foreground sm:max-w-none sm:text-base">
             {name}
           </p>
         </div>
@@ -146,7 +146,7 @@ export default function UserMenu({
             h-3.5
             w-3.5
             shrink-0
-            text-slate-500
+            text-muted-foreground
             sm:h-4
             sm:w-4
           "
@@ -172,7 +172,7 @@ export default function UserMenu({
                   className="h-10 w-10 rounded-full object-cover"
                 />
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent font-bold text-accent-foreground">
                   {initials}
                 </div>
               )}
@@ -182,7 +182,7 @@ export default function UserMenu({
                   {displayName}
                 </span>
 
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-muted-foreground">
                   {dict.accountLabel}
                 </span>
               </div>
@@ -209,7 +209,7 @@ export default function UserMenu({
         <DropdownMenuItem
           render={
             <Link href="/chat">
-              <MessageCircle className="mr-2 h-4 w-4 text-emerald-600" />
+              <MessageCircle className="mr-2 h-4 w-4 text-primary" />
               {dict.myChats}
             </Link>
           }
@@ -254,7 +254,7 @@ export default function UserMenu({
           <DropdownMenuItem
             render={
               <Link href="/dashboard/beta-checklist">
-                <ClipboardCheck className="mr-2 h-4 w-4 text-emerald-600" />
+                <ClipboardCheck className="mr-2 h-4 w-4 text-primary" />
                 {dict.betaChecklist}
               </Link>
             }
@@ -270,7 +270,7 @@ export default function UserMenu({
             <DropdownMenuItem
               render={
                 <Link href="/admin/events">
-                  <CalendarDays className="mr-2 h-4 w-4 text-emerald-600" />
+                  <CalendarDays className="mr-2 h-4 w-4 text-primary" />
                   {dict.admin}
                 </Link>
               }

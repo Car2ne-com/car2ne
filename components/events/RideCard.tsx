@@ -16,6 +16,9 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import RatingStars from "@/components/ratings/RatingStars";
 import VerifiedAvatar from "@/components/ui/VerifiedAvatar";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type RidesDict = {
   driverFallback: string;
@@ -262,18 +265,14 @@ export default function RideCard({
       .toUpperCase();
 
   return (
-    <div
+    <Card
       className="
-        rounded-3xl
-        border
-        border-slate-200
-        bg-white
         p-6
         shadow-sm
         transition
         duration-300
         hover:-translate-y-1
-        hover:border-emerald-200
+        hover:border-primary/30
         hover:shadow-xl
       "
     >
@@ -294,14 +293,14 @@ export default function RideCard({
 
         <div>
           <div className="flex items-center gap-1.5">
-            <h3 className="text-lg font-bold text-slate-900">
+            <h3 className="text-lg font-bold text-foreground">
               {displayName}
             </h3>
 
             {ride.isVerifiedDriver && (
               <span
                 title={dict.driverVerifiedBadge}
-                className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700"
+                className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-accent-foreground"
               >
                 <BadgeCheck className="h-3.5 w-3.5" />
                 {dict.driverVerifiedBadge}
@@ -309,7 +308,7 @@ export default function RideCard({
             )}
           </div>
 
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             {dict.driverLabel}
           </p>
 
@@ -320,7 +319,7 @@ export default function RideCard({
                 size={14}
               />
 
-              <span className="text-xs font-medium text-slate-500">
+              <span className="text-xs font-medium text-muted-foreground">
                 ({driverRating.count})
               </span>
             </div>
@@ -334,21 +333,21 @@ export default function RideCard({
       <div className="mt-8 space-y-4">
 
         <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-emerald-600" />
+          <MapPin className="h-5 w-5 text-primary" />
 
-          <span className="font-medium text-slate-700">
+          <span className="font-medium text-foreground/80">
             {ride.from}
           </span>
         </div>
 
-        <div className="pl-2 text-slate-300">
+        <div className="pl-2 text-border">
           │
         </div>
 
         <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-emerald-600" />
+          <MapPin className="h-5 w-5 text-primary" />
 
-          <span className="font-medium text-slate-700">
+          <span className="font-medium text-foreground/80">
             {ride.to}
           </span>
         </div>
@@ -359,25 +358,25 @@ export default function RideCard({
 
       <div className="mt-8 grid grid-cols-2 gap-4">
 
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <Clock3 className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Clock3 className="h-4 w-4 text-primary" />
 
           {ride.departure}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <CalendarDays className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <CalendarDays className="h-4 w-4 text-primary" />
 
           {ride.date}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <CarFront className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <CarFront className="h-4 w-4 text-primary" />
 
           {ride.seats} {dict.seatsLabel}
         </div>
 
-        <div className="text-right text-xl font-black text-emerald-600">
+        <div className="text-right text-xl font-black text-primary">
           € {ride.price.toFixed(2)}
         </div>
 
@@ -394,50 +393,32 @@ export default function RideCard({
 
       {bookingStatus ===
         "confirmed" && (
-        <div className="mt-6 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+        <div className="mt-6 rounded-2xl bg-accent px-4 py-3 text-sm font-medium text-accent-foreground">
           {dict.statusConfirmedBanner}
         </div>
       )}
 
       {bookingStatus ===
         "rejected" && (
-        <div className="mt-6 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <div className="mt-6 rounded-2xl bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
           {dict.statusRejectedBanner}
         </div>
       )}
 
       {/* CTA */}
 
-      <button
+      <Button
         type="button"
         onClick={handleRequestSeat}
         disabled={isDisabled}
-        className={`
-          mt-8
-          flex
-          w-full
-          items-center
-          justify-center
-          gap-2
-          rounded-2xl
-          px-5
-          py-4
-          font-semibold
-          text-white
-          transition
-          duration-300
-          disabled:cursor-not-allowed
-          disabled:opacity-60
-          ${
-            bookingStatus ===
-            "confirmed"
-              ? "bg-emerald-600"
-              : bookingStatus ===
-                  "pending"
-                ? "bg-amber-500"
-                : "bg-emerald-500 hover:bg-emerald-600"
-          }
-        `}
+        className={cn(
+          "mt-8 h-auto w-full gap-2 rounded-2xl px-5 py-4 text-base font-semibold text-primary-foreground transition duration-300 disabled:opacity-60",
+          bookingStatus === "confirmed"
+            ? "bg-primary hover:bg-primary"
+            : bookingStatus === "pending"
+              ? "bg-amber-500 hover:bg-amber-500"
+              : "bg-primary hover:bg-primary/90"
+        )}
       >
         {getButtonContent()}
 
@@ -446,8 +427,8 @@ export default function RideCard({
           bookingStatus !== "confirmed" && (
             <ArrowRight className="h-4 w-4" />
           )}
-      </button>
+      </Button>
 
-    </div>
+    </Card>
   );
 }

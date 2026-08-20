@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import { CalendarDays, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
+
 type Props = {
   dict: {
     eventPlaceholder: string;
@@ -48,14 +50,14 @@ export default function SearchBox({ dict }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[32px] border border-white/70 bg-white p-4 shadow-2xl"
+      className="rounded-[32px] border border-border bg-card p-4 shadow-2xl"
     >
       <div className="grid gap-4 md:grid-cols-[1.5fr_1.2fr_1fr_auto]">
 
         {/* Evento */}
 
-        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-emerald-400 focus-within:bg-white">
-          <Search className="mr-3 h-5 w-5 shrink-0 text-gray-400" />
+        <div className="flex items-center rounded-2xl border border-input bg-muted px-4 transition focus-within:border-ring focus-within:bg-background">
+          <Search className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
           <input
             type="text"
@@ -64,14 +66,14 @@ export default function SearchBox({ dict }: Props) {
               setSearch(event.target.value)
             }
             placeholder={dict.eventPlaceholder}
-            className="h-14 w-full bg-transparent outline-none placeholder:text-gray-400"
+            className="h-14 w-full bg-transparent outline-none placeholder:text-muted-foreground"
           />
         </div>
 
         {/* Partenza */}
 
-        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-emerald-400 focus-within:bg-white">
-          <MapPin className="mr-3 h-5 w-5 shrink-0 text-gray-400" />
+        <div className="flex items-center rounded-2xl border border-input bg-muted px-4 transition focus-within:border-ring focus-within:bg-background">
+          <MapPin className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
           <input
             type="text"
@@ -80,14 +82,14 @@ export default function SearchBox({ dict }: Props) {
               setDeparture(event.target.value)
             }
             placeholder={dict.departurePlaceholder}
-            className="h-14 w-full bg-transparent outline-none placeholder:text-gray-400"
+            className="h-14 w-full bg-transparent outline-none placeholder:text-muted-foreground"
           />
         </div>
 
         {/* Data */}
 
-        <div className="flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 transition focus-within:border-emerald-400 focus-within:bg-white">
-          <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-gray-400" />
+        <div className="flex items-center rounded-2xl border border-input bg-muted px-4 transition focus-within:border-ring focus-within:bg-background">
+          <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
           <input
             type="date"
@@ -101,12 +103,12 @@ export default function SearchBox({ dict }: Props) {
 
         {/* Cerca */}
 
-        <button
+        <Button
           type="submit"
-          className="h-14 rounded-2xl bg-emerald-500 px-8 font-semibold text-white shadow-lg transition duration-300 hover:scale-105 hover:bg-emerald-600 hover:shadow-xl"
+          className="h-14 rounded-2xl px-8 shadow-lg transition duration-300 hover:scale-105 hover:shadow-xl"
         >
           {dict.searchButton}
-        </button>
+        </Button>
 
       </div>
     </form>

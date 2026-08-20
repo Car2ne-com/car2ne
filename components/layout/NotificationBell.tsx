@@ -641,13 +641,13 @@ export default function NotificationBell({ locale, dict }: Props) {
               !current
           )
         }
-        className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600"
+        className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background/80 text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
         aria-label={dict.ariaLabel}
       >
         <Bell className="h-5 w-5" />
 
         {totalUnread > 0 && (
-          <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1 text-[10px] font-bold text-white shadow-sm">
+          <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white shadow-sm">
             {totalUnread > 9
               ? "9+"
               : totalUnread}
@@ -659,8 +659,8 @@ export default function NotificationBell({ locale, dict }: Props) {
         <div
           className="
             fixed inset-x-4 top-20 z-50 max-h-[calc(100vh-96px)]
-            overflow-hidden rounded-3xl border border-slate-200
-            bg-white shadow-2xl
+            overflow-hidden rounded-3xl border border-border
+            bg-card shadow-2xl
             sm:absolute sm:inset-x-auto sm:right-0 sm:top-14 sm:max-h-none
             sm:w-[380px] sm:max-w-[calc(100vw-32px)]
           "
@@ -668,15 +668,15 @@ export default function NotificationBell({ locale, dict }: Props) {
 
           {/* HEADER */}
 
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
 
             <div>
-              <h3 className="font-bold text-slate-900">
+              <h3 className="font-bold text-foreground">
                 {dict.title}
               </h3>
 
               {totalUnread > 0 && (
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   {totalUnread} {dict.unreadItemsSuffix}
                 </p>
               )}
@@ -688,7 +688,7 @@ export default function NotificationBell({ locale, dict }: Props) {
                 onClick={
                   markAllAsRead
                 }
-                className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+                className="text-xs font-semibold text-primary hover:text-primary/80"
               >
                 {dict.markAllRead}
               </button>
@@ -705,21 +705,21 @@ export default function NotificationBell({ locale, dict }: Props) {
               onClick={() =>
                 setOpen(false)
               }
-              className="flex items-center gap-3 border-b border-slate-100 bg-emerald-50/60 px-5 py-4 transition hover:bg-emerald-50"
+              className="flex items-center gap-3 border-b border-border bg-accent/60 px-5 py-4 transition hover:bg-accent"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-                <MessageCircle className="h-5 w-5 text-emerald-600" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent">
+                <MessageCircle className="h-5 w-5 text-accent-foreground" />
               </div>
 
               <div className="min-w-0 flex-1">
 
                 <div className="flex items-center justify-between gap-3">
 
-                  <p className="text-sm font-bold text-slate-900">
+                  <p className="text-sm font-bold text-foreground">
                     {dict.messagesTitle}
                   </p>
 
-                  <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white">
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-white">
                     {unreadMessagesCount >
                     9
                       ? "9+"
@@ -728,14 +728,14 @@ export default function NotificationBell({ locale, dict }: Props) {
 
                 </div>
 
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {(unreadMessagesCount === 1
                     ? dict.unreadMessageSingular
                     : dict.unreadMessagePlural
                   ).replace("{count}", String(unreadMessagesCount))}
                 </p>
 
-                <p className="mt-1 text-xs font-semibold text-emerald-600">
+                <p className="mt-1 text-xs font-semibold text-primary">
                   {dict.openChats}
                 </p>
 
@@ -748,7 +748,7 @@ export default function NotificationBell({ locale, dict }: Props) {
           <div className="max-h-[420px] overflow-y-auto">
 
             {loading ? (
-              <div className="px-5 py-12 text-center text-sm text-slate-500">
+              <div className="px-5 py-12 text-center text-sm text-muted-foreground">
                 {dict.loading}
               </div>
             ) : notifications.length ===
@@ -756,15 +756,15 @@ export default function NotificationBell({ locale, dict }: Props) {
 
               <div className="px-5 py-12 text-center">
 
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-                  <Bell className="h-7 w-7 text-slate-400" />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+                  <Bell className="h-7 w-7 text-muted-foreground/70" />
                 </div>
 
-                <h4 className="mt-4 font-bold text-slate-900">
+                <h4 className="mt-4 font-bold text-foreground">
                   {dict.emptyTitle}
                 </h4>
 
-                <p className="mt-2 text-sm text-slate-500">
+                <p className="mt-2 text-sm text-muted-foreground">
                   {dict.emptyDescription}
                 </p>
 
@@ -803,9 +803,9 @@ export default function NotificationBell({ locale, dict }: Props) {
                             false
                           );
                         }}
-                        className={`flex gap-3 border-b border-slate-100 px-5 py-4 transition hover:bg-slate-50 ${
+                        className={`flex gap-3 border-b border-border px-5 py-4 transition hover:bg-muted ${
                           !notification.is_read
-                            ? "bg-emerald-50/50"
+                            ? "bg-accent/50"
                             : ""
                         }`}
                       >
@@ -818,25 +818,25 @@ export default function NotificationBell({ locale, dict }: Props) {
 
                           <div className="flex items-start justify-between gap-3">
 
-                            <p className="text-sm font-bold text-slate-900">
+                            <p className="text-sm font-bold text-foreground">
                               {
                                 notification.title
                               }
                             </p>
 
                             {!notification.is_read && (
-                              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
+                              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
                             )}
 
                           </div>
 
-                          <p className="mt-1 text-sm leading-5 text-slate-600">
+                          <p className="mt-1 text-sm leading-5 text-muted-foreground">
                             {
                               notification.message
                             }
                           </p>
 
-                          <p className="mt-2 text-[11px] text-slate-400">
+                          <p className="mt-2 text-[11px] text-muted-foreground/70">
                             {formatDate(
                               notification.created_at
                             )}
@@ -856,14 +856,14 @@ export default function NotificationBell({ locale, dict }: Props) {
 
           {/* FOOTER */}
 
-          <div className="border-t border-slate-100 px-5 py-3 text-center">
+          <div className="border-t border-border px-5 py-3 text-center">
 
             <Link
               href="/dashboard/notifications"
               onClick={() =>
                 setOpen(false)
               }
-              className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+              className="text-sm font-semibold text-primary hover:text-primary/80"
             >
               {dict.viewAll}
             </Link>

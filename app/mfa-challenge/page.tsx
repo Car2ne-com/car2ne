@@ -36,7 +36,7 @@ export default async function MfaChallengePage({
               🔒 Verifica in due passaggi
             </span>
 
-            <h1 className="mt-6 text-4xl font-black text-slate-900">
+            <h1 className="mt-6 text-4xl font-black text-foreground">
               Conferma la tua identità
             </h1>
 

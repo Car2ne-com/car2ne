@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import BookingCard from "@/components/dashboard/BookingCard";
+import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -67,23 +66,20 @@ export default async function MyBookingsPage() {
   }
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
 
         {/* Header */}
 
         <div className="mb-10">
-          <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
             {dict.dashboardBookings.page.badge}
           </span>
 
-          <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-5 text-2xl font-bold text-foreground">
             {dict.dashboardBookings.page.title}
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             {dict.dashboardBookings.page.subtitle}
           </p>
         </div>
@@ -91,27 +87,18 @@ export default async function MyBookingsPage() {
         {/* Nessuna prenotazione */}
 
         {bookings.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-8 py-20 text-center">
-
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-4xl">
-              🎟️
-            </div>
-
-            <h2 className="mt-6 text-2xl font-bold text-slate-900">
-              {dict.dashboardBookings.empty.title}
-            </h2>
-
-            <p className="mx-auto mt-3 max-w-lg text-slate-500">
-              {dict.dashboardBookings.empty.description}
-            </p>
+          <div className="text-center">
+            <EmptyState
+              title={dict.dashboardBookings.empty.title}
+              description={dict.dashboardBookings.empty.description}
+            />
 
             <Link
               href="/events"
-              className="mt-8 inline-flex rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
+              className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               {dict.dashboardBookings.empty.cta}
             </Link>
-
           </div>
         ) : (
 
@@ -186,9 +173,6 @@ export default async function MyBookingsPage() {
 
           </div>
         )}
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

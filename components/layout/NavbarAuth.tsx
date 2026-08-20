@@ -21,14 +21,14 @@ export default async function NavbarAuth() {
         <Link href="/login">
           <Button
             variant="outline"
-            className="rounded-xl border-slate-200 bg-white px-2.5 text-xs hover:bg-slate-50 sm:px-5 sm:text-sm"
+            className="rounded-xl px-2.5 text-xs sm:px-5 sm:text-sm"
           >
             {auth.login}
           </Button>
         </Link>
 
         <Link href="/register">
-          <Button className="rounded-xl bg-emerald-500 px-2.5 text-xs shadow-lg hover:bg-emerald-600 sm:px-5 sm:text-sm">
+          <Button className="rounded-xl px-2.5 text-xs shadow-lg sm:px-5 sm:text-sm">
             {auth.register}
           </Button>
         </Link>

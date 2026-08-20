@@ -8,6 +8,11 @@ import ImageUploader from "./ImageUploader";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 import type { Event, EventCategory } from "@/types/event";
 
@@ -91,12 +96,12 @@ export default function AdminEventForm({ event }: Props) {
     router.refresh();
   }
     return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
-      <h1 className="text-3xl font-bold text-slate-900">
+    <Card className="p-10">
+      <h1 className="text-2xl font-bold text-foreground">
         {event ? "Modifica evento" : "Nuovo evento"}
       </h1>
 
-      <p className="mt-2 text-slate-500">
+      <p className="mt-2 text-muted-foreground">
         {event
           ? "Modifica i dati dell'evento."
           : "Compila tutti i dati dell'evento."}
@@ -104,93 +109,79 @@ export default function AdminEventForm({ event }: Props) {
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
-          <label className="mb-2 block font-semibold">
-            Titolo *
-          </label>
+          <Label>Titolo *</Label>
 
-          <input
+          <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="h-12 w-full rounded-xl border border-slate-300 px-4"
+            className="h-12"
           />
         </div>
 
         <div>
-          <label className="mb-2 block font-semibold">
-            Artista *
-          </label>
+          <Label>Artista *</Label>
 
-          <input
+          <Input
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
-            className="h-12 w-full rounded-xl border border-slate-300 px-4"
+            className="h-12"
           />
         </div>
 
         <div>
-          <label className="mb-2 block font-semibold">
-            Venue *
-          </label>
+          <Label>Venue *</Label>
 
-          <input
+          <Input
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
-            className="h-12 w-full rounded-xl border border-slate-300 px-4"
+            className="h-12"
           />
         </div>
 
         <div>
-          <label className="mb-2 block font-semibold">
-            Città *
-          </label>
+          <Label>Città *</Label>
 
-          <input
+          <Input
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="h-12 w-full rounded-xl border border-slate-300 px-4"
+            className="h-12"
           />
         </div>
 
         <div>
-          <label className="mb-2 block font-semibold">
-            Categoria
-          </label>
+          <Label>Categoria</Label>
 
-          <select
+          <Select
             value={category}
             onChange={(e) =>
               setCategory(
                 e.target.value as EventCategory
               )
             }
-            className="h-12 w-full rounded-xl border border-slate-300 px-4"
+            className="h-12"
           >
             <option>Concerto</option>
             <option>Festival</option>
             <option>Sport</option>
             <option>Fiera</option>
             <option>Teatro</option>
-          </select>
+          </Select>
         </div>
 
         <div>
-          <label className="mb-2 block font-semibold">
-            Data evento *
-          </label>
+          <Label>Data evento *</Label>
 
-          <input
+          <Input
             type="datetime-local"
             value={eventDate}
             onChange={(e) => setEventDate(e.target.value)}
-            className="h-12 w-full rounded-xl border border-slate-300 px-4"
+            className="h-12"
           />
         </div>
       </div>
 
       <div className="mt-8">
-        <label className="mb-3 block font-semibold">
-          Immagine evento
-        </label>
+        <Label>Immagine evento</Label>
 
         <ImageUploader
           value={imageUrl}
@@ -199,15 +190,12 @@ export default function AdminEventForm({ event }: Props) {
       </div>
 
       <div className="mt-8">
-        <label className="mb-2 block font-semibold">
-          Descrizione
-        </label>
+        <Label>Descrizione</Label>
 
-        <textarea
+        <Textarea
           rows={6}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full rounded-xl border border-slate-300 p-4"
         />
       </div>
 
@@ -215,7 +203,7 @@ export default function AdminEventForm({ event }: Props) {
         <Button
           onClick={handleSubmit}
           disabled={loading}
-          className="h-12 rounded-xl bg-emerald-500 px-8 hover:bg-emerald-600"
+          className="h-12 rounded-xl px-8"
         >
           {loading
             ? "Salvataggio..."
@@ -224,6 +212,6 @@ export default function AdminEventForm({ event }: Props) {
               : "Crea evento"}
         </Button>
       </div>
-    </section>
+    </Card>
   );
 }

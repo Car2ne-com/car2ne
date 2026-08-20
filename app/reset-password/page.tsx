@@ -32,7 +32,7 @@ export default async function ResetPasswordPage() {
               {t.resetPassword.pageBadge}
             </span>
 
-            <h1 className="mt-6 text-4xl font-black text-slate-900">
+            <h1 className="mt-6 text-4xl font-black text-foreground">
               {t.resetPassword.pageTitle}
             </h1>
 

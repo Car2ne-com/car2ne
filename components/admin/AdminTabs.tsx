@@ -40,7 +40,7 @@ export default function AdminTabs({ tabs }: Props) {
   ];
 
   return (
-    <nav className="flex gap-2 overflow-x-auto border-b border-slate-200">
+    <nav className="flex gap-2 overflow-x-auto border-b border-border">
       {TABS.map((tab) => {
         const active =
           tab.href === "/admin"
@@ -53,8 +53,8 @@ export default function AdminTabs({ tabs }: Props) {
             href={tab.href}
             className={`shrink-0 rounded-t-xl px-5 py-3 text-sm font-semibold transition ${
               active
-                ? "border-x border-t border-slate-200 bg-white text-emerald-700"
-                : "text-slate-600 hover:bg-white hover:text-slate-900"
+                ? "border-x border-t border-border bg-card text-primary"
+                : "text-muted-foreground hover:bg-card hover:text-foreground"
             }`}
           >
             {tab.label}

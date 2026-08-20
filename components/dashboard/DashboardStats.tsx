@@ -5,6 +5,8 @@ import {
   Armchair,
 } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
+
 type Props = {
   ridesCount: number;
   bookingsCount: number;
@@ -25,7 +27,7 @@ export default function DashboardStats({
       title: "Passaggi pubblicati",
       value: String(ridesCount),
       icon: CarFront,
-      color: "bg-emerald-100 text-emerald-600",
+      color: "bg-accent text-accent-foreground",
     },
     {
       title: "Prenotazioni effettuate",
@@ -59,9 +61,9 @@ export default function DashboardStats({
         const Icon = stat.icon;
 
         return (
-          <div
+          <Card
             key={stat.title}
-            className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+            className="p-6 transition duration-300 hover:-translate-y-1 hover:shadow-lg"
           >
             <div
               className={`flex h-14 w-14 items-center justify-center rounded-2xl ${stat.color}`}
@@ -69,14 +71,14 @@ export default function DashboardStats({
               <Icon className="h-7 w-7" />
             </div>
 
-            <h3 className="mt-6 text-4xl font-black text-slate-900">
+            <h3 className="mt-6 text-4xl font-black text-foreground">
               {stat.value}
             </h3>
 
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               {stat.title}
             </p>
-          </div>
+          </Card>
         );
       })}
     </section>

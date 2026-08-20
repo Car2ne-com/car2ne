@@ -5,7 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import VenueHero from "@/components/venues/VenueHero";
 import EventGrid from "@/components/events/EventGrid";
-import EmptyState from "@/components/events/EmptyState";
+import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";

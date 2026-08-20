@@ -4,6 +4,9 @@ import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
 import { romeDay } from "@/lib/utils/date";
+import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -118,11 +121,11 @@ export default async function AdminDashboardPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-foreground">
           Dashboard
         </h1>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted-foreground">
           Panoramica del servizio e delle attività recenti.
         </p>
       </div>
@@ -226,18 +229,18 @@ export default async function AdminDashboardPage() {
           footer={
             <Link
               href="/admin/import"
-              className="text-sm font-semibold text-emerald-700 hover:underline"
+              className="text-sm font-semibold text-primary hover:underline"
             >
               Vai agli import →
             </Link>
           }
         >
           {lastImportResult.error ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               Dato non disponibile.
             </p>
           ) : !lastImport ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               Nessun import eseguito finora.
             </p>
           ) : (
@@ -305,11 +308,11 @@ export default async function AdminDashboardPage() {
 
         <SectionCard title="Qualità dati">
           {eventsError ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               Dato non disponibile.
             </p>
           ) : eventsNoCity === 0 && eventsNoVenue === 0 ? (
-            <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
+            <p className="rounded-xl bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground">
               Nessuna anomalia rilevata su città/venue.
             </p>
           ) : (
@@ -334,28 +337,40 @@ export default async function AdminDashboardPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/admin/events"
-          className="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          className={cn(
+            buttonVariants(),
+            "h-auto rounded-2xl bg-foreground px-6 py-3 text-sm text-background hover:bg-foreground/90"
+          )}
         >
           Gestisci eventi
         </Link>
 
         <Link
           href="/admin/users"
-          className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "h-auto rounded-2xl px-6 py-3 text-sm"
+          )}
         >
           Gestisci utenti
         </Link>
 
         <Link
           href="/admin/import"
-          className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "h-auto rounded-2xl px-6 py-3 text-sm"
+          )}
         >
           Vai agli import
         </Link>
 
         <Link
           href="/admin/analytics"
-          className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "h-auto rounded-2xl px-6 py-3 text-sm"
+          )}
         >
           Vai ad analytics
         </Link>
@@ -374,17 +389,17 @@ function KpiTile({
   caption?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5">
-      <p className="text-sm text-slate-500">{label}</p>
+    <Card className="p-5">
+      <p className="text-sm text-muted-foreground">{label}</p>
 
-      <p className="mt-1 text-3xl font-black text-slate-900">
+      <p className="mt-1 text-3xl font-black text-foreground">
         {value === null || value === undefined ? "—" : value}
       </p>
 
       {caption && (
-        <p className="mt-1 text-xs text-slate-400">{caption}</p>
+        <p className="mt-1 text-xs text-muted-foreground/70">{caption}</p>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -398,13 +413,13 @@ function SectionCard({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
 
       <div className="mt-4 space-y-2">{children}</div>
 
       {footer && <div className="mt-4">{footer}</div>}
-    </div>
+    </Card>
   );
 }
 
@@ -431,7 +446,7 @@ function StatRow({
   return (
     <div className="flex items-center justify-between text-sm">
       <span
-        className={muted ? "text-slate-400" : "text-slate-600"}
+        className={muted ? "text-muted-foreground/70" : "text-muted-foreground"}
       >
         {label}
       </span>
@@ -439,12 +454,12 @@ function StatRow({
       <span
         className={`font-semibold ${
           tone === "bad"
-            ? "text-red-600"
+            ? "text-destructive"
             : tone === "good"
-              ? "text-emerald-600"
+              ? "text-primary"
               : muted
-                ? "text-slate-400"
-                : "text-slate-900"
+                ? "text-muted-foreground/70"
+                : "text-foreground"
         }`}
       >
         {displayValue}

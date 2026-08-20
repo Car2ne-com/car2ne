@@ -7,6 +7,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import type { it } from "@/lib/i18n/dictionaries/it";
 
@@ -383,251 +386,252 @@ export default function LoginForm({ dict }: Props) {
 
   if (mfaFactorId) {
     return (
-      <form
-        onSubmit={handleMfaVerify}
-        className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
-      >
-        <div>
-          <h2 className="text-xl font-bold text-slate-900">
-            {dict.loginForm.mfaTitle}
-          </h2>
+      <Card className="p-8">
+        <form
+          onSubmit={handleMfaVerify}
+          className="space-y-6"
+        >
+          <div>
+            <h2 className="text-xl font-bold text-foreground">
+              {dict.loginForm.mfaTitle}
+            </h2>
 
-          <p className="mt-2 text-sm text-slate-500">
-            {dict.loginForm.mfaSubtitle}
-          </p>
-        </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {dict.loginForm.mfaSubtitle}
+            </p>
+          </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.loginForm.mfaCodeLabel}
+          <div>
+            <Label>{dict.loginForm.mfaCodeLabel}</Label>
+
+            <Input
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              placeholder="123456"
+              value={mfaCode}
+              onChange={(e) =>
+                setMfaCode(
+                  e.target.value.replace(
+                    /\D/g,
+                    ""
+                  )
+                )
+              }
+              maxLength={6}
+              disabled={mfaLoading}
+              className="h-14 rounded-2xl text-center text-lg tracking-[0.5em]"
+            />
+          </div>
+
+          <label className="flex items-center gap-2 text-sm text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={trustDevice}
+              onChange={(e) =>
+                setTrustDevice(
+                  e.target.checked
+                )
+              }
+              disabled={mfaLoading}
+              className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+            />
+            {dict.loginForm.trustDevice}
           </label>
 
-          <input
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="123456"
-            value={mfaCode}
-            onChange={(e) =>
-              setMfaCode(
-                e.target.value.replace(
-                  /\D/g,
-                  ""
-                )
-              )
-            }
-            maxLength={6}
+          <Button
+            type="submit"
             disabled={mfaLoading}
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 text-center text-lg tracking-[0.5em] outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-          />
-        </div>
+            className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+          >
+            {mfaLoading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
+          </Button>
 
-        <label className="flex items-center gap-2 text-sm text-slate-600">
-          <input
-            type="checkbox"
-            checked={trustDevice}
-            onChange={(e) =>
-              setTrustDevice(
-                e.target.checked
-              )
-            }
-            disabled={mfaLoading}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
-          />
-          {dict.loginForm.trustDevice}
-        </label>
-
-        <Button
-          type="submit"
-          disabled={mfaLoading}
-          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
-        >
-          {mfaLoading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
-        </Button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setMfaFactorId(null);
-            setMfaCode("");
-          }}
-          className="w-full text-center text-sm font-medium text-slate-500 hover:text-slate-700"
-        >
-          {dict.common.backToLogin}
-        </button>
-      </form>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setMfaFactorId(null);
+              setMfaCode("");
+            }}
+            className="w-full font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
+          >
+            {dict.common.backToLogin}
+          </Button>
+        </form>
+      </Card>
     );
   }
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
-    >
-      {/* Email */}
+    <Card className="p-8">
+      <form
+        onSubmit={handleLogin}
+        className="space-y-6"
+      >
+        {/* Email */}
 
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.common.emailLabel}
-        </label>
+        <div>
+          <Label>{dict.common.emailLabel}</Label>
 
-        <input
-          type="email"
-          placeholder={dict.common.emailPlaceholder}
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
+          <Input
+            type="email"
+            placeholder={dict.common.emailPlaceholder}
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            disabled={
+              loading ||
+              !!oauthLoading
+            }
+            autoComplete="email"
+            className="h-14 rounded-2xl"
+          />
+        </div>
+
+        {/* Password */}
+
+        <div>
+          <Label>{dict.common.passwordLabel}</Label>
+
+          <div className="relative">
+            <Input
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) =>
+                setPassword(
+                  e.target.value
+                )
+              }
+              disabled={
+                loading ||
+                !!oauthLoading
+              }
+              autoComplete="current-password"
+              className="h-14 rounded-2xl pr-12"
+            />
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                setShowPassword(
+                  (current) => !current
+                )
+              }
+              disabled={
+                loading ||
+                !!oauthLoading
+              }
+              aria-label={
+                showPassword
+                  ? dict.common.hidePassword
+                  : dict.common.showPassword
+              }
+              className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-primary"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Ricordami / Password dimenticata */}
+
+        <div className="flex items-center justify-between text-sm">
+          <label className="flex items-center gap-2 text-muted-foreground">
+            <input
+              type="checkbox"
+              disabled={
+                loading ||
+                !!oauthLoading
+              }
+              className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+            />
+
+            {dict.loginForm.rememberMe}
+          </label>
+
+          <Link
+            href="/forgot-password"
+            className="font-medium text-primary hover:text-emerald-700"
+          >
+            {dict.loginForm.forgotPassword}
+          </Link>
+        </div>
+
+        {/* Login */}
+
+        <Button
+          type="submit"
           disabled={
             loading ||
             !!oauthLoading
           }
-          autoComplete="email"
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-      </div>
+          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+        >
+          {loading
+            ? dict.loginForm.loggingIn
+            : dict.loginForm.loginButton}
+        </Button>
 
-      {/* Password */}
-
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.common.passwordLabel}
-        </label>
+        {/* Separatore */}
 
         <div className="relative">
-          <input
-            type={
-              showPassword
-                ? "text"
-                : "password"
-            }
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
-            }
-            disabled={
-              loading ||
-              !!oauthLoading
-            }
-            autoComplete="current-password"
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 pr-12 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-          />
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              setShowPassword(
-                (current) => !current
-              )
-            }
-            disabled={
-              loading ||
-              !!oauthLoading
-            }
-            aria-label={
-              showPassword
-                ? dict.common.hidePassword
-                : dict.common.showPassword
-            }
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
+          <div className="relative flex justify-center">
+            <span className="bg-card px-4 text-sm text-muted-foreground">
+              {dict.common.or}
+            </span>
+          </div>
+        </div>
+
+        {/* Google */}
+
+        <Button
+          type="button"
+          variant="outline"
+          disabled={
+            loading ||
+            !!oauthLoading
+          }
+          onClick={() =>
+            handleOAuth("google")
+          }
+          className="h-12 w-full rounded-2xl"
+        >
+          {oauthLoading ===
+          "google"
+            ? dict.common.connecting
+            : dict.common.continueWithGoogle}
+        </Button>
+
+        {/* Registrazione */}
+
+        <p className="text-center text-sm text-muted-foreground">
+          {dict.loginForm.noAccount}{" "}
+
+          <Link
+            href="/register"
+            className="font-semibold text-primary hover:text-emerald-700"
           >
-            {showPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Ricordami / Password dimenticata */}
-
-      <div className="flex items-center justify-between text-sm">
-        <label className="flex items-center gap-2 text-slate-600">
-          <input
-            type="checkbox"
-            disabled={
-              loading ||
-              !!oauthLoading
-            }
-            className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
-          />
-
-          {dict.loginForm.rememberMe}
-        </label>
-
-        <Link
-          href="/forgot-password"
-          className="font-medium text-emerald-600 hover:text-emerald-700"
-        >
-          {dict.loginForm.forgotPassword}
-        </Link>
-      </div>
-
-      {/* Login */}
-
-      <Button
-        type="submit"
-        disabled={
-          loading ||
-          !!oauthLoading
-        }
-        className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
-      >
-        {loading
-          ? dict.loginForm.loggingIn
-          : dict.loginForm.loginButton}
-      </Button>
-
-      {/* Separatore */}
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200" />
-        </div>
-
-        <div className="relative flex justify-center">
-          <span className="bg-white px-4 text-sm text-slate-500">
-            {dict.common.or}
-          </span>
-        </div>
-      </div>
-
-      {/* Google */}
-
-      <Button
-        type="button"
-        variant="outline"
-        disabled={
-          loading ||
-          !!oauthLoading
-        }
-        onClick={() =>
-          handleOAuth("google")
-        }
-        className="h-12 w-full rounded-2xl"
-      >
-        {oauthLoading ===
-        "google"
-          ? dict.common.connecting
-          : dict.common.continueWithGoogle}
-      </Button>
-
-      {/* Registrazione */}
-
-      <p className="text-center text-sm text-slate-600">
-        {dict.loginForm.noAccount}{" "}
-
-        <Link
-          href="/register"
-          className="font-semibold text-emerald-600 hover:text-emerald-700"
-        >
-          {dict.loginForm.signUpLink}
-        </Link>
-      </p>
-    </form>
+            {dict.loginForm.signUpLink}
+          </Link>
+        </p>
+      </form>
+    </Card>
   );
 }

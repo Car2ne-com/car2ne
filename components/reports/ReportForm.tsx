@@ -6,6 +6,10 @@ import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 import { createClient } from "@/lib/supabase/client";
 
@@ -159,12 +163,12 @@ export default function ReportForm({ dict, locale }: Props) {
 
   if (submitted) {
     return (
-      <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <h2 className="text-xl font-bold text-slate-900">
+      <Card className="mt-10 p-8 text-center shadow-sm">
+        <h2 className="text-xl font-bold text-foreground">
           {dict.success.title}
         </h2>
 
-        <p className="mt-2 text-slate-600">{dict.success.description}</p>
+        <p className="mt-2 text-muted-foreground">{dict.success.description}</p>
 
         <Button
           type="button"
@@ -174,26 +178,24 @@ export default function ReportForm({ dict, locale }: Props) {
             setDescription("");
             setSelectedOption("");
           }}
-          className="mt-6 h-12 rounded-2xl bg-emerald-500 px-8 font-semibold hover:bg-emerald-600"
+          className="mt-6 h-12 rounded-2xl px-8 text-base font-semibold"
         >
           {dict.success.another}
         </Button>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <Card className="mt-10 p-8 shadow-sm">
       <div className="mb-6">
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.form.categoryLabel}
-        </label>
+        <Label>{dict.form.categoryLabel}</Label>
 
-        <select
+        <Select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           disabled={submitting}
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+          className="h-14 rounded-2xl"
         >
           <option value="">—</option>
 
@@ -202,20 +204,18 @@ export default function ReportForm({ dict, locale }: Props) {
               {label}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       {options.length > 0 && (
         <div className="mb-6">
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            {dict.form.rideLabel}
-          </label>
+          <Label>{dict.form.rideLabel}</Label>
 
-          <select
+          <Select
             value={selectedOption}
             onChange={(e) => setSelectedOption(e.target.value)}
             disabled={submitting}
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+            className="h-14 rounded-2xl"
           >
             <option value="">{dict.form.rideNone}</option>
 
@@ -224,32 +224,30 @@ export default function ReportForm({ dict, locale }: Props) {
                 {option.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       )}
 
       <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.form.descriptionLabel}
-        </label>
+        <Label>{dict.form.descriptionLabel}</Label>
 
-        <textarea
+        <Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           disabled={submitting}
           rows={6}
           maxLength={2000}
           placeholder={dict.form.descriptionPlaceholder}
-          className="w-full rounded-2xl border border-slate-200 p-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+          className="rounded-2xl py-4"
         />
       </div>
 
-      <div className="mt-8 flex justify-end border-t border-slate-100 pt-6">
+      <div className="mt-8 flex justify-end border-t border-border pt-6">
         <Button
           type="button"
           onClick={handleSubmit}
           disabled={submitting}
-          className="h-12 rounded-2xl bg-emerald-500 px-8 font-semibold hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-12 rounded-2xl px-8 text-base font-semibold"
         >
           {submitting ? (
             <>
@@ -264,6 +262,6 @@ export default function ReportForm({ dict, locale }: Props) {
           )}
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }

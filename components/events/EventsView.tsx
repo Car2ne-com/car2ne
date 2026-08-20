@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 
 import EventSearch from "./EventSearch";
 import EventGrid from "./EventGrid";
-import EmptyState from "./EmptyState";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 import { Event } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
@@ -162,11 +164,12 @@ export default function EventsView({
 
         {cityOptions.length > 0 && (
           <div className="flex flex-wrap gap-3">
-            <select
+            <Select
               value={cityId}
               onChange={(e) => setCityId(e.target.value)}
               aria-label={dict.filters.cityAriaLabel}
-              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+              containerClassName="w-auto"
+              className="h-12 w-auto rounded-2xl pr-9 text-sm font-medium shadow-sm"
             >
               <option value="">{dict.filters.allCities}</option>
 
@@ -175,14 +178,15 @@ export default function EventsView({
                   {city.name}
                 </option>
               ))}
-            </select>
+            </Select>
 
             {venueOptions.length > 0 && (
-              <select
+              <Select
                 value={effectiveVenueId}
                 onChange={(e) => setVenueId(e.target.value)}
                 aria-label={dict.filters.venueAriaLabel}
-                className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                containerClassName="w-auto"
+                className="h-12 w-auto rounded-2xl pr-9 text-sm font-medium shadow-sm"
               >
                 <option value="">{dict.filters.allVenues}</option>
 
@@ -191,19 +195,19 @@ export default function EventsView({
                     {venue.name}
                   </option>
                 ))}
-              </select>
+              </Select>
             )}
           </div>
         )}
       </div>
 
       {initialDeparture && (
-        <div className="mb-8 rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-4">
-          <p className="text-sm font-semibold text-emerald-800">
+        <div className="mb-8 rounded-2xl bg-accent px-5 py-4">
+          <p className="text-sm font-semibold text-accent-foreground">
             {dict.filters.departureBadge}
           </p>
 
-          <p className="mt-1 text-sm text-emerald-700">
+          <p className="mt-1 text-sm text-accent-foreground">
             {dict.filters.departureSearching}{" "}
             <strong>{initialDeparture}</strong>.
           </p>
@@ -216,20 +220,22 @@ export default function EventsView({
 
           {visibleCount < filteredEvents.length && (
             <div className="mt-10 flex justify-center">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="lg"
                 onClick={() =>
                   setVisibleCount(
                     (count) => count + PAGE_SIZE
                   )
                 }
-                className="rounded-2xl border border-slate-200 bg-white px-8 py-3 font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+                className="h-auto rounded-2xl px-8 py-3 text-base"
               >
                 {dict.filters.loadMore} (
                 {filteredEvents.length -
                   visibleCount}{" "}
                 {dict.filters.remaining})
-              </button>
+              </Button>
             </div>
           )}
         </>

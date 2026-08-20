@@ -9,20 +9,20 @@ export default async function Features() {
   const t = dict.home.features;
 
   return (
-    <section className="bg-white py-24">
+    <section className="bg-background py-24">
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
 
         <div>
 
-          <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
             {t.badge}
           </span>
 
-          <h2 className="mt-6 text-5xl font-bold text-slate-900">
+          <h2 className="mt-6 text-5xl font-bold text-foreground">
             {t.title}
           </h2>
 
-          <p className="mt-6 text-lg leading-8 text-slate-500">
+          <p className="mt-6 text-lg leading-8 text-muted-foreground">
             {t.description}
           </p>
 
@@ -36,18 +36,18 @@ export default async function Features() {
             return (
               <div
                 key={feature.title}
-                className="flex gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-xl"
+                className="flex gap-5 rounded-2xl border border-border bg-card p-6 transition hover:shadow-xl"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-100">
-                  <Icon className="h-7 w-7 text-emerald-600" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent">
+                  <Icon className="h-7 w-7 text-accent-foreground" />
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900">
+                  <h3 className="text-xl font-bold text-foreground">
                     {feature.title}
                   </h3>
 
-                  <p className="mt-2 text-slate-500">
+                  <p className="mt-2 text-muted-foreground">
                     {feature.description}
                   </p>
                 </div>

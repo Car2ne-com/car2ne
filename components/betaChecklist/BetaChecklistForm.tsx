@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { CheckCircle2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 import type {
   BetaChecklistResultsByItem,
@@ -128,33 +130,33 @@ export default function BetaChecklistForm({
 
   return (
     <div className="space-y-8">
-      <div className="sticky top-4 z-10 rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm backdrop-blur">
+      <div className="sticky top-4 z-10 rounded-3xl border border-border bg-card/95 p-6 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <span className="text-2xl font-black text-slate-900">{progressPct}%</span>
+          <span className="text-2xl font-black text-foreground">{progressPct}%</span>
 
-          <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
             <span>
-              {dict.progress.tested}: <b className="font-semibold text-slate-900">{testedCount}</b>/{totalItems}
+              {dict.progress.tested}: <b className="font-semibold text-foreground">{testedCount}</b>/{totalItems}
             </span>
             <span>
-              {dict.progress.ok}: <b className="font-semibold text-emerald-600">{okCount}</b>
+              {dict.progress.ok}: <b className="font-semibold text-primary">{okCount}</b>
             </span>
             <span>
-              {dict.progress.problem}: <b className="font-semibold text-red-600">{problemCount}</b>
+              {dict.progress.problem}: <b className="font-semibold text-destructive">{problemCount}</b>
             </span>
             <span>
-              {dict.progress.untested}: <b className="font-semibold text-slate-900">{untestedCount}</b>
+              {dict.progress.untested}: <b className="font-semibold text-foreground">{untestedCount}</b>
             </span>
           </div>
         </div>
 
-        <div className="mt-3 flex h-2 overflow-hidden rounded-full bg-slate-100">
+        <div className="mt-3 flex h-2 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-full bg-emerald-500 transition-all"
+            className="h-full bg-primary transition-all"
             style={{ width: `${totalItems > 0 ? (okCount / totalItems) * 100 : 0}%` }}
           />
           <div
-            className="h-full bg-red-500 transition-all"
+            className="h-full bg-destructive transition-all"
             style={{ width: `${totalItems > 0 ? (problemCount / totalItems) * 100 : 0}%` }}
           />
         </div>
@@ -165,15 +167,15 @@ export default function BetaChecklistForm({
 
         return (
           <section key={section.id}>
-            <div className="mb-4 flex items-baseline justify-between gap-3 border-b border-slate-200 pb-3">
-              <h2 className="text-lg font-bold text-slate-900">{section.title}</h2>
-              <span className="shrink-0 text-xs font-medium text-slate-400">
+            <div className="mb-4 flex items-baseline justify-between gap-3 border-b border-border pb-3">
+              <h2 className="text-lg font-bold text-foreground">{section.title}</h2>
+              <span className="shrink-0 text-xs font-medium text-muted-foreground">
                 {sectionTested} / {section.items.length}
               </span>
             </div>
 
             {section.note && (
-              <p className="-mt-2 mb-4 text-sm text-slate-500">{section.note}</p>
+              <p className="-mt-2 mb-4 text-sm text-muted-foreground">{section.note}</p>
             )}
 
             <ul className="space-y-3">
@@ -186,60 +188,62 @@ export default function BetaChecklistForm({
                     key={item.id}
                     className={`rounded-2xl border p-4 transition-colors ${
                       status === "ok"
-                        ? "border-emerald-200 bg-emerald-50/60"
+                        ? "border-primary/30 bg-accent/60"
                         : status === "problem"
-                          ? "border-red-200 bg-red-50/60"
-                          : "border-slate-200 bg-white"
+                          ? "border-destructive/30 bg-destructive/5"
+                          : "border-border bg-card"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-slate-800">{item.title}</p>
+                        <p className="text-sm font-medium text-foreground">{item.title}</p>
                         {item.expected && (
-                          <p className="mt-1 text-xs text-slate-500">
-                            <span className="font-semibold text-slate-600">{dict.expectedLabel}:</span>{" "}
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            <span className="font-semibold text-muted-foreground">{dict.expectedLabel}:</span>{" "}
                             {item.expected}
                           </p>
                         )}
                       </div>
 
                       <div className="flex shrink-0 gap-2">
-                        <button
+                        <Button
                           type="button"
+                          size="sm"
                           onClick={() => setStatus(item.id, "ok")}
-                          className={`flex items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${
+                          className={
                             status === "ok"
-                              ? "border-emerald-500 bg-emerald-500 text-white"
-                              : "border-slate-200 bg-slate-50 text-slate-500 hover:border-emerald-300 hover:text-emerald-700"
-                          }`}
+                              ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
+                              : "border-border bg-muted text-muted-foreground hover:border-primary/40 hover:text-primary"
+                          }
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           {dict.states.ok}
-                        </button>
+                        </Button>
 
-                        <button
+                        <Button
                           type="button"
+                          size="sm"
                           onClick={() => setStatus(item.id, "problem")}
-                          className={`flex items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${
+                          className={
                             status === "problem"
-                              ? "border-red-500 bg-red-500 text-white"
-                              : "border-slate-200 bg-slate-50 text-slate-500 hover:border-red-300 hover:text-red-700"
-                          }`}
+                              ? "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              : "border-border bg-muted text-muted-foreground hover:border-destructive/40 hover:text-destructive"
+                          }
                         >
                           <AlertTriangle className="h-3.5 w-3.5" />
                           {dict.states.problem}
-                        </button>
+                        </Button>
                       </div>
                     </div>
 
                     {status === "problem" && (
-                      <textarea
+                      <Textarea
                         value={entry?.note ?? ""}
                         onChange={(e) => updateNoteLocally(item.id, e.target.value)}
                         onBlur={() => saveNote(item.id)}
                         placeholder={dict.notePlaceholder}
                         rows={2}
-                        className="mt-3 w-full rounded-xl border border-red-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-red-400 focus:ring-4 focus:ring-red-100"
+                        className="mt-3 min-h-0 border-destructive/30 focus-visible:border-destructive focus-visible:ring-destructive/20"
                       />
                     )}
                   </li>

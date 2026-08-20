@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import DriverVerificationForm from "@/components/dashboard/DriverVerificationForm";
 
 import { createClient } from "@/lib/supabase/server";
@@ -28,16 +26,13 @@ export default async function DriverVerificationPage() {
     .maybeSingle();
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
         <div className="mb-10">
-          <h1 className="text-5xl font-black tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold text-foreground">
             {dict.driverVerification.page.title}
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             {dict.driverVerification.page.subtitle}
           </p>
         </div>
@@ -46,9 +41,6 @@ export default async function DriverVerificationPage() {
           dict={dict.driverVerification}
           verification={verification ?? null}
         />
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

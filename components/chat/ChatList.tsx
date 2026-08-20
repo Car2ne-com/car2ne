@@ -12,10 +12,13 @@ import Link from "next/link";
 
 import {
   ChevronRight,
+  Loader2,
   MessageCircle,
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type Conversation = {
   id: string;
@@ -508,39 +511,30 @@ export default function ChatList({
 
   if (loading) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white px-8 py-20 text-center text-slate-500 shadow-sm">
-        Caricamento chat...
-      </div>
+      <Card className="flex flex-col items-center justify-center gap-3 px-8 py-20 text-center text-muted-foreground">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span>Caricamento chat...</span>
+      </Card>
     );
   }
 
   if (chats.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white px-8 py-20 text-center shadow-sm">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-          <MessageCircle className="h-8 w-8 text-emerald-600" />
-        </div>
-
-        <h2 className="mt-6 text-2xl font-bold text-slate-900">
-          Nessuna conversazione
-        </h2>
-
-        <p className="mx-auto mt-3 max-w-md text-slate-500">
-          Quando una prenotazione verrà
-          confermata, la conversazione
-          apparirà qui.
-        </p>
-      </div>
+      <EmptyState
+        icon={MessageCircle}
+        title="Nessuna conversazione"
+        description="Quando una prenotazione verrà confermata, la conversazione apparirà qui."
+      />
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <Card className="overflow-hidden">
       {chats.map((chat) => (
         <Link
           key={chat.id}
           href={`/chat/${chat.id}`}
-          className="flex items-center gap-5 border-b border-slate-100 p-6 transition last:border-b-0 hover:bg-slate-50"
+          className="flex items-center gap-5 border-b border-slate-100 p-6 transition last:border-b-0 hover:bg-muted"
         >
           {chat.avatarUrl ? (
             <Image
@@ -548,17 +542,17 @@ export default function ChatList({
               alt={chat.otherName}
               width={64}
               height={64}
-              className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-emerald-50"
+              className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-accent"
             />
           ) : (
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-lg font-black text-emerald-600">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accent text-lg font-black text-accent-foreground">
               {chat.initials || "U"}
             </div>
           )}
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="truncate text-lg font-bold text-slate-900">
+              <h2 className="truncate text-lg font-bold text-foreground">
                 {chat.otherName}
               </h2>
 
@@ -570,7 +564,7 @@ export default function ChatList({
                 </span>
 
                 {chat.unreadCount > 0 && (
-                  <span className="flex min-h-6 min-w-6 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-xs font-bold text-white">
+                  <span className="flex min-h-6 min-w-6 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-bold text-primary-foreground">
                     {chat.unreadCount > 9
                       ? "9+"
                       : chat.unreadCount}
@@ -580,13 +574,13 @@ export default function ChatList({
             </div>
 
             {chat.eventLabel && (
-              <p className="mt-1 truncate text-sm font-medium text-emerald-600">
+              <p className="mt-1 truncate text-sm font-medium text-primary">
                 {chat.eventLabel}
               </p>
             )}
 
             {chat.routeLabel && (
-              <p className="mt-1 truncate text-sm text-slate-500">
+              <p className="mt-1 truncate text-sm text-muted-foreground">
                 {chat.routeLabel}
               </p>
             )}
@@ -595,7 +589,7 @@ export default function ChatList({
               className={`mt-2 truncate text-sm ${
                 chat.unreadCount > 0
                   ? "font-semibold text-slate-700"
-                  : "text-slate-500"
+                  : "text-muted-foreground"
               }`}
             >
               {chat.lastMessage
@@ -616,6 +610,6 @@ export default function ChatList({
           <ChevronRight className="h-5 w-5 shrink-0 text-slate-300" />
         </Link>
       ))}
-    </div>
+    </Card>
   );
 }

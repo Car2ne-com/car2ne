@@ -6,6 +6,12 @@ import { useRouter } from "next/navigation";
 import { ShieldCheck, ShieldOff } from "lucide-react";
 import { toast } from "sonner";
 
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import ConfirmDialog from "./ConfirmDialog";
+
 type User = {
   id: string;
   email: string;
@@ -22,6 +28,12 @@ type Props = {
 
 const PAGE_SIZE = 50;
 
+type PendingRoleChange = {
+  userId: string;
+  role: "admin" | "user";
+  label: string;
+} | null;
+
 export default function AdminUserTable({
   users,
   currentUserId,
@@ -34,6 +46,8 @@ export default function AdminUserTable({
   >(null);
   const [visibleCount, setVisibleCount] =
     useState(PAGE_SIZE);
+  const [pendingRoleChange, setPendingRoleChange] =
+    useState<PendingRoleChange>(null);
 
   const filteredUsers = useMemo(() => {
     const query = search.toLowerCase().trim();
@@ -58,14 +72,6 @@ export default function AdminUserTable({
     role: "admin" | "user",
     label: string
   ) {
-    const confirmed = window.confirm(
-      role === "admin"
-        ? `Rendere "${label}" admin? Avrà accesso completo al pannello di gestione.`
-        : `Rimuovere il ruolo admin a "${label}"?`
-    );
-
-    if (!confirmed) return;
-
     setBusyId(userId);
 
     try {
@@ -107,36 +113,31 @@ export default function AdminUserTable({
       );
     } finally {
       setBusyId(null);
+      setPendingRoleChange(null);
     }
   }
 
   if (users.length === 0) {
-    return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-        <h2 className="text-2xl font-bold">
-          Nessun utente
-        </h2>
-      </div>
-    );
+    return <EmptyState title="Nessun utente" description="" />;
   }
 
   return (
     <div>
       <div className="mb-4">
-        <input
+        <Input
           type="text"
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
           }
           placeholder="Cerca per nome o email..."
-          className="h-12 w-full max-w-md rounded-xl border border-slate-300 px-4 outline-none focus:border-emerald-500"
+          className="h-12 max-w-md"
         />
       </div>
 
-      <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <Card className="overflow-x-auto p-0">
         <table className="w-full">
-          <thead className="bg-slate-50">
+          <thead className="bg-muted">
             <tr>
               <th className="px-6 py-4 text-left">
                 Nome
@@ -175,34 +176,34 @@ export default function AdminUserTable({
               return (
                 <tr
                   key={user.id}
-                  className="border-t border-slate-100"
+                  className="border-t border-border"
                 >
                   <td className="px-6 py-5 font-semibold">
                     {label}
                     {isSelf && (
-                      <span className="ml-2 text-xs font-normal text-slate-400">
+                      <span className="ml-2 text-xs font-normal text-muted-foreground">
                         (tu)
                       </span>
                     )}
                   </td>
 
-                  <td className="px-6 py-5 text-slate-600">
+                  <td className="px-6 py-5 text-muted-foreground">
                     {user.email}
                   </td>
 
                   <td className="px-6 py-5">
                     {isAdmin ? (
-                      <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
                         Admin
                       </span>
                     ) : (
-                      <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
                         Utente
                       </span>
                     )}
                   </td>
 
-                  <td className="px-6 py-5 text-sm text-slate-500">
+                  <td className="px-6 py-5 text-sm text-muted-foreground">
                     {new Date(
                       user.createdAt
                     ).toLocaleDateString("it-IT")}
@@ -211,13 +212,13 @@ export default function AdminUserTable({
                   <td className="px-6 py-5">
                     <div className="flex justify-center">
                       {isAdmin ? (
-                        <button
+                        <Button
                           onClick={() =>
-                            setRole(
-                              user.id,
-                              "user",
-                              label
-                            )
+                            setPendingRoleChange({
+                              userId: user.id,
+                              role: "user",
+                              label,
+                            })
                           }
                           disabled={
                             busyId === user.id ||
@@ -228,29 +229,29 @@ export default function AdminUserTable({
                               ? "Non puoi rimuovere il tuo stesso ruolo admin"
                               : "Rimuovi ruolo admin"
                           }
-                          className="flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="h-auto gap-2 rounded-xl bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
                         >
                           <ShieldOff className="h-4 w-4" />
                           Rimuovi admin
-                        </button>
+                        </Button>
                       ) : (
-                        <button
+                        <Button
                           onClick={() =>
-                            setRole(
-                              user.id,
-                              "admin",
-                              label
-                            )
+                            setPendingRoleChange({
+                              userId: user.id,
+                              role: "admin",
+                              label,
+                            })
                           }
                           disabled={
                             busyId === user.id
                           }
                           title="Rendi admin"
-                          className="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+                          className="h-auto gap-2 rounded-xl px-4 py-2"
                         >
                           <ShieldCheck className="h-4 w-4" />
                           Rendi admin
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </td>
@@ -259,25 +260,61 @@ export default function AdminUserTable({
             })}
           </tbody>
         </table>
-      </div>
+      </Card>
 
       {visibleCount < filteredUsers.length && (
         <div className="mt-6 flex justify-center">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() =>
               setVisibleCount(
                 (count) => count + PAGE_SIZE
               )
             }
-            className="rounded-2xl border border-slate-200 bg-white px-8 py-3 font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+            className="h-auto rounded-2xl px-8 py-3"
           >
             Carica altri (
             {filteredUsers.length - visibleCount}{" "}
             rimanenti)
-          </button>
+          </Button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={pendingRoleChange !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingRoleChange(null);
+        }}
+        title={
+          pendingRoleChange?.role === "admin"
+            ? "Rendi admin"
+            : "Rimuovi ruolo admin"
+        }
+        description={
+          pendingRoleChange?.role === "admin"
+            ? `Rendere "${pendingRoleChange?.label}" admin? Avrà accesso completo al pannello di gestione.`
+            : `Rimuovere il ruolo admin a "${pendingRoleChange?.label}"?`
+        }
+        confirmLabel={
+          pendingRoleChange?.role === "admin"
+            ? "Rendi admin"
+            : "Rimuovi admin"
+        }
+        confirmTone={
+          pendingRoleChange?.role === "admin" ? "default" : "warning"
+        }
+        busy={busyId === pendingRoleChange?.userId}
+        onConfirm={() => {
+          if (pendingRoleChange) {
+            setRole(
+              pendingRoleChange.userId,
+              pendingRoleChange.role,
+              pendingRoleChange.label
+            );
+          }
+        }}
+      />
     </div>
   );
 }

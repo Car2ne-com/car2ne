@@ -3,6 +3,7 @@
 import { Bell, BellOff } from "lucide-react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import { usePushSubscription } from "@/lib/hooks/usePushSubscription";
 
 export type PushDict = {
@@ -50,38 +51,36 @@ export default function PushNotificationToggle({ dict }: Props) {
   }
 
   return (
-    <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
         <div
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${
-            subscribed ? "bg-emerald-100" : "bg-slate-100"
+            subscribed ? "bg-accent" : "bg-muted"
           }`}
         >
           {subscribed ? (
-            <Bell className="h-6 w-6 text-emerald-600" />
+            <Bell className="h-6 w-6 text-accent-foreground" />
           ) : (
-            <BellOff className="h-6 w-6 text-slate-400" />
+            <BellOff className="h-6 w-6 text-muted-foreground" />
           )}
         </div>
 
         <div>
-          <p className="font-bold text-slate-900">{dict.title}</p>
+          <p className="font-bold text-foreground">{dict.title}</p>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-muted-foreground">
             {subscribed ? dict.descriptionOn : dict.descriptionOff}
           </p>
         </div>
       </div>
 
-      <button
+      <Button
         type="button"
+        variant={subscribed ? "outline" : "default"}
         onClick={subscribed ? handleDisable : handleEnable}
         disabled={busy}
-        className={`shrink-0 rounded-2xl px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
-          subscribed
-            ? "border border-slate-200 text-slate-700 hover:bg-slate-50"
-            : "bg-emerald-500 text-white hover:bg-emerald-600"
-        }`}
+        size="lg"
+        className="shrink-0 rounded-2xl px-5 py-3"
       >
         {busy
           ? subscribed
@@ -90,7 +89,7 @@ export default function PushNotificationToggle({ dict }: Props) {
           : subscribed
             ? dict.disable
             : dict.enable}
-      </button>
+      </Button>
     </div>
   );
 }

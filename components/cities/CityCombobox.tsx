@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Search, X } from "lucide-react";
 
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 type City = {
   id: string;
   name: string;
@@ -193,22 +196,24 @@ export default function CityCombobox({
    */
   if (selected && !open) {
     return (
-      <div className="flex h-14 items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-4">
-        <span className="flex items-center gap-2 font-semibold text-emerald-800">
+      <div className="flex h-14 items-center justify-between rounded-2xl bg-accent px-4">
+        <span className="flex items-center gap-2 font-semibold text-accent-foreground">
           <Check className="h-4 w-4 shrink-0" />
           {selected.name}
           {selected.region ? `, ${selected.region}` : ""}
         </span>
 
         {!disabled && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon-xs"
             onClick={handleClear}
             aria-label={dict.changeCityAriaLabel}
-            className="text-emerald-600 transition hover:text-emerald-800"
+            className="text-accent-foreground hover:bg-primary/10"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         )}
       </div>
     );
@@ -216,32 +221,30 @@ export default function CityCombobox({
 
   return (
     <div ref={containerRef} className="relative">
-      <div className="flex h-14 items-center rounded-2xl border border-slate-200 px-4 outline-none transition focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-100">
-        <Search className="mr-3 h-4 w-4 shrink-0 text-slate-400" />
+      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-        <input
-          type="text"
-          value={query}
-          disabled={disabled}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTouched(true)}
-          placeholder={resolvedPlaceholder}
-          className="h-full w-full bg-transparent outline-none disabled:cursor-not-allowed"
-        />
-      </div>
+      <Input
+        type="text"
+        value={query}
+        disabled={disabled}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTouched(true)}
+        placeholder={resolvedPlaceholder}
+        className="h-14 rounded-2xl pl-11"
+      />
 
       {open && query.trim().length >= MIN_QUERY_LENGTH && (
-        <div className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
+        <div className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded-2xl border border-border bg-popover py-2 shadow-xl">
           {searching ? (
-            <p className="px-4 py-2.5 text-sm text-slate-500">
+            <p className="px-4 py-2.5 text-sm text-muted-foreground">
               {dict.searching}
             </p>
           ) : searchError ? (
-            <p className="px-4 py-2.5 text-sm text-red-600">
+            <p className="px-4 py-2.5 text-sm text-destructive">
               {dict.searchFailed}
             </p>
           ) : results.length > 0 ? (
@@ -251,21 +254,21 @@ export default function CityCombobox({
                 type="button"
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => handleSelect(city)}
-                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition hover:bg-emerald-50"
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition hover:bg-accent"
               >
-                <span className="font-medium text-slate-800">
+                <span className="font-medium text-popover-foreground">
                   {city.name}
                 </span>
 
                 {city.region && (
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-muted-foreground">
                     {city.region}
                   </span>
                 )}
               </button>
             ))
           ) : (
-            <p className="px-4 py-2.5 text-sm text-slate-500">
+            <p className="px-4 py-2.5 text-sm text-muted-foreground">
               {dict.noCityFound}
             </p>
           )}
@@ -273,13 +276,13 @@ export default function CityCombobox({
       )}
 
       {showTooShortHint && (
-        <p className="mt-2 text-xs text-slate-400">
+        <p className="mt-2 text-xs text-muted-foreground">
           {dict.minCharsHint.replace("{count}", String(MIN_QUERY_LENGTH))}
         </p>
       )}
 
       {showUnconfirmedError && (
-        <p className="mt-2 text-xs font-medium text-red-600">
+        <p className="mt-2 text-xs font-medium text-destructive">
           {dict.selectSuggestion}
         </p>
       )}

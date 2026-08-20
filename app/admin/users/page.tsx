@@ -60,11 +60,11 @@ export default async function AdminUsersPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-foreground">
           Gestione utenti
         </h1>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted-foreground">
           Assegna o rimuovi il ruolo admin.
         </p>
       </div>

@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label, FieldError } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import {
   calculateAge,
@@ -161,55 +164,55 @@ export default function VerifyAgeForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
-    >
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          Data di nascita
-        </label>
-
-        <input
-          type="date"
-          value={birthDate}
-          onChange={(e) =>
-            setBirthDate(e.target.value)
-          }
-          max={
-            new Date()
-              .toISOString()
-              .split("T")[0]
-          }
-          disabled={loading}
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-
-        <p className="mt-2 text-xs text-slate-500">
-          Car2ne è riservato a chi ha almeno
-          18 anni.
-        </p>
-
-        {birthDate.length > 0 &&
-          age !== null &&
-          !isAdult && (
-            <p className="mt-2 text-xs font-medium text-red-500">
-              Non risulti maggiorenne: il tuo
-              account non potrà essere
-              attivato.
-            </p>
-          )}
-      </div>
-
-      <Button
-        type="submit"
-        disabled={loading || !birthDate}
-        className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+    <Card className="p-8">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6"
       >
-        {loading
-          ? "Verifica..."
-          : "Continua"}
-      </Button>
-    </form>
+        <div>
+          <Label>Data di nascita</Label>
+
+          <Input
+            type="date"
+            value={birthDate}
+            onChange={(e) =>
+              setBirthDate(e.target.value)
+            }
+            max={
+              new Date()
+                .toISOString()
+                .split("T")[0]
+            }
+            disabled={loading}
+            className="h-14 rounded-2xl"
+          />
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            Car2ne è riservato a chi ha almeno
+            18 anni.
+          </p>
+
+          {birthDate.length > 0 &&
+            age !== null &&
+            !isAdult && (
+              <FieldError>
+                Non risulti maggiorenne: il tuo
+                account non potrà essere
+                attivato.
+              </FieldError>
+            )}
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading || !birthDate}
+          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+        >
+          {loading
+            ? "Verifica..."
+            : "Continua"}
+        </Button>
+      </form>
+    </Card>
   );
 }

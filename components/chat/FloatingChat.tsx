@@ -12,11 +12,14 @@ import Link from "next/link";
 
 import {
   ChevronRight,
+  Loader2,
   MessageCircle,
   X,
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type Conversation = {
   id: string;
@@ -812,57 +815,52 @@ export default function FloatingChat() {
   return (
     <div className="fixed bottom-6 right-6 z-[60]">
       {open && (
-        <div className="absolute bottom-16 right-0 mb-3 w-[380px] max-w-[calc(100vw-32px)] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
-          <div className="flex items-center justify-between border-b border-slate-100 bg-white px-5 py-4">
+        <div className="absolute bottom-16 right-0 mb-3 w-[380px] max-w-[calc(100vw-32px)] overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
+          <div className="flex items-center justify-between border-b border-slate-100 bg-card px-5 py-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100">
-                <MessageCircle className="h-5 w-5 text-emerald-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent">
+                <MessageCircle className="h-5 w-5 text-accent-foreground" />
               </div>
 
               <div>
-                <h2 className="font-bold text-slate-900">
+                <h2 className="font-bold text-foreground">
                   Chat
                 </h2>
 
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   Le tue conversazioni
                 </p>
               </div>
             </div>
 
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() =>
                 setOpen(false)
               }
-              className="flex h-9 w-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              className="h-9 w-9 rounded-full text-slate-400 hover:text-slate-700"
               aria-label="Chiudi chat"
             >
               <X className="h-5 w-5" />
-            </button>
+            </Button>
           </div>
 
           <div className="max-h-[420px] overflow-y-auto">
             {loading ? (
-              <div className="px-5 py-12 text-center text-sm text-slate-500">
-                Caricamento chat...
+              <div className="flex items-center justify-center gap-2 px-5 py-12 text-center text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Caricamento chat...</span>
               </div>
             ) : chats.length ===
               0 ? (
-              <div className="px-5 py-12 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-                  <MessageCircle className="h-7 w-7 text-slate-400" />
-                </div>
-
-                <p className="mt-4 font-semibold text-slate-800">
-                  Nessuna conversazione
-                </p>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Le tue chat appariranno
-                  qui.
-                </p>
-              </div>
+              <EmptyState
+                icon={MessageCircle}
+                title="Nessuna conversazione"
+                description="Le tue chat appariranno qui."
+                className="rounded-none border-none bg-transparent px-5 py-12 shadow-none"
+              />
             ) : (
               chats.map((chat) => {
                 const hasUnread =
@@ -908,8 +906,8 @@ export default function FloatingChat() {
                     }}
                     className={`flex items-center gap-3 border-b border-slate-100 px-5 py-4 transition last:border-b-0 ${
                       hasUnread
-                        ? "bg-emerald-50/50 hover:bg-emerald-50"
-                        : "hover:bg-slate-50"
+                        ? "bg-accent/50 hover:bg-accent"
+                        : "hover:bg-muted"
                     }`}
                   >
                     {chat.avatarUrl ? (
@@ -925,7 +923,7 @@ export default function FloatingChat() {
                         className={`h-12 w-12 shrink-0 rounded-full object-cover ${
                           hasUnread
                             ? "ring-2 ring-emerald-300"
-                            : "ring-2 ring-emerald-50"
+                            : "ring-2 ring-accent"
                         }`}
                       />
                     ) : (
@@ -933,7 +931,7 @@ export default function FloatingChat() {
                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold ${
                           hasUnread
                             ? "bg-emerald-200 text-emerald-700"
-                            : "bg-emerald-100 text-emerald-600"
+                            : "bg-accent text-accent-foreground"
                         }`}
                       >
                         {
@@ -947,7 +945,7 @@ export default function FloatingChat() {
                         <p
                           className={`truncate text-sm ${
                             hasUnread
-                              ? "font-black text-slate-900"
+                              ? "font-black text-foreground"
                               : "font-bold text-slate-800"
                           }`}
                         >
@@ -959,7 +957,7 @@ export default function FloatingChat() {
                         <span
                           className={`shrink-0 text-[10px] ${
                             hasUnread
-                              ? "font-semibold text-emerald-600"
+                              ? "font-semibold text-primary"
                               : "text-slate-400"
                           }`}
                         >
@@ -974,7 +972,7 @@ export default function FloatingChat() {
                           className={`min-w-0 flex-1 truncate text-xs ${
                             hasUnread
                               ? "font-semibold text-slate-700"
-                              : "text-slate-500"
+                              : "text-muted-foreground"
                           }`}
                         >
                           {chat.lastMessage ? (
@@ -1000,7 +998,7 @@ export default function FloatingChat() {
                         </p>
 
                         {hasUnread && (
-                          <span className="flex min-h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 px-1 text-[10px] font-bold text-white">
+                          <span className="flex min-h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                             {chat.unreadCount >
                             9
                               ? "9+"
@@ -1017,13 +1015,13 @@ export default function FloatingChat() {
             )}
           </div>
 
-          <div className="border-t border-slate-100 bg-slate-50 px-5 py-3 text-center">
+          <div className="border-t border-slate-100 bg-muted px-5 py-3 text-center">
             <Link
               href="/chat"
               onClick={() =>
                 setOpen(false)
               }
-              className="text-sm font-semibold text-emerald-600 transition hover:text-emerald-700"
+              className="text-sm font-semibold text-primary transition hover:text-primary/80"
             >
               Vedi tutte le chat →
             </Link>
@@ -1031,14 +1029,15 @@ export default function FloatingChat() {
         </div>
       )}
 
-      <button
+      <Button
         type="button"
         onClick={() =>
           setOpen(
             (current) => !current
           )
         }
-        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/25 transition hover:scale-105 hover:bg-emerald-600 active:scale-95"
+        size="icon"
+        className="relative h-14 w-14 rounded-full shadow-xl shadow-primary/25 hover:scale-105 active:scale-95"
         aria-label={
           open
             ? "Chiudi chat"
@@ -1053,13 +1052,13 @@ export default function FloatingChat() {
 
         {!open &&
           unreadTotal > 0 && (
-            <span className="absolute -right-1 -top-1 flex min-h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white shadow-md ring-2 ring-white">
+            <span className="absolute -right-1 -top-1 flex min-h-6 min-w-6 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground shadow-md ring-2 ring-background">
               {unreadTotal > 9
                 ? "9+"
                 : unreadTotal}
             </span>
           )}
-      </button>
+      </Button>
     </div>
   );
 }

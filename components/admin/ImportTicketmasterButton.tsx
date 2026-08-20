@@ -7,6 +7,7 @@ import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 import { IMPORT_COOLDOWN_MS } from "@/lib/importers/cooldown";
+import { Button } from "@/components/ui/button";
 
 type ImportResult = {
   eventsFetched: number;
@@ -111,8 +112,9 @@ export default function ImportTicketmasterButton({
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={handleImport}
         disabled={loading || onCooldown}
         title={
@@ -120,7 +122,7 @@ export default function ImportTicketmasterButton({
             ? `Disponibile tra ${formatRemaining(cooldownRemainingMs)}: evita importazioni ravvicinate inutili.`
             : undefined
         }
-        className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+        className="h-auto gap-2 rounded-2xl px-6 py-3"
       >
         <RefreshCw
           className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
@@ -130,17 +132,17 @@ export default function ImportTicketmasterButton({
           : onCooldown
             ? `Disponibile tra ${formatRemaining(cooldownRemainingMs)}`
             : "Importa da Ticketmaster"}
-      </button>
+      </Button>
 
       {onCooldown && !loading && (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           In cooldown: evita importazioni ravvicinate inutili.
         </p>
       )}
 
       <Link
         href="/admin/events?filter=pending"
-        className="text-sm font-semibold text-emerald-700 hover:underline"
+        className="text-sm font-semibold text-primary hover:underline"
       >
         Rivedi eventi in attesa →
       </Link>

@@ -4,7 +4,7 @@ export default function Logo() {
   return (
     <Link
       href="/"
-      className="flex shrink-0 items-center gap-0.5 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl"
+      className="flex shrink-0 items-center gap-0.5 text-xl font-extrabold tracking-tight text-foreground sm:text-2xl"
     >
       <svg
         viewBox="8 8 84 84"

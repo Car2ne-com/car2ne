@@ -5,6 +5,9 @@ import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label, FieldError } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ChangePasswordForm() {
@@ -93,13 +96,13 @@ export default function ChangePasswordForm() {
   }
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <Card className="p-8">
       <div>
-        <h3 className="text-xl font-bold text-slate-900">
+        <h3 className="text-lg font-semibold text-foreground">
           Password
         </h3>
 
-        <p className="mt-2 text-sm leading-6 text-slate-500">
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Aggiorna la password del tuo account.
           Se hai effettuato l&apos;accesso con
           Google, questo ti permetterà di
@@ -124,12 +127,10 @@ export default function ChangePasswordForm() {
             className="space-y-6"
           >
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                Nuova password
-              </label>
+              <Label>Nuova password</Label>
 
               <div className="relative">
-                <input
+                <Input
                   type={
                     showPassword
                       ? "text"
@@ -144,11 +145,13 @@ export default function ChangePasswordForm() {
                   }
                   disabled={loading}
                   autoComplete="new-password"
-                  className="h-14 w-full rounded-2xl border border-slate-200 px-4 pr-12 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                  className="h-14 rounded-2xl pr-12"
                 />
 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() =>
                     setShowPassword(
                       (current) => !current
@@ -160,18 +163,18 @@ export default function ChangePasswordForm() {
                       ? "Nascondi password"
                       : "Mostra password"
                   }
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
+                  className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-primary"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
                   ) : (
                     <Eye className="h-5 w-5" />
                   )}
-                </button>
+                </Button>
               </div>
 
-              <div className="mt-4 rounded-2xl bg-slate-50 p-4">
-                <p className="mb-3 text-xs font-semibold text-slate-600">
+              <div className="mt-4 rounded-2xl bg-muted p-4">
+                <p className="mb-3 text-xs font-semibold text-muted-foreground">
                   La password deve contenere:
                 </p>
 
@@ -215,11 +218,9 @@ export default function ChangePasswordForm() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                Conferma nuova password
-              </label>
+              <Label>Conferma nuova password</Label>
 
-              <input
+              <Input
                 type={
                   showPassword
                     ? "text"
@@ -234,15 +235,15 @@ export default function ChangePasswordForm() {
                 }
                 disabled={loading}
                 autoComplete="new-password"
-                className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 rounded-2xl"
               />
 
               {confirmPassword.length > 0 &&
                 password !==
                   confirmPassword && (
-                  <p className="mt-2 text-xs font-medium text-red-500">
+                  <FieldError>
                     Le password non coincidono.
-                  </p>
+                  </FieldError>
                 )}
             </div>
 
@@ -274,7 +275,7 @@ export default function ChangePasswordForm() {
           </form>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
 

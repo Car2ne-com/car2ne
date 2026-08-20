@@ -1,8 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import ManageRideForm from "@/components/dashboard/ManageRideForm";
+import { Card } from "@/components/ui/card";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -108,36 +107,33 @@ export default async function ManageRidePage({
   ).format(new Date(event.event_date));
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
 
         {/* Header */}
 
         <div className="mb-10">
-          <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
             {t.managePage.badge}
           </span>
 
-          <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-5 text-2xl font-bold text-foreground">
             {t.managePage.title}
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             {t.managePage.subtitle}
           </p>
         </div>
 
         {/* Informazioni evento */}
 
-        <div className="mb-8 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+        <Card className="mb-8 p-7">
 
-          <p className="text-sm font-semibold text-emerald-600">
+          <p className="text-sm font-semibold text-primary">
             {t.managePage.eventLabel}
           </p>
 
-          <h2 className="mt-1 text-2xl font-black text-slate-900">
+          <h2 className="mt-1 text-lg font-semibold text-foreground">
             {event.title}
           </h2>
 
@@ -146,11 +142,11 @@ export default async function ManageRidePage({
             {/* Destinazione */}
 
             <div>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-muted-foreground">
                 {t.managePage.destinationLabel}
               </p>
 
-              <p className="mt-1 font-semibold text-slate-900">
+              <p className="mt-1 font-semibold text-foreground">
                 {event.venue}
               </p>
             </div>
@@ -158,11 +154,11 @@ export default async function ManageRidePage({
             {/* Data */}
 
             <div>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-muted-foreground">
                 {t.managePage.eventDateLabel}
               </p>
 
-              <p className="mt-1 font-semibold text-slate-900">
+              <p className="mt-1 font-semibold text-foreground">
                 {formattedDate}
               </p>
             </div>
@@ -170,21 +166,21 @@ export default async function ManageRidePage({
             {/* Città */}
 
             <div>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-muted-foreground">
                 {t.managePage.cityLabel}
               </p>
 
-              <p className="mt-1 font-semibold text-slate-900">
+              <p className="mt-1 font-semibold text-foreground">
                 {event.city}
               </p>
             </div>
 
           </div>
 
-          <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">
+          <div className="mt-5 rounded-2xl bg-muted p-4 text-sm text-muted-foreground">
             {t.managePage.infoLocked}
           </div>
-        </div>
+        </Card>
 
         {/* Form */}
 
@@ -210,9 +206,6 @@ export default async function ManageRidePage({
           }}
         />
 
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

@@ -60,8 +60,8 @@ export default function VerifiedAvatar({
   const config = SIZE_CONFIG[size];
 
   const ringClass = isVerified
-    ? `${config.ring} ring-emerald-500`
-    : `${config.ring} ring-emerald-50`;
+    ? `${config.ring} ring-primary`
+    : `${config.ring} ring-accent`;
 
   return (
     <div className="relative shrink-0">
@@ -75,7 +75,7 @@ export default function VerifiedAvatar({
         />
       ) : (
         <div
-          className={`flex ${config.box} items-center justify-center rounded-full bg-emerald-100 font-black text-emerald-600 ${config.text} ${
+          className={`flex ${config.box} items-center justify-center rounded-full bg-accent font-black text-accent-foreground ${config.text} ${
             isVerified ? ringClass : ""
           }`}
         >
@@ -87,9 +87,9 @@ export default function VerifiedAvatar({
         <span
           title={verifiedLabel}
           aria-label={verifiedLabel}
-          className={`absolute -bottom-0.5 -right-0.5 flex ${config.badgeBox} items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white`}
+          className={`absolute -bottom-0.5 -right-0.5 flex ${config.badgeBox} items-center justify-center rounded-full bg-primary ring-2 ring-background`}
         >
-          <BadgeCheck className={`${config.badgeIcon} text-white`} />
+          <BadgeCheck className={`${config.badgeIcon} text-primary-foreground`} />
         </span>
       )}
     </div>

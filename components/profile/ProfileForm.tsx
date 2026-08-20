@@ -17,6 +17,10 @@ import {
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 import { createClient } from "@/lib/supabase/client";
 
@@ -372,7 +376,7 @@ export default function ProfileForm({
           HEADER PROFILO
           ============================== */}
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+      <Card className="p-10">
 
         <div className="flex flex-col items-center">
 
@@ -418,7 +422,7 @@ export default function ProfileForm({
 
           </div>
 
-          <p className="mt-4 text-sm text-slate-500">
+          <p className="mt-4 text-sm text-muted-foreground">
             JPG, PNG o WebP · massimo 2 MB
           </p>
 
@@ -428,11 +432,11 @@ export default function ProfileForm({
             </p>
           )}
 
-          <h2 className="mt-6 text-3xl font-bold text-slate-900">
+          <h2 className="mt-6 text-2xl font-bold text-foreground">
             {displayName}
           </h2>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-muted-foreground">
             {profile.email}
           </p>
 
@@ -442,20 +446,20 @@ export default function ProfileForm({
 
         </div>
 
-      </div>
+      </Card>
 
       {/* ==============================
           INFORMAZIONI ACCOUNT
           ============================== */}
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <Card className="p-8">
 
         <div>
-          <h3 className="text-xl font-bold text-slate-900">
+          <h3 className="text-lg font-semibold text-foreground">
             Informazioni account
           </h3>
 
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Questi dati identificano il tuo account
             e non possono essere modificati da questa
             pagina.
@@ -467,61 +471,55 @@ export default function ProfileForm({
           {/* Nome */}
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Nome
-            </label>
+            <Label>Nome</Label>
 
-            <input
+            <Input
               value={profile.name}
               disabled
-              className="h-14 w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 text-slate-500 outline-none"
+              className="h-14 rounded-2xl"
             />
           </div>
 
           {/* Cognome */}
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Cognome
-            </label>
+            <Label>Cognome</Label>
 
-            <input
+            <Input
               value={profile.surname}
               disabled
-              className="h-14 w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 text-slate-500 outline-none"
+              className="h-14 rounded-2xl"
             />
           </div>
 
           {/* Email */}
 
           <div className="md:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Email
-            </label>
+            <Label>Email</Label>
 
-            <input
+            <Input
               value={profile.email}
               disabled
-              className="h-14 w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 text-slate-500 outline-none"
+              className="h-14 rounded-2xl"
             />
           </div>
 
         </div>
 
-      </div>
+      </Card>
 
       {/* ==============================
           PROFILO PUBBLICO
           ============================== */}
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <Card className="p-8">
 
         <div>
-          <h3 className="text-xl font-bold text-slate-900">
+          <h3 className="text-lg font-semibold text-foreground">
             Profilo pubblico
           </h3>
 
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Queste informazioni potranno essere
             visibili agli altri utenti quando offrirai
             o prenoterai un passaggio.
@@ -532,11 +530,9 @@ export default function ProfileForm({
 
         <div className="mt-6">
 
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Città
-          </label>
+          <Label>Città</Label>
 
-          <input
+          <Input
             value={city}
             onChange={(e) =>
               setCity(e.target.value)
@@ -544,7 +540,7 @@ export default function ProfileForm({
             disabled={isSaving}
             placeholder="Milano"
             maxLength={100}
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+            className="h-14 rounded-2xl"
           />
 
         </div>
@@ -553,11 +549,9 @@ export default function ProfileForm({
 
         <div className="mt-6">
 
-          <label className="mb-2 block text-sm font-semibold text-slate-700">
-            Biografia
-          </label>
+          <Label>Biografia</Label>
 
-          <textarea
+          <Textarea
             value={bio}
             onChange={(e) =>
               setBio(e.target.value)
@@ -566,7 +560,7 @@ export default function ProfileForm({
             rows={6}
             maxLength={300}
             placeholder="Parla un po' di te..."
-            className="w-full rounded-2xl border border-slate-200 p-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+            className="rounded-2xl p-4"
           />
 
           <div className="mt-2 flex justify-between text-xs text-slate-400">
@@ -586,7 +580,7 @@ export default function ProfileForm({
 
         {/* Salvataggio */}
 
-        <div className="mt-8 flex justify-end border-t border-slate-100 pt-6">
+        <div className="mt-8 flex justify-end border-t border-border pt-6">
 
           <Button
             type="button"
@@ -606,7 +600,7 @@ export default function ProfileForm({
 
         </div>
 
-      </div>
+      </Card>
 
     </div>
   );

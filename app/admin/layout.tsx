@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import AdminTabs from "@/components/admin/AdminTabs";
 
 export default async function AdminLayout({
@@ -36,12 +38,18 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-7xl px-10 pt-10">
-        <AdminTabs tabs={dict.admin.tabs} />
+    <>
+      <Navbar />
+
+      <div className="min-h-screen bg-muted/50 pt-40">
+        <div className="mx-auto max-w-7xl px-10">
+          <AdminTabs tabs={dict.admin.tabs} />
+        </div>
+
+        {children}
       </div>
 
-      {children}
-    </div>
+      <Footer />
+    </>
   );
 }

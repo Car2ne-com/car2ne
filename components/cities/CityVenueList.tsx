@@ -21,7 +21,7 @@ export default function CityVenueList({ city, venues, dict }: Props) {
 
   return (
     <section className="mt-16">
-      <h2 className="text-2xl font-bold text-slate-900">
+      <h2 className="text-2xl font-bold text-foreground">
         {dict.title.replace("{city}", city.name)}
       </h2>
 
@@ -30,14 +30,14 @@ export default function CityVenueList({ city, venues, dict }: Props) {
           <Link
             key={venue.id}
             href={`/citta/${city.slug}/venue/${venue.slug}`}
-            className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 transition hover:border-emerald-300 hover:bg-emerald-50"
+            className="flex items-center justify-between rounded-2xl border border-border bg-card px-5 py-4 transition hover:border-primary/30 hover:bg-accent"
           >
-            <span className="flex items-center gap-3 font-semibold text-slate-800">
-              <Building2 className="h-4 w-4 text-emerald-600" />
+            <span className="flex items-center gap-3 font-semibold text-foreground/90">
+              <Building2 className="h-4 w-4 text-primary" />
               {venue.name}
             </span>
 
-            <ChevronRight className="h-4 w-4 text-slate-400" />
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>
         ))}
       </div>

@@ -6,6 +6,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label, FieldError } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import {
   calculateAge,
@@ -219,382 +222,372 @@ export default function RegisterForm({ dict }: Props) {
    */
 
   return (
-    <form
-      onSubmit={handleRegister}
-      className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
-    >
-      {/* Nome */}
+    <Card className="p-8">
+      <form
+        onSubmit={handleRegister}
+        className="space-y-6"
+      >
+        {/* Nome */}
 
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.registerForm.nameLabel}
-        </label>
+        <div>
+          <Label>{dict.registerForm.nameLabel}</Label>
 
-        <input
-          type="text"
-          placeholder={dict.registerForm.namePlaceholder}
-          value={name}
-          onChange={(e) =>
-            setName(e.target.value)
-          }
-          disabled={
-            loading || !!oauthLoading
-          }
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-      </div>
-
-      {/* Cognome */}
-
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.registerForm.surnameLabel}
-        </label>
-
-        <input
-          type="text"
-          placeholder={dict.registerForm.surnamePlaceholder}
-          value={surname}
-          onChange={(e) =>
-            setSurname(e.target.value)
-          }
-          disabled={
-            loading || !!oauthLoading
-          }
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-      </div>
-
-      {/* Data di nascita */}
-
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.registerForm.birthDateLabel}
-        </label>
-
-        <input
-          type="date"
-          value={birthDate}
-          onChange={(e) =>
-            setBirthDate(e.target.value)
-          }
-          max={
-            new Date()
-              .toISOString()
-              .split("T")[0]
-          }
-          disabled={
-            loading || !!oauthLoading
-          }
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-
-        <p className="mt-2 text-xs text-slate-500">
-          {dict.registerForm.ageNotice}
-        </p>
-
-        {birthDate.length > 0 &&
-          age !== null &&
-          !isAdult && (
-            <p className="mt-2 text-xs font-medium text-red-500">
-              {dict.registerForm.ageError}
-            </p>
-          )}
-      </div>
-
-      {/* Email */}
-
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.common.emailLabel}
-        </label>
-
-        <input
-          type="email"
-          placeholder={dict.common.emailPlaceholder}
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          disabled={
-            loading || !!oauthLoading
-          }
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-      </div>
-
-      {/* Password */}
-
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.common.passwordLabel}
-        </label>
-
-        <div className="relative">
-          <input
-            type={
-              showPassword
-                ? "text"
-                : "password"
-            }
-            placeholder="••••••••"
-            value={password}
+          <Input
+            type="text"
+            placeholder={dict.registerForm.namePlaceholder}
+            value={name}
             onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
+              setName(e.target.value)
             }
             disabled={
               loading || !!oauthLoading
             }
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 pr-12 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+            className="h-14 rounded-2xl"
           />
-
-          <button
-            type="button"
-            onClick={() =>
-              setShowPassword(
-                (current) => !current
-              )
-            }
-            disabled={
-              loading || !!oauthLoading
-            }
-            aria-label={
-              showPassword
-                ? dict.common.hidePassword
-                : dict.common.showPassword
-            }
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
-          >
-            {showPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </button>
         </div>
 
-        {/* Regole password */}
+        {/* Cognome */}
 
-        <div className="mt-4 rounded-2xl bg-slate-50 p-4">
-          <p className="mb-3 text-xs font-semibold text-slate-600">
-            {dict.common.passwordRequirementsTitle}
+        <div>
+          <Label>{dict.registerForm.surnameLabel}</Label>
+
+          <Input
+            type="text"
+            placeholder={dict.registerForm.surnamePlaceholder}
+            value={surname}
+            onChange={(e) =>
+              setSurname(e.target.value)
+            }
+            disabled={
+              loading || !!oauthLoading
+            }
+            className="h-14 rounded-2xl"
+          />
+        </div>
+
+        {/* Data di nascita */}
+
+        <div>
+          <Label>{dict.registerForm.birthDateLabel}</Label>
+
+          <Input
+            type="date"
+            value={birthDate}
+            onChange={(e) =>
+              setBirthDate(e.target.value)
+            }
+            max={
+              new Date()
+                .toISOString()
+                .split("T")[0]
+            }
+            disabled={
+              loading || !!oauthLoading
+            }
+            className="h-14 rounded-2xl"
+          />
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            {dict.registerForm.ageNotice}
           </p>
 
-          <div className="grid gap-2 sm:grid-cols-2">
-            <PasswordRule
-              valid={
-                passwordRules.minLength
+          {birthDate.length > 0 &&
+            age !== null &&
+            !isAdult && (
+              <FieldError>{dict.registerForm.ageError}</FieldError>
+            )}
+        </div>
+
+        {/* Email */}
+
+        <div>
+          <Label>{dict.common.emailLabel}</Label>
+
+          <Input
+            type="email"
+            placeholder={dict.common.emailPlaceholder}
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            disabled={
+              loading || !!oauthLoading
+            }
+            className="h-14 rounded-2xl"
+          />
+        </div>
+
+        {/* Password */}
+
+        <div>
+          <Label>{dict.common.passwordLabel}</Label>
+
+          <div className="relative">
+            <Input
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
               }
-              text={dict.common.ruleMinLength}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) =>
+                setPassword(
+                  e.target.value
+                )
+              }
+              disabled={
+                loading || !!oauthLoading
+              }
+              className="h-14 rounded-2xl pr-12"
             />
 
-            <PasswordRule
-              valid={
-                passwordRules.number
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                setShowPassword(
+                  (current) => !current
+                )
               }
-              text={dict.common.ruleNumber}
-            />
+              disabled={
+                loading || !!oauthLoading
+              }
+              aria-label={
+                showPassword
+                  ? dict.common.hidePassword
+                  : dict.common.showPassword
+              }
+              className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-primary"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
 
-            <PasswordRule
-              valid={
-                passwordRules.uppercase
-              }
-              text={dict.common.ruleUppercase}
-            />
+          {/* Regole password */}
 
-            <PasswordRule
-              valid={
-                passwordRules.lowercase
-              }
-              text={dict.common.ruleLowercase}
-            />
+          <div className="mt-4 rounded-2xl bg-muted p-4">
+            <p className="mb-3 text-xs font-semibold text-muted-foreground">
+              {dict.common.passwordRequirementsTitle}
+            </p>
 
-            <PasswordRule
-              valid={
-                passwordRules.special
-              }
-              text={dict.common.ruleSpecial}
-            />
+            <div className="grid gap-2 sm:grid-cols-2">
+              <PasswordRule
+                valid={
+                  passwordRules.minLength
+                }
+                text={dict.common.ruleMinLength}
+              />
+
+              <PasswordRule
+                valid={
+                  passwordRules.number
+                }
+                text={dict.common.ruleNumber}
+              />
+
+              <PasswordRule
+                valid={
+                  passwordRules.uppercase
+                }
+                text={dict.common.ruleUppercase}
+              />
+
+              <PasswordRule
+                valid={
+                  passwordRules.lowercase
+                }
+                text={dict.common.ruleLowercase}
+              />
+
+              <PasswordRule
+                valid={
+                  passwordRules.special
+                }
+                text={dict.common.ruleSpecial}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Conferma Password */}
+        {/* Conferma Password */}
 
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.registerForm.confirmPasswordLabel}
-        </label>
+        <div>
+          <Label>{dict.registerForm.confirmPasswordLabel}</Label>
 
-        <div className="relative">
+          <div className="relative">
+            <Input
+              type={
+                showConfirmPassword
+                  ? "text"
+                  : "password"
+              }
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) =>
+                setConfirmPassword(
+                  e.target.value
+                )
+              }
+              disabled={
+                loading || !!oauthLoading
+              }
+              className="h-14 rounded-2xl pr-12"
+            />
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                setShowConfirmPassword(
+                  (current) => !current
+                )
+              }
+              disabled={
+                loading || !!oauthLoading
+              }
+              aria-label={
+                showConfirmPassword
+                  ? dict.registerForm.hideConfirmPassword
+                  : dict.registerForm.showConfirmPassword
+              }
+              className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-primary"
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
+
+          {confirmPassword.length > 0 &&
+            password !==
+              confirmPassword && (
+              <FieldError>{dict.common.passwordsDontMatch}</FieldError>
+            )}
+
+          {confirmPassword.length > 0 &&
+            password ===
+              confirmPassword && (
+              <p className="mt-1.5 text-xs font-medium text-emerald-600">
+                {dict.common.passwordsMatch}
+              </p>
+            )}
+        </div>
+
+        {/* Accettazione Termini + Privacy */}
+
+        <label className="flex items-start gap-3 text-sm text-muted-foreground">
           <input
-            type={
-              showConfirmPassword
-                ? "text"
-                : "password"
-            }
-            placeholder="••••••••"
-            value={confirmPassword}
+            type="checkbox"
+            checked={acceptedTerms}
             onChange={(e) =>
-              setConfirmPassword(
-                e.target.value
+              setAcceptedTerms(
+                e.target.checked
               )
             }
             disabled={
               loading || !!oauthLoading
             }
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 pr-12 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
           />
 
-          <button
-            type="button"
-            onClick={() =>
-              setShowConfirmPassword(
-                (current) => !current
-              )
-            }
-            disabled={
-              loading || !!oauthLoading
-            }
-            aria-label={
-              showConfirmPassword
-                ? dict.registerForm.hideConfirmPassword
-                : dict.registerForm.showConfirmPassword
-            }
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
-          >
-            {showConfirmPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-
-        {confirmPassword.length > 0 &&
-          password !==
-            confirmPassword && (
-            <p className="mt-2 text-xs font-medium text-red-500">
-              {dict.common.passwordsDontMatch}
-            </p>
-          )}
-
-        {confirmPassword.length > 0 &&
-          password ===
-            confirmPassword && (
-            <p className="mt-2 text-xs font-medium text-emerald-600">
-              {dict.common.passwordsMatch}
-            </p>
-          )}
-      </div>
-
-      {/* Accettazione Termini + Privacy */}
-
-      <label className="flex items-start gap-3 text-sm text-slate-600">
-        <input
-          type="checkbox"
-          checked={acceptedTerms}
-          onChange={(e) =>
-            setAcceptedTerms(
-              e.target.checked
-            )
-          }
-          disabled={
-            loading || !!oauthLoading
-          }
-          className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
-        />
-
-        <span>
-          {dict.registerForm.acceptTermsPrefix}{" "}
-          <Link
-            href="/termini"
-            target="_blank"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
-          >
-            {dict.registerForm.termsAndConditions}
-          </Link>{" "}
-          {dict.registerForm.acceptPrivacyMiddle}{" "}
-          <Link
-            href="/privacy"
-            target="_blank"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
-          >
-            {dict.registerForm.privacyPolicy}
-          </Link>
-          .
-        </span>
-      </label>
-
-      {/* Registrazione */}
-
-      <Button
-        type="submit"
-        disabled={
-          loading ||
-          !!oauthLoading ||
-          !passwordIsValid ||
-          password !==
-            confirmPassword ||
-          !acceptedTerms ||
-          !isAdult
-        }
-        className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
-      >
-        {loading
-          ? dict.registerForm.creatingAccount
-          : dict.registerForm.createAccountButton}
-      </Button>
-
-      {/* Separatore */}
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200" />
-        </div>
-
-        <div className="relative flex justify-center">
-          <span className="bg-white px-4 text-sm text-slate-500">
-            {dict.common.or}
+          <span>
+            {dict.registerForm.acceptTermsPrefix}{" "}
+            <Link
+              href="/termini"
+              target="_blank"
+              className="font-semibold text-primary hover:text-emerald-700"
+            >
+              {dict.registerForm.termsAndConditions}
+            </Link>{" "}
+            {dict.registerForm.acceptPrivacyMiddle}{" "}
+            <Link
+              href="/privacy"
+              target="_blank"
+              className="font-semibold text-primary hover:text-emerald-700"
+            >
+              {dict.registerForm.privacyPolicy}
+            </Link>
+            .
           </span>
-        </div>
-      </div>
+        </label>
 
-      {/* Google */}
+        {/* Registrazione */}
 
-      <Button
-        type="button"
-        variant="outline"
-        disabled={
-          loading ||
-          !!oauthLoading ||
-          !acceptedTerms
-        }
-        onClick={() =>
-          handleOAuth("google")
-        }
-        className="h-12 w-full rounded-2xl"
-      >
-        {oauthLoading ===
-        "google"
-          ? dict.common.connecting
-          : dict.common.continueWithGoogle}
-      </Button>
-
-      {/* Login */}
-
-      <p className="text-center text-sm text-slate-600">
-        {dict.registerForm.haveAccount}{" "}
-        <Link
-          href="/login"
-          className="font-semibold text-emerald-600 hover:text-emerald-700"
+        <Button
+          type="submit"
+          disabled={
+            loading ||
+            !!oauthLoading ||
+            !passwordIsValid ||
+            password !==
+              confirmPassword ||
+            !acceptedTerms ||
+            !isAdult
+          }
+          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
         >
-          {dict.registerForm.loginLink}
-        </Link>
-      </p>
-    </form>
+          {loading
+            ? dict.registerForm.creatingAccount
+            : dict.registerForm.createAccountButton}
+        </Button>
+
+        {/* Separatore */}
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+
+          <div className="relative flex justify-center">
+            <span className="bg-card px-4 text-sm text-muted-foreground">
+              {dict.common.or}
+            </span>
+          </div>
+        </div>
+
+        {/* Google */}
+
+        <Button
+          type="button"
+          variant="outline"
+          disabled={
+            loading ||
+            !!oauthLoading ||
+            !acceptedTerms
+          }
+          onClick={() =>
+            handleOAuth("google")
+          }
+          className="h-12 w-full rounded-2xl"
+        >
+          {oauthLoading ===
+          "google"
+            ? dict.common.connecting
+            : dict.common.continueWithGoogle}
+        </Button>
+
+        {/* Login */}
+
+        <p className="text-center text-sm text-muted-foreground">
+          {dict.registerForm.haveAccount}{" "}
+          <Link
+            href="/login"
+            className="font-semibold text-primary hover:text-emerald-700"
+          >
+            {dict.registerForm.loginLink}
+          </Link>
+        </p>
+      </form>
+    </Card>
   );
 }
 

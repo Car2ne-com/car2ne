@@ -47,11 +47,11 @@ export default async function FeaturedEvents() {
     <section className="mx-auto max-w-7xl px-6 py-24">
       <div className="mb-12 flex items-end justify-between">
         <div>
-          <h2 className="text-4xl font-bold text-slate-900">
+          <h2 className="text-4xl font-bold text-foreground">
             {t.title}
           </h2>
 
-          <p className="mt-3 max-w-2xl text-lg text-slate-600">
+          <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
             {t.subtitle}
           </p>
         </div>

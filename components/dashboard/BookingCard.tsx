@@ -28,6 +28,9 @@ import RatingForm from "@/components/ratings/RatingForm";
 import ReportNoShowButton, {
   type NoShowDict,
 } from "@/components/dashboard/ReportNoShowButton";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 type Dict = {
   statusConfirmed: string;
@@ -90,6 +93,9 @@ export default function BookingCard({
   const [cancelling, setCancelling] =
     useState(false);
 
+  const [cancelDialogOpen, setCancelDialogOpen] =
+    useState(false);
+
   const [conversationId, setConversationId] =
     useState<string | null>(null);
 
@@ -142,19 +148,15 @@ export default function BookingCard({
     supabase,
   ]);
 
-  async function handleCancel() {
+  function handleCancelRequest() {
     if (cancelling) {
       return;
     }
 
-    const confirmed = window.confirm(
-      dict.cancelConfirmMessage
-    );
+    setCancelDialogOpen(true);
+  }
 
-    if (!confirmed) {
-      return;
-    }
-
+  async function handleCancelConfirm() {
     setCancelling(true);
 
     const { error } = await supabase.rpc(
@@ -180,6 +182,7 @@ export default function BookingCard({
     }
 
     setCancelling(false);
+    setCancelDialogOpen(false);
 
     toast.success(dict.cancelSuccess);
 
@@ -198,20 +201,20 @@ export default function BookingCard({
     booking.departureTime.slice(0, 5);
 
   return (
-    <div
-      className={`rounded-3xl border bg-white p-7 shadow-sm transition hover:shadow-lg ${
+    <Card
+      className={`p-7 transition hover:shadow-lg ${
         isConfirmed
-          ? "border-slate-200 hover:border-emerald-200"
-          : "border-slate-200 opacity-80"
+          ? "hover:border-primary/30"
+          : "opacity-80"
       }`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-emerald-600">
+          <p className="text-sm font-semibold text-primary">
             {booking.eventTitle}
           </p>
 
-          <h2 className="mt-1 text-2xl font-black text-slate-900">
+          <h2 className="mt-1 text-2xl font-black text-foreground">
             {booking.departureCity}
             {" → "}
             {booking.destination}
@@ -219,30 +222,30 @@ export default function BookingCard({
         </div>
 
         {isConfirmed ? (
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-accent-foreground">
             <CheckCircle2 className="h-3.5 w-3.5" />
             {dict.statusConfirmed}
           </span>
         ) : (
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
             <XCircle className="h-3.5 w-3.5" />
             {dict.statusCancelled}
           </span>
         )}
       </div>
 
-      <div className="mt-6 rounded-2xl bg-slate-50 p-5">
-        <p className="text-sm font-semibold text-slate-700">
+      <div className="mt-6 rounded-2xl bg-muted p-5">
+        <p className="text-sm font-semibold text-foreground">
           {dict.eventLabel}
         </p>
 
-        <p className="mt-1 font-bold text-slate-900">
+        <p className="mt-1 font-bold text-foreground">
           {booking.eventTitle}
         </p>
 
         {(booking.eventVenue ||
           booking.eventCity) && (
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-muted-foreground">
             {booking.eventVenue}
             {booking.eventCity
               ? ` · ${booking.eventCity}`
@@ -253,71 +256,71 @@ export default function BookingCard({
 
       <Link
         href={`/profile/${booking.driverId}`}
-        className="mt-6 flex items-center gap-3 rounded-2xl transition hover:bg-slate-50"
+        className="mt-6 flex items-center gap-3 rounded-2xl transition hover:bg-muted"
       >
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100">
-          <User2 className="h-5 w-5 text-emerald-600" />
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent">
+          <User2 className="h-5 w-5 text-accent-foreground" />
         </div>
 
         <div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             {dict.driverLabel}
           </p>
 
-          <p className="font-semibold text-slate-900 underline-offset-2 hover:underline">
+          <p className="font-semibold text-foreground underline-offset-2 hover:underline">
             {booking.driverName}
           </p>
         </div>
       </Link>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <CalendarDays className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <CalendarDays className="h-4 w-4 text-primary" />
           {formattedDate}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <Clock3 className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Clock3 className="h-4 w-4 text-primary" />
           {formattedTime}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <CarFront className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <CarFront className="h-4 w-4 text-primary" />
           {dict.rideLabel}
         </div>
 
-        <div className="text-right text-xl font-black text-emerald-600">
+        <div className="text-right text-xl font-black text-primary">
           € {booking.contribution.toFixed(2)}
         </div>
       </div>
 
-      <div className="mt-6 space-y-3 border-t border-slate-100 pt-6">
+      <div className="mt-6 space-y-3 border-t border-border pt-6">
         <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-emerald-600" />
+          <MapPin className="h-5 w-5 text-primary" />
 
-          <span className="font-medium text-slate-700">
+          <span className="font-medium text-foreground">
             {booking.departureCity}
           </span>
         </div>
 
-        <div className="pl-2 text-slate-300">
+        <div className="pl-2 text-muted-foreground">
           │
         </div>
 
         <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-emerald-600" />
+          <MapPin className="h-5 w-5 text-primary" />
 
-          <span className="font-medium text-slate-700">
+          <span className="font-medium text-foreground">
             {booking.destination}
           </span>
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
+      <div className="mt-6 flex flex-wrap gap-3 border-t border-border pt-5">
         {booking.eventSlug && !booking.rideHasPassed && (
           <Link
             href={`/events/${booking.eventSlug}`}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
           >
             {dict.viewEvent}
             <ArrowRight className="h-4 w-4" />
@@ -327,7 +330,7 @@ export default function BookingCard({
         {isConfirmed && conversationId && (
           <Link
             href={`/chat/${conversationId}`}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             <MessageCircle className="h-4 w-4" />
             {dict.openChat}
@@ -335,16 +338,16 @@ export default function BookingCard({
         )}
 
         {isConfirmed && !rideHasPassed && (
-          <button
+          <Button
             type="button"
-            onClick={handleCancel}
+            onClick={handleCancelRequest}
             disabled={cancelling}
-            className="flex-1 rounded-2xl bg-red-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-auto flex-1 rounded-2xl bg-destructive px-4 py-3 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
           >
             {cancelling
               ? dict.cancelling
               : dict.cancelButton}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -364,6 +367,17 @@ export default function BookingCard({
           />
         </>
       )}
-    </div>
+
+      <ConfirmDialog
+        open={cancelDialogOpen}
+        onOpenChange={setCancelDialogOpen}
+        title={dict.cancelButton}
+        description={dict.cancelConfirmMessage}
+        confirmLabel={dict.cancelButton}
+        confirmTone="danger"
+        busy={cancelling}
+        onConfirm={handleCancelConfirm}
+      />
+    </Card>
   );
 }

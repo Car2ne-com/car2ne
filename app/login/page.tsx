@@ -19,7 +19,7 @@ export default async function LoginPage() {
               {t.login.pageBadge}
             </span>
 
-            <h1 className="mt-6 text-4xl font-black text-slate-900">
+            <h1 className="mt-6 text-4xl font-black text-foreground">
               {t.login.pageTitle}
             </h1>
 

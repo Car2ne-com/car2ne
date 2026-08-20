@@ -2,7 +2,18 @@
 
 import { useState } from "react";
 
-import { AlertDialog } from "@base-ui/react/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Flag } from "lucide-react";
 import { toast } from "sonner";
 
@@ -69,7 +80,7 @@ export default function ReportNoShowButton({
 
   if (reported) {
     return (
-      <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-slate-400">
+      <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
         <Flag className="h-3.5 w-3.5" />
         {dict.reported}
       </p>
@@ -77,63 +88,57 @@ export default function ReportNoShowButton({
   }
 
   return (
-    <AlertDialog.Root
+    <AlertDialog
       open={open}
       onOpenChange={(next) => {
         if (!next) setNote("");
         setOpen(next);
       }}
     >
-      <AlertDialog.Trigger className="mt-3 flex items-center gap-1.5 text-xs font-medium text-slate-400 underline-offset-2 transition hover:text-red-600 hover:underline">
+      <AlertDialogTrigger className="mt-3 flex items-center gap-1.5 text-xs font-medium text-muted-foreground underline-offset-2 transition hover:text-destructive hover:underline">
         <Flag className="h-3.5 w-3.5" />
         {dict.button}
-      </AlertDialog.Trigger>
+      </AlertDialogTrigger>
 
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop className="fixed inset-0 z-50 bg-slate-900/40" />
+      <AlertDialogContent>
+        <AlertDialogTitle>
+          {dict.dialogTitle}
+        </AlertDialogTitle>
 
-        <AlertDialog.Popup className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl">
-          <AlertDialog.Title className="text-lg font-bold text-slate-900">
-            {dict.dialogTitle}
-          </AlertDialog.Title>
+        <AlertDialogDescription>
+          {dict.dialogDescription}
+        </AlertDialogDescription>
 
-          <AlertDialog.Description className="mt-2 text-sm text-slate-600">
-            {dict.dialogDescription}
-          </AlertDialog.Description>
+        <div className="mt-4">
+          <Label htmlFor="no-show-note">
+            {dict.noteLabel}
+          </Label>
 
-          <div className="mt-4">
-            <label className="mb-1.5 block text-sm font-semibold text-slate-700">
-              {dict.noteLabel}
-            </label>
+          <Textarea
+            id="no-show-note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={3}
+            maxLength={500}
+            className="rounded-2xl"
+          />
+        </div>
 
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={3}
-              maxLength={500}
-              className="w-full rounded-2xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-500"
-            />
-          </div>
+        <AlertDialogFooter>
+          <AlertDialogClose disabled={submitting}>
+            {dict.cancel}
+          </AlertDialogClose>
 
-          <div className="mt-6 flex justify-end gap-3">
-            <AlertDialog.Close
-              disabled={submitting}
-              className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {dict.cancel}
-            </AlertDialog.Close>
-
-            <button
-              type="button"
-              onClick={handleConfirm}
-              disabled={submitting}
-              className="rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {submitting ? dict.submitting : dict.confirm}
-            </button>
-          </div>
-        </AlertDialog.Popup>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
+          <Button
+            type="button"
+            onClick={handleConfirm}
+            disabled={submitting}
+            className="h-auto rounded-xl bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
+          >
+            {submitting ? dict.submitting : dict.confirm}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

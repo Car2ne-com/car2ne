@@ -6,6 +6,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label, FieldError } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import type { it } from "@/lib/i18n/dictionaries/it";
 
@@ -90,128 +93,126 @@ export default function ResetPasswordForm({ dict }: Props) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
-    >
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.resetPasswordForm.newPasswordLabel}
-        </label>
+    <Card className="p-8">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6"
+      >
+        <div>
+          <Label>{dict.resetPasswordForm.newPasswordLabel}</Label>
 
-        <div className="relative">
-          <input
+          <div className="relative">
+            <Input
+              type={
+                showPassword ? "text" : "password"
+              }
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              disabled={loading}
+              autoComplete="new-password"
+              className="h-14 rounded-2xl pr-12"
+            />
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                setShowPassword(
+                  (current) => !current
+                )
+              }
+              disabled={loading}
+              aria-label={
+                showPassword
+                  ? dict.common.hidePassword
+                  : dict.common.showPassword
+              }
+              className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-primary"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
+
+          <div className="mt-4 rounded-2xl bg-muted p-4">
+            <p className="mb-3 text-xs font-semibold text-muted-foreground">
+              {dict.common.passwordRequirementsTitle}
+            </p>
+
+            <div className="grid gap-2 sm:grid-cols-2">
+              <PasswordRule
+                valid={passwordRules.minLength}
+                text={dict.common.ruleMinLength}
+              />
+
+              <PasswordRule
+                valid={passwordRules.number}
+                text={dict.common.ruleNumber}
+              />
+
+              <PasswordRule
+                valid={passwordRules.uppercase}
+                text={dict.common.ruleUppercase}
+              />
+
+              <PasswordRule
+                valid={passwordRules.lowercase}
+                text={dict.common.ruleLowercase}
+              />
+
+              <PasswordRule
+                valid={passwordRules.special}
+                text={dict.common.ruleSpecial}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <Label>{dict.resetPasswordForm.confirmNewPasswordLabel}</Label>
+
+          <Input
             type={
               showPassword ? "text" : "password"
             }
             placeholder="••••••••"
-            value={password}
+            value={confirmPassword}
             onChange={(e) =>
-              setPassword(e.target.value)
+              setConfirmPassword(e.target.value)
             }
             disabled={loading}
             autoComplete="new-password"
-            className="h-14 w-full rounded-2xl border border-slate-200 px-4 pr-12 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+            className="h-14 rounded-2xl"
           />
 
-          <button
-            type="button"
-            onClick={() =>
-              setShowPassword(
-                (current) => !current
-              )
-            }
-            disabled={loading}
-            aria-label={
-              showPassword
-                ? dict.common.hidePassword
-                : dict.common.showPassword
-            }
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-emerald-600"
-          >
-            {showPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
+          {confirmPassword.length > 0 &&
+            password !== confirmPassword && (
+              <FieldError>{dict.common.passwordsDontMatch}</FieldError>
             )}
-          </button>
         </div>
 
-        <div className="mt-4 rounded-2xl bg-slate-50 p-4">
-          <p className="mb-3 text-xs font-semibold text-slate-600">
-            {dict.common.passwordRequirementsTitle}
-          </p>
-
-          <div className="grid gap-2 sm:grid-cols-2">
-            <PasswordRule
-              valid={passwordRules.minLength}
-              text={dict.common.ruleMinLength}
-            />
-
-            <PasswordRule
-              valid={passwordRules.number}
-              text={dict.common.ruleNumber}
-            />
-
-            <PasswordRule
-              valid={passwordRules.uppercase}
-              text={dict.common.ruleUppercase}
-            />
-
-            <PasswordRule
-              valid={passwordRules.lowercase}
-              text={dict.common.ruleLowercase}
-            />
-
-            <PasswordRule
-              valid={passwordRules.special}
-              text={dict.common.ruleSpecial}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">
-          {dict.resetPasswordForm.confirmNewPasswordLabel}
-        </label>
-
-        <input
-          type={
-            showPassword ? "text" : "password"
+        <Button
+          type="submit"
+          disabled={
+            loading ||
+            !passwordIsValid ||
+            password !== confirmPassword
           }
-          placeholder="••••••••"
-          value={confirmPassword}
-          onChange={(e) =>
-            setConfirmPassword(e.target.value)
-          }
-          disabled={loading}
-          autoComplete="new-password"
-          className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
-        />
-
-        {confirmPassword.length > 0 &&
-          password !== confirmPassword && (
-            <p className="mt-2 text-xs font-medium text-red-500">
-              {dict.common.passwordsDontMatch}
-            </p>
-          )}
-      </div>
-
-      <Button
-        type="submit"
-        disabled={
-          loading ||
-          !passwordIsValid ||
-          password !== confirmPassword
-        }
-        className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
-      >
-        {loading
-          ? dict.resetPasswordForm.updating
-          : dict.resetPasswordForm.updateButton}
-      </Button>
-    </form>
+          className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
+        >
+          {loading
+            ? dict.resetPasswordForm.updating
+            : dict.resetPasswordForm.updateButton}
+        </Button>
+      </form>
+    </Card>
   );
 }
 

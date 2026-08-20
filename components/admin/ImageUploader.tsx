@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Upload, ImageIcon, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   value: string;
@@ -58,11 +59,11 @@ export default function ImageUploader({
           className="h-56 w-full rounded-2xl object-cover"
         />
       ) : (
-        <div className="flex h-56 items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50">
+        <div className="flex h-56 items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted">
           <div className="text-center">
-            <ImageIcon className="mx-auto mb-3 h-10 w-10 text-slate-400" />
+            <ImageIcon className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               Nessuna immagine caricata
             </p>
           </div>
@@ -81,11 +82,11 @@ export default function ImageUploader({
         }}
       />
 
-      <button
+      <Button
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="inline-flex h-12 items-center gap-2 rounded-xl bg-emerald-500 px-6 font-semibold text-white transition hover:bg-emerald-600 disabled:opacity-50"
+        className="h-12 gap-2 rounded-xl px-6"
       >
         {uploading ? (
           <>
@@ -98,7 +99,7 @@ export default function ImageUploader({
             Carica immagine
           </>
         )}
-      </button>
+      </Button>
     </div>
   );
 }

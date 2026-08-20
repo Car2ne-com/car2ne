@@ -5,6 +5,9 @@ import { ShieldCheck, ShieldOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 
 type EnrollState = {
@@ -242,13 +245,13 @@ export default function MfaSettings() {
    */
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <Card className="p-8">
       <div>
-        <h3 className="text-xl font-bold text-slate-900">
+        <h3 className="text-lg font-semibold text-foreground">
           Autenticazione a due fattori
         </h3>
 
-        <p className="mt-2 text-sm leading-6 text-slate-500">
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Aggiungi un livello di sicurezza in
           più: oltre alla password, ti verrà
           richiesto un codice generato da
@@ -267,15 +270,15 @@ export default function MfaSettings() {
             onSubmit={handleConfirmEnroll}
             className="space-y-6"
           >
-            <div className="flex flex-col items-center gap-4 rounded-2xl bg-slate-50 p-6 sm:flex-row sm:items-start">
+            <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted p-6 sm:flex-row sm:items-start">
               <img
                 src={enrollState.qrCode}
                 alt="QR code per l'autenticazione a due fattori"
-                className="h-40 w-40 rounded-xl border border-slate-200 bg-white"
+                className="h-40 w-40 rounded-xl border border-border bg-card"
               />
 
-              <div className="text-sm text-slate-600">
-                <p className="font-semibold text-slate-700">
+              <div className="text-sm text-muted-foreground">
+                <p className="font-semibold text-foreground">
                   1. Scansiona il QR code
                 </p>
 
@@ -284,23 +287,21 @@ export default function MfaSettings() {
                   Authenticator o Authy.
                 </p>
 
-                <p className="mt-4 font-semibold text-slate-700">
+                <p className="mt-4 font-semibold text-foreground">
                   Oppure inserisci manualmente
                   questo codice:
                 </p>
 
-                <p className="mt-1 break-all rounded-lg bg-white px-3 py-2 font-mono text-xs text-slate-500">
+                <p className="mt-1 break-all rounded-lg bg-card px-3 py-2 font-mono text-xs text-muted-foreground">
                   {enrollState.secret}
                 </p>
               </div>
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                2. Inserisci il codice generato
-              </label>
+              <Label>2. Inserisci il codice generato</Label>
 
-              <input
+              <Input
                 type="text"
                 inputMode="numeric"
                 autoComplete="one-time-code"
@@ -316,7 +317,7 @@ export default function MfaSettings() {
                 }
                 maxLength={6}
                 disabled={busy}
-                className="h-14 w-full max-w-xs rounded-2xl border border-slate-200 px-4 text-center text-lg tracking-[0.5em] outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 max-w-xs rounded-2xl text-center text-lg tracking-[0.5em]"
               />
             </div>
 
@@ -367,7 +368,7 @@ export default function MfaSettings() {
                 variant="outline"
                 disabled={busy}
                 onClick={handleDisable}
-                className="h-11 rounded-2xl px-6 font-semibold text-red-600 hover:bg-red-50"
+                className="h-11 rounded-2xl px-6 font-semibold text-destructive hover:bg-destructive/10"
               >
                 {confirmingDisable
                   ? "Confermi la disattivazione?"
@@ -393,6 +394,6 @@ export default function MfaSettings() {
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

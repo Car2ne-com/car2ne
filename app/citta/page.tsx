@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CityCard from "@/components/cities/CityCard";
+import { buttonVariants } from "@/components/ui/button";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -102,20 +103,20 @@ export default async function CitiesIndexPage({
 
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
         <section className="mb-16">
-          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
             {t.badge}
           </span>
 
-          <h1 className="mt-6 text-5xl font-black tracking-tight text-slate-900 md:text-6xl">
+          <h1 className="mt-6 text-5xl font-black tracking-tight text-foreground md:text-6xl">
             {t.title}
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
             {t.subtitle}
           </p>
 
           {totalCities ? (
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-muted-foreground">
               {t.countSummary
                 .replace(
                   "{count}",
@@ -147,7 +148,7 @@ export default async function CitiesIndexPage({
             />
           </>
         ) : (
-          <p className="text-slate-500">
+          <p className="text-muted-foreground">
             {t.noCities}
           </p>
         )}
@@ -187,19 +188,22 @@ function CityPagination({
       {prevPage >= 1 ? (
         <Link
           href={prevPage === 1 ? "/citta" : `/citta?page=${prevPage}`}
-          className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+          className={buttonVariants({
+            variant: "outline",
+            className: "h-auto gap-2 rounded-2xl px-5 py-3 text-sm",
+          })}
         >
           <ChevronLeft className="h-4 w-4" />
           {dict.previous}
         </Link>
       ) : (
-        <span className="flex items-center gap-2 rounded-2xl border border-slate-100 px-5 py-3 text-sm font-semibold text-slate-300">
+        <span className="flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold text-muted-foreground/50">
           <ChevronLeft className="h-4 w-4" />
           {dict.previous}
         </span>
       )}
 
-      <span className="text-sm font-medium text-slate-500">
+      <span className="text-sm font-medium text-muted-foreground">
         {dict.pageOf
           .replace("{page}", String(currentPage))
           .replace("{totalPages}", String(totalPages))}
@@ -208,13 +212,16 @@ function CityPagination({
       {nextPage <= totalPages ? (
         <Link
           href={`/citta?page=${nextPage}`}
-          className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+          className={buttonVariants({
+            variant: "outline",
+            className: "h-auto gap-2 rounded-2xl px-5 py-3 text-sm",
+          })}
         >
           {dict.next}
           <ChevronRight className="h-4 w-4" />
         </Link>
       ) : (
-        <span className="flex items-center gap-2 rounded-2xl border border-slate-100 px-5 py-3 text-sm font-semibold text-slate-300">
+        <span className="flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold text-muted-foreground/50">
           {dict.next}
           <ChevronRight className="h-4 w-4" />
         </span>

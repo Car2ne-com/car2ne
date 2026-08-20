@@ -22,20 +22,20 @@ export default function HeroFloatingCards({ dict }: Props) {
   return (
     <>
       {/* Evento */}
-      <div className="absolute left-0 top-10 rounded-2xl border border-white/40 bg-white/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <div className="absolute left-0 top-10 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
-          <div className="rounded-xl bg-emerald-100 p-2">
-            <CalendarDays className="h-5 w-5 text-emerald-600" />
+          <div className="rounded-xl bg-accent p-2">
+            <CalendarDays className="h-5 w-5 text-accent-foreground" />
           </div>
 
           <div>
-            <p className="font-semibold text-slate-900">
+            <p className="font-semibold text-foreground">
               {dict.eventName}
             </p>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               {dict.eventLocation}
             </p>
           </div>
@@ -45,7 +45,7 @@ export default function HeroFloatingCards({ dict }: Props) {
       </div>
 
       {/* Rating */}
-      <div className="absolute right-0 top-40 rounded-2xl border border-white/40 bg-white/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <div className="absolute right-0 top-40 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
@@ -55,11 +55,11 @@ export default function HeroFloatingCards({ dict }: Props) {
           />
 
           <div>
-            <p className="font-semibold text-slate-900">
+            <p className="font-semibold text-foreground">
               {dict.rating}
             </p>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               {dict.reviews}
             </p>
           </div>
@@ -69,18 +69,18 @@ export default function HeroFloatingCards({ dict }: Props) {
       </div>
 
       {/* Posti */}
-      <div className="absolute bottom-10 left-12 rounded-2xl border border-white/40 bg-white/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <div className="absolute bottom-10 left-12 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
-          <Users className="h-5 w-5 text-emerald-600" />
+          <Users className="h-5 w-5 text-accent-foreground" />
 
           <div>
-            <p className="font-semibold text-slate-900">
+            <p className="font-semibold text-foreground">
               {dict.seatsAvailable}
             </p>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               {dict.departureFrom}
             </p>
           </div>
@@ -90,18 +90,18 @@ export default function HeroFloatingCards({ dict }: Props) {
       </div>
 
       {/* Destinazione */}
-      <div className="absolute bottom-24 right-10 rounded-2xl border border-white/40 bg-white/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <div className="absolute bottom-24 right-10 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
-          <MapPin className="h-5 w-5 text-emerald-600" />
+          <MapPin className="h-5 w-5 text-accent-foreground" />
 
           <div>
-            <p className="font-semibold text-slate-900">
+            <p className="font-semibold text-foreground">
               {dict.destination}
             </p>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground">
               {dict.destinationLocation}
             </p>
           </div>

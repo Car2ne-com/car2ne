@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Bell, X } from "lucide-react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import { usePushSubscription } from "@/lib/hooks/usePushSubscription";
 import type { PushDict } from "@/components/notifications/PushNotificationToggle";
 
@@ -58,41 +59,44 @@ export default function PushNotificationPrompt({ dict }: Props) {
   }
 
   return (
-    <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-emerald-200 bg-emerald-50 p-6 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-primary/20 bg-accent p-6 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-          <Bell className="h-6 w-6 text-emerald-600" />
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-foreground/10">
+          <Bell className="h-6 w-6 text-accent-foreground" />
         </div>
 
         <div>
-          <p className="font-bold text-slate-900">{dict.promptTitle}</p>
+          <p className="font-bold text-foreground">{dict.promptTitle}</p>
 
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             {dict.promptDescription}
           </p>
         </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <button
+        <Button
           type="button"
           onClick={handleEnable}
           disabled={busy}
-          className="rounded-2xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+          size="lg"
+          className="rounded-2xl px-5 py-3"
         >
           {busy ? dict.enabling : dict.enable}
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={dismiss}
           disabled={busy}
           title={dict.dismiss}
           aria-label={dict.dismiss}
-          className="rounded-2xl border border-transparent p-3 text-slate-500 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+          size="icon-lg"
+          className="rounded-2xl"
         >
           <X className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

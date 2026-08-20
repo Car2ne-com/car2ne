@@ -20,7 +20,7 @@ export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
         onClick={() =>
           setOpen((current) => !current)
         }
-        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600 sm:h-10 sm:w-10"
+        className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background/80 text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary sm:h-10 sm:w-10"
         aria-label={
           open ? ariaClose : ariaOpen
         }
@@ -34,12 +34,12 @@ export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
       </button>
 
       {open && (
-        <div className="absolute inset-x-2 top-full mt-2 rounded-2xl border border-white/40 bg-white p-2 shadow-[0_10px_40px_rgba(15,23,42,.08)] sm:inset-x-4">
-          <nav className="flex flex-col text-sm font-medium text-slate-600">
+        <div className="absolute inset-x-2 top-full mt-2 rounded-2xl border border-border bg-card p-2 shadow-[0_10px_40px_rgba(15,23,42,.08)] sm:inset-x-4">
+          <nav className="flex flex-col text-sm font-medium text-muted-foreground">
             <Link
               href="/"
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-3 transition hover:bg-emerald-50 hover:text-emerald-600"
+              className="rounded-xl px-4 py-3 transition hover:bg-accent hover:text-primary"
             >
               {dict.home}
             </Link>
@@ -47,7 +47,7 @@ export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
             <Link
               href="/events"
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-3 transition hover:bg-emerald-50 hover:text-emerald-600"
+              className="rounded-xl px-4 py-3 transition hover:bg-accent hover:text-primary"
             >
               {dict.events}
             </Link>
@@ -55,7 +55,7 @@ export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
             <Link
               href="/offer-ride"
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-3 transition hover:bg-emerald-50 hover:text-emerald-600"
+              className="rounded-xl px-4 py-3 transition hover:bg-accent hover:text-primary"
             >
               {dict.offerRide}
             </Link>

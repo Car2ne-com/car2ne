@@ -3,6 +3,10 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { getCooldownRemainingMs } from "@/lib/importers/cooldown";
 import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButton";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ImportLog = {
   id: string;
@@ -70,23 +74,23 @@ export default async function AdminImportPage({
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-foreground">
           Import
         </h1>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted-foreground">
           Importa eventi dalle fonti esterne collegate a Car2ne.
         </p>
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <Card className="p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-lg font-semibold text-foreground">
               Ticketmaster
             </h2>
 
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-muted-foreground">
               Avvia manualmente l&apos;importazione degli eventi da
               Ticketmaster. Gli eventi importati entrano in stato
               &quot;In attesa&quot; e vanno revisionati da{" "}
@@ -95,13 +99,13 @@ export default async function AdminImportPage({
           </div>
         </div>
 
-        <div className="mt-6 border-t border-slate-100 pt-6">
-          <p className="text-sm font-semibold text-slate-500">
+        <div className="mt-6 border-t border-border pt-6">
+          <p className="text-sm font-semibold text-muted-foreground">
             Ultimo import
           </p>
 
           {!lastImport ? (
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-muted-foreground">
               Non è stato ancora eseguito alcun import.
             </p>
           ) : (
@@ -145,8 +149,8 @@ export default async function AdminImportPage({
           )}
 
           {lastImport?.status === "failed" && (
-            <div className="mt-4 rounded-2xl bg-red-50 px-4 py-3">
-              <p className="text-sm font-semibold text-red-700">
+            <div className="mt-4 rounded-2xl bg-destructive/10 px-4 py-3">
+              <p className="text-sm font-semibold text-destructive">
                 L&apos;ultimo import è fallito.
               </p>
 
@@ -175,24 +179,23 @@ export default async function AdminImportPage({
             initialCooldownRemainingMs={cooldownRemainingMs}
           />
         </div>
-      </div>
+      </Card>
 
       <div className="mt-8">
-        <h2 className="mb-4 text-2xl font-bold text-slate-900">
+        <h2 className="mb-4 text-lg font-semibold text-foreground">
           Storico import
         </h2>
 
         {history.length === 0 ? (
-          <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-            <p className="text-slate-500">
-              Non è stato ancora eseguito alcun import.
-            </p>
-          </div>
+          <EmptyState
+            title="Nessuno storico"
+            description="Non è stato ancora eseguito alcun import."
+          />
         ) : (
           <>
-            <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <Card className="overflow-x-auto p-0">
               <table className="w-full">
-                <thead className="bg-slate-50">
+                <thead className="bg-muted">
                   <tr>
                     <th className="px-6 py-4 text-left">
                       Data/ora
@@ -212,9 +215,9 @@ export default async function AdminImportPage({
                   {history.map((log) => (
                     <tr
                       key={log.id}
-                      className="border-t border-slate-100 align-top"
+                      className="border-t border-border align-top"
                     >
-                      <td className="px-6 py-5 text-sm text-slate-700">
+                      <td className="px-6 py-5 text-sm text-foreground/90">
                         {new Date(
                           log.started_at
                         ).toLocaleString("it-IT", {
@@ -230,25 +233,25 @@ export default async function AdminImportPage({
                         <StatusBadge status={log.status} />
                       </td>
 
-                      <td className="px-6 py-5 font-semibold text-slate-900">
+                      <td className="px-6 py-5 font-semibold text-foreground">
                         {log.events_created}
                       </td>
 
-                      <td className="px-6 py-5 font-semibold text-slate-900">
+                      <td className="px-6 py-5 font-semibold text-foreground">
                         {log.events_updated}
                       </td>
 
                       <td
                         className={`px-6 py-5 font-semibold ${
                           log.events_failed > 0
-                            ? "text-red-600"
-                            : "text-slate-900"
+                            ? "text-destructive"
+                            : "text-foreground"
                         }`}
                       >
                         {log.events_failed}
                       </td>
 
-                      <td className="px-6 py-5 text-sm text-slate-500">
+                      <td className="px-6 py-5 text-sm text-muted-foreground">
                         {formatDuration(
                           log.started_at,
                           log.finished_at
@@ -261,14 +264,14 @@ export default async function AdminImportPage({
                             message={log.error_message}
                           />
                         ) : (
-                          <span className="text-slate-300">—</span>
+                          <span className="text-muted-foreground/50">—</span>
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
+            </Card>
 
             {totalPages > 1 && (
               <div className="mt-4 flex items-center justify-center gap-4">
@@ -279,29 +282,35 @@ export default async function AdminImportPage({
                         ? "/admin/import"
                         : `/admin/import?page=${currentPage - 1}`
                     }
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "h-auto rounded-xl px-4 py-2"
+                    )}
                   >
                     Precedente
                   </Link>
                 ) : (
-                  <span className="rounded-xl border border-slate-100 px-4 py-2 text-sm font-semibold text-slate-300">
+                  <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
                     Precedente
                   </span>
                 )}
 
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-muted-foreground">
                   Pagina {currentPage} di {totalPages}
                 </span>
 
                 {currentPage < totalPages ? (
                   <Link
                     href={`/admin/import?page=${currentPage + 1}`}
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "h-auto rounded-xl px-4 py-2"
+                    )}
                   >
                     Successiva
                   </Link>
                 ) : (
-                  <span className="rounded-xl border border-slate-100 px-4 py-2 text-sm font-semibold text-slate-300">
+                  <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
                     Successiva
                   </span>
                 )}
@@ -325,10 +334,10 @@ function Stat({
 }) {
   return (
     <div>
-      <p className="text-xs text-slate-400">{label}</p>
+      <p className="text-xs text-muted-foreground/70">{label}</p>
       <p
         className={`text-lg font-bold ${
-          tone === "bad" ? "text-red-600" : "text-slate-900"
+          tone === "bad" ? "text-destructive" : "text-foreground"
         }`}
       >
         {value}
@@ -345,7 +354,7 @@ function Stat({
 function StatusBadge({ status }: { status: string }) {
   if (status === "success") {
     return (
-      <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
         Riuscito
       </span>
     );
@@ -397,11 +406,11 @@ const ERROR_PREVIEW_LENGTH = 100;
 
 function ErrorMessage({ message }: { message: string }) {
   if (message.length <= ERROR_PREVIEW_LENGTH) {
-    return <p className="text-red-700">{message}</p>;
+    return <p className="text-destructive">{message}</p>;
   }
 
   return (
-    <details className="text-red-700">
+    <details className="text-destructive">
       <summary className="cursor-pointer font-medium">
         {message.slice(0, ERROR_PREVIEW_LENGTH)}…
       </summary>

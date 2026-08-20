@@ -7,16 +7,16 @@ type Props = {
 export default function DashboardHeader({ name }: Props) {
   return (
     <section className="mb-12">
-      <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+      <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
         <Sparkles className="h-4 w-4" />
         Dashboard
       </span>
 
-      <h1 className="mt-6 text-5xl font-black tracking-tight text-slate-900">
+      <h1 className="mt-6 text-2xl font-bold text-foreground">
         Ciao {name} 👋
       </h1>
 
-      <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+      <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
         Benvenuto nella tua dashboard. Da qui puoi gestire i tuoi passaggi,
         controllare le prenotazioni e organizzare tutti i tuoi viaggi verso gli
         eventi.

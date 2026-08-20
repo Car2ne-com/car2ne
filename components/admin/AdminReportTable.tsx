@@ -8,6 +8,10 @@ import { CheckCircle2, Clock3, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import AdminNoteDialog from "./AdminNoteDialog";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/utils";
 
 type Report = {
   id: string;
@@ -93,13 +97,10 @@ export default function AdminReportTable({
 
   if (reports.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-        <h2 className="text-2xl font-bold">Nessuna segnalazione</h2>
-
-        <p className="mt-2 text-slate-500">
-          Le segnalazioni inviate dagli utenti appariranno qui.
-        </p>
-      </div>
+      <EmptyState
+        title="Nessuna segnalazione"
+        description="Le segnalazioni inviate dagli utenti appariranno qui."
+      />
     );
   }
 
@@ -107,45 +108,42 @@ export default function AdminReportTable({
     <div>
       <div className="mb-4 flex flex-wrap gap-2">
         {FILTERS.map((item) => (
-          <button
+          <Button
             key={item.key}
             type="button"
             onClick={() => setFilter(item.key)}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+            className={cn(
+              "h-auto rounded-xl px-4 py-2",
               filter === item.key
-                ? "bg-slate-900 text-white"
-                : "bg-white text-slate-600 hover:bg-slate-100"
-            }`}
+                ? "bg-foreground text-background hover:bg-foreground/90"
+                : "bg-card text-muted-foreground hover:bg-muted"
+            )}
           >
             {item.label}
-          </button>
+          </Button>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-          <h2 className="text-xl font-bold">
-            Nessuna segnalazione corrisponde al filtro
-          </h2>
-        </div>
+        <EmptyState
+          title="Nessuna segnalazione corrisponde al filtro"
+          description=""
+        />
       ) : (
         <div className="space-y-4">
           {filtered.map((r) => (
-            <div
-              key={r.id}
-              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
-            >
+            <Card key={r.id} className="p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                    <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
                       {CATEGORY_LABELS[r.category] ?? r.category}
                     </span>
 
                     <StatusBadge status={r.status} />
                   </div>
 
-                  <p className="mt-3 text-sm text-slate-500">
+                  <p className="mt-3 text-sm text-muted-foreground">
                     Da <strong>{r.reporterName || "—"}</strong>
                     {r.reportedName && (
                       <>
@@ -158,12 +156,12 @@ export default function AdminReportTable({
                     )}
                   </p>
 
-                  <p className="mt-3 whitespace-pre-wrap text-slate-800">
+                  <p className="mt-3 whitespace-pre-wrap text-foreground">
                     {r.description}
                   </p>
 
                   {r.adminNote && (
-                    <p className="mt-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                    <p className="mt-3 rounded-2xl bg-muted px-4 py-3 text-sm text-muted-foreground">
                       <strong>Nota admin:</strong> {r.adminNote}
                     </p>
                   )}
@@ -172,44 +170,47 @@ export default function AdminReportTable({
                 {(r.status === "open" || r.status === "reviewing") && (
                   <div className="flex shrink-0 gap-3">
                     {r.status === "open" && (
-                      <button
+                      <Button
                         onClick={() => updateStatus(r.id, "reviewing")}
                         disabled={busyId === r.id}
                         title="Segna in revisione"
                         aria-label="Segna in revisione"
-                        className="rounded-xl bg-blue-500 p-3 text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        size="icon-lg"
+                        className="rounded-xl bg-blue-500 text-white hover:bg-blue-600"
                       >
                         <Clock3 className="h-4 w-4" />
-                      </button>
+                      </Button>
                     )}
 
-                    <button
+                    <Button
                       onClick={() =>
                         setNoteDialog({ id: r.id, status: "resolved" })
                       }
                       disabled={busyId === r.id}
                       title="Risolvi"
                       aria-label="Risolvi"
-                      className="rounded-xl bg-emerald-500 p-3 text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+                      size="icon-lg"
+                      className="rounded-xl"
                     >
                       <CheckCircle2 className="h-4 w-4" />
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                       onClick={() =>
                         setNoteDialog({ id: r.id, status: "dismissed" })
                       }
                       disabled={busyId === r.id}
                       title="Archivia"
                       aria-label="Archivia"
-                      className="rounded-xl bg-slate-400 p-3 text-white transition hover:bg-slate-500 disabled:cursor-not-allowed disabled:opacity-60"
+                      size="icon-lg"
+                      className="rounded-xl bg-slate-400 text-white hover:bg-slate-500"
                     >
                       <XCircle className="h-4 w-4" />
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       )}
@@ -247,7 +248,7 @@ export default function AdminReportTable({
 function StatusBadge({ status }: { status: string }) {
   if (status === "resolved") {
     return (
-      <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
         Risolta
       </span>
     );
@@ -255,7 +256,7 @@ function StatusBadge({ status }: { status: string }) {
 
   if (status === "dismissed") {
     return (
-      <span className="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
+      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
         Archiviata
       </span>
     );

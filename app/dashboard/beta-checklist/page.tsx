@@ -1,7 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import BetaChecklistForm from "@/components/betaChecklist/BetaChecklistForm";
 
 import { createClient } from "@/lib/supabase/server";
@@ -43,25 +41,22 @@ export default async function BetaChecklistPage() {
   }
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-4xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-4xl px-6 pt-40 pb-24">
         <div className="mb-10">
-          <p className="text-xs font-bold tracking-widest text-emerald-600 uppercase">
+          <p className="text-xs font-bold tracking-widest text-primary uppercase">
             {dict.betaChecklist.meta.eyebrow}
           </p>
 
-          <h1 className="mt-2 text-4xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-2 text-2xl font-bold text-foreground">
             {dict.betaChecklist.meta.title}
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             {dict.betaChecklist.meta.subtitle}
           </p>
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
-            <p className="font-semibold text-slate-800">
+          <div className="mt-6 rounded-2xl border border-border bg-muted p-5 text-sm text-muted-foreground">
+            <p className="font-semibold text-foreground">
               {dict.betaChecklist.meta.howToTitle}
             </p>
             <p className="mt-1 leading-6">{dict.betaChecklist.meta.howToBody}</p>
@@ -80,9 +75,6 @@ export default async function BetaChecklistPage() {
             saveErrorToast: dict.betaChecklist.saveErrorToast,
           }}
         />
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

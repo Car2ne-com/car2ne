@@ -3,9 +3,8 @@ import Link from "next/link";
 
 import { Bell } from "lucide-react";
 
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import PushNotificationToggle from "@/components/notifications/PushNotificationToggle";
+import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -57,37 +56,34 @@ export default async function NotificationsPage() {
     ).length;
 
   return (
-    <>
-      <Navbar />
-
-      <main className="mx-auto max-w-4xl px-6 pb-24 pt-40">
+    <main className="mx-auto max-w-4xl px-6 pb-24 pt-40">
 
         {/* Header */}
 
         <div className="mb-10 flex items-start justify-between gap-6">
 
           <div>
-            <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+            <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
               🔔 Notifiche
             </span>
 
-            <h1 className="mt-5 text-5xl font-black tracking-tight text-slate-900">
+            <h1 className="mt-5 text-2xl font-bold text-foreground">
               Le tue notifiche
             </h1>
 
-            <p className="mt-4 text-lg text-slate-600">
+            <p className="mt-4 text-lg text-muted-foreground">
               Tieni sotto controllo richieste,
               prenotazioni e aggiornamenti.
             </p>
           </div>
 
           {unreadCount > 0 && (
-            <div className="shrink-0 rounded-2xl bg-emerald-50 px-5 py-4 text-center">
-              <p className="text-xs font-semibold text-emerald-600">
+            <div className="shrink-0 rounded-2xl bg-accent px-5 py-4 text-center">
+              <p className="text-xs font-semibold text-accent-foreground">
                 Non lette
               </p>
 
-              <p className="mt-1 text-2xl font-black text-emerald-700">
+              <p className="mt-1 text-2xl font-black text-accent-foreground">
                 {unreadCount}
               </p>
             </div>
@@ -101,34 +97,24 @@ export default async function NotificationsPage() {
 
         {notificationList.length === 0 ? (
 
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-8 py-20 text-center">
-
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
-              <Bell className="h-9 w-9 text-emerald-600" />
-            </div>
-
-            <h2 className="mt-6 text-2xl font-bold text-slate-900">
-              Nessuna notifica
-            </h2>
-
-            <p className="mx-auto mt-3 max-w-lg text-slate-500">
-              Qui troverai le richieste di
-              prenotazione e tutti gli aggiornamenti
-              sui tuoi passaggi.
-            </p>
+          <div className="text-center">
+            <EmptyState
+              icon={Bell}
+              title="Nessuna notifica"
+              description="Qui troverai le richieste di prenotazione e tutti gli aggiornamenti sui tuoi passaggi."
+            />
 
             <Link
               href="/events"
-              className="mt-8 inline-flex rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
+              className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               Cerca un evento
             </Link>
-
           </div>
 
         ) : (
 
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
 
             {notificationList.map(
               (notification) => {
@@ -149,10 +135,10 @@ export default async function NotificationsPage() {
                   <Link
                     key={notification.id}
                     href={href}
-                    className={`flex gap-5 border-b border-slate-100 p-6 transition last:border-b-0 hover:bg-slate-50 ${
+                    className={`flex gap-5 border-b border-border p-6 transition last:border-b-0 hover:bg-muted ${
                       isUnread
-                        ? "bg-emerald-50/40"
-                        : "bg-white"
+                        ? "bg-accent/40"
+                        : "bg-card"
                     }`}
                   >
 
@@ -164,17 +150,17 @@ export default async function NotificationsPage() {
 
                         <div className="flex items-center gap-2">
 
-                          <h2 className="font-bold text-slate-900">
+                          <h2 className="font-bold text-foreground">
                             {notification.title}
                           </h2>
 
                           {isUnread && (
-                            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                            <span className="h-2.5 w-2.5 rounded-full bg-primary" />
                           )}
 
                         </div>
 
-                        <span className="shrink-0 text-xs text-slate-400">
+                        <span className="shrink-0 text-xs text-muted-foreground">
                           {new Date(
                             notification.created_at
                           ).toLocaleString(
@@ -191,11 +177,11 @@ export default async function NotificationsPage() {
 
                       </div>
 
-                      <p className="mt-2 leading-6 text-slate-600">
+                      <p className="mt-2 leading-6 text-muted-foreground">
                         {notification.message}
                       </p>
 
-                      <p className="mt-3 text-sm font-semibold text-emerald-600">
+                      <p className="mt-3 text-sm font-semibold text-primary">
                         Visualizza →
                       </p>
 
@@ -209,9 +195,6 @@ export default async function NotificationsPage() {
           </div>
         )}
 
-      </main>
-
-      <Footer />
-    </>
+    </main>
   );
 }

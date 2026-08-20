@@ -6,6 +6,9 @@ import { AlertTriangle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 
 type Dict = {
@@ -84,13 +87,13 @@ export default function DeleteAccountForm({
   }
 
   return (
-    <div className="rounded-3xl border border-red-200 bg-red-50/40 p-8 shadow-sm">
+    <Card className="border-destructive/20 bg-destructive/5 p-8">
       <div>
-        <h3 className="text-xl font-bold text-red-700">
+        <h3 className="text-lg font-semibold text-destructive">
           {dict.title}
         </h3>
 
-        <p className="mt-2 text-sm leading-6 text-slate-600">
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
           {dict.description}
         </p>
       </div>
@@ -101,33 +104,31 @@ export default function DeleteAccountForm({
             type="button"
             variant="outline"
             onClick={() => setOpen(true)}
-            className="h-11 rounded-2xl border-red-300 px-6 font-semibold text-red-700 hover:bg-red-100"
+            className="h-11 rounded-2xl border-destructive/30 px-6 font-semibold text-destructive hover:bg-destructive/10"
           >
             <Trash2 className="mr-2 h-4 w-4" />
             {dict.openButton}
           </Button>
         ) : (
           <div className="space-y-6">
-            <div className="flex gap-3 rounded-2xl bg-red-100 p-4">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-red-600" />
+            <div className="flex gap-3 rounded-2xl bg-destructive/10 p-4">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-destructive" />
 
               <div>
-                <p className="text-sm font-bold text-red-800">
+                <p className="text-sm font-bold text-destructive">
                   {dict.warningTitle}
                 </p>
 
-                <p className="mt-1 text-sm leading-6 text-red-700">
+                <p className="mt-1 text-sm leading-6 text-destructive/90">
                   {dict.warningBody}
                 </p>
               </div>
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
-                {dict.confirmLabel}
-              </label>
+              <Label>{dict.confirmLabel}</Label>
 
-              <input
+              <Input
                 type="text"
                 value={confirmText}
                 onChange={(e) =>
@@ -135,7 +136,7 @@ export default function DeleteAccountForm({
                 }
                 placeholder={dict.confirmPlaceholder}
                 disabled={loading}
-                className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-red-500 focus:ring-4 focus:ring-red-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 rounded-2xl focus-visible:border-destructive focus-visible:ring-destructive/20"
               />
             </div>
 
@@ -147,7 +148,7 @@ export default function DeleteAccountForm({
                   confirmText !== dict.confirmWord
                 }
                 onClick={handleDelete}
-                className="h-11 rounded-2xl bg-red-600 px-6 font-semibold hover:bg-red-700"
+                className="h-11 rounded-2xl bg-destructive px-6 font-semibold text-destructive-foreground hover:bg-destructive/90"
               >
                 {loading
                   ? dict.deleting
@@ -167,6 +168,6 @@ export default function DeleteAccountForm({
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

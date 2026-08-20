@@ -33,7 +33,7 @@ export default function LanguageSwitcher({ locale, srLabel }: Props) {
     <div
       role="group"
       aria-label={srLabel}
-      className="flex shrink-0 items-center gap-0.5 rounded-full border border-slate-200 bg-white/80 p-0.5 text-xs font-semibold text-slate-500"
+      className="flex shrink-0 items-center gap-0.5 rounded-full border border-border bg-background/80 p-0.5 text-xs font-semibold text-muted-foreground"
     >
       {options.map((option) => (
         <button
@@ -44,8 +44,8 @@ export default function LanguageSwitcher({ locale, srLabel }: Props) {
           disabled={isPending}
           className={`rounded-full px-2 py-1 transition disabled:opacity-60 ${
             locale === option.code
-              ? "bg-emerald-500 text-white shadow-sm"
-              : "hover:bg-slate-100 hover:text-slate-700"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "hover:bg-muted hover:text-foreground"
           }`}
         >
           {option.label}

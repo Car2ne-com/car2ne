@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
 import AdminEventTable from "@/components/admin/AdminEventTable";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   searchParams: Promise<{ filter?: string }>;
@@ -75,11 +77,11 @@ export default async function AdminEventsPage({
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Gestione eventi
           </h1>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-muted-foreground">
             Gestisci tutti gli eventi di Car2ne.
           </p>
         </div>
@@ -87,7 +89,10 @@ export default async function AdminEventsPage({
         <div className="flex gap-3">
           <Link
             href="/admin/events/new"
-            className="rounded-2xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-600"
+            className={cn(
+              buttonVariants(),
+              "h-auto rounded-2xl px-6 py-3"
+            )}
           >
             + Nuovo evento
           </Link>

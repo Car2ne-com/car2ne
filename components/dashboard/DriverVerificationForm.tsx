@@ -15,6 +15,9 @@ import {
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import { createClient } from "@/lib/supabase/client";
 
@@ -199,16 +202,16 @@ export default function DriverVerificationForm({
   return (
     <div className="space-y-6">
       {status && (
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <Card className="p-8">
           <div className="flex items-center gap-3">
             <StatusIcon status={status} />
 
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-lg font-semibold text-foreground">
                 {dict.status[status as keyof Dict["status"]] ?? status}
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {status === "pending" && dict.status.pendingDescription}
                 {status === "approved" && dict.status.approvedDescription}
                 {status === "rejected" && dict.status.rejectedDescription}
@@ -218,82 +221,86 @@ export default function DriverVerificationForm({
           </div>
 
           {verification?.admin_note && status === "rejected" && (
-            <p className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">
+            <p className="mt-4 rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
               <strong>{dict.status.adminNoteLabel}:</strong>{" "}
               {verification.admin_note}
             </p>
           )}
-        </div>
+        </Card>
       )}
 
       {status !== "approved" && status !== "pending" && (
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <Card className="p-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
+              <Label htmlFor="vehicle-make">
                 {dict.form.vehicleMakeLabel}
-              </label>
+              </Label>
 
-              <input
+              <Input
+                id="vehicle-make"
                 value={vehicleMake}
                 onChange={(e) => setVehicleMake(e.target.value)}
                 disabled={submitting}
                 maxLength={50}
-                className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 rounded-2xl"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
+              <Label htmlFor="vehicle-model">
                 {dict.form.vehicleModelLabel}
-              </label>
+              </Label>
 
-              <input
+              <Input
+                id="vehicle-model"
                 value={vehicleModel}
                 onChange={(e) => setVehicleModel(e.target.value)}
                 disabled={submitting}
                 maxLength={50}
-                className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 rounded-2xl"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
+              <Label htmlFor="vehicle-plate">
                 {dict.form.vehiclePlateLabel}
-              </label>
+              </Label>
 
-              <input
+              <Input
+                id="vehicle-plate"
                 value={vehiclePlate}
                 onChange={(e) => setVehiclePlate(e.target.value)}
                 disabled={submitting}
                 maxLength={20}
-                className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 rounded-2xl"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
+              <Label htmlFor="license-number">
                 {dict.form.licenseNumberLabel}
-              </label>
+              </Label>
 
-              <input
+              <Input
+                id="license-number"
                 value={licenseNumber}
                 onChange={(e) => setLicenseNumber(e.target.value)}
                 disabled={submitting}
                 maxLength={30}
-                className="h-14 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="h-14 rounded-2xl"
               />
             </div>
           </div>
 
           <div className="mt-6">
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
+            <Label>
               {dict.form.documentLabel}
-            </label>
+            </Label>
 
             <label
               htmlFor="verification-document"
-              className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-8 text-sm font-semibold text-slate-500 transition hover:border-emerald-300 hover:text-emerald-600"
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border px-4 py-8 text-sm font-semibold text-muted-foreground transition hover:border-primary/40 hover:text-primary"
             >
               <Upload className="h-5 w-5" />
               {file ? file.name : dict.form.documentLabel}
@@ -308,17 +315,17 @@ export default function DriverVerificationForm({
               />
             </label>
 
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-muted-foreground">
               {dict.form.documentHint}
             </p>
           </div>
 
-          <div className="mt-8 flex justify-end border-t border-slate-100 pt-6">
+          <div className="mt-8 flex justify-end border-t border-border pt-6">
             <Button
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="h-12 rounded-2xl bg-emerald-500 px-8 font-semibold hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-12 rounded-2xl bg-primary px-8 font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting ? (
                 <>
@@ -332,7 +339,7 @@ export default function DriverVerificationForm({
               )}
             </Button>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
@@ -341,16 +348,16 @@ export default function DriverVerificationForm({
 function StatusIcon({ status }: { status: string }) {
   if (status === "approved") {
     return (
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-        <BadgeCheck className="h-6 w-6 text-emerald-600" />
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent">
+        <BadgeCheck className="h-6 w-6 text-accent-foreground" />
       </div>
     );
   }
 
   if (status === "rejected" || status === "expired") {
     return (
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100">
-        <XCircle className="h-6 w-6 text-red-500" />
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+        <XCircle className="h-6 w-6 text-destructive" />
       </div>
     );
   }

@@ -1,6 +1,10 @@
 import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/server";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CityRow = {
   id: string;
@@ -139,11 +143,11 @@ export default async function AdminCitiesPage({
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-foreground">
           Città &amp; venue
         </h1>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted-foreground">
           Vista di sola lettura. Città e venue vengono creati
           automaticamente dal resolver durante l&apos;import
           Ticketmaster o il backfill — non da qui.
@@ -187,22 +191,18 @@ function CitiesTable({
 }) {
   if (cities.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-        <h2 className="text-2xl font-bold">Nessuna città</h2>
-
-        <p className="mt-2 text-slate-500">
-          Le città compaiono qui dopo il primo import Ticketmaster o
-          backfill.
-        </p>
-      </div>
+      <EmptyState
+        title="Nessuna città"
+        description="Le città compaiono qui dopo il primo import Ticketmaster o backfill."
+      />
     );
   }
 
   return (
     <div>
-      <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <Card className="overflow-x-auto p-0">
         <table className="w-full">
-          <thead className="bg-slate-50">
+          <thead className="bg-muted">
             <tr>
               <th className="px-6 py-4 text-left">Nome</th>
               <th className="px-6 py-4 text-left">Slug</th>
@@ -214,9 +214,9 @@ function CitiesTable({
 
           <tbody>
             {cities.map((city) => (
-              <tr key={city.id} className="border-t border-slate-100">
+              <tr key={city.id} className="border-t border-border">
                 <td className="px-6 py-5 font-semibold">{city.name}</td>
-                <td className="px-6 py-5 text-slate-500">
+                <td className="px-6 py-5 text-muted-foreground">
                   /citta/{city.slug}
                 </td>
                 <td className="px-6 py-5">{city.region ?? "—"}</td>
@@ -230,7 +230,7 @@ function CitiesTable({
             ))}
           </tbody>
         </table>
-      </div>
+      </Card>
 
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-center gap-4">
@@ -241,29 +241,35 @@ function CitiesTable({
                   ? "/admin/cities"
                   : `/admin/cities?page=${currentPage - 1}`
               }
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "h-auto rounded-xl px-4 py-2"
+              )}
             >
               Precedente
             </Link>
           ) : (
-            <span className="rounded-xl border border-slate-100 px-4 py-2 text-sm font-semibold text-slate-300">
+            <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
               Precedente
             </span>
           )}
 
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-muted-foreground">
             Pagina {currentPage} di {totalPages}
           </span>
 
           {currentPage < totalPages ? (
             <Link
               href={`/admin/cities?page=${currentPage + 1}`}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "h-auto rounded-xl px-4 py-2"
+              )}
             >
               Successiva
             </Link>
           ) : (
-            <span className="rounded-xl border border-slate-100 px-4 py-2 text-sm font-semibold text-slate-300">
+            <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
               Successiva
             </span>
           )}
@@ -284,21 +290,17 @@ function VenuesTable({
 }) {
   return (
     <>
-      <h2 className="mb-4 text-2xl font-bold text-slate-900">Venue</h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">Venue</h2>
 
       {venues.length === 0 ? (
-        <div className="rounded-3xl border border-slate-200 bg-white p-16 text-center shadow-sm">
-          <h3 className="text-xl font-bold">Nessun venue</h3>
-
-          <p className="mt-2 text-slate-500">
-            I venue compaiono qui dopo il primo import Ticketmaster o
-            backfill.
-          </p>
-        </div>
+        <EmptyState
+          title="Nessun venue"
+          description="I venue compaiono qui dopo il primo import Ticketmaster o backfill."
+        />
       ) : (
-        <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <Card className="overflow-x-auto p-0">
           <table className="w-full">
-            <thead className="bg-slate-50">
+            <thead className="bg-muted">
               <tr>
                 <th className="px-6 py-4 text-left">Nome</th>
                 <th className="px-6 py-4 text-left">Città</th>
@@ -311,7 +313,7 @@ function VenuesTable({
               {venues.map((venue) => (
                 <tr
                   key={venue.id}
-                  className="border-t border-slate-100"
+                  className="border-t border-border"
                 >
                   <td className="px-6 py-5 font-semibold">
                     {venue.name}
@@ -319,7 +321,7 @@ function VenuesTable({
                   <td className="px-6 py-5">
                     {cityNameById.get(venue.city_id) ?? "—"}
                   </td>
-                  <td className="px-6 py-5 text-slate-500">
+                  <td className="px-6 py-5 text-muted-foreground">
                     {venue.address ?? "—"}
                   </td>
                   <td className="px-6 py-5">
@@ -329,7 +331,7 @@ function VenuesTable({
               ))}
             </tbody>
           </table>
-        </div>
+        </Card>
       )}
     </>
   );
