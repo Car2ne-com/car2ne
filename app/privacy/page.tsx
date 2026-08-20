@@ -27,7 +27,7 @@ export default async function PrivacyPolicyPage() {
             portability) you can write to{" "}
             <a
               href="mailto:privacy@car2ne.com"
-              className="font-semibold text-emerald-600 hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               privacy@car2ne.com
             </a>
@@ -245,7 +245,7 @@ export default async function PrivacyPolicyPage() {
             to{" "}
             <a
               href="mailto:privacy@car2ne.com"
-              className="font-semibold text-emerald-600 hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               privacy@car2ne.com
             </a>
@@ -287,7 +287,7 @@ export default async function PrivacyPolicyPage() {
           scrivere a{" "}
           <a
             href="mailto:privacy@car2ne.com"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             privacy@car2ne.com
           </a>
@@ -539,7 +539,7 @@ export default async function PrivacyPolicyPage() {
           portabilità, scrivendo a{" "}
           <a
             href="mailto:privacy@car2ne.com"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             privacy@car2ne.com
           </a>

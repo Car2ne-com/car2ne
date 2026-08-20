@@ -88,7 +88,7 @@ export default async function CommunityGuidelinesPage() {
             Violating these guidelines or the{" "}
             <Link
               href="/termini"
-              className="font-semibold text-emerald-600 hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               Terms and Conditions
             </Link>{" "}
@@ -102,7 +102,7 @@ export default async function CommunityGuidelinesPage() {
             have a problem with another user, use the{" "}
             <Link
               href="/segnala-un-problema"
-              className="font-semibold text-emerald-600 hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               Report a problem
             </Link>{" "}
@@ -199,7 +199,7 @@ export default async function CommunityGuidelinesPage() {
           dei{" "}
           <Link
             href="/termini"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             Termini e Condizioni
           </Link>{" "}
@@ -215,7 +215,7 @@ export default async function CommunityGuidelinesPage() {
           usa la pagina{" "}
           <Link
             href="/segnala-un-problema"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             Segnala un problema
           </Link>{" "}

@@ -91,7 +91,7 @@ export default async function TerminiPage() {
             rights. See our{" "}
             <Link
               href="/community-guidelines"
-              className="font-semibold text-emerald-600 hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               Community Guidelines
             </Link>{" "}
@@ -130,7 +130,7 @@ export default async function TerminiPage() {
             can write to{" "}
             <a
               href="mailto:privacy@car2ne.com"
-              className="font-semibold text-emerald-600 hover:text-emerald-700"
+              className="font-semibold text-primary hover:text-primary/80"
             >
               privacy@car2ne.com
             </a>
@@ -229,7 +229,7 @@ export default async function TerminiPage() {
           nostre{" "}
           <Link
             href="/community-guidelines"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             Community Guidelines
           </Link>{" "}
@@ -272,7 +272,7 @@ export default async function TerminiPage() {
           presenti Termini puoi scrivere a{" "}
           <a
             href="mailto:privacy@car2ne.com"
-            className="font-semibold text-emerald-600 hover:text-emerald-700"
+            className="font-semibold text-primary hover:text-primary/80"
           >
             privacy@car2ne.com
           </a>
