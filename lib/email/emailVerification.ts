@@ -85,7 +85,7 @@ export async function sendVerificationCode({
 
   const name = getUserDisplayName(user, locale);
 
-  await sendTransactionalEmail({
+  const sent = await sendTransactionalEmail({
     to: { email },
     subject: copy.subject,
     htmlContent: renderEmailHtml({
@@ -94,6 +94,13 @@ export async function sendVerificationCode({
       code,
     }),
   });
+
+  if (!sent) {
+    // Il codice è già salvato: se l'invio fallisce lo segnaliamo con un
+    // errore reale (la route API lo trasforma in 500) invece di lasciar
+    // credere all'utente che l'email sia partita quando non è così.
+    throw new Error("Invio email di verifica fallito.");
+  }
 }
 
 type VerifyResult =

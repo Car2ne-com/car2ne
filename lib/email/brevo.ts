@@ -35,7 +35,7 @@ export async function sendTransactionalEmail({
   to,
   subject,
   htmlContent,
-}: SendEmailParams) {
+}: SendEmailParams): Promise<boolean> {
   const apiKey = process.env.BREVO_API_KEY;
   const fromAddress = process.env.EMAIL_FROM_ADDRESS;
   const fromName = process.env.EMAIL_FROM_NAME ?? "Car2ne";
@@ -44,7 +44,7 @@ export async function sendTransactionalEmail({
     console.error(
       "BREVO_API_KEY o EMAIL_FROM_ADDRESS non configurate: email non inviata."
     );
-    return;
+    return false;
   }
 
   const response = await fetch(
@@ -73,7 +73,11 @@ export async function sendTransactionalEmail({
       response.status,
       body
     );
+
+    return false;
   }
+
+  return true;
 }
 
 /*

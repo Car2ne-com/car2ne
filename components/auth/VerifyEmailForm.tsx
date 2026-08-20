@@ -88,10 +88,11 @@ export default function VerifyEmailForm({
       }
 
       if (!response.ok) {
-        if (!silent) {
-          toast.error(t.errors.generic);
-        }
-
+        // Un fallimento di invio è sempre informativo per l'utente,
+        // anche al primo tentativo automatico al caricamento della
+        // pagina: restare in silenzio lo lascerebbe bloccato su
+        // "controlla la tua email" senza sapere che non è mai partita.
+        toast.error(t.errors.generic);
         return;
       }
 
@@ -102,10 +103,7 @@ export default function VerifyEmailForm({
       }
     } catch (error) {
       console.error("Errore invio codice verifica:", error);
-
-      if (!silent) {
-        toast.error(t.errors.generic);
-      }
+      toast.error(t.errors.generic);
     } finally {
       if (!silent) {
         setResending(false);
