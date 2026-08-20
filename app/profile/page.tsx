@@ -39,11 +39,11 @@ export default async function ProfilePage() {
       <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
         <div className="mb-10">
           <h1 className="text-2xl font-bold text-foreground">
-            Il mio profilo
+            {dict.profile.title}
           </h1>
 
           <p className="mt-4 text-lg text-slate-600">
-            Gestisci le informazioni del tuo account Car2ne.
+            {dict.profile.subtitle}
           </p>
         </div>
 
@@ -53,11 +53,12 @@ export default async function ProfilePage() {
               ...profile,
               email: user.email ?? "",
             }}
+            dict={dict.profile.form}
           />
 
-          <ChangePasswordForm />
+          <ChangePasswordForm dict={dict.profile.changePassword} />
 
-          <MfaSettings />
+          <MfaSettings dict={dict.profile.mfa} />
 
           <DeleteAccountForm
             dict={dict.profile.deleteAccount}

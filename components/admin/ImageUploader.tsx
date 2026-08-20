@@ -5,14 +5,23 @@ import { Upload, ImageIcon, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 
+type Dict = {
+  previewAlt: string;
+  noImage: string;
+  uploading: string;
+  uploadImage: string;
+};
+
 type Props = {
   value: string;
   onChange: (url: string) => void;
+  dict: Dict;
 };
 
 export default function ImageUploader({
   value,
   onChange,
+  dict,
 }: Props) {
   const supabase = createClient();
 
@@ -55,7 +64,7 @@ export default function ImageUploader({
       {value ? (
         <img
           src={value}
-          alt="Anteprima evento"
+          alt={dict.previewAlt}
           className="h-56 w-full rounded-2xl object-cover"
         />
       ) : (
@@ -64,7 +73,7 @@ export default function ImageUploader({
             <ImageIcon className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
 
             <p className="text-sm text-muted-foreground">
-              Nessuna immagine caricata
+              {dict.noImage}
             </p>
           </div>
         </div>
@@ -91,12 +100,12 @@ export default function ImageUploader({
         {uploading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Caricamento...
+            {dict.uploading}
           </>
         ) : (
           <>
             <Upload className="h-4 w-4" />
-            Carica immagine
+            {dict.uploadImage}
           </>
         )}
       </Button>

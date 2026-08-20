@@ -13,13 +13,18 @@ import {
   calculateAge,
   MINIMUM_AGE,
 } from "@/lib/utils/age";
+import type { it } from "@/lib/i18n/dictionaries/it";
+
+type AuthDict = (typeof it)["auth"];
 
 type Props = {
   next: string | null;
+  dict: AuthDict;
 };
 
 export default function VerifyAgeForm({
   next,
+  dict,
 }: Props) {
   const router = useRouter();
   const supabase = createClient();
@@ -50,9 +55,7 @@ export default function VerifyAgeForm({
     e.preventDefault();
 
     if (!birthDate) {
-      toast.error(
-        "Inserisci la tua data di nascita."
-      );
+      toast.error(dict.verifyAge.emptyBirthDateError);
       return;
     }
 
@@ -86,9 +89,7 @@ export default function VerifyAgeForm({
 
       setLoading(false);
 
-      toast.error(
-        "Car2ne è riservato a chi ha almeno 18 anni. Il tuo account non è stato attivato."
-      );
+      toast.error(dict.verifyAge.notAdultToast);
 
       router.push("/");
       return;
@@ -170,7 +171,7 @@ export default function VerifyAgeForm({
         className="space-y-6"
       >
         <div>
-          <Label>Data di nascita</Label>
+          <Label>{dict.registerForm.birthDateLabel}</Label>
 
           <Input
             type="date"
@@ -188,17 +189,14 @@ export default function VerifyAgeForm({
           />
 
           <p className="mt-2 text-xs text-muted-foreground">
-            Car2ne è riservato a chi ha almeno
-            18 anni.
+            {dict.registerForm.ageNotice}
           </p>
 
           {birthDate.length > 0 &&
             age !== null &&
             !isAdult && (
               <FieldError>
-                Non risulti maggiorenne: il tuo
-                account non potrà essere
-                attivato.
+                {dict.verifyAge.notAdultFieldError}
               </FieldError>
             )}
         </div>
@@ -209,8 +207,8 @@ export default function VerifyAgeForm({
           className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
         >
           {loading
-            ? "Verifica..."
-            : "Continua"}
+            ? dict.verifyAge.verifying
+            : dict.verifyAge.continueButton}
         </Button>
       </form>
     </Card>

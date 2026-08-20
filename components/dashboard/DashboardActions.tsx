@@ -7,7 +7,7 @@ import {
   User,
 } from "lucide-react";
 
-type Dict = {
+type VerificationDict = {
   title: string;
   description: string;
   cta: string;
@@ -15,13 +15,27 @@ type Dict = {
   ctaVerified: string;
 };
 
+type ActionsDict = {
+  editProfileTitle: string;
+  editProfileDescription: string;
+  editProfileCta: string;
+  offerRideTitle: string;
+  offerRideDescription: string;
+  offerRideCta: string;
+  findEventTitle: string;
+  findEventDescription: string;
+  findEventCta: string;
+};
+
 type Props = {
-  dict: Dict;
+  dict: ActionsDict;
+  verificationDict: VerificationDict;
   verificationStatus: string | null;
 };
 
 export default function DashboardActions({
   dict,
+  verificationDict,
   verificationStatus,
 }: Props) {
   return (
@@ -37,15 +51,15 @@ export default function DashboardActions({
         </div>
 
         <h2 className="mt-8 text-lg font-semibold text-foreground">
-          Il mio profilo
+          {dict.editProfileTitle}
         </h2>
 
         <p className="mt-3 max-w-sm text-muted-foreground">
-          Aggiorna i tuoi dati personali, la foto profilo e le informazioni del tuo account.
+          {dict.editProfileDescription}
         </p>
 
         <div className="mt-8 flex items-center gap-2 font-semibold text-primary">
-          Modifica profilo
+          {dict.editProfileCta}
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>
@@ -62,15 +76,15 @@ export default function DashboardActions({
         </div>
 
         <h2 className="mt-8 text-lg font-semibold">
-          Offri un passaggio
+          {dict.offerRideTitle}
         </h2>
 
         <p className="mt-3 max-w-sm text-primary-foreground/90">
-          Condividi il tuo viaggio con altri partecipanti e dividi le spese.
+          {dict.offerRideDescription}
         </p>
 
         <div className="mt-8 flex items-center gap-2 font-semibold">
-          Inizia ora
+          {dict.offerRideCta}
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>
@@ -87,15 +101,15 @@ export default function DashboardActions({
         </div>
 
         <h2 className="mt-8 text-lg font-semibold text-foreground">
-          Cerca un evento
+          {dict.findEventTitle}
         </h2>
 
         <p className="mt-3 max-w-sm text-muted-foreground">
-          Esplora concerti, festival, fiere ed eventi sportivi e trova il tuo prossimo viaggio.
+          {dict.findEventDescription}
         </p>
 
         <div className="mt-8 flex items-center gap-2 font-semibold text-primary">
-          Esplora eventi
+          {dict.findEventCta}
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>
@@ -112,19 +126,19 @@ export default function DashboardActions({
         </div>
 
         <h2 className="mt-8 text-lg font-semibold text-foreground">
-          {dict.title}
+          {verificationDict.title}
         </h2>
 
         <p className="mt-3 max-w-sm text-muted-foreground">
-          {dict.description}
+          {verificationDict.description}
         </p>
 
         <div className="mt-8 flex items-center gap-2 font-semibold text-primary">
           {verificationStatus === "approved"
-            ? dict.ctaVerified
+            ? verificationDict.ctaVerified
             : verificationStatus === "pending"
-              ? dict.ctaPending
-              : dict.cta}
+              ? verificationDict.ctaPending
+              : verificationDict.cta}
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>

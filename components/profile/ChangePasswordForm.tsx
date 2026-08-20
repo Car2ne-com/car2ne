@@ -10,7 +10,36 @@ import { Input } from "@/components/ui/input";
 import { Label, FieldError } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 
-export default function ChangePasswordForm() {
+type Dict = {
+  title: string;
+  description: string;
+  changeButton: string;
+  newPasswordLabel: string;
+  showPassword: string;
+  hidePassword: string;
+  passwordRequirementsTitle: string;
+  ruleMinLength: string;
+  ruleNumber: string;
+  ruleUppercase: string;
+  ruleLowercase: string;
+  ruleSpecial: string;
+  confirmNewPasswordLabel: string;
+  passwordsDontMatch: string;
+  updateButton: string;
+  updating: string;
+  cancelButton: string;
+  errors: {
+    weakPassword: string;
+    passwordMismatch: string;
+  };
+  success: string;
+};
+
+type Props = {
+  dict: Dict;
+};
+
+export default function ChangePasswordForm({ dict }: Props) {
   const supabase = useMemo(
     () => createClient(),
     []
@@ -58,14 +87,12 @@ export default function ChangePasswordForm() {
     e.preventDefault();
 
     if (!passwordIsValid) {
-      toast.error(
-        "La password non rispetta tutti i requisiti di sicurezza."
-      );
+      toast.error(dict.errors.weakPassword);
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Le password non coincidono.");
+      toast.error(dict.errors.passwordMismatch);
       return;
     }
 
@@ -88,9 +115,7 @@ export default function ChangePasswordForm() {
       return;
     }
 
-    toast.success(
-      "Password aggiornata con successo!"
-    );
+    toast.success(dict.success);
 
     resetForm();
   }
@@ -99,14 +124,11 @@ export default function ChangePasswordForm() {
     <Card className="p-8">
       <div>
         <h3 className="text-lg font-semibold text-foreground">
-          Password
+          {dict.title}
         </h3>
 
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Aggiorna la password del tuo account.
-          Se hai effettuato l&apos;accesso con
-          Google, questo ti permetterà di
-          impostarne una anche per l&apos;email.
+          {dict.description}
         </p>
       </div>
 
@@ -119,7 +141,7 @@ export default function ChangePasswordForm() {
             className="h-11 rounded-2xl px-6 font-semibold"
           >
             <KeyRound className="mr-2 h-4 w-4" />
-            Cambia password
+            {dict.changeButton}
           </Button>
         ) : (
           <form
@@ -127,7 +149,7 @@ export default function ChangePasswordForm() {
             className="space-y-6"
           >
             <div>
-              <Label>Nuova password</Label>
+              <Label>{dict.newPasswordLabel}</Label>
 
               <div className="relative">
                 <Input
@@ -160,8 +182,8 @@ export default function ChangePasswordForm() {
                   disabled={loading}
                   aria-label={
                     showPassword
-                      ? "Nascondi password"
-                      : "Mostra password"
+                      ? dict.hidePassword
+                      : dict.showPassword
                   }
                   className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-primary"
                 >
@@ -175,7 +197,7 @@ export default function ChangePasswordForm() {
 
               <div className="mt-4 rounded-2xl bg-muted p-4">
                 <p className="mb-3 text-xs font-semibold text-muted-foreground">
-                  La password deve contenere:
+                  {dict.passwordRequirementsTitle}
                 </p>
 
                 <div className="grid gap-2 sm:grid-cols-2">
@@ -183,42 +205,42 @@ export default function ChangePasswordForm() {
                     valid={
                       passwordRules.minLength
                     }
-                    text="Almeno 8 caratteri"
+                    text={dict.ruleMinLength}
                   />
 
                   <PasswordRule
                     valid={
                       passwordRules.number
                     }
-                    text="Almeno un numero"
+                    text={dict.ruleNumber}
                   />
 
                   <PasswordRule
                     valid={
                       passwordRules.uppercase
                     }
-                    text="Una lettera maiuscola"
+                    text={dict.ruleUppercase}
                   />
 
                   <PasswordRule
                     valid={
                       passwordRules.lowercase
                     }
-                    text="Una lettera minuscola"
+                    text={dict.ruleLowercase}
                   />
 
                   <PasswordRule
                     valid={
                       passwordRules.special
                     }
-                    text="Un carattere speciale"
+                    text={dict.ruleSpecial}
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <Label>Conferma nuova password</Label>
+              <Label>{dict.confirmNewPasswordLabel}</Label>
 
               <Input
                 type={
@@ -242,7 +264,7 @@ export default function ChangePasswordForm() {
                 password !==
                   confirmPassword && (
                   <FieldError>
-                    Le password non coincidono.
+                    {dict.passwordsDontMatch}
                   </FieldError>
                 )}
             </div>
@@ -258,8 +280,8 @@ export default function ChangePasswordForm() {
                 className="h-11 rounded-2xl bg-emerald-500 px-6 font-semibold hover:bg-emerald-600"
               >
                 {loading
-                  ? "Aggiornamento..."
-                  : "Aggiorna password"}
+                  ? dict.updating
+                  : dict.updateButton}
               </Button>
 
               <Button
@@ -269,7 +291,7 @@ export default function ChangePasswordForm() {
                 onClick={resetForm}
                 className="h-11 rounded-2xl px-6 font-semibold"
               >
-                Annulla
+                {dict.cancelButton}
               </Button>
             </div>
           </form>

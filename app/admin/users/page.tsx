@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import AdminUserTable from "@/components/admin/AdminUserTable";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function AdminUsersPage() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user: currentUser },
@@ -61,17 +63,19 @@ export default async function AdminUsersPage() {
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">
-          Gestione utenti
+          {dict.admin.usersPage.title}
         </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Assegna o rimuovi il ruolo admin.
+          {dict.admin.usersPage.subtitle}
         </p>
       </div>
 
       <AdminUserTable
         users={users}
         currentUserId={currentUser?.id ?? ""}
+        dict={dict.admin.userTable}
+        confirmDialogDict={dict.admin.confirmDialog}
       />
     </main>
   );

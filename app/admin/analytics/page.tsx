@@ -2,6 +2,7 @@ import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { romeDay } from "@/lib/utils/date";
 import AdminTrendChart from "@/components/admin/AdminTrendChart";
+import { getTranslations } from "@/lib/i18n";
 
 const DAYS = 30;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -43,6 +44,8 @@ function bucketByDay(
 export default async function AdminAnalyticsPage() {
   await requireAdmin();
   const adminClient = createAdminClient();
+  const { dict } = await getTranslations();
+  const t = dict.admin.analyticsPage;
 
   const now = new Date();
   const days = buildLastDays(now, DAYS);
@@ -77,35 +80,38 @@ export default async function AdminAnalyticsPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
 
         <p className="mt-2 text-muted-foreground">
-          Andamento degli ultimi 30 giorni.
+          {t.subtitle}
         </p>
       </div>
 
       {hasError ? (
         <div className="rounded-3xl border border-destructive/20 bg-destructive/10 p-6 text-sm text-destructive">
-          Dato non disponibile.
+          {t.dataUnavailable}
         </div>
       ) : (
         <div className="space-y-6">
           <AdminTrendChart
-            title="Nuovi utenti al giorno"
+            title={t.newUsersPerDay}
             data={usersSeries}
             color="#10b981"
+            last30DaysLabel={dict.admin.trendChart.last30Days}
           />
 
           <AdminTrendChart
-            title="Nuove ride pubblicate al giorno"
+            title={t.newRidesPerDay}
             data={ridesSeries}
             color="#0ea5e9"
+            last30DaysLabel={dict.admin.trendChart.last30Days}
           />
 
           <AdminTrendChart
-            title="Nuove prenotazioni al giorno"
+            title={t.newBookingsPerDay}
             data={bookingsSeries}
             color="#f59e0b"
+            last30DaysLabel={dict.admin.trendChart.last30Days}
           />
         </div>
       )}

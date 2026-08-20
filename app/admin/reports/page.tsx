@@ -3,9 +3,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminReportTable from "@/components/admin/AdminReportTable";
 import { toOne } from "@/lib/utils/relations";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function AdminReportsPage() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user },
@@ -82,14 +84,16 @@ export default async function AdminReportsPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Segnalazioni</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          {dict.admin.reportsPage.title}
+        </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Gestisci le segnalazioni inviate dagli utenti.
+          {dict.admin.reportsPage.subtitle}
         </p>
       </div>
 
-      <AdminReportTable reports={formatted} />
+      <AdminReportTable reports={formatted} dict={dict.admin.reportTable} />
     </main>
   );
 }

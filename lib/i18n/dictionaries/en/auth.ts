@@ -21,6 +21,25 @@ export const auth: (typeof it)["auth"] = {
     pageTitle: "Set a new password",
     pageSubtitle: "Choose a secure password for your account.",
   },
+  verifyAge: {
+    pageBadge: "🎂 Last step",
+    pageTitle: "Complete your registration",
+    pageSubtitle:
+      "Car2ne is reserved for people at least 18 years old: enter your date of birth to continue.",
+    emptyBirthDateError: "Enter your date of birth.",
+    notAdultFieldError:
+      "You don't appear to be an adult: your account can't be activated.",
+    notAdultToast:
+      "Car2ne is reserved for people at least 18 years old. Your account wasn't activated.",
+    verifying: "Verifying...",
+    continueButton: "Continue",
+  },
+  mfaChallenge: {
+    pageBadge: "🔒 Two-step verification",
+    pageTitle: "Confirm your identity",
+    pageSubtitle: "Your account has two-factor authentication enabled.",
+    signingOut: "Signing out...",
+  },
   common: {
     emailLabel: "Email",
     emailPlaceholder: "name@email.com",

@@ -187,6 +187,7 @@ export default async function ManageRidePage({
         <ManageRideForm
           dict={t}
           noShowDict={dict.reports.noShow}
+          ratingFormDict={dict.ratings.form}
           ride={{
             id: ride.id,
             origin_city_id: ride.origin_city_id,

@@ -7,7 +7,16 @@ import {
 
 import { Card } from "@/components/ui/card";
 
+type Dict = {
+  ridesPublished: string;
+  bookingsMade: string;
+  reviews: string;
+  reviewsWithCount: string;
+  seatsOffered: string;
+};
+
 type Props = {
+  dict: Dict;
   ridesCount: number;
   bookingsCount: number;
   seatsOffered: number;
@@ -16,6 +25,7 @@ type Props = {
 };
 
 export default function DashboardStats({
+  dict,
   ridesCount,
   bookingsCount,
   seatsOffered,
@@ -24,13 +34,13 @@ export default function DashboardStats({
 }: Props) {
   const stats = [
     {
-      title: "Passaggi pubblicati",
+      title: dict.ridesPublished,
       value: String(ridesCount),
       icon: CarFront,
       color: "bg-accent text-accent-foreground",
     },
     {
-      title: "Prenotazioni effettuate",
+      title: dict.bookingsMade,
       value: String(bookingsCount),
       icon: Ticket,
       color: "bg-blue-100 text-blue-600",
@@ -38,8 +48,8 @@ export default function DashboardStats({
     {
       title:
         ratingsCount > 0
-          ? `Recensioni (${ratingsCount})`
-          : "Recensioni",
+          ? dict.reviewsWithCount.replace("{count}", String(ratingsCount))
+          : dict.reviews,
       value:
         ratingAverage !== null
           ? ratingAverage.toFixed(1)
@@ -48,7 +58,7 @@ export default function DashboardStats({
       color: "bg-amber-100 text-amber-600",
     },
     {
-      title: "Posti offerti",
+      title: dict.seatsOffered,
       value: String(seatsOffered),
       icon: Armchair,
       color: "bg-violet-100 text-violet-600",

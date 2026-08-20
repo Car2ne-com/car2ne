@@ -1,6 +1,19 @@
 import type { it } from "../it";
 
 export const dashboardBookings: (typeof it)["dashboardBookings"] = {
+  widget: {
+    title: "My bookings",
+    subtitle: "The rides you've booked.",
+    viewAll: "See all →",
+    emptyTitle: "No bookings",
+    emptyDescription: "You haven't booked any rides yet.",
+    findEvent: "Find an event",
+    statusConfirmed: "Confirmed",
+    statusCancelled: "Cancelled",
+    eventFallback: "Event",
+    driverFallback: "Driver",
+    manageBooking: "Manage booking",
+  },
   page: {
     badge: "🎟️ My bookings",
     title: "My bookings",
@@ -13,6 +26,7 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     cta: "Search an event",
   },
   card: {
+    eventFallback: "Event",
     statusConfirmed: "Confirmed",
     statusCancelled: "Cancelled",
     eventLabel: "Event",
@@ -22,6 +36,8 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     viewEvent: "View event",
     openChat: "Open chat",
     cancelButton: "Cancel booking",
+    dialogCancelButton: "Cancel",
+    dialogPleaseWait: "Please wait…",
     cancelling: "Cancelling...",
     cancelConfirmMessage:
       "Are you sure you want to cancel this booking?\n\nThe seat will become available to other users again.",

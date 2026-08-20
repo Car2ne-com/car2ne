@@ -16,11 +16,40 @@ import { Label } from "@/components/ui/label";
 
 import type { Event, EventCategory } from "@/types/event";
 
-type Props = {
-  event?: Event;
+type Dict = {
+  newTitle: string;
+  editTitle: string;
+  newSubtitle: string;
+  editSubtitle: string;
+  fieldsRequired: string;
+  titleLabel: string;
+  artistLabel: string;
+  venueLabel: string;
+  cityLabel: string;
+  categoryLabel: string;
+  eventDateLabel: string;
+  imageLabel: string;
+  descriptionLabel: string;
+  saving: string;
+  saveChanges: string;
+  createEvent: string;
+  saveFailed: string;
+  eventUpdatedToast: string;
+  eventCreatedToast: string;
 };
 
-export default function AdminEventForm({ event }: Props) {
+type Props = {
+  event?: Event;
+  dict: Dict;
+  imageUploaderDict: {
+    previewAlt: string;
+    noImage: string;
+    uploading: string;
+    uploadImage: string;
+  };
+};
+
+export default function AdminEventForm({ event, dict, imageUploaderDict }: Props) {
   const router = useRouter();
 
   const [title, setTitle] = useState(event?.title ?? "");
@@ -49,7 +78,7 @@ export default function AdminEventForm({ event }: Props) {
 
   async function handleSubmit() {
     if (!title || !artist || !venue || !city || !eventDate) {
-      toast.error("Compila tutti i campi obbligatori.");
+      toast.error(dict.fieldsRequired);
       return;
     }
 
@@ -82,14 +111,14 @@ export default function AdminEventForm({ event }: Props) {
     setLoading(false);
 
     if (!response.ok) {
-      toast.error(data.error ?? "Salvataggio fallito.");
+      toast.error(data.error ?? dict.saveFailed);
       return;
     }
 
     toast.success(
       event
-        ? "Evento aggiornato!"
-        : "Evento creato!"
+        ? dict.eventUpdatedToast
+        : dict.eventCreatedToast
     );
 
     router.push("/admin/events");
@@ -98,18 +127,18 @@ export default function AdminEventForm({ event }: Props) {
     return (
     <Card className="p-10">
       <h1 className="text-2xl font-bold text-foreground">
-        {event ? "Modifica evento" : "Nuovo evento"}
+        {event ? dict.editTitle : dict.newTitle}
       </h1>
 
       <p className="mt-2 text-muted-foreground">
         {event
-          ? "Modifica i dati dell'evento."
-          : "Compila tutti i dati dell'evento."}
+          ? dict.editSubtitle
+          : dict.newSubtitle}
       </p>
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
-          <Label>Titolo *</Label>
+          <Label>{dict.titleLabel}</Label>
 
           <Input
             value={title}
@@ -119,7 +148,7 @@ export default function AdminEventForm({ event }: Props) {
         </div>
 
         <div>
-          <Label>Artista *</Label>
+          <Label>{dict.artistLabel}</Label>
 
           <Input
             value={artist}
@@ -129,7 +158,7 @@ export default function AdminEventForm({ event }: Props) {
         </div>
 
         <div>
-          <Label>Venue *</Label>
+          <Label>{dict.venueLabel}</Label>
 
           <Input
             value={venue}
@@ -139,7 +168,7 @@ export default function AdminEventForm({ event }: Props) {
         </div>
 
         <div>
-          <Label>Città *</Label>
+          <Label>{dict.cityLabel}</Label>
 
           <Input
             value={city}
@@ -149,7 +178,7 @@ export default function AdminEventForm({ event }: Props) {
         </div>
 
         <div>
-          <Label>Categoria</Label>
+          <Label>{dict.categoryLabel}</Label>
 
           <Select
             value={category}
@@ -169,7 +198,7 @@ export default function AdminEventForm({ event }: Props) {
         </div>
 
         <div>
-          <Label>Data evento *</Label>
+          <Label>{dict.eventDateLabel}</Label>
 
           <Input
             type="datetime-local"
@@ -181,16 +210,17 @@ export default function AdminEventForm({ event }: Props) {
       </div>
 
       <div className="mt-8">
-        <Label>Immagine evento</Label>
+        <Label>{dict.imageLabel}</Label>
 
         <ImageUploader
           value={imageUrl}
           onChange={setImageUrl}
+          dict={imageUploaderDict}
         />
       </div>
 
       <div className="mt-8">
-        <Label>Descrizione</Label>
+        <Label>{dict.descriptionLabel}</Label>
 
         <Textarea
           rows={6}
@@ -206,10 +236,10 @@ export default function AdminEventForm({ event }: Props) {
           className="h-12 rounded-xl px-8"
         >
           {loading
-            ? "Salvataggio..."
+            ? dict.saving
             : event
-              ? "Salva modifiche"
-              : "Crea evento"}
+              ? dict.saveChanges
+              : dict.createEvent}
         </Button>
       </div>
     </Card>

@@ -28,29 +28,69 @@ type Report = {
 
 type Filter = "all" | "open" | "reviewing" | "resolved" | "dismissed";
 
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: "all", label: "Tutte" },
-  { key: "open", label: "Aperte" },
-  { key: "reviewing", label: "In revisione" },
-  { key: "resolved", label: "Risolte" },
-  { key: "dismissed", label: "Archiviate" },
-];
-
-const CATEGORY_LABELS: Record<string, string> = {
-  user_behavior: "Comportamento utente",
-  inappropriate_content: "Contenuto inappropriato",
-  technical_issue: "Problema tecnico",
-  safety: "Sicurezza",
-  no_show: "Mancata presentazione",
-  other: "Altro",
+type Dict = {
+  emptyTitle: string;
+  emptyDescription: string;
+  filterAll: string;
+  filterOpen: string;
+  filterReviewing: string;
+  filterResolved: string;
+  filterDismissed: string;
+  noMatchTitle: string;
+  categoryUserBehavior: string;
+  categoryInappropriateContent: string;
+  categoryTechnicalIssue: string;
+  categorySafety: string;
+  categoryNoShow: string;
+  categoryOther: string;
+  fromPrefix: string;
+  regardingPrefix: string;
+  rideRefNote: string;
+  adminNoteLabel: string;
+  markReviewing: string;
+  resolve: string;
+  dismiss: string;
+  reportUpdatedToast: string;
+  operationFailed: string;
+  contactServerError: string;
+  statusResolved: string;
+  statusDismissed: string;
+  statusReviewing: string;
+  statusOpen: string;
+  resolveDialogTitle: string;
+  dismissDialogTitle: string;
+  noteDialogDescription: string;
+  noteForUserLabel: string;
+  resolveButton: string;
+  dismissButton: string;
+  cancelButton: string;
 };
 
 export default function AdminReportTable({
   reports,
+  dict,
 }: {
   reports: Report[];
+  dict: Dict;
 }) {
   const router = useRouter();
+
+  const FILTERS: { key: Filter; label: string }[] = [
+    { key: "all", label: dict.filterAll },
+    { key: "open", label: dict.filterOpen },
+    { key: "reviewing", label: dict.filterReviewing },
+    { key: "resolved", label: dict.filterResolved },
+    { key: "dismissed", label: dict.filterDismissed },
+  ];
+
+  const CATEGORY_LABELS: Record<string, string> = {
+    user_behavior: dict.categoryUserBehavior,
+    inappropriate_content: dict.categoryInappropriateContent,
+    technical_issue: dict.categoryTechnicalIssue,
+    safety: dict.categorySafety,
+    no_show: dict.categoryNoShow,
+    other: dict.categoryOther,
+  };
 
   const [filter, setFilter] = useState<Filter>("all");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -81,14 +121,14 @@ export default function AdminReportTable({
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error ?? "Operazione fallita.");
+        toast.error(data.error ?? dict.operationFailed);
         return;
       }
 
-      toast.success("Segnalazione aggiornata.");
+      toast.success(dict.reportUpdatedToast);
       router.refresh();
     } catch {
-      toast.error("Impossibile contattare il server.");
+      toast.error(dict.contactServerError);
     } finally {
       setBusyId(null);
       setNoteDialog(null);
@@ -98,8 +138,8 @@ export default function AdminReportTable({
   if (reports.length === 0) {
     return (
       <EmptyState
-        title="Nessuna segnalazione"
-        description="Le segnalazioni inviate dagli utenti appariranno qui."
+        title={dict.emptyTitle}
+        description={dict.emptyDescription}
       />
     );
   }
@@ -126,7 +166,7 @@ export default function AdminReportTable({
 
       {filtered.length === 0 ? (
         <EmptyState
-          title="Nessuna segnalazione corrisponde al filtro"
+          title={dict.noMatchTitle}
           description=""
         />
       ) : (
@@ -140,19 +180,19 @@ export default function AdminReportTable({
                       {CATEGORY_LABELS[r.category] ?? r.category}
                     </span>
 
-                    <StatusBadge status={r.status} />
+                    <StatusBadge status={r.status} dict={dict} />
                   </div>
 
                   <p className="mt-3 text-sm text-muted-foreground">
-                    Da <strong>{r.reporterName || "—"}</strong>
+                    {dict.fromPrefix} <strong>{r.reporterName || "—"}</strong>
                     {r.reportedName && (
                       <>
                         {" "}
-                        riguardo <strong>{r.reportedName}</strong>
+                        {dict.regardingPrefix} <strong>{r.reportedName}</strong>
                       </>
                     )}
                     {(r.hasRideRef || r.hasBookingRef) && (
-                      <> · con riferimento a un passaggio</>
+                      <> {dict.rideRefNote}</>
                     )}
                   </p>
 
@@ -162,7 +202,7 @@ export default function AdminReportTable({
 
                   {r.adminNote && (
                     <p className="mt-3 rounded-2xl bg-muted px-4 py-3 text-sm text-muted-foreground">
-                      <strong>Nota admin:</strong> {r.adminNote}
+                      <strong>{dict.adminNoteLabel}</strong> {r.adminNote}
                     </p>
                   )}
                 </div>
@@ -173,8 +213,8 @@ export default function AdminReportTable({
                       <Button
                         onClick={() => updateStatus(r.id, "reviewing")}
                         disabled={busyId === r.id}
-                        title="Segna in revisione"
-                        aria-label="Segna in revisione"
+                        title={dict.markReviewing}
+                        aria-label={dict.markReviewing}
                         size="icon-lg"
                         className="rounded-xl bg-blue-500 text-white hover:bg-blue-600"
                       >
@@ -187,8 +227,8 @@ export default function AdminReportTable({
                         setNoteDialog({ id: r.id, status: "resolved" })
                       }
                       disabled={busyId === r.id}
-                      title="Risolvi"
-                      aria-label="Risolvi"
+                      title={dict.resolve}
+                      aria-label={dict.resolve}
                       size="icon-lg"
                       className="rounded-xl"
                     >
@@ -200,8 +240,8 @@ export default function AdminReportTable({
                         setNoteDialog({ id: r.id, status: "dismissed" })
                       }
                       disabled={busyId === r.id}
-                      title="Archivia"
-                      aria-label="Archivia"
+                      title={dict.dismiss}
+                      aria-label={dict.dismiss}
                       size="icon-lg"
                       className="rounded-xl bg-slate-400 text-white hover:bg-slate-500"
                     >
@@ -222,15 +262,15 @@ export default function AdminReportTable({
         }}
         title={
           noteDialog?.status === "resolved"
-            ? "Risolvi segnalazione"
-            : "Archivia segnalazione"
+            ? dict.resolveDialogTitle
+            : dict.dismissDialogTitle
         }
-        description="La nota (opzionale) verrà inviata come notifica a chi ha segnalato."
-        noteLabel="Nota per l'utente"
+        description={dict.noteDialogDescription}
+        noteLabel={dict.noteForUserLabel}
         confirmLabel={
-          noteDialog?.status === "resolved" ? "Risolvi" : "Archivia"
+          noteDialog?.status === "resolved" ? dict.resolveButton : dict.dismissButton
         }
-        cancelLabel="Annulla"
+        cancelLabel={dict.cancelButton}
         confirmTone={
           noteDialog?.status === "resolved" ? "default" : "warning"
         }
@@ -245,11 +285,22 @@ export default function AdminReportTable({
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({
+  status,
+  dict,
+}: {
+  status: string;
+  dict: {
+    statusResolved: string;
+    statusDismissed: string;
+    statusReviewing: string;
+    statusOpen: string;
+  };
+}) {
   if (status === "resolved") {
     return (
       <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        Risolta
+        {dict.statusResolved}
       </span>
     );
   }
@@ -257,7 +308,7 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "dismissed") {
     return (
       <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-        Archiviata
+        {dict.statusDismissed}
       </span>
     );
   }
@@ -265,14 +316,14 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "reviewing") {
     return (
       <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-        In revisione
+        {dict.statusReviewing}
       </span>
     );
   }
 
   return (
     <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-      Aperta
+      {dict.statusOpen}
     </span>
   );
 }

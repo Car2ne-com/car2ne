@@ -18,8 +18,21 @@ type ImportResult = {
   errorMessage: string | null;
 };
 
+type Dict = {
+  importFailed: string;
+  importCompletedToast: string;
+  contactServerError: string;
+  availableIn: string;
+  availableInHint: string;
+  onCooldownHint: string;
+  importing: string;
+  importButton: string;
+  reviewPending: string;
+};
+
 type Props = {
   initialCooldownRemainingMs: number;
+  dict: Dict;
 };
 
 function formatRemaining(ms: number): string {
@@ -32,6 +45,7 @@ function formatRemaining(ms: number): string {
 
 export default function ImportTicketmasterButton({
   initialCooldownRemainingMs,
+  dict,
 }: Props) {
   const router = useRouter();
 
@@ -71,7 +85,7 @@ export default function ImportTicketmasterButton({
 
       if (!response.ok) {
         toast.error(
-          data.error ?? "Importazione fallita."
+          data.error ?? dict.importFailed
         );
 
         return;
@@ -83,9 +97,10 @@ export default function ImportTicketmasterButton({
         toast.error(result.errorMessage);
       } else {
         toast.success(
-          `Importazione completata: ${result.eventsCreated} creati, ` +
-            `${result.eventsUpdated} aggiornati, ` +
-            `${result.eventsSkipped} invariati.`
+          dict.importCompletedToast
+            .replace("{created}", String(result.eventsCreated))
+            .replace("{updated}", String(result.eventsUpdated))
+            .replace("{skipped}", String(result.eventsSkipped))
         );
       }
 
@@ -100,9 +115,7 @@ export default function ImportTicketmasterButton({
         error
       );
 
-      toast.error(
-        "Impossibile contattare il server."
-      );
+      toast.error(dict.contactServerError);
     } finally {
       setLoading(false);
     }
@@ -119,7 +132,10 @@ export default function ImportTicketmasterButton({
         disabled={loading || onCooldown}
         title={
           onCooldown
-            ? `Disponibile tra ${formatRemaining(cooldownRemainingMs)}: evita importazioni ravvicinate inutili.`
+            ? dict.availableInHint.replace(
+                "{time}",
+                formatRemaining(cooldownRemainingMs)
+              )
             : undefined
         }
         className="h-auto gap-2 rounded-2xl px-6 py-3"
@@ -128,15 +144,18 @@ export default function ImportTicketmasterButton({
           className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
         />
         {loading
-          ? "Import in corso..."
+          ? dict.importing
           : onCooldown
-            ? `Disponibile tra ${formatRemaining(cooldownRemainingMs)}`
-            : "Importa da Ticketmaster"}
+            ? dict.availableIn.replace(
+                "{time}",
+                formatRemaining(cooldownRemainingMs)
+              )
+            : dict.importButton}
       </Button>
 
       {onCooldown && !loading && (
         <p className="text-sm text-muted-foreground">
-          In cooldown: evita importazioni ravvicinate inutili.
+          {dict.onCooldownHint}
         </p>
       )}
 
@@ -144,7 +163,7 @@ export default function ImportTicketmasterButton({
         href="/admin/events?filter=pending"
         className="text-sm font-semibold text-primary hover:underline"
       >
-        Rivedi eventi in attesa →
+        {dict.reviewPending}
       </Link>
     </div>
   );

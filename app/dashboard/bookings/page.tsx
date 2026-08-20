@@ -121,6 +121,7 @@ export default async function MyBookingsPage() {
                   key={booking.id}
                   dict={dict.dashboardBookings.card}
                   noShowDict={dict.reports.noShow}
+                  ratingFormDict={dict.ratings.form}
                   locale={locale}
                   booking={{
                     id: booking.id,
@@ -130,7 +131,7 @@ export default async function MyBookingsPage() {
                     rideId: booking.ride_id,
 
                     eventTitle:
-                      event?.title ?? "Evento",
+                      event?.title ?? dict.dashboardBookings.card.eventFallback,
 
                     eventSlug:
                       event?.slug ?? null,

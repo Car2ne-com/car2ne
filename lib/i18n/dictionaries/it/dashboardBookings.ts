@@ -1,4 +1,17 @@
 export const dashboardBookings = {
+  widget: {
+    title: "Le mie prenotazioni",
+    subtitle: "I passaggi che hai prenotato.",
+    viewAll: "Vedi tutte →",
+    emptyTitle: "Nessuna prenotazione",
+    emptyDescription: "Non hai ancora prenotato nessun passaggio.",
+    findEvent: "Trova un evento",
+    statusConfirmed: "Confermato",
+    statusCancelled: "Annullato",
+    eventFallback: "Evento",
+    driverFallback: "Conducente",
+    manageBooking: "Gestisci prenotazione",
+  },
   page: {
     badge: "🎟️ Le mie prenotazioni",
     title: "Le mie prenotazioni",
@@ -11,6 +24,7 @@ export const dashboardBookings = {
     cta: "Cerca un evento",
   },
   card: {
+    eventFallback: "Evento",
     statusConfirmed: "Confermata",
     statusCancelled: "Annullata",
     eventLabel: "Evento",
@@ -20,6 +34,8 @@ export const dashboardBookings = {
     viewEvent: "Vedi evento",
     openChat: "Apri chat",
     cancelButton: "Annulla prenotazione",
+    dialogCancelButton: "Annulla",
+    dialogPleaseWait: "Attendere…",
     cancelling: "Annullamento...",
     cancelConfirmMessage:
       "Sei sicuro di voler annullare questa prenotazione?\n\nIl posto tornerà disponibile per gli altri utenti.",

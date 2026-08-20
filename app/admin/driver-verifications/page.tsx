@@ -3,9 +3,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminVerificationTable from "@/components/admin/AdminVerificationTable";
 import { toOne } from "@/lib/utils/relations";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function AdminDriverVerificationsPage() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
 
   const {
     data: { user },
@@ -78,15 +80,18 @@ export default async function AdminDriverVerificationsPage() {
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">
-          Verifiche conducenti
+          {dict.admin.verificationsPage.title}
         </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Rivedi le richieste di verifica identità e veicolo.
+          {dict.admin.verificationsPage.subtitle}
         </p>
       </div>
 
-      <AdminVerificationTable verifications={formatted} />
+      <AdminVerificationTable
+        verifications={formatted}
+        dict={dict.admin.verificationTable}
+      />
     </main>
   );
 }

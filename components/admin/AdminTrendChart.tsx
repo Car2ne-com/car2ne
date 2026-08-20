@@ -9,6 +9,7 @@ type Props = {
   title: string;
   data: Point[];
   color?: string;
+  last30DaysLabel: string;
 };
 
 /*
@@ -20,6 +21,7 @@ export default function AdminTrendChart({
   title,
   data,
   color = "#10b981",
+  last30DaysLabel,
 }: Props) {
   const width = 640;
   const height = 160;
@@ -37,7 +39,7 @@ export default function AdminTrendChart({
         <h3 className="text-lg font-semibold text-foreground">{title}</h3>
 
         <p className="text-sm text-muted-foreground">
-          {total} <span className="text-muted-foreground/70">ultimi 30gg</span>
+          {total} <span className="text-muted-foreground/70">{last30DaysLabel}</span>
         </p>
       </div>
 

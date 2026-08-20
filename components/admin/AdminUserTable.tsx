@@ -21,9 +21,38 @@ type User = {
   createdAt: string;
 };
 
+type Dict = {
+  searchPlaceholder: string;
+  emptyTitle: string;
+  colName: string;
+  colEmail: string;
+  colRole: string;
+  colRegistered: string;
+  colActions: string;
+  youSuffix: string;
+  adminBadge: string;
+  userBadge: string;
+  removeAdminSelfTitle: string;
+  removeAdminTitle: string;
+  removeAdminButton: string;
+  makeAdminTitle: string;
+  makeAdminButton: string;
+  loadMore: string;
+  confirmMakeAdminTitle: string;
+  confirmRemoveAdminTitle: string;
+  confirmMakeAdminDescription: string;
+  confirmRemoveAdminDescription: string;
+  operationFailed: string;
+  contactServerError: string;
+  roleGrantedToast: string;
+  roleRevokedToast: string;
+};
+
 type Props = {
   users: User[];
   currentUserId: string;
+  dict: Dict;
+  confirmDialogDict: { cancel: string; pleaseWait: string };
 };
 
 const PAGE_SIZE = 50;
@@ -37,6 +66,8 @@ type PendingRoleChange = {
 export default function AdminUserTable({
   users,
   currentUserId,
+  dict,
+  confirmDialogDict,
 }: Props) {
   const router = useRouter();
 
@@ -90,15 +121,15 @@ export default function AdminUserTable({
 
       if (!response.ok) {
         toast.error(
-          data.error ?? "Operazione fallita."
+          data.error ?? dict.operationFailed
         );
         return;
       }
 
       toast.success(
         role === "admin"
-          ? `"${label}" è ora admin.`
-          : `Ruolo admin rimosso a "${label}".`
+          ? dict.roleGrantedToast.replace("{label}", label)
+          : dict.roleRevokedToast.replace("{label}", label)
       );
 
       router.refresh();
@@ -108,9 +139,7 @@ export default function AdminUserTable({
         error
       );
 
-      toast.error(
-        "Impossibile contattare il server."
-      );
+      toast.error(dict.contactServerError);
     } finally {
       setBusyId(null);
       setPendingRoleChange(null);
@@ -118,7 +147,7 @@ export default function AdminUserTable({
   }
 
   if (users.length === 0) {
-    return <EmptyState title="Nessun utente" description="" />;
+    return <EmptyState title={dict.emptyTitle} description="" />;
   }
 
   return (
@@ -130,7 +159,7 @@ export default function AdminUserTable({
           onChange={(e) =>
             setSearch(e.target.value)
           }
-          placeholder="Cerca per nome o email..."
+          placeholder={dict.searchPlaceholder}
           className="h-12 max-w-md"
         />
       </div>
@@ -140,23 +169,23 @@ export default function AdminUserTable({
           <thead className="bg-muted">
             <tr>
               <th className="px-6 py-4 text-left">
-                Nome
+                {dict.colName}
               </th>
 
               <th className="px-6 py-4 text-left">
-                Email
+                {dict.colEmail}
               </th>
 
               <th className="px-6 py-4 text-left">
-                Ruolo
+                {dict.colRole}
               </th>
 
               <th className="px-6 py-4 text-left">
-                Registrato il
+                {dict.colRegistered}
               </th>
 
               <th className="px-6 py-4 text-center">
-                Azioni
+                {dict.colActions}
               </th>
             </tr>
           </thead>
@@ -182,7 +211,7 @@ export default function AdminUserTable({
                     {label}
                     {isSelf && (
                       <span className="ml-2 text-xs font-normal text-muted-foreground">
-                        (tu)
+                        {dict.youSuffix}
                       </span>
                     )}
                   </td>
@@ -194,11 +223,11 @@ export default function AdminUserTable({
                   <td className="px-6 py-5">
                     {isAdmin ? (
                       <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-                        Admin
+                        {dict.adminBadge}
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                        Utente
+                        {dict.userBadge}
                       </span>
                     )}
                   </td>
@@ -226,13 +255,13 @@ export default function AdminUserTable({
                           }
                           title={
                             isSelf
-                              ? "Non puoi rimuovere il tuo stesso ruolo admin"
-                              : "Rimuovi ruolo admin"
+                              ? dict.removeAdminSelfTitle
+                              : dict.removeAdminTitle
                           }
                           className="h-auto gap-2 rounded-xl bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
                         >
                           <ShieldOff className="h-4 w-4" />
-                          Rimuovi admin
+                          {dict.removeAdminButton}
                         </Button>
                       ) : (
                         <Button
@@ -246,11 +275,11 @@ export default function AdminUserTable({
                           disabled={
                             busyId === user.id
                           }
-                          title="Rendi admin"
+                          title={dict.makeAdminTitle}
                           className="h-auto gap-2 rounded-xl px-4 py-2"
                         >
                           <ShieldCheck className="h-4 w-4" />
-                          Rendi admin
+                          {dict.makeAdminButton}
                         </Button>
                       )}
                     </div>
@@ -274,9 +303,10 @@ export default function AdminUserTable({
             }
             className="h-auto rounded-2xl px-8 py-3"
           >
-            Carica altri (
-            {filteredUsers.length - visibleCount}{" "}
-            rimanenti)
+            {dict.loadMore.replace(
+              "{count}",
+              String(filteredUsers.length - visibleCount)
+            )}
           </Button>
         </div>
       )}
@@ -288,19 +318,27 @@ export default function AdminUserTable({
         }}
         title={
           pendingRoleChange?.role === "admin"
-            ? "Rendi admin"
-            : "Rimuovi ruolo admin"
+            ? dict.confirmMakeAdminTitle
+            : dict.confirmRemoveAdminTitle
         }
         description={
           pendingRoleChange?.role === "admin"
-            ? `Rendere "${pendingRoleChange?.label}" admin? Avrà accesso completo al pannello di gestione.`
-            : `Rimuovere il ruolo admin a "${pendingRoleChange?.label}"?`
+            ? dict.confirmMakeAdminDescription.replace(
+                "{label}",
+                pendingRoleChange?.label ?? ""
+              )
+            : dict.confirmRemoveAdminDescription.replace(
+                "{label}",
+                pendingRoleChange?.label ?? ""
+              )
         }
         confirmLabel={
           pendingRoleChange?.role === "admin"
-            ? "Rendi admin"
-            : "Rimuovi admin"
+            ? dict.makeAdminButton
+            : dict.removeAdminButton
         }
+        cancelLabel={confirmDialogDict.cancel}
+        pleaseWaitLabel={confirmDialogDict.pleaseWait}
         confirmTone={
           pendingRoleChange?.role === "admin" ? "default" : "warning"
         }

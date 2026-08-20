@@ -16,6 +16,8 @@ type Props = {
   title: string;
   description: string;
   confirmLabel: string;
+  cancelLabel?: string;
+  pleaseWaitLabel?: string;
   confirmTone?: "danger" | "warning" | "default";
   busy?: boolean;
   onConfirm: () => void;
@@ -39,6 +41,8 @@ export default function ConfirmDialog({
   title,
   description,
   confirmLabel,
+  cancelLabel = "Annulla",
+  pleaseWaitLabel = "Attendere…",
   confirmTone = "default",
   busy = false,
   onConfirm,
@@ -50,7 +54,7 @@ export default function ConfirmDialog({
         <AlertDialogDescription>{description}</AlertDialogDescription>
 
         <AlertDialogFooter>
-          <AlertDialogClose disabled={busy}>Annulla</AlertDialogClose>
+          <AlertDialogClose disabled={busy}>{cancelLabel}</AlertDialogClose>
 
           <Button
             type="button"
@@ -58,7 +62,7 @@ export default function ConfirmDialog({
             disabled={busy}
             className={TONE_CLASSES[confirmTone]}
           >
-            {busy ? "Attendere…" : confirmLabel}
+            {busy ? pleaseWaitLabel : confirmLabel}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

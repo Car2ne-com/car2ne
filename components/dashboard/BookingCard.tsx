@@ -46,11 +46,26 @@ type Dict = {
   cancelConfirmMessage: string;
   cancelSuccess: string;
   cancelError: string;
+  dialogCancelButton: string;
+  dialogPleaseWait: string;
+};
+
+type RatingFormDict = {
+  selectStar: string;
+  submitted: string;
+  yourReview: string;
+  leaveReviewButton: string;
+  reviewPrompt: string;
+  commentPlaceholder: string;
+  sending: string;
+  sendButton: string;
+  cancelButton: string;
 };
 
 type Props = {
   dict: Dict;
   noShowDict: NoShowDict;
+  ratingFormDict: RatingFormDict;
   locale: "it" | "en";
   booking: {
     id: string;
@@ -80,6 +95,7 @@ type Props = {
 export default function BookingCard({
   dict,
   noShowDict,
+  ratingFormDict,
   locale,
   booking,
 }: Props) {
@@ -354,6 +370,7 @@ export default function BookingCard({
       {isConfirmed && rideHasPassed && (
         <>
           <RatingForm
+            dict={ratingFormDict}
             bookingId={booking.id}
             rideId={booking.rideId}
             rateeId={booking.driverId}
@@ -374,6 +391,8 @@ export default function BookingCard({
         title={dict.cancelButton}
         description={dict.cancelConfirmMessage}
         confirmLabel={dict.cancelButton}
+        cancelLabel={dict.dialogCancelButton}
+        pleaseWaitLabel={dict.dialogPleaseWait}
         confirmTone="danger"
         busy={cancelling}
         onConfirm={handleCancelConfirm}

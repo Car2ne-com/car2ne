@@ -41,21 +41,87 @@ type Filter =
   | "published"
   | "rejected";
 
+type Dict = {
+  emptyTitle: string;
+  emptyDescription: string;
+  searchPlaceholder: string;
+  filterCityAria: string;
+  filterVenueAria: string;
+  filterArtistAria: string;
+  filterSourceAria: string;
+  filterAllCities: string;
+  filterAllVenues: string;
+  filterAllArtists: string;
+  filterAllSources: string;
+  sourceTicketmaster: string;
+  sourceManual: string;
+  dateFromLabel: string;
+  dateToLabel: string;
+  dateFromAria: string;
+  dateToAria: string;
+  clearFilters: string;
+  filterAll: string;
+  filterImported: string;
+  filterPending: string;
+  filterPublished: string;
+  filterRejected: string;
+  selectedCount: string;
+  approveSelected: string;
+  rejectSelected: string;
+  deselectAll: string;
+  noMatchTitle: string;
+  noMatchDescription: string;
+  selectAllAria: string;
+  selectRowAria: string;
+  colEvent: string;
+  colArtist: string;
+  colDate: string;
+  colCity: string;
+  colVenue: string;
+  colSource: string;
+  colStatus: string;
+  colActions: string;
+  idLabel: string;
+  approveAndPublish: string;
+  reject: string;
+  edit: string;
+  deleteAction: string;
+  loadMore: string;
+  statusPublished: string;
+  statusCancelled: string;
+  statusRejected: string;
+  statusPending: string;
+  confirmDeleteTitle: string;
+  confirmDeleteDescription: string;
+  confirmBulkPublishTitle: string;
+  confirmBulkPublishDescription: string;
+  confirmBulkRejectTitle: string;
+  confirmBulkRejectDescription: string;
+  confirmDeleteButton: string;
+  confirmPublishButton: string;
+  confirmRejectButton: string;
+  operationFailed: string;
+  deleteFailed: string;
+  contactServerError: string;
+  eventsPublishedToast: string;
+  eventsRejectedToast: string;
+  skippedConcludedNote: string;
+  eventDeletedToast: string;
+  eventPublishedToast: string;
+  eventRejectedToast: string;
+};
+
 type Props = {
   events: Event[];
   initialFilter?: string;
+  dict: Dict;
+  confirmDialogDict: { cancel: string; pleaseWait: string };
 };
 
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: "all", label: "Tutti" },
-  { key: "imported", label: "Importati" },
-  { key: "pending", label: "In attesa" },
-  { key: "published", label: "Pubblicati" },
-  { key: "rejected", label: "Rifiutati" },
-];
-
 function isFilter(value: string | undefined): value is Filter {
-  return FILTERS.some((item) => item.key === value);
+  return ["all", "imported", "pending", "published", "rejected"].includes(
+    value ?? ""
+  );
 }
 
 const PAGE_SIZE = 50;
@@ -74,8 +140,18 @@ function uniqueSorted(values: (string | null)[]): string[] {
 export default function AdminEventTable({
   events,
   initialFilter,
+  dict,
+  confirmDialogDict,
 }: Props) {
   const router = useRouter();
+
+  const FILTERS: { key: Filter; label: string }[] = [
+    { key: "all", label: dict.filterAll },
+    { key: "imported", label: dict.filterImported },
+    { key: "pending", label: dict.filterPending },
+    { key: "published", label: dict.filterPublished },
+    { key: "rejected", label: dict.filterRejected },
+  ];
 
   const [filter, setFilter] = useState<Filter>(
     isFilter(initialFilter) ? initialFilter : "all"
@@ -297,25 +373,34 @@ export default function AdminEventTable({
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error ?? "Operazione fallita.");
+        toast.error(data.error ?? dict.operationFailed);
         return;
       }
 
       const skippedNote =
         data.skippedConcluded > 0
-          ? ` (${data.skippedConcluded} esclusi perché nel frattempo conclusi)`
+          ? dict.skippedConcludedNote.replace(
+              "{count}",
+              String(data.skippedConcluded)
+            )
           : "";
 
       toast.success(
         (status === "published"
-          ? `${data.updated} eventi pubblicati!`
-          : `${data.updated} eventi rifiutati.`) + skippedNote
+          ? dict.eventsPublishedToast.replace(
+              "{count}",
+              String(data.updated)
+            )
+          : dict.eventsRejectedToast.replace(
+              "{count}",
+              String(data.updated)
+            )) + skippedNote
       );
 
       setSelectedIds(new Set());
       router.refresh();
     } catch {
-      toast.error("Impossibile contattare il server.");
+      toast.error(dict.contactServerError);
     } finally {
       setBulkBusy(false);
       setPendingConfirm(null);
@@ -333,14 +418,14 @@ export default function AdminEventTable({
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error ?? "Eliminazione fallita.");
+        toast.error(data.error ?? dict.deleteFailed);
         return;
       }
 
-      toast.success("Evento eliminato!");
+      toast.success(dict.eventDeletedToast);
       router.refresh();
     } catch {
-      toast.error("Impossibile contattare il server.");
+      toast.error(dict.contactServerError);
     } finally {
       setBusyId(null);
       setPendingConfirm(null);
@@ -367,19 +452,19 @@ export default function AdminEventTable({
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error ?? "Operazione fallita.");
+        toast.error(data.error ?? dict.operationFailed);
         return;
       }
 
       toast.success(
         status === "published"
-          ? `"${title}" pubblicato!`
-          : `"${title}" rifiutato.`
+          ? dict.eventPublishedToast.replace("{title}", title)
+          : dict.eventRejectedToast.replace("{title}", title)
       );
 
       router.refresh();
     } catch {
-      toast.error("Impossibile contattare il server.");
+      toast.error(dict.contactServerError);
     } finally {
       setBusyId(null);
     }
@@ -388,8 +473,8 @@ export default function AdminEventTable({
   if (events.length === 0) {
     return (
       <EmptyState
-        title="Nessun evento"
-        description="Crea il primo evento dal pulsante in alto."
+        title={dict.emptyTitle}
+        description={dict.emptyDescription}
       />
     );
   }
@@ -405,7 +490,7 @@ export default function AdminEventTable({
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cerca per titolo, artista, venue o città..."
+          placeholder={dict.searchPlaceholder}
           className="h-12 pl-11"
         />
       </div>
@@ -416,10 +501,10 @@ export default function AdminEventTable({
         <Select
           value={cityFilter}
           onChange={(e) => setCityFilter(e.target.value)}
-          aria-label="Filtra per città"
+          aria-label={dict.filterCityAria}
           containerClassName="w-auto"
         >
-          <option value="">Tutte le città</option>
+          <option value="">{dict.filterAllCities}</option>
           {cityOptions.map((city) => (
             <option key={city} value={city}>
               {city}
@@ -430,10 +515,10 @@ export default function AdminEventTable({
         <Select
           value={venueFilter}
           onChange={(e) => setVenueFilter(e.target.value)}
-          aria-label="Filtra per venue"
+          aria-label={dict.filterVenueAria}
           containerClassName="w-auto"
         >
-          <option value="">Tutti i venue</option>
+          <option value="">{dict.filterAllVenues}</option>
           {venueOptions.map((venue) => (
             <option key={venue} value={venue}>
               {venue}
@@ -444,10 +529,10 @@ export default function AdminEventTable({
         <Select
           value={artistFilter}
           onChange={(e) => setArtistFilter(e.target.value)}
-          aria-label="Filtra per artista"
+          aria-label={dict.filterArtistAria}
           containerClassName="w-auto"
         >
-          <option value="">Tutti gli artisti</option>
+          <option value="">{dict.filterAllArtists}</option>
           {artistOptions.map((artist) => (
             <option key={artist} value={artist}>
               {artist}
@@ -462,32 +547,32 @@ export default function AdminEventTable({
               e.target.value as "all" | "ticketmaster" | "manual"
             )
           }
-          aria-label="Filtra per fonte"
+          aria-label={dict.filterSourceAria}
           containerClassName="w-auto"
         >
-          <option value="all">Tutte le fonti</option>
-          <option value="ticketmaster">Ticketmaster</option>
-          <option value="manual">Manuale</option>
+          <option value="all">{dict.filterAllSources}</option>
+          <option value="ticketmaster">{dict.sourceTicketmaster}</option>
+          <option value="manual">{dict.sourceManual}</option>
         </Select>
 
         <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          Da
+          {dict.dateFromLabel}
           <Input
             type="date"
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
-            aria-label="Data evento da"
+            aria-label={dict.dateFromAria}
             className="w-auto px-2"
           />
         </label>
 
         <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          A
+          {dict.dateToLabel}
           <Input
             type="date"
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
-            aria-label="Data evento a"
+            aria-label={dict.dateToAria}
             className="w-auto px-2"
           />
         </label>
@@ -499,7 +584,7 @@ export default function AdminEventTable({
             onClick={resetFilters}
             className="text-muted-foreground hover:text-foreground"
           >
-            Cancella filtri
+            {dict.clearFilters}
           </Button>
         )}
       </div>
@@ -527,7 +612,7 @@ export default function AdminEventTable({
       {selectedIds.size > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-accent bg-accent px-5 py-3">
           <span className="text-sm font-semibold text-accent-foreground">
-            {selectedIds.size} selezionati
+            {dict.selectedCount.replace("{count}", String(selectedIds.size))}
           </span>
 
           <Button
@@ -538,7 +623,7 @@ export default function AdminEventTable({
             disabled={bulkBusy}
             className="h-auto rounded-xl px-4 py-2"
           >
-            Approva selezionati
+            {dict.approveSelected}
           </Button>
 
           <Button
@@ -549,7 +634,7 @@ export default function AdminEventTable({
             disabled={bulkBusy}
             className="h-auto rounded-xl bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
           >
-            Rifiuta selezionati
+            {dict.rejectSelected}
           </Button>
 
           <Button
@@ -559,15 +644,15 @@ export default function AdminEventTable({
             disabled={bulkBusy}
             className="h-auto rounded-xl px-4 py-2 text-accent-foreground hover:bg-accent-foreground/10"
           >
-            Deseleziona tutto
+            {dict.deselectAll}
           </Button>
         </div>
       )}
 
       {filteredEvents.length === 0 ? (
         <EmptyState
-          title="Nessun evento corrisponde ai filtri"
-          description="Prova a modificare ricerca o filtri."
+          title={dict.noMatchTitle}
+          description={dict.noMatchDescription}
         />
       ) : (
         <Card className="overflow-x-auto p-0">
@@ -580,20 +665,20 @@ export default function AdminEventTable({
                     checked={allFilteredSelected}
                     onChange={toggleSelectAll}
                     className="h-4 w-4 rounded border-border"
-                    aria-label="Seleziona tutti gli eventi filtrati"
+                    aria-label={dict.selectAllAria}
                   />
                 </th>
 
-                <th className="px-6 py-4 text-left">Evento</th>
-                <th className="px-6 py-4 text-left">Artista</th>
-                <th className="px-6 py-4 text-left">Data</th>
-                <th className="px-6 py-4 text-left">Città</th>
-                <th className="px-6 py-4 text-left">Venue</th>
-                <th className="px-6 py-4 text-left">Fonte</th>
-                <th className="px-6 py-4 text-left">Stato</th>
+                <th className="px-6 py-4 text-left">{dict.colEvent}</th>
+                <th className="px-6 py-4 text-left">{dict.colArtist}</th>
+                <th className="px-6 py-4 text-left">{dict.colDate}</th>
+                <th className="px-6 py-4 text-left">{dict.colCity}</th>
+                <th className="px-6 py-4 text-left">{dict.colVenue}</th>
+                <th className="px-6 py-4 text-left">{dict.colSource}</th>
+                <th className="px-6 py-4 text-left">{dict.colStatus}</th>
 
                 <th className="sticky right-0 z-10 bg-muted px-6 py-4 text-center shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
-                  Azioni
+                  {dict.colActions}
                 </th>
               </tr>
             </thead>
@@ -610,7 +695,10 @@ export default function AdminEventTable({
                       checked={selectedIds.has(event.id)}
                       onChange={() => toggleSelect(event.id)}
                       className="h-4 w-4 rounded border-border"
-                      aria-label={`Seleziona ${event.title}`}
+                      aria-label={dict.selectRowAria.replace(
+                        "{title}",
+                        event.title
+                      )}
                     />
                   </td>
 
@@ -634,24 +722,24 @@ export default function AdminEventTable({
                     {event.source ? (
                       <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
                         {event.source === "ticketmaster"
-                          ? "Ticketmaster"
+                          ? dict.sourceTicketmaster
                           : event.source}
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-                        Manuale
+                        {dict.sourceManual}
                       </span>
                     )}
 
                     {event.external_id && (
                       <p className="mt-1 text-[11px] text-muted-foreground">
-                        ID: {event.external_id}
+                        {dict.idLabel.replace("{id}", event.external_id)}
                       </p>
                     )}
                   </td>
 
                   <td className="px-6 py-5">
-                    <StatusBadge status={event.status} />
+                    <StatusBadge status={event.status} dict={dict} />
                   </td>
 
                   <td className="sticky right-0 z-10 bg-card px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
@@ -666,8 +754,8 @@ export default function AdminEventTable({
                             )
                           }
                           disabled={busyId === event.id}
-                          title="Approva e pubblica"
-                          aria-label={`Approva e pubblica ${event.title}`}
+                          title={dict.approveAndPublish}
+                          aria-label={`${dict.approveAndPublish} ${event.title}`}
                           size="icon-lg"
                           className="rounded-xl"
                         >
@@ -686,8 +774,8 @@ export default function AdminEventTable({
                               )
                             }
                             disabled={busyId === event.id}
-                            title="Rifiuta"
-                            aria-label={`Rifiuta ${event.title}`}
+                            title={dict.reject}
+                            aria-label={`${dict.reject} ${event.title}`}
                             size="icon-lg"
                             className="rounded-xl bg-amber-500 text-white hover:bg-amber-600"
                           >
@@ -697,8 +785,8 @@ export default function AdminEventTable({
 
                       <Link
                         href={`/admin/events/${event.id}`}
-                        title="Modifica"
-                        aria-label={`Modifica ${event.title}`}
+                        title={dict.edit}
+                        aria-label={`${dict.edit} ${event.title}`}
                         className={cn(
                           buttonVariants({ size: "icon-lg" }),
                           "rounded-xl bg-blue-500 hover:bg-blue-600"
@@ -716,8 +804,8 @@ export default function AdminEventTable({
                           })
                         }
                         disabled={busyId === event.id}
-                        title="Elimina"
-                        aria-label={`Elimina ${event.title}`}
+                        title={dict.deleteAction}
+                        aria-label={`${dict.deleteAction} ${event.title}`}
                         size="icon-lg"
                         className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
@@ -742,8 +830,10 @@ export default function AdminEventTable({
             }
             className="h-auto rounded-2xl px-8 py-3"
           >
-            Carica altri (
-            {filteredEvents.length - visibleCount} rimanenti)
+            {dict.loadMore.replace(
+              "{count}",
+              String(filteredEvents.length - visibleCount)
+            )}
           </Button>
         </div>
       )}
@@ -755,25 +845,36 @@ export default function AdminEventTable({
         }}
         title={
           pendingConfirm?.kind === "delete"
-            ? "Elimina evento"
+            ? dict.confirmDeleteTitle
             : pendingConfirm?.status === "published"
-              ? "Pubblica eventi selezionati"
-              : "Rifiuta eventi selezionati"
+              ? dict.confirmBulkPublishTitle
+              : dict.confirmBulkRejectTitle
         }
         description={
           pendingConfirm?.kind === "delete"
-            ? `Vuoi eliminare "${pendingConfirm.title}"? Questa operazione è irreversibile. Se vuoi solo scartarlo mantenendo la cronologia, usa "Rifiuta" invece.`
+            ? dict.confirmDeleteDescription.replace(
+                "{title}",
+                pendingConfirm.title
+              )
             : pendingConfirm?.status === "published"
-              ? `Stai per pubblicare ${selectedIds.size} eventi.`
-              : `Stai per rifiutare ${selectedIds.size} eventi.`
+              ? dict.confirmBulkPublishDescription.replace(
+                  "{count}",
+                  String(selectedIds.size)
+                )
+              : dict.confirmBulkRejectDescription.replace(
+                  "{count}",
+                  String(selectedIds.size)
+                )
         }
         confirmLabel={
           pendingConfirm?.kind === "delete"
-            ? "Elimina"
+            ? dict.confirmDeleteButton
             : pendingConfirm?.status === "published"
-              ? "Pubblica"
-              : "Rifiuta"
+              ? dict.confirmPublishButton
+              : dict.confirmRejectButton
         }
+        cancelLabel={confirmDialogDict.cancel}
+        pleaseWaitLabel={confirmDialogDict.pleaseWait}
         confirmTone={
           pendingConfirm?.kind === "delete"
             ? "danger"
@@ -798,11 +899,22 @@ export default function AdminEventTable({
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({
+  status,
+  dict,
+}: {
+  status: string;
+  dict: {
+    statusPublished: string;
+    statusCancelled: string;
+    statusRejected: string;
+    statusPending: string;
+  };
+}) {
   if (status === "published") {
     return (
       <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        Pubblicato
+        {dict.statusPublished}
       </span>
     );
   }
@@ -810,7 +922,7 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "cancelled") {
     return (
       <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-        Annullato
+        {dict.statusCancelled}
       </span>
     );
   }
@@ -818,14 +930,14 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "rejected") {
     return (
       <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-        Rifiutato
+        {dict.statusRejected}
       </span>
     );
   }
 
   return (
     <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-      In attesa
+      {dict.statusPending}
     </span>
   );
 }

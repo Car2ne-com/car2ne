@@ -16,7 +16,37 @@ type EnrollState = {
   secret: string;
 };
 
-export default function MfaSettings() {
+type Dict = {
+  title: string;
+  description: string;
+  loading: string;
+  qrAlt: string;
+  step1Title: string;
+  step1Description: string;
+  manualEntryPrefix: string;
+  step2Label: string;
+  verifyAndEnableButton: string;
+  cancelButton: string;
+  activeLabel: string;
+  inactiveLabel: string;
+  confirmDisableQuestion: string;
+  disableButton: string;
+  enableButton: string;
+  errors: {
+    codeLength: string;
+    invalidCode: string;
+  };
+  success: {
+    enabled: string;
+    disabled: string;
+  };
+};
+
+type Props = {
+  dict: Dict;
+};
+
+export default function MfaSettings({ dict }: Props) {
   const supabase = createClient();
 
   const [loadingFactors, setLoadingFactors] =
@@ -122,9 +152,7 @@ export default function MfaSettings() {
     }
 
     if (code.trim().length !== 6) {
-      toast.error(
-        "Inserisci il codice a 6 cifre."
-      );
+      toast.error(dict.errors.codeLength);
       return;
     }
 
@@ -164,14 +192,12 @@ export default function MfaSettings() {
         verifyError
       );
 
-      toast.error("Codice non valido. Riprova.");
+      toast.error(dict.errors.invalidCode);
       setCode("");
       return;
     }
 
-    toast.success(
-      "Autenticazione a due fattori attivata!"
-    );
+    toast.success(dict.success.enabled);
 
     fetch("/api/mfa/notify-enabled", {
       method: "POST",
@@ -224,9 +250,7 @@ export default function MfaSettings() {
       return;
     }
 
-    toast.success(
-      "Autenticazione a due fattori disattivata."
-    );
+    toast.success(dict.success.disabled);
 
     fetch("/api/mfa/notify-disabled", {
       method: "POST",
@@ -250,22 +274,18 @@ export default function MfaSettings() {
     <Card className="p-8">
       <div>
         <h3 className="text-lg font-semibold text-foreground">
-          Autenticazione a due fattori
+          {dict.title}
         </h3>
 
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Aggiungi un livello di sicurezza in
-          più: oltre alla password, ti verrà
-          richiesto un codice generato da
-          un&apos;app di autenticazione (es.
-          Google Authenticator, Authy).
+          {dict.description}
         </p>
       </div>
 
       <div className="mt-6">
         {loadingFactors ? (
           <p className="text-sm text-slate-400">
-            Caricamento...
+            {dict.loading}
           </p>
         ) : enrollState ? (
           <form
@@ -275,23 +295,21 @@ export default function MfaSettings() {
             <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted p-6 sm:flex-row sm:items-start">
               <img
                 src={enrollState.qrCode}
-                alt="QR code per l'autenticazione a due fattori"
+                alt={dict.qrAlt}
                 className="h-40 w-40 rounded-xl border border-border bg-card"
               />
 
               <div className="text-sm text-muted-foreground">
                 <p className="font-semibold text-foreground">
-                  1. Scansiona il QR code
+                  {dict.step1Title}
                 </p>
 
                 <p className="mt-1">
-                  Usa un&apos;app come Google
-                  Authenticator o Authy.
+                  {dict.step1Description}
                 </p>
 
                 <p className="mt-4 font-semibold text-foreground">
-                  Oppure inserisci manualmente
-                  questo codice:
+                  {dict.manualEntryPrefix}
                 </p>
 
                 <p className="mt-1 break-all rounded-lg bg-card px-3 py-2 font-mono text-xs text-muted-foreground">
@@ -301,7 +319,7 @@ export default function MfaSettings() {
             </div>
 
             <div>
-              <Label>2. Inserisci il codice generato</Label>
+              <Label>{dict.step2Label}</Label>
 
               <Input
                 type="text"
@@ -329,7 +347,7 @@ export default function MfaSettings() {
                 disabled={busy}
                 className="h-11 rounded-2xl bg-emerald-500 px-6 font-semibold hover:bg-emerald-600"
               >
-                Verifica e attiva
+                {dict.verifyAndEnableButton}
               </Button>
 
               <Button
@@ -339,7 +357,7 @@ export default function MfaSettings() {
                 onClick={handleCancelEnroll}
                 className="h-11 rounded-2xl px-6 font-semibold"
               >
-                Annulla
+                {dict.cancelButton}
               </Button>
             </div>
           </form>
@@ -347,7 +365,7 @@ export default function MfaSettings() {
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
               <ShieldCheck className="h-4 w-4" />
-              Attiva
+              {dict.activeLabel}
             </div>
 
             <div className="flex gap-3">
@@ -361,7 +379,7 @@ export default function MfaSettings() {
                   }
                   className="h-11 rounded-2xl px-6 font-semibold"
                 >
-                  Annulla
+                  {dict.cancelButton}
                 </Button>
               )}
 
@@ -373,8 +391,8 @@ export default function MfaSettings() {
                 className="h-11 rounded-2xl px-6 font-semibold text-destructive hover:bg-destructive/10"
               >
                 {confirmingDisable
-                  ? "Confermi la disattivazione?"
-                  : "Disattiva"}
+                  ? dict.confirmDisableQuestion
+                  : dict.disableButton}
               </Button>
             </div>
           </div>
@@ -382,7 +400,7 @@ export default function MfaSettings() {
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">
               <ShieldOff className="h-4 w-4" />
-              Non attiva
+              {dict.inactiveLabel}
             </div>
 
             <Button
@@ -391,7 +409,7 @@ export default function MfaSettings() {
               onClick={handleStartEnroll}
               className="h-11 rounded-2xl bg-emerald-500 px-6 font-semibold hover:bg-emerald-600"
             >
-              Attiva autenticazione a due fattori
+              {dict.enableButton}
             </Button>
           </div>
         )}

@@ -7,12 +7,15 @@ import { romeDay } from "@/lib/utils/date";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTranslations } from "@/lib/i18n";
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 export default async function AdminDashboardPage() {
   const { supabase } = await requireAdmin();
   const adminClient = createAdminClient();
+  const { dict } = await getTranslations();
+  const t = dict.admin.dashboardPage;
 
   const now = new Date();
   const today = romeDay(now);
@@ -122,11 +125,11 @@ export default async function AdminDashboardPage() {
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">
-          Dashboard
+          {t.title}
         </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Panoramica del servizio e delle attività recenti.
+          {t.subtitle}
         </p>
       </div>
 
@@ -134,34 +137,39 @@ export default async function AdminDashboardPage() {
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <KpiTile
-          label="Eventi operativi"
+          label={t.kpiOperationalEvents}
           value={
             eventsError ? null : eventsOperational
           }
           caption={
             eventsError
-              ? "Dato non disponibile"
-              : `${eventsTotal} totali · ${eventsConcluded} conclusi`
+              ? t.dataUnavailable
+              : t.totalConcludedCaption
+                  .replace("{total}", String(eventsTotal))
+                  .replace("{concluded}", String(eventsConcluded))
           }
         />
 
         <KpiTile
-          label="Utenti"
+          label={t.kpiUsers}
           value={profilesTotalResult.count}
           caption={
             profilesNewResult.count !== null
-              ? `+${profilesNewResult.count} ultimi 7gg`
+              ? t.last7Days.replace(
+                  "{count}",
+                  String(profilesNewResult.count)
+                )
               : undefined
           }
         />
 
         <KpiTile
-          label="Ride attive"
+          label={t.kpiActiveRides}
           value={ridesActiveResult.count}
         />
 
         <KpiTile
-          label="Prenotazioni"
+          label={t.kpiBookings}
           value={bookingsTotalResult.count}
         />
       </div>
@@ -169,53 +177,53 @@ export default async function AdminDashboardPage() {
       {/* Eventi + Carpooling */}
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <SectionCard title="Eventi">
+        <SectionCard title={t.eventsSectionTitle}>
           <StatRow
-            label="Operativi"
+            label={t.statOperational}
             value={eventsError ? null : eventsOperational}
           />
           <StatRow
-            label="Pubblicati"
+            label={t.statPublished}
             value={eventsError ? null : eventsPublished}
           />
           <StatRow
-            label="In attesa"
+            label={t.statPending}
             value={eventsError ? null : eventsPending}
           />
           <StatRow
-            label="Rifiutati"
+            label={t.statRejected}
             value={eventsError ? null : eventsRejected}
           />
           <StatRow
-            label="Futuri"
+            label={t.statFuture}
             value={eventsError ? null : eventsFuture}
           />
           <StatRow
-            label="Oggi"
+            label={t.statToday}
             value={eventsError ? null : eventsToday}
           />
           <StatRow
-            label="Conclusi (storico)"
+            label={t.statConcludedHistory}
             value={eventsError ? null : eventsConcluded}
             muted
           />
         </SectionCard>
 
-        <SectionCard title="Carpooling">
+        <SectionCard title={t.carpoolingSectionTitle}>
           <StatRow
-            label="Ride attive"
+            label={t.statActiveRides}
             value={ridesActiveResult.count}
           />
           <StatRow
-            label="Prenotazioni totali"
+            label={t.statTotalBookings}
             value={bookingsTotalResult.count}
           />
           <StatRow
-            label="Richieste pendenti"
+            label={t.statPendingRequests}
             value={bookingsPendingResult.count}
           />
           <StatRow
-            label="Prenotazioni confermate"
+            label={t.statConfirmedBookings}
             value={bookingsConfirmedResult.count}
           />
         </SectionCard>
@@ -225,28 +233,28 @@ export default async function AdminDashboardPage() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <SectionCard
-          title="Import Ticketmaster"
+          title={t.importSectionTitle}
           footer={
             <Link
               href="/admin/import"
               className="text-sm font-semibold text-primary hover:underline"
             >
-              Vai agli import →
+              {t.goToImports}
             </Link>
           }
         >
           {lastImportResult.error ? (
             <p className="text-sm text-muted-foreground">
-              Dato non disponibile.
+              {t.dataUnavailable}
             </p>
           ) : !lastImport ? (
             <p className="text-sm text-muted-foreground">
-              Nessun import eseguito finora.
+              {t.noImportYet}
             </p>
           ) : (
             <>
               <StatRow
-                label="Ultimo import"
+                label={t.lastImportLabel}
                 value={new Date(
                   lastImport.finished_at ??
                     lastImport.started_at
@@ -261,13 +269,13 @@ export default async function AdminDashboardPage() {
               />
 
               <StatRow
-                label="Esito"
+                label={t.outcomeLabel}
                 value={
                   lastImport.status === "success"
-                    ? "Riuscito"
+                    ? t.succeeded
                     : lastImport.status === "failed"
-                      ? "Fallito"
-                      : "In corso"
+                      ? t.failed
+                      : t.inProgress
                 }
                 isText
                 tone={
@@ -280,18 +288,18 @@ export default async function AdminDashboardPage() {
               />
 
               <StatRow
-                label="Eventi creati"
+                label={t.eventsCreatedLabel}
                 value={lastImport.events_created}
               />
 
               <StatRow
-                label="Eventi aggiornati"
+                label={t.eventsUpdatedLabel}
                 value={lastImport.events_updated}
               />
 
               {lastImport.events_failed > 0 && (
                 <StatRow
-                  label="Eventi falliti"
+                  label={t.eventsFailedLabel}
                   value={lastImport.events_failed}
                   tone="bad"
                 />
@@ -306,24 +314,24 @@ export default async function AdminDashboardPage() {
           )}
         </SectionCard>
 
-        <SectionCard title="Qualità dati">
+        <SectionCard title={t.dataQualitySectionTitle}>
           {eventsError ? (
             <p className="text-sm text-muted-foreground">
-              Dato non disponibile.
+              {t.dataUnavailable}
             </p>
           ) : eventsNoCity === 0 && eventsNoVenue === 0 ? (
             <p className="rounded-xl bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground">
-              Nessuna anomalia rilevata su città/venue.
+              {t.noAnomalies}
             </p>
           ) : (
             <>
               <StatRow
-                label="Eventi senza città"
+                label={t.eventsNoCity}
                 value={eventsNoCity}
                 tone={eventsNoCity > 0 ? "bad" : "good"}
               />
               <StatRow
-                label="Eventi senza venue"
+                label={t.eventsNoVenue}
                 value={eventsNoVenue}
                 tone={eventsNoVenue > 0 ? "bad" : "good"}
               />
@@ -342,7 +350,7 @@ export default async function AdminDashboardPage() {
             "h-auto rounded-2xl bg-foreground px-6 py-3 text-sm text-background hover:bg-foreground/90"
           )}
         >
-          Gestisci eventi
+          {t.manageEvents}
         </Link>
 
         <Link
@@ -352,7 +360,7 @@ export default async function AdminDashboardPage() {
             "h-auto rounded-2xl px-6 py-3 text-sm"
           )}
         >
-          Gestisci utenti
+          {t.manageUsers}
         </Link>
 
         <Link
@@ -362,7 +370,7 @@ export default async function AdminDashboardPage() {
             "h-auto rounded-2xl px-6 py-3 text-sm"
           )}
         >
-          Vai agli import
+          {t.goToImports}
         </Link>
 
         <Link
@@ -372,7 +380,7 @@ export default async function AdminDashboardPage() {
             "h-auto rounded-2xl px-6 py-3 text-sm"
           )}
         >
-          Vai ad analytics
+          {t.goToAnalytics}
         </Link>
       </div>
     </main>

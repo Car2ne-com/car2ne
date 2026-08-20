@@ -12,9 +12,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { toOne } from "@/lib/utils/relations";
+import { getTranslations } from "@/lib/i18n";
 
 export default async function MyBookings() {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
+  const t = dict.dashboardBookings.widget;
 
   const {
     data: { user },
@@ -85,7 +88,7 @@ export default async function MyBookings() {
           status: booking.status,
 
           eventTitle:
-            event?.title ?? "Evento",
+            event?.title ?? t.eventFallback,
 
           eventSlug:
             event?.slug ?? null,
@@ -99,7 +102,7 @@ export default async function MyBookings() {
             ride.departure_time.slice(0, 5),
 
           driver:
-            profile?.name ?? "Conducente",
+            profile?.name ?? t.driverFallback,
 
           contribution:
             Number(ride.contribution),
@@ -120,11 +123,11 @@ export default async function MyBookings() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-foreground">
-            Le mie prenotazioni
+            {t.title}
           </h2>
 
           <p className="mt-2 text-muted-foreground">
-            I passaggi che hai prenotato.
+            {t.subtitle}
           </p>
         </div>
 
@@ -132,7 +135,7 @@ export default async function MyBookings() {
           href="/dashboard/bookings"
           className="text-sm font-semibold text-primary hover:text-primary/80"
         >
-          Vedi tutte →
+          {t.viewAll}
         </Link>
       </div>
 
@@ -142,8 +145,8 @@ export default async function MyBookings() {
         <div className="text-center">
           <EmptyState
             icon={Ticket}
-            title="Nessuna prenotazione"
-            description="Non hai ancora prenotato nessun passaggio."
+            title={t.emptyTitle}
+            description={t.emptyDescription}
             className="rounded-2xl py-10"
           />
 
@@ -151,7 +154,7 @@ export default async function MyBookings() {
             href="/events"
             className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
-            Trova un evento
+            {t.findEvent}
 
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -194,8 +197,8 @@ export default async function MyBookings() {
                     }`}
                   >
                     {isConfirmed
-                      ? "Confermato"
-                      : "Annullato"}
+                      ? t.statusConfirmed
+                      : t.statusCancelled}
                   </span>
 
                 </div>
@@ -241,7 +244,7 @@ export default async function MyBookings() {
                     href="/dashboard/bookings"
                     className="inline-flex items-center gap-2 font-semibold text-primary hover:text-primary/80"
                   >
-                    Gestisci prenotazione
+                    {t.manageBooking}
 
                     <ArrowRight className="h-4 w-4" />
                   </Link>

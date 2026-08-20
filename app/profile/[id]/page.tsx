@@ -177,7 +177,7 @@ export default async function PublicProfilePage({
                 </>
               ) : (
                 <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-muted-foreground">
-                  Nessuna recensione ancora
+                  {dict.profile.publicProfile.noReviewsYet}
                 </span>
               )}
             </div>
@@ -193,7 +193,7 @@ export default async function PublicProfilePage({
         {ratings.length > 0 && (
           <Card className="mt-8 p-8">
             <h2 className="text-lg font-semibold text-foreground">
-              Recensioni
+              {dict.profile.publicProfile.reviewsTitle}
             </h2>
 
             <div className="mt-6 space-y-5">
@@ -206,7 +206,7 @@ export default async function PublicProfilePage({
                     <p className="font-semibold text-foreground">
                       {raterNameById.get(
                         rating.rater_id
-                      ) ?? "Utente Car2ne"}
+                      ) ?? dict.profile.publicProfile.anonymousReviewerFallback}
                     </p>
 
                     <RatingStars

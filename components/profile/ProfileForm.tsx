@@ -35,12 +35,48 @@ type Profile = {
   bio: string | null;
 };
 
+type Dict = {
+  avatarPreviewAlt: string;
+  avatarHint: string;
+  newPhotoSelected: string;
+  memberBadge: string;
+  accountInfoTitle: string;
+  accountInfoDescription: string;
+  nameLabel: string;
+  surnameLabel: string;
+  emailLabel: string;
+  publicProfileTitle: string;
+  publicProfileDescription: string;
+  cityLabel: string;
+  cityPlaceholder: string;
+  bioLabel: string;
+  bioPlaceholder: string;
+  bioHint: string;
+  saving: string;
+  saveButton: string;
+  errors: {
+    unsupportedFormat: string;
+    imageTooLarge: string;
+    sessionError: string;
+    sessionInvalid: string;
+    uploadFailed: string;
+    profileUpdateAfterUploadFailed: string;
+    updateFailed: string;
+  };
+  success: {
+    avatarUpdated: string;
+    profileUpdated: string;
+  };
+};
+
 type Props = {
   profile: Profile;
+  dict: Dict;
 };
 
 export default function ProfileForm({
   profile,
+  dict,
 }: Props) {
   const router = useRouter();
   const supabase = createClient();
@@ -100,9 +136,7 @@ export default function ProfileForm({
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        "Formato non supportato. Usa JPG, PNG o WebP."
-      );
+      toast.error(dict.errors.unsupportedFormat);
 
       event.target.value = "";
       return;
@@ -111,9 +145,7 @@ export default function ProfileForm({
     const maxSize = 2 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      toast.error(
-        "L'immagine non può superare 2 MB."
-      );
+      toast.error(dict.errors.imageTooLarge);
 
       event.target.value = "";
       return;
@@ -161,9 +193,7 @@ export default function ProfileForm({
           userError
         );
 
-        toast.error(
-          "Errore nel recupero della sessione."
-        );
+        toast.error(dict.errors.sessionError);
 
         return false;
       }
@@ -173,9 +203,7 @@ export default function ProfileForm({
           "Nessun utente autenticato."
         );
 
-        toast.error(
-          "La sessione non è valida. Effettua nuovamente il login."
-        );
+        toast.error(dict.errors.sessionInvalid);
 
         router.push("/login");
 
@@ -237,7 +265,7 @@ export default function ProfileForm({
 
         toast.error(
           uploadError.message ||
-            "Non è stato possibile caricare l'immagine."
+            dict.errors.uploadFailed
         );
 
         return false;
@@ -279,9 +307,7 @@ export default function ProfileForm({
           profileError
         );
 
-        toast.error(
-          "Immagine caricata, ma non è stato possibile aggiornare il profilo."
-        );
+        toast.error(dict.errors.profileUpdateAfterUploadFailed);
 
         return false;
       }
@@ -300,9 +326,7 @@ export default function ProfileForm({
         setPreviewUrl(null);
       }
 
-      toast.success(
-        "Foto profilo aggiornata!"
-      );
+      toast.success(dict.success.avatarUpdated);
 
       return true;
     } finally {
@@ -352,16 +376,12 @@ export default function ProfileForm({
         error
       );
 
-      toast.error(
-        "Non è stato possibile aggiornare il profilo."
-      );
+      toast.error(dict.errors.updateFailed);
 
       return;
     }
 
-    toast.success(
-      "Profilo aggiornato con successo!"
-    );
+    toast.success(dict.success.profileUpdated);
 
     router.refresh();
   }
@@ -387,7 +407,7 @@ export default function ProfileForm({
             {previewUrl ? (
               <img
                 src={previewUrl}
-                alt="Anteprima avatar"
+                alt={dict.avatarPreviewAlt}
                 className="h-28 w-28 rounded-full object-cover ring-4 ring-emerald-50"
               />
             ) : avatarUrl ? (
@@ -423,12 +443,12 @@ export default function ProfileForm({
           </div>
 
           <p className="mt-4 text-sm text-muted-foreground">
-            JPG, PNG o WebP · massimo 2 MB
+            {dict.avatarHint}
           </p>
 
           {selectedFile && (
             <p className="mt-2 text-sm font-semibold text-emerald-600">
-              Nuova foto selezionata
+              {dict.newPhotoSelected}
             </p>
           )}
 
@@ -441,7 +461,7 @@ export default function ProfileForm({
           </p>
 
           <span className="mt-4 rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-semibold text-emerald-700">
-            Membro Car2ne
+            {dict.memberBadge}
           </span>
 
         </div>
@@ -456,13 +476,11 @@ export default function ProfileForm({
 
         <div>
           <h3 className="text-lg font-semibold text-foreground">
-            Informazioni account
+            {dict.accountInfoTitle}
           </h3>
 
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Questi dati identificano il tuo account
-            e non possono essere modificati da questa
-            pagina.
+            {dict.accountInfoDescription}
           </p>
         </div>
 
@@ -471,7 +489,7 @@ export default function ProfileForm({
           {/* Nome */}
 
           <div>
-            <Label>Nome</Label>
+            <Label>{dict.nameLabel}</Label>
 
             <Input
               value={profile.name}
@@ -483,7 +501,7 @@ export default function ProfileForm({
           {/* Cognome */}
 
           <div>
-            <Label>Cognome</Label>
+            <Label>{dict.surnameLabel}</Label>
 
             <Input
               value={profile.surname}
@@ -495,7 +513,7 @@ export default function ProfileForm({
           {/* Email */}
 
           <div className="md:col-span-2">
-            <Label>Email</Label>
+            <Label>{dict.emailLabel}</Label>
 
             <Input
               value={profile.email}
@@ -516,13 +534,11 @@ export default function ProfileForm({
 
         <div>
           <h3 className="text-lg font-semibold text-foreground">
-            Profilo pubblico
+            {dict.publicProfileTitle}
           </h3>
 
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Queste informazioni potranno essere
-            visibili agli altri utenti quando offrirai
-            o prenoterai un passaggio.
+            {dict.publicProfileDescription}
           </p>
         </div>
 
@@ -530,7 +546,7 @@ export default function ProfileForm({
 
         <div className="mt-6">
 
-          <Label>Città</Label>
+          <Label>{dict.cityLabel}</Label>
 
           <Input
             value={city}
@@ -538,7 +554,7 @@ export default function ProfileForm({
               setCity(e.target.value)
             }
             disabled={isSaving}
-            placeholder="Milano"
+            placeholder={dict.cityPlaceholder}
             maxLength={100}
             className="h-14 rounded-2xl"
           />
@@ -549,7 +565,7 @@ export default function ProfileForm({
 
         <div className="mt-6">
 
-          <Label>Biografia</Label>
+          <Label>{dict.bioLabel}</Label>
 
           <Textarea
             value={bio}
@@ -559,15 +575,14 @@ export default function ProfileForm({
             disabled={isSaving}
             rows={6}
             maxLength={300}
-            placeholder="Parla un po' di te..."
+            placeholder={dict.bioPlaceholder}
             className="rounded-2xl p-4"
           />
 
           <div className="mt-2 flex justify-between text-xs text-slate-400">
 
             <span>
-              Una breve descrizione che aiuti gli
-              altri a conoscerti.
+              {dict.bioHint}
             </span>
 
             <span>
@@ -591,10 +606,10 @@ export default function ProfileForm({
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Salvataggio...
+                {dict.saving}
               </>
             ) : (
-              "Salva modifiche"
+              dict.saveButton
             )}
           </Button>
 

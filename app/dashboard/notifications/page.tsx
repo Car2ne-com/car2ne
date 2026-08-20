@@ -16,6 +16,7 @@ import {
 export default async function NotificationsPage() {
   const supabase = await createClient();
   const { dict } = await getTranslations();
+  const t = dict.dashboardNotifications;
 
   const {
     data: { user },
@@ -64,23 +65,22 @@ export default async function NotificationsPage() {
 
           <div>
             <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-              🔔 Notifiche
+              {t.badge}
             </span>
 
             <h1 className="mt-5 text-2xl font-bold text-foreground">
-              Le tue notifiche
+              {t.title}
             </h1>
 
             <p className="mt-4 text-lg text-muted-foreground">
-              Tieni sotto controllo richieste,
-              prenotazioni e aggiornamenti.
+              {t.subtitle}
             </p>
           </div>
 
           {unreadCount > 0 && (
             <div className="shrink-0 rounded-2xl bg-accent px-5 py-4 text-center">
               <p className="text-xs font-semibold text-accent-foreground">
-                Non lette
+                {t.unreadLabel}
               </p>
 
               <p className="mt-1 text-2xl font-black text-accent-foreground">
@@ -100,15 +100,15 @@ export default async function NotificationsPage() {
           <div className="text-center">
             <EmptyState
               icon={Bell}
-              title="Nessuna notifica"
-              description="Qui troverai le richieste di prenotazione e tutti gli aggiornamenti sui tuoi passaggi."
+              title={t.emptyTitle}
+              description={t.emptyDescription}
             />
 
             <Link
               href="/events"
               className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
-              Cerca un evento
+              {t.findEvent}
             </Link>
           </div>
 
@@ -182,7 +182,7 @@ export default async function NotificationsPage() {
                       </p>
 
                       <p className="mt-3 text-sm font-semibold text-primary">
-                        Visualizza →
+                        {t.viewLink}
                       </p>
 
                     </div>

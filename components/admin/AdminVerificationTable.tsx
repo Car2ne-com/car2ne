@@ -28,20 +28,59 @@ type Verification = {
 
 type Filter = "all" | "pending" | "approved" | "rejected" | "expired";
 
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: "all", label: "Tutti" },
-  { key: "pending", label: "In attesa" },
-  { key: "approved", label: "Approvati" },
-  { key: "rejected", label: "Rifiutati" },
-  { key: "expired", label: "Scaduti" },
-];
+type Dict = {
+  emptyTitle: string;
+  emptyDescription: string;
+  filterAll: string;
+  filterPending: string;
+  filterApproved: string;
+  filterRejected: string;
+  filterExpired: string;
+  noMatchTitle: string;
+  colDriver: string;
+  colVehicle: string;
+  colPlate: string;
+  colLicense: string;
+  colStatus: string;
+  colActions: string;
+  viewDocument: string;
+  viewDocumentAria: string;
+  approve: string;
+  approveAria: string;
+  reject: string;
+  rejectAria: string;
+  documentUnavailable: string;
+  contactServerError: string;
+  driverVerifiedToast: string;
+  requestRejectedToast: string;
+  operationFailed: string;
+  statusApproved: string;
+  statusRejected: string;
+  statusExpired: string;
+  statusPending: string;
+  rejectDialogTitle: string;
+  rejectDialogDescription: string;
+  reasonLabel: string;
+  rejectButton: string;
+  cancelButton: string;
+};
 
 export default function AdminVerificationTable({
   verifications,
+  dict,
 }: {
   verifications: Verification[];
+  dict: Dict;
 }) {
   const router = useRouter();
+
+  const FILTERS: { key: Filter; label: string }[] = [
+    { key: "all", label: dict.filterAll },
+    { key: "pending", label: dict.filterPending },
+    { key: "approved", label: dict.filterApproved },
+    { key: "rejected", label: dict.filterRejected },
+    { key: "expired", label: dict.filterExpired },
+  ];
 
   const [filter, setFilter] = useState<Filter>("all");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -65,13 +104,13 @@ export default function AdminVerificationTable({
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error ?? "Documento non disponibile.");
+        toast.error(data.error ?? dict.documentUnavailable);
         return;
       }
 
       window.open(data.url, "_blank", "noopener,noreferrer");
     } catch {
-      toast.error("Impossibile contattare il server.");
+      toast.error(dict.contactServerError);
     } finally {
       setBusyId(null);
     }
@@ -97,19 +136,19 @@ export default function AdminVerificationTable({
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error ?? "Operazione fallita.");
+        toast.error(data.error ?? dict.operationFailed);
         return;
       }
 
       toast.success(
         status === "approved"
-          ? "Conducente verificato!"
-          : "Richiesta rifiutata."
+          ? dict.driverVerifiedToast
+          : dict.requestRejectedToast
       );
 
       router.refresh();
     } catch {
-      toast.error("Impossibile contattare il server.");
+      toast.error(dict.contactServerError);
     } finally {
       setBusyId(null);
       setRejectTargetId(null);
@@ -119,8 +158,8 @@ export default function AdminVerificationTable({
   if (verifications.length === 0) {
     return (
       <EmptyState
-        title="Nessuna richiesta"
-        description="Le richieste di verifica conducente appariranno qui."
+        title={dict.emptyTitle}
+        description={dict.emptyDescription}
       />
     );
   }
@@ -147,7 +186,7 @@ export default function AdminVerificationTable({
 
       {filtered.length === 0 ? (
         <EmptyState
-          title="Nessuna richiesta corrisponde al filtro"
+          title={dict.noMatchTitle}
           description=""
         />
       ) : (
@@ -155,12 +194,12 @@ export default function AdminVerificationTable({
           <table className="w-full">
             <thead className="bg-muted">
               <tr>
-                <th className="px-6 py-4 text-left">Conducente</th>
-                <th className="px-6 py-4 text-left">Veicolo</th>
-                <th className="px-6 py-4 text-left">Targa</th>
-                <th className="px-6 py-4 text-left">Patente</th>
-                <th className="px-6 py-4 text-left">Stato</th>
-                <th className="px-6 py-4 text-center">Azioni</th>
+                <th className="px-6 py-4 text-left">{dict.colDriver}</th>
+                <th className="px-6 py-4 text-left">{dict.colVehicle}</th>
+                <th className="px-6 py-4 text-left">{dict.colPlate}</th>
+                <th className="px-6 py-4 text-left">{dict.colLicense}</th>
+                <th className="px-6 py-4 text-left">{dict.colStatus}</th>
+                <th className="px-6 py-4 text-center">{dict.colActions}</th>
               </tr>
             </thead>
 
@@ -179,7 +218,7 @@ export default function AdminVerificationTable({
                   <td className="px-6 py-5">{v.licenseNumber}</td>
 
                   <td className="px-6 py-5">
-                    <StatusBadge status={v.status} />
+                    <StatusBadge status={v.status} dict={dict} />
 
                     {v.adminNote && v.status === "rejected" && (
                       <p className="mt-1 text-[11px] text-muted-foreground">
@@ -194,8 +233,11 @@ export default function AdminVerificationTable({
                         <Button
                           onClick={() => viewDocument(v.id)}
                           disabled={busyId === v.id}
-                          title="Visualizza documento"
-                          aria-label={`Visualizza documento di ${v.driverName}`}
+                          title={dict.viewDocument}
+                          aria-label={dict.viewDocumentAria.replace(
+                            "{name}",
+                            v.driverName
+                          )}
                           size="icon-lg"
                           className="rounded-xl bg-blue-500 text-white hover:bg-blue-600"
                         >
@@ -208,8 +250,11 @@ export default function AdminVerificationTable({
                           <Button
                             onClick={() => updateStatus(v.id, "approved")}
                             disabled={busyId === v.id}
-                            title="Approva"
-                            aria-label={`Approva ${v.driverName}`}
+                            title={dict.approve}
+                            aria-label={dict.approveAria.replace(
+                              "{name}",
+                              v.driverName
+                            )}
                             size="icon-lg"
                             className="rounded-xl"
                           >
@@ -219,8 +264,11 @@ export default function AdminVerificationTable({
                           <Button
                             onClick={() => setRejectTargetId(v.id)}
                             disabled={busyId === v.id}
-                            title="Rifiuta"
-                            aria-label={`Rifiuta ${v.driverName}`}
+                            title={dict.reject}
+                            aria-label={dict.rejectAria.replace(
+                              "{name}",
+                              v.driverName
+                            )}
                             size="icon-lg"
                             className="rounded-xl bg-amber-500 text-white hover:bg-amber-600"
                           >
@@ -242,12 +290,12 @@ export default function AdminVerificationTable({
         onOpenChange={(open) => {
           if (!open) setRejectTargetId(null);
         }}
-        title="Rifiuta richiesta"
-        description="Spiega al conducente perché la richiesta non è stata approvata."
-        noteLabel="Motivazione"
+        title={dict.rejectDialogTitle}
+        description={dict.rejectDialogDescription}
+        noteLabel={dict.reasonLabel}
         noteRequired
-        confirmLabel="Rifiuta"
-        cancelLabel="Annulla"
+        confirmLabel={dict.rejectButton}
+        cancelLabel={dict.cancelButton}
         confirmTone="danger"
         busy={busyId === rejectTargetId}
         onConfirm={(note) => {
@@ -260,11 +308,22 @@ export default function AdminVerificationTable({
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({
+  status,
+  dict,
+}: {
+  status: string;
+  dict: {
+    statusApproved: string;
+    statusRejected: string;
+    statusExpired: string;
+    statusPending: string;
+  };
+}) {
   if (status === "approved") {
     return (
       <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        Approvato
+        {dict.statusApproved}
       </span>
     );
   }
@@ -272,7 +331,7 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "rejected") {
     return (
       <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-        Rifiutato
+        {dict.statusRejected}
       </span>
     );
   }
@@ -280,14 +339,14 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "expired") {
     return (
       <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-        Scaduto
+        {dict.statusExpired}
       </span>
     );
   }
 
   return (
     <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-      In attesa
+      {dict.statusPending}
     </span>
   );
 }

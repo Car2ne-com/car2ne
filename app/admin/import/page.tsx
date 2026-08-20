@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTranslations } from "@/lib/i18n";
 
 type ImportLog = {
   id: string;
@@ -30,6 +31,8 @@ export default async function AdminImportPage({
   searchParams,
 }: Props) {
   const { supabase } = await requireAdmin();
+  const { dict } = await getTranslations();
+  const t = dict.admin.importPage;
 
   const params = await searchParams;
   const currentPage = Math.max(1, Number(params.page) || 1);
@@ -75,11 +78,11 @@ export default async function AdminImportPage({
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">
-          Import
+          {t.title}
         </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Importa eventi dalle fonti esterne collegate a Car2ne.
+          {t.subtitle}
         </p>
       </div>
 
@@ -87,31 +90,30 @@ export default async function AdminImportPage({
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
-              Ticketmaster
+              {t.ticketmasterTitle}
             </h2>
 
             <p className="mt-2 text-muted-foreground">
-              Avvia manualmente l&apos;importazione degli eventi da
-              Ticketmaster. Gli eventi importati entrano in stato
-              &quot;In attesa&quot; e vanno revisionati da{" "}
-              <span className="font-semibold">Eventi</span>.
+              {t.ticketmasterDescriptionPrefix}{" "}
+              {t.ticketmasterDescriptionPendingLabel} {t.ticketmasterDescriptionSuffix}{" "}
+              <span className="font-semibold">{t.ticketmasterDescriptionEventsLabel}</span>.
             </p>
           </div>
         </div>
 
         <div className="mt-6 border-t border-border pt-6">
           <p className="text-sm font-semibold text-muted-foreground">
-            Ultimo import
+            {t.lastImportLabel}
           </p>
 
           {!lastImport ? (
             <p className="mt-2 text-muted-foreground">
-              Non è stato ancora eseguito alcun import.
+              {t.neverRun}
             </p>
           ) : (
             <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-2">
               <Stat
-                label="Data"
+                label={t.dateLabel}
                 value={new Date(
                   lastImport.finished_at ?? lastImport.started_at
                 ).toLocaleString("it-IT", {
@@ -124,22 +126,22 @@ export default async function AdminImportPage({
               />
 
               <Stat
-                label="Stato"
-                value={<StatusBadge status={lastImport.status} />}
+                label={t.statusLabel}
+                value={<StatusBadge status={lastImport.status} dict={t} />}
               />
 
               <Stat
-                label="Creati"
+                label={t.createdLabel}
                 value={lastImport.events_created}
               />
 
               <Stat
-                label="Aggiornati"
+                label={t.updatedLabel}
                 value={lastImport.events_updated}
               />
 
               <Stat
-                label="Falliti"
+                label={t.failedLabel}
                 value={lastImport.events_failed}
                 tone={
                   lastImport.events_failed > 0 ? "bad" : undefined
@@ -151,7 +153,7 @@ export default async function AdminImportPage({
           {lastImport?.status === "failed" && (
             <div className="mt-4 rounded-2xl bg-destructive/10 px-4 py-3">
               <p className="text-sm font-semibold text-destructive">
-                L&apos;ultimo import è fallito.
+                {t.lastImportFailed}
               </p>
 
               {lastImport.error_message && (
@@ -164,11 +166,10 @@ export default async function AdminImportPage({
             lastImport.events_failed > 0 && (
               <div className="mt-4 rounded-2xl bg-amber-50 px-4 py-3">
                 <p className="text-sm font-semibold text-amber-700">
-                  Import concluso con {lastImport.events_failed}{" "}
-                  {lastImport.events_failed === 1
-                    ? "evento non importato"
-                    : "eventi non importati"}{" "}
-                  (dettagli nei log server).
+                  {(lastImport.events_failed === 1
+                    ? t.importCompletedWithFailuresSingular
+                    : t.importCompletedWithFailuresPlural
+                  ).replace("{count}", String(lastImport.events_failed))}
                 </p>
               </div>
             )}
@@ -177,19 +178,20 @@ export default async function AdminImportPage({
         <div className="mt-6">
           <ImportTicketmasterButton
             initialCooldownRemainingMs={cooldownRemainingMs}
+            dict={dict.admin.importButton}
           />
         </div>
       </Card>
 
       <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold text-foreground">
-          Storico import
+          {t.historyTitle}
         </h2>
 
         {history.length === 0 ? (
           <EmptyState
-            title="Nessuno storico"
-            description="Non è stato ancora eseguito alcun import."
+            title={t.emptyHistoryTitle}
+            description={t.emptyHistoryDescription}
           />
         ) : (
           <>
@@ -198,16 +200,16 @@ export default async function AdminImportPage({
                 <thead className="bg-muted">
                   <tr>
                     <th className="px-6 py-4 text-left">
-                      Data/ora
+                      {t.colDateTime}
                     </th>
-                    <th className="px-6 py-4 text-left">Stato</th>
-                    <th className="px-6 py-4 text-left">Creati</th>
+                    <th className="px-6 py-4 text-left">{t.colStatus}</th>
+                    <th className="px-6 py-4 text-left">{t.colCreated}</th>
                     <th className="px-6 py-4 text-left">
-                      Aggiornati
+                      {t.colUpdated}
                     </th>
-                    <th className="px-6 py-4 text-left">Falliti</th>
-                    <th className="px-6 py-4 text-left">Durata</th>
-                    <th className="px-6 py-4 text-left">Errore</th>
+                    <th className="px-6 py-4 text-left">{t.colFailed}</th>
+                    <th className="px-6 py-4 text-left">{t.colDuration}</th>
+                    <th className="px-6 py-4 text-left">{t.colError}</th>
                   </tr>
                 </thead>
 
@@ -230,7 +232,7 @@ export default async function AdminImportPage({
                       </td>
 
                       <td className="px-6 py-5">
-                        <StatusBadge status={log.status} />
+                        <StatusBadge status={log.status} dict={t} />
                       </td>
 
                       <td className="px-6 py-5 font-semibold text-foreground">
@@ -287,16 +289,18 @@ export default async function AdminImportPage({
                       "h-auto rounded-xl px-4 py-2"
                     )}
                   >
-                    Precedente
+                    {t.previous}
                   </Link>
                 ) : (
                   <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
-                    Precedente
+                    {t.previous}
                   </span>
                 )}
 
                 <span className="text-sm text-muted-foreground">
-                  Pagina {currentPage} di {totalPages}
+                  {t.pageOf
+                    .replace("{current}", String(currentPage))
+                    .replace("{total}", String(totalPages))}
                 </span>
 
                 {currentPage < totalPages ? (
@@ -307,11 +311,11 @@ export default async function AdminImportPage({
                       "h-auto rounded-xl px-4 py-2"
                     )}
                   >
-                    Successiva
+                    {t.next}
                   </Link>
                 ) : (
                   <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
-                    Successiva
+                    {t.next}
                   </span>
                 )}
               </div>
@@ -351,11 +355,17 @@ function Stat({
  * 0004_ticketmaster_import.sql): solo running / success / failed.
  * Nessuno stato inventato.
  */
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({
+  status,
+  dict,
+}: {
+  status: string;
+  dict: { statusSuccess: string; statusFailed: string; statusRunning: string };
+}) {
   if (status === "success") {
     return (
       <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        Riuscito
+        {dict.statusSuccess}
       </span>
     );
   }
@@ -363,14 +373,14 @@ function StatusBadge({ status }: { status: string }) {
   if (status === "failed") {
     return (
       <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-        Fallito
+        {dict.statusFailed}
       </span>
     );
   }
 
   return (
     <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-      In corso
+      {dict.statusRunning}
     </span>
   );
 }

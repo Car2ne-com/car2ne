@@ -91,9 +91,22 @@ type Dict = {
 
 type NoShowDictProp = NoShowDict;
 
+type RatingFormDict = {
+  selectStar: string;
+  submitted: string;
+  yourReview: string;
+  leaveReviewButton: string;
+  reviewPrompt: string;
+  commentPlaceholder: string;
+  sending: string;
+  sendButton: string;
+  cancelButton: string;
+};
+
 type Props = {
   dict: Dict;
   noShowDict?: NoShowDictProp;
+  ratingFormDict: RatingFormDict;
   ride: {
     id: string;
     origin_city_id: string | null;
@@ -127,6 +140,7 @@ type ConfirmedPassenger = {
 export default function ManageRideForm({
   dict,
   noShowDict,
+  ratingFormDict,
   ride,
 }: Props) {
   const router = useRouter();
@@ -742,6 +756,7 @@ export default function ManageRideForm({
                 {rideHasPassed && (
                   <>
                     <RatingForm
+                      dict={ratingFormDict}
                       bookingId={passenger.id}
                       rideId={ride.id}
                       rateeId={passenger.passengerId}

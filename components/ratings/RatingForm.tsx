@@ -7,7 +7,20 @@ import { Button } from "@/components/ui/button";
 import RatingStars from "@/components/ratings/RatingStars";
 import { createClient } from "@/lib/supabase/client";
 
+type Dict = {
+  selectStar: string;
+  submitted: string;
+  yourReview: string;
+  leaveReviewButton: string;
+  reviewPrompt: string;
+  commentPlaceholder: string;
+  sending: string;
+  sendButton: string;
+  cancelButton: string;
+};
+
 type Props = {
+  dict: Dict;
   bookingId: string;
   rideId: string;
   rateeId: string;
@@ -20,6 +33,7 @@ type ExistingRating = {
 } | null;
 
 export default function RatingForm({
+  dict,
   bookingId,
   rideId,
   rateeId,
@@ -67,9 +81,7 @@ export default function RatingForm({
 
   async function handleSubmit() {
     if (rating < 1) {
-      toast.error(
-        "Seleziona almeno una stella."
-      );
+      toast.error(dict.selectStar);
       return;
     }
 
@@ -107,7 +119,7 @@ export default function RatingForm({
       return;
     }
 
-    toast.success("Recensione inviata!");
+    toast.success(dict.submitted);
 
     setExisting({
       rating,
@@ -125,7 +137,7 @@ export default function RatingForm({
     return (
       <div className="mt-6 rounded-2xl bg-slate-50 p-4">
         <p className="text-xs font-semibold text-slate-500">
-          La tua recensione
+          {dict.yourReview}
         </p>
 
         <div className="mt-2">
@@ -149,7 +161,7 @@ export default function RatingForm({
         onClick={() => setOpen(true)}
         className="mt-6 h-10 w-full rounded-2xl text-sm font-semibold"
       >
-        Lascia una recensione a {rateeName}
+        {dict.leaveReviewButton.replace("{name}", rateeName)}
       </Button>
     );
   }
@@ -157,7 +169,7 @@ export default function RatingForm({
   return (
     <div className="mt-6 space-y-3 rounded-2xl bg-slate-50 p-4">
       <p className="text-sm font-semibold text-slate-700">
-        Recensisci {rateeName}
+        {dict.reviewPrompt.replace("{name}", rateeName)}
       </p>
 
       <RatingStars
@@ -173,7 +185,7 @@ export default function RatingForm({
         }
         rows={3}
         maxLength={300}
-        placeholder="Com'è andata? (facoltativo)"
+        placeholder={dict.commentPlaceholder}
         className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
       />
 
@@ -185,8 +197,8 @@ export default function RatingForm({
           className="h-10 rounded-2xl bg-emerald-500 px-5 text-sm font-semibold hover:bg-emerald-600"
         >
           {submitting
-            ? "Invio..."
-            : "Invia recensione"}
+            ? dict.sending
+            : dict.sendButton}
         </Button>
 
         <Button
@@ -196,7 +208,7 @@ export default function RatingForm({
           onClick={() => setOpen(false)}
           className="h-10 rounded-2xl px-5 text-sm font-semibold"
         >
-          Annulla
+          {dict.cancelButton}
         </Button>
       </div>
     </div>

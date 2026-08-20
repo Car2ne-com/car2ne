@@ -21,6 +21,26 @@ export const auth = {
     pageTitle: "Imposta una nuova password",
     pageSubtitle: "Scegli una password sicura per il tuo account.",
   },
+  verifyAge: {
+    pageBadge: "🎂 Ultimo passaggio",
+    pageTitle: "Completa la registrazione",
+    pageSubtitle:
+      "Car2ne è riservato a chi ha almeno 18 anni: inserisci la tua data di nascita per continuare.",
+    emptyBirthDateError: "Inserisci la tua data di nascita.",
+    notAdultFieldError:
+      "Non risulti maggiorenne: il tuo account non potrà essere attivato.",
+    notAdultToast:
+      "Car2ne è riservato a chi ha almeno 18 anni. Il tuo account non è stato attivato.",
+    verifying: "Verifica...",
+    continueButton: "Continua",
+  },
+  mfaChallenge: {
+    pageBadge: "🔒 Verifica in due passaggi",
+    pageTitle: "Conferma la tua identità",
+    pageSubtitle:
+      "Il tuo account ha l'autenticazione a due fattori attiva.",
+    signingOut: "Disconnessione...",
+  },
   common: {
     emailLabel: "Email",
     emailPlaceholder: "nome@email.com",

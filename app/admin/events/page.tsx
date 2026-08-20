@@ -6,6 +6,7 @@ import { isEventConcluded } from "@/lib/utils/eventStatus";
 import AdminEventTable from "@/components/admin/AdminEventTable";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   searchParams: Promise<{ filter?: string }>;
@@ -17,6 +18,8 @@ export default async function AdminEventsPage({
   const params = await searchParams;
 
   const supabase = await createClient();
+  const { dict } = await getTranslations();
+  const t = dict.admin.eventsPage;
 
   // Controlla autenticazione
   const {
@@ -78,11 +81,11 @@ export default async function AdminEventsPage({
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Gestione eventi
+            {t.title}
           </h1>
 
           <p className="mt-2 text-muted-foreground">
-            Gestisci tutti gli eventi di Car2ne.
+            {t.subtitle}
           </p>
         </div>
 
@@ -94,7 +97,7 @@ export default async function AdminEventsPage({
               "h-auto rounded-2xl px-6 py-3"
             )}
           >
-            + Nuovo evento
+            {t.newEvent}
           </Link>
         </div>
       </div>
@@ -103,6 +106,8 @@ export default async function AdminEventsPage({
         key={params.filter ?? "all"}
         events={activeEvents}
         initialFilter={params.filter}
+        dict={dict.admin.eventTable}
+        confirmDialogDict={dict.admin.confirmDialog}
       />
     </main>
   );

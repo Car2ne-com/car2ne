@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import MfaChallengeForm from "@/components/auth/MfaChallengeForm";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   searchParams: Promise<{ next?: string }>;
@@ -14,6 +15,8 @@ export default async function MfaChallengePage({
   searchParams,
 }: Props) {
   const supabase = await createClient();
+  const { dict } = await getTranslations();
+  const t = dict.auth.mfaChallenge;
 
   const {
     data: { user },
@@ -33,20 +36,19 @@ export default async function MfaChallengePage({
         <div className="w-full">
           <div className="mb-10 text-center">
             <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
-              🔒 Verifica in due passaggi
+              {t.pageBadge}
             </span>
 
             <h1 className="mt-6 text-4xl font-black text-foreground">
-              Conferma la tua identità
+              {t.pageTitle}
             </h1>
 
             <p className="mt-4 text-slate-600">
-              Il tuo account ha l&apos;autenticazione
-              a due fattori attiva.
+              {t.pageSubtitle}
             </p>
           </div>
 
-          <MfaChallengeForm next={next ?? null} />
+          <MfaChallengeForm next={next ?? null} dict={dict.auth} />
         </div>
       </main>
 

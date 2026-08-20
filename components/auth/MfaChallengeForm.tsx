@@ -9,13 +9,18 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import type { it } from "@/lib/i18n/dictionaries/it";
+
+type AuthDict = (typeof it)["auth"];
 
 type Props = {
   next: string | null;
+  dict: AuthDict;
 };
 
 export default function MfaChallengeForm({
   next,
+  dict,
 }: Props) {
   const router = useRouter();
   const supabase = createClient();
@@ -66,15 +71,13 @@ export default function MfaChallengeForm({
     e.preventDefault();
 
     if (!factorId) {
-      toast.error(
-        "Nessun metodo di autenticazione a due fattori trovato."
-      );
+      toast.error(dict.loginForm.errors.noMfaMethod);
 
       return;
     }
 
     if (code.trim().length !== 6) {
-      toast.error("Inserisci il codice a 6 cifre.");
+      toast.error(dict.loginForm.errors.mfaCodeLength);
       return;
     }
 
@@ -114,9 +117,7 @@ export default function MfaChallengeForm({
         verifyError
       );
 
-      toast.error(
-        "Codice non valido. Riprova."
-      );
+      toast.error(dict.loginForm.errors.invalidMfaCode);
 
       setCode("");
       return;
@@ -158,7 +159,7 @@ export default function MfaChallengeForm({
         className="space-y-6"
       >
         <div>
-          <Label>Codice di verifica</Label>
+          <Label>{dict.loginForm.mfaCodeLabel}</Label>
 
           <Input
             type="text"
@@ -180,8 +181,7 @@ export default function MfaChallengeForm({
           />
 
           <p className="mt-2 text-xs text-muted-foreground">
-            Apri la tua app di autenticazione e
-            inserisci il codice generato.
+            {dict.loginForm.mfaSubtitle}
           </p>
         </div>
 
@@ -197,8 +197,7 @@ export default function MfaChallengeForm({
             disabled={loading}
             className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
           />
-          Non chiedermelo più su questo
-          dispositivo per 14 giorni
+          {dict.loginForm.trustDevice}
         </label>
 
         <Button
@@ -206,7 +205,7 @@ export default function MfaChallengeForm({
           disabled={loading || !factorId}
           className="h-12 w-full rounded-2xl bg-emerald-500 text-base font-semibold hover:bg-emerald-600"
         >
-          {loading ? "Verifica..." : "Verifica"}
+          {loading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
         </Button>
 
         <Button
@@ -217,8 +216,8 @@ export default function MfaChallengeForm({
           className="w-full font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
         >
           {signingOut
-            ? "Disconnessione..."
-            : "Torna al login"}
+            ? dict.mfaChallenge.signingOut
+            : dict.common.backToLogin}
         </Button>
       </form>
     </Card>

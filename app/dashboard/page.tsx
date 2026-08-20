@@ -92,11 +92,13 @@ export default async function DashboardPage() {
           name={
             profileResult.data?.name ?? "👋"
           }
+          dict={dict.dashboardHome.header}
         />
 
         <PushNotificationPrompt dict={dict.push} />
 
         <DashboardStats
+          dict={dict.dashboardHome.stats}
           ridesCount={
             ridesResult.count ?? 0
           }
@@ -109,7 +111,8 @@ export default async function DashboardPage() {
         />
 
         <DashboardActions
-          dict={dict.driverVerification.dashboardCard}
+          dict={dict.dashboardHome.actions}
+          verificationDict={dict.driverVerification.dashboardCard}
           verificationStatus={
             verificationResult.data?.status ?? null
           }

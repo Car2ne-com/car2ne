@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTranslations } from "@/lib/i18n";
 
 type CityRow = {
   id: string;
@@ -80,6 +81,8 @@ export default async function AdminCitiesPage({
   const currentPage = Math.max(1, Number(params.page) || 1);
 
   const supabase = await createClient();
+  const { dict } = await getTranslations();
+  const t = dict.admin.citiesPage;
 
   const from = (currentPage - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
@@ -144,15 +147,16 @@ export default async function AdminCitiesPage({
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">
-          Città &amp; venue
+          {t.title}
         </h1>
 
         <p className="mt-2 text-muted-foreground">
-          Vista di sola lettura. Città e venue vengono creati
-          automaticamente dal resolver durante l&apos;import
-          Ticketmaster o il backfill — non da qui.
+          {t.subtitle}
           {totalCities
-            ? ` ${totalCities.toLocaleString("it-IT")} comuni totali.`
+            ? t.totalMunicipalities.replace(
+                "{count}",
+                totalCities.toLocaleString("it-IT")
+              )
             : ""}
         </p>
       </div>
@@ -163,6 +167,7 @@ export default async function AdminCitiesPage({
         eventCountByCity={eventCountByCity}
         currentPage={currentPage}
         totalPages={totalPages}
+        dict={dict.admin.citiesTable}
       />
 
       <div className="mt-10">
@@ -170,11 +175,25 @@ export default async function AdminCitiesPage({
           venues={(venues ?? []) as VenueRow[]}
           cityNameById={cityNameById}
           eventCountByVenue={eventCountByVenue}
+          dict={dict.admin.venuesTable}
         />
       </div>
     </main>
   );
 }
+
+type CitiesTableDict = {
+  emptyTitle: string;
+  emptyDescription: string;
+  colName: string;
+  colSlug: string;
+  colRegion: string;
+  colVenues: string;
+  colEvents: string;
+  previous: string;
+  next: string;
+  pageOf: string;
+};
 
 function CitiesTable({
   cities,
@@ -182,18 +201,20 @@ function CitiesTable({
   eventCountByCity,
   currentPage,
   totalPages,
+  dict,
 }: {
   cities: CityRow[];
   venueCountByCity: Map<string, number>;
   eventCountByCity: Map<string, number>;
   currentPage: number;
   totalPages: number;
+  dict: CitiesTableDict;
 }) {
   if (cities.length === 0) {
     return (
       <EmptyState
-        title="Nessuna città"
-        description="Le città compaiono qui dopo il primo import Ticketmaster o backfill."
+        title={dict.emptyTitle}
+        description={dict.emptyDescription}
       />
     );
   }
@@ -204,11 +225,11 @@ function CitiesTable({
         <table className="w-full">
           <thead className="bg-muted">
             <tr>
-              <th className="px-6 py-4 text-left">Nome</th>
-              <th className="px-6 py-4 text-left">Slug</th>
-              <th className="px-6 py-4 text-left">Regione</th>
-              <th className="px-6 py-4 text-left">Venue</th>
-              <th className="px-6 py-4 text-left">Eventi</th>
+              <th className="px-6 py-4 text-left">{dict.colName}</th>
+              <th className="px-6 py-4 text-left">{dict.colSlug}</th>
+              <th className="px-6 py-4 text-left">{dict.colRegion}</th>
+              <th className="px-6 py-4 text-left">{dict.colVenues}</th>
+              <th className="px-6 py-4 text-left">{dict.colEvents}</th>
             </tr>
           </thead>
 
@@ -246,16 +267,18 @@ function CitiesTable({
                 "h-auto rounded-xl px-4 py-2"
               )}
             >
-              Precedente
+              {dict.previous}
             </Link>
           ) : (
             <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
-              Precedente
+              {dict.previous}
             </span>
           )}
 
           <span className="text-sm text-muted-foreground">
-            Pagina {currentPage} di {totalPages}
+            {dict.pageOf
+              .replace("{current}", String(currentPage))
+              .replace("{total}", String(totalPages))}
           </span>
 
           {currentPage < totalPages ? (
@@ -266,11 +289,11 @@ function CitiesTable({
                 "h-auto rounded-xl px-4 py-2"
               )}
             >
-              Successiva
+              {dict.next}
             </Link>
           ) : (
             <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
-              Successiva
+              {dict.next}
             </span>
           )}
         </div>
@@ -279,33 +302,45 @@ function CitiesTable({
   );
 }
 
+type VenuesTableDict = {
+  title: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  colName: string;
+  colCity: string;
+  colAddress: string;
+  colEvents: string;
+};
+
 function VenuesTable({
   venues,
   cityNameById,
   eventCountByVenue,
+  dict,
 }: {
   venues: VenueRow[];
   cityNameById: Map<string, string>;
   eventCountByVenue: Map<string, number>;
+  dict: VenuesTableDict;
 }) {
   return (
     <>
-      <h2 className="mb-4 text-lg font-semibold text-foreground">Venue</h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">{dict.title}</h2>
 
       {venues.length === 0 ? (
         <EmptyState
-          title="Nessun venue"
-          description="I venue compaiono qui dopo il primo import Ticketmaster o backfill."
+          title={dict.emptyTitle}
+          description={dict.emptyDescription}
         />
       ) : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full">
             <thead className="bg-muted">
               <tr>
-                <th className="px-6 py-4 text-left">Nome</th>
-                <th className="px-6 py-4 text-left">Città</th>
-                <th className="px-6 py-4 text-left">Indirizzo</th>
-                <th className="px-6 py-4 text-left">Eventi</th>
+                <th className="px-6 py-4 text-left">{dict.colName}</th>
+                <th className="px-6 py-4 text-left">{dict.colCity}</th>
+                <th className="px-6 py-4 text-left">{dict.colAddress}</th>
+                <th className="px-6 py-4 text-left">{dict.colEvents}</th>
               </tr>
             </thead>
 

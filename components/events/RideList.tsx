@@ -99,7 +99,7 @@ export default async function RideList({
 
         driver:
           profile?.name ??
-          "Conducente",
+          "",
 
         driverSurname:
           profile?.surname ??

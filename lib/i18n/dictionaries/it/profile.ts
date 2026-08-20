@@ -1,4 +1,6 @@
 export const profile = {
+  title: "Il mio profilo",
+  subtitle: "Gestisci le informazioni del tuo account Car2ne.",
   deleteAccount: {
     title: "Elimina account",
     description:
@@ -18,5 +20,98 @@ export const profile = {
       "Account eliminato. Ci dispiace vederti andare via!",
     genericError:
       "Non è stato possibile eliminare l'account. Riprova.",
+  },
+  form: {
+    avatarPreviewAlt: "Anteprima avatar",
+    avatarHint: "JPG, PNG o WebP · massimo 2 MB",
+    newPhotoSelected: "Nuova foto selezionata",
+    memberBadge: "Membro Car2ne",
+    accountInfoTitle: "Informazioni account",
+    accountInfoDescription:
+      "Questi dati identificano il tuo account e non possono essere modificati da questa pagina.",
+    nameLabel: "Nome",
+    surnameLabel: "Cognome",
+    emailLabel: "Email",
+    publicProfileTitle: "Profilo pubblico",
+    publicProfileDescription:
+      "Queste informazioni potranno essere visibili agli altri utenti quando offrirai o prenoterai un passaggio.",
+    cityLabel: "Città",
+    cityPlaceholder: "Milano",
+    bioLabel: "Biografia",
+    bioPlaceholder: "Parla un po' di te...",
+    bioHint: "Una breve descrizione che aiuti gli altri a conoscerti.",
+    saving: "Salvataggio...",
+    saveButton: "Salva modifiche",
+    errors: {
+      unsupportedFormat: "Formato non supportato. Usa JPG, PNG o WebP.",
+      imageTooLarge: "L'immagine non può superare 2 MB.",
+      sessionError: "Errore nel recupero della sessione.",
+      sessionInvalid:
+        "La sessione non è valida. Effettua nuovamente il login.",
+      uploadFailed: "Non è stato possibile caricare l'immagine.",
+      profileUpdateAfterUploadFailed:
+        "Immagine caricata, ma non è stato possibile aggiornare il profilo.",
+      updateFailed: "Non è stato possibile aggiornare il profilo.",
+    },
+    success: {
+      avatarUpdated: "Foto profilo aggiornata!",
+      profileUpdated: "Profilo aggiornato con successo!",
+    },
+  },
+  publicProfile: {
+    noReviewsYet: "Nessuna recensione ancora",
+    reviewsTitle: "Recensioni",
+    anonymousReviewerFallback: "Utente Car2ne",
+  },
+  changePassword: {
+    title: "Password",
+    description:
+      "Aggiorna la password del tuo account. Se hai effettuato l'accesso con Google, questo ti permetterà di impostarne una anche per l'email.",
+    changeButton: "Cambia password",
+    newPasswordLabel: "Nuova password",
+    showPassword: "Mostra password",
+    hidePassword: "Nascondi password",
+    passwordRequirementsTitle: "La password deve contenere:",
+    ruleMinLength: "Almeno 8 caratteri",
+    ruleNumber: "Almeno un numero",
+    ruleUppercase: "Una lettera maiuscola",
+    ruleLowercase: "Una lettera minuscola",
+    ruleSpecial: "Un carattere speciale",
+    confirmNewPasswordLabel: "Conferma nuova password",
+    passwordsDontMatch: "Le password non coincidono.",
+    updateButton: "Aggiorna password",
+    updating: "Aggiornamento...",
+    cancelButton: "Annulla",
+    errors: {
+      weakPassword: "La password non rispetta tutti i requisiti di sicurezza.",
+      passwordMismatch: "Le password non coincidono.",
+    },
+    success: "Password aggiornata con successo!",
+  },
+  mfa: {
+    title: "Autenticazione a due fattori",
+    description:
+      "Aggiungi un livello di sicurezza in più: oltre alla password, ti verrà richiesto un codice generato da un'app di autenticazione (es. Google Authenticator, Authy).",
+    loading: "Caricamento...",
+    qrAlt: "QR code per l'autenticazione a due fattori",
+    step1Title: "1. Scansiona il QR code",
+    step1Description: "Usa un'app come Google Authenticator o Authy.",
+    manualEntryPrefix: "Oppure inserisci manualmente questo codice:",
+    step2Label: "2. Inserisci il codice generato",
+    verifyAndEnableButton: "Verifica e attiva",
+    cancelButton: "Annulla",
+    activeLabel: "Attiva",
+    inactiveLabel: "Non attiva",
+    confirmDisableQuestion: "Confermi la disattivazione?",
+    disableButton: "Disattiva",
+    enableButton: "Attiva autenticazione a due fattori",
+    errors: {
+      codeLength: "Inserisci il codice a 6 cifre.",
+      invalidCode: "Codice non valido. Riprova.",
+    },
+    success: {
+      enabled: "Autenticazione a due fattori attivata!",
+      disabled: "Autenticazione a due fattori disattivata.",
+    },
   },
 };
