@@ -228,12 +228,6 @@ export const admin = {
     saveFailed: "Salvataggio fallito.",
     eventUpdatedToast: "Evento aggiornato!",
     eventCreatedToast: "Evento creato!",
-    pasteLabel: "Incolla il testo copiato dalla pagina dell'evento",
-    pastePlaceholder: "Incolla qui titolo, data, venue... così come li hai copiati",
-    pasteButton: "Prova a precompilare",
-    pasteHint:
-      "Riconosce titolo e data quando possibile; il resto del testo va in descrizione. Rivedi sempre i campi prima di salvare.",
-    pasteEmptyToast: "Incolla prima del testo.",
   },
   imageUploader: {
     previewAlt: "Anteprima evento",

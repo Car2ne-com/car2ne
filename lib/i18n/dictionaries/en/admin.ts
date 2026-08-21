@@ -230,12 +230,6 @@ export const admin: (typeof it)["admin"] = {
     saveFailed: "Save failed.",
     eventUpdatedToast: "Event updated!",
     eventCreatedToast: "Event created!",
-    pasteLabel: "Paste the text copied from the event page",
-    pastePlaceholder: "Paste title, date, venue... as you copied them",
-    pasteButton: "Try to prefill",
-    pasteHint:
-      "Recognizes title and date when possible; the rest of the text goes into the description. Always review the fields before saving.",
-    pasteEmptyToast: "Paste some text first.",
   },
   imageUploader: {
     previewAlt: "Event preview",
