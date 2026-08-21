@@ -43,8 +43,11 @@ export default async function ManageRidePage({
       .select(`
         id,
         event_id,
+        direction,
         origin_city_id,
+        destination_city_id,
         departure_city,
+        destination,
         departure_date,
         departure_time,
         available_seats,
@@ -139,11 +142,13 @@ export default async function ManageRidePage({
 
           <div className="mt-5 grid gap-5 sm:grid-cols-3">
 
-            {/* Destinazione */}
+            {/* Destinazione (o partenza, per un ritorno) */}
 
             <div>
               <p className="text-sm text-muted-foreground">
-                {t.managePage.destinationLabel}
+                {ride.direction === "return"
+                  ? t.managePage.originLabel
+                  : t.managePage.destinationLabel}
               </p>
 
               <p className="mt-1 font-semibold text-foreground">
@@ -190,8 +195,13 @@ export default async function ManageRidePage({
           ratingFormDict={dict.ratings.form}
           ride={{
             id: ride.id,
+            direction:
+              ride.direction as "outbound" | "return",
             origin_city_id: ride.origin_city_id,
+            destination_city_id:
+              ride.destination_city_id,
             departure_city: ride.departure_city,
+            destination: ride.destination,
             departure_date: ride.departure_date,
             departure_time: ride.departure_time,
             available_seats: ride.available_seats,

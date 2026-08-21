@@ -26,6 +26,7 @@ export default async function MyRidesPage() {
     .select(`
       id,
       event_id,
+      direction,
       departure_city,
       destination,
       departure_date,
@@ -135,15 +136,23 @@ export default async function MyRidesPage() {
                       </h2>
                     </div>
 
-                    <span
-                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                        ride.status === "active"
-                          ? "bg-accent text-accent-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {statusLabel}
-                    </span>
+                    <div className="flex shrink-0 flex-col items-end gap-2">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                          ride.status === "active"
+                            ? "bg-accent text-accent-foreground"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {statusLabel}
+                      </span>
+
+                      <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                        {ride.direction === "return"
+                          ? t.directionReturn
+                          : t.directionOutbound}
+                      </span>
+                    </div>
 
                   </div>
 

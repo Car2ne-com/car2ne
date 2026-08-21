@@ -11,6 +11,8 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
     emptyCta: "Offer a ride",
     statusActive: "Active",
     statusCancelled: "Cancelled",
+    directionOutbound: "Outbound",
+    directionReturn: "Return",
     eventLabel: "Event",
     dateLabel: "Date",
     departureLabel: "Departure",
@@ -25,6 +27,7 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
     subtitle: "Update the details of your trip.",
     eventLabel: "Event",
     destinationLabel: "Destination",
+    originLabel: "Departure",
     eventDateLabel: "Event date",
     cityLabel: "City",
     infoLocked:
@@ -59,6 +62,7 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
   },
   form: {
     originCityLabel: "Departure city *",
+    destinationCityLabel: "Destination city *",
     departureTimeLabel: "Departure time *",
     seatsLabel: "Available seats *",
     contributionLabel: "Contribution (€) *",
@@ -66,7 +70,7 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
     descriptionPlaceholder: "Add useful information for passengers...",
     save: "Save changes",
     saving: "Saving...",
-    missingCity: "Select a departure city from the suggestions.",
+    missingCity: "Select a city from the suggestions.",
     missingFields: "Fill in all required fields.",
     updateSuccess: "Ride updated successfully.",
   },

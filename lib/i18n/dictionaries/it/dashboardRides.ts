@@ -9,6 +9,8 @@ export const dashboardRides = {
     emptyCta: "Offri un passaggio",
     statusActive: "Attivo",
     statusCancelled: "Annullato",
+    directionOutbound: "Andata",
+    directionReturn: "Ritorno",
     eventLabel: "Evento",
     dateLabel: "Data",
     departureLabel: "Partenza",
@@ -23,6 +25,7 @@ export const dashboardRides = {
     subtitle: "Aggiorna le informazioni del tuo viaggio.",
     eventLabel: "Evento",
     destinationLabel: "Destinazione",
+    originLabel: "Partenza",
     eventDateLabel: "Data evento",
     cityLabel: "Città",
     infoLocked:
@@ -59,6 +62,7 @@ export const dashboardRides = {
   },
   form: {
     originCityLabel: "Città di partenza *",
+    destinationCityLabel: "Città di destinazione *",
     departureTimeLabel: "Ora di partenza *",
     seatsLabel: "Posti disponibili *",
     contributionLabel: "Contributo (€) *",
@@ -66,7 +70,7 @@ export const dashboardRides = {
     descriptionPlaceholder: "Aggiungi informazioni utili per i passeggeri...",
     save: "Salva modifiche",
     saving: "Salvataggio...",
-    missingCity: "Seleziona una città di partenza dai suggerimenti.",
+    missingCity: "Seleziona una città dai suggerimenti.",
     missingFields: "Compila tutti i campi obbligatori.",
     updateSuccess: "Passaggio aggiornato con successo.",
   },

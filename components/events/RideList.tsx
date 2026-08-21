@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import RideCard from "./RideCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
@@ -23,6 +25,7 @@ export default async function RideList({
       id,
       event_id,
       driver_id,
+      direction,
       departure_city,
       destination,
       departure_date,
@@ -94,6 +97,8 @@ export default async function RideList({
 
         driverId: ride.driver_id,
 
+        direction: ride.direction as "outbound" | "return",
+
         driverRating:
           driverRatings[ride.driver_id] ?? null,
 
@@ -157,18 +162,83 @@ export default async function RideList({
       </div>
 
       {formattedRides.length === 0 ? (
-        <EmptyState title={t.emptyTitle} description={t.emptyDescription} />
+        <div className="text-center">
+          <EmptyState title={t.emptyTitle} description={t.emptyDescription} />
+
+          <Link
+            href={`/offer-ride?eventId=${eventId}`}
+            className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+          >
+            {t.emptyCta}
+          </Link>
+        </div>
       ) : (
-        <div className="grid gap-8 lg:grid-cols-2">
-          {formattedRides.map(
-            (ride) => (
-              <RideCard
-                key={ride.id}
-                ride={ride}
-                dict={t}
-              />
-            )
-          )}
+        <div className="space-y-12">
+          {(
+            [
+              {
+                direction: "outbound" as const,
+                title: t.sectionOutbound,
+                sectionId: undefined,
+              },
+              {
+                direction: "return" as const,
+                title: t.sectionReturn,
+                sectionId: "return-section",
+              },
+            ]
+          ).map(({ direction, title, sectionId }) => {
+            const rides = formattedRides.filter(
+              (ride) => ride.direction === direction
+            );
+
+            /*
+             * Passata solo alle card di andata: permette al passeggero
+             * di richiedere anche il ritorno con un click in più,
+             * invece di dover scorrere fino alla sezione qui sotto.
+             */
+            const matchingReturnRides =
+              direction === "outbound"
+                ? formattedRides.filter(
+                    (ride) => ride.direction === "return"
+                  )
+                : [];
+
+            return (
+              <div key={direction} id={sectionId}>
+                <h3 className="mb-5 text-xl font-bold text-foreground">
+                  {title}
+                </h3>
+
+                {rides.length === 0 ? (
+                  <div className="text-center">
+                    <EmptyState
+                      title={t.emptyTitle}
+                      description={t.emptyDescription}
+                    />
+
+                    <Link
+                      href={`/offer-ride?eventId=${eventId}&direction=${direction}`}
+                      className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+                    >
+                      {t.emptyCta}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid gap-8 lg:grid-cols-2">
+                    {rides.map((ride) => (
+                      <RideCard
+                        key={ride.id}
+                        ride={ride}
+                        dict={t}
+                        matchingReturnRides={matchingReturnRides}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

@@ -15,19 +15,28 @@ export const offerRide = {
     noResults: "Nessun evento trovato.",
     moreResults: "Altri {count} risultati, affina la ricerca.",
   },
+  direction: {
+    label: "Direzione *",
+    outbound: "🚗 Andata",
+    outboundHint: "Parti da una città verso l'evento.",
+    return: "🔁 Ritorno",
+    returnHint: "Parti dall'evento verso una città.",
+  },
   alreadyHasRide: {
     title: "Hai già un passaggio attivo",
     description:
-      "Hai già pubblicato un passaggio per questo evento. Puoi modificarlo o eliminarlo dalla sezione I miei passaggi.",
+      "Hai già pubblicato un passaggio con questa direzione per questo evento. Puoi modificarlo o eliminarlo dalla sezione I miei passaggi.",
     cta: "Vai ai miei passaggi",
   },
   eventInfo: {
     destination: "📍 Destinazione",
+    origin: "📍 Partenza",
     eventDate: "📅 Data evento",
-    note: "Destinazione e data sono impostate automaticamente dall'evento.",
+    note: "La venue e la data sono impostate automaticamente dall'evento.",
   },
   fields: {
     originCityLabel: "Città di partenza *",
+    destinationCityLabel: "Città di destinazione *",
     departureTimeLabel: "Ora di partenza *",
     departureTimeHint: "Scegli l'orario in cui prevedi di partire.",
     seatsLabel: "Posti disponibili *",
@@ -40,7 +49,7 @@ export const offerRide = {
     publish: "Pubblica passaggio",
   },
   toasts: {
-    selectDepartureCity: "Seleziona una città di partenza dai suggerimenti.",
+    selectDepartureCity: "Seleziona una città dai suggerimenti.",
     fillRequiredFields: "Compila tutti i campi obbligatori.",
     selectValidEvent: "Seleziona un evento valido.",
     checkExistingRideFailed:

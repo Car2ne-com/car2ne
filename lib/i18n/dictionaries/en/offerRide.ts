@@ -17,19 +17,28 @@ export const offerRide: (typeof it)["offerRide"] = {
     noResults: "No events found.",
     moreResults: "{count} more results, refine your search.",
   },
+  direction: {
+    label: "Direction *",
+    outbound: "🚗 Outbound",
+    outboundHint: "Leave from a city towards the event.",
+    return: "🔁 Return",
+    returnHint: "Leave from the event towards a city.",
+  },
   alreadyHasRide: {
     title: "You already have an active ride",
     description:
-      "You've already published a ride for this event. You can edit or delete it from the My rides section.",
+      "You've already published a ride with this direction for this event. You can edit or delete it from the My rides section.",
     cta: "Go to my rides",
   },
   eventInfo: {
     destination: "📍 Destination",
+    origin: "📍 Departure",
     eventDate: "📅 Event date",
-    note: "Destination and date are set automatically from the event.",
+    note: "The venue and date are set automatically from the event.",
   },
   fields: {
     originCityLabel: "Departure city *",
+    destinationCityLabel: "Destination city *",
     departureTimeLabel: "Departure time *",
     departureTimeHint: "Choose the time you expect to leave.",
     seatsLabel: "Available seats *",
@@ -42,7 +51,7 @@ export const offerRide: (typeof it)["offerRide"] = {
     publish: "Publish ride",
   },
   toasts: {
-    selectDepartureCity: "Select a departure city from the suggestions.",
+    selectDepartureCity: "Select a city from the suggestions.",
     fillRequiredFields: "Fill in all required fields.",
     selectValidEvent: "Select a valid event.",
     checkExistingRideFailed: "Couldn't verify your rides. Please try again.",

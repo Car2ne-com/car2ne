@@ -22,6 +22,7 @@ import CityCombobox from "@/components/cities/CityCombobox";
 import { Event } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
 import { haversineKm } from "@/lib/utils/distance";
+import { cn } from "@/lib/utils";
 
 /*
  * Soglia indicativa di prezzo equo, in stile BlaBlaCar: un
@@ -37,8 +38,11 @@ const MIN_DISTANCE_FOR_CAP_KM = 15;
 const DRAFT_KEY =
   "car2ne_offer_ride_draft";
 
+type RideDirection = "outbound" | "return";
+
 type RideDraft = {
   eventId: string;
+  direction: RideDirection;
   originCityId: string;
   departureCity: string;
   departureTime: string;
@@ -57,6 +61,13 @@ type OfferRideDict = {
     noResults: string;
     moreResults: string;
   };
+  direction: {
+    label: string;
+    outbound: string;
+    outboundHint: string;
+    return: string;
+    returnHint: string;
+  };
   alreadyHasRide: {
     title: string;
     description: string;
@@ -64,11 +75,13 @@ type OfferRideDict = {
   };
   eventInfo: {
     destination: string;
+    origin: string;
     eventDate: string;
     note: string;
   };
   fields: {
     originCityLabel: string;
+    destinationCityLabel: string;
     departureTimeLabel: string;
     departureTimeHint: string;
     seatsLabel: string;
@@ -106,9 +119,16 @@ type OfferRideDict = {
 type Props = {
   locale: Locale;
   dict: OfferRideDict;
+  initialEventId?: string;
+  initialDirection?: string;
 };
 
-export default function OfferRideForm({ locale, dict }: Props) {
+export default function OfferRideForm({
+  locale,
+  dict,
+  initialEventId,
+  initialDirection,
+}: Props) {
   const router = useRouter();
 
   const supabase = createClient();
@@ -124,6 +144,13 @@ export default function OfferRideForm({ locale, dict }: Props) {
 
   const [eventId, setEventId] =
     useState("");
+
+  const [direction, setDirection] =
+    useState<RideDirection>(
+      initialDirection === "return"
+        ? "return"
+        : "outbound"
+    );
 
   const [originCityId, setOriginCityId] =
     useState("");
@@ -349,6 +376,11 @@ export default function OfferRideForm({ locale, dict }: Props) {
               draft.eventId
             );
 
+            setDirection(
+              draft.direction ??
+                "outbound"
+            );
+
             setOriginCityId(
               draft.originCityId
             );
@@ -397,6 +429,24 @@ export default function OfferRideForm({ locale, dict }: Props) {
               DRAFT_KEY
             );
           }
+        } else if (initialEventId) {
+          /*
+           * Evento preselezionato da query string
+           * (es. link "Offri un passaggio" da una
+           * pagina evento senza passaggi disponibili).
+           */
+
+          const event =
+            loadedEvents.find(
+              (event) =>
+                event.id ===
+                initialEventId
+            );
+
+          if (event) {
+            setEventId(event.id);
+            setSelectedEvent(event);
+          }
         }
       }
 
@@ -407,35 +457,30 @@ export default function OfferRideForm({ locale, dict }: Props) {
     // supabase è un client singleton (createBrowserClient di @supabase/ssr
     // restituisce sempre la stessa istanza lato client), quindi includerlo
     // qui non cambia quando l'effect viene eseguito rispetto a `[]`.
+    // initialEventId va usato solo per la preselezione al primo
+    // caricamento: va letto una volta sola, non deve far ripartire il
+    // fetch degli eventi se cambiasse (non cambia, è un prop da server).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase]);
 
   /*
    * ==============================
-   * CAMBIO EVENTO
+   * CAMBIO EVENTO / DIREZIONE
    * ==============================
+   *
+   * "Già hai un passaggio" va controllato per la coppia
+   * evento+direzione: un conducente può avere un'andata E
+   * un ritorno attivi per lo stesso evento, quindi il
+   * controllo va rifatto sia al cambio evento sia al
+   * cambio direzione.
    */
 
-  async function handleEventChange(
-    selectedEventId: string
+  async function checkAlreadyHasRide(
+    selectedEventId: string,
+    selectedDirection: RideDirection
   ) {
-    setEventId(
-      selectedEventId
-    );
-
-    setAlreadyHasRide(false);
-
-    const event =
-      events.find(
-        (event) =>
-          event.id ===
-          selectedEventId
-      );
-
-    setSelectedEvent(
-      event ?? null
-    );
-
     if (!selectedEventId) {
+      setAlreadyHasRide(false);
       return;
     }
 
@@ -444,13 +489,9 @@ export default function OfferRideForm({ locale, dict }: Props) {
     } = await supabase.auth.getUser();
 
     if (!user) {
+      setAlreadyHasRide(false);
       return;
     }
-
-    /*
-     * Controlliamo se l'utente ha già
-     * pubblicato una corsa per questo evento.
-     */
 
     const {
       data: existingRide,
@@ -465,6 +506,10 @@ export default function OfferRideForm({ locale, dict }: Props) {
       .eq(
         "event_id",
         selectedEventId
+      )
+      .eq(
+        "direction",
+        selectedDirection
       )
       .eq(
         "status",
@@ -486,6 +531,41 @@ export default function OfferRideForm({ locale, dict }: Props) {
     );
   }
 
+  async function handleEventChange(
+    selectedEventId: string
+  ) {
+    setEventId(
+      selectedEventId
+    );
+
+    const event =
+      events.find(
+        (event) =>
+          event.id ===
+          selectedEventId
+      );
+
+    setSelectedEvent(
+      event ?? null
+    );
+
+    await checkAlreadyHasRide(
+      selectedEventId,
+      direction
+    );
+  }
+
+  function handleDirectionChange(
+    newDirection: RideDirection
+  ) {
+    setDirection(newDirection);
+
+    void checkAlreadyHasRide(
+      eventId,
+      newDirection
+    );
+  }
+
   /*
    * ==============================
    * SALVA BOZZA
@@ -495,6 +575,7 @@ export default function OfferRideForm({ locale, dict }: Props) {
   function saveDraft() {
     const draft: RideDraft = {
       eventId,
+      direction,
       originCityId,
       departureCity,
       departureTime,
@@ -608,6 +689,10 @@ export default function OfferRideForm({ locale, dict }: Props) {
         event.id
       )
       .eq(
+        "direction",
+        direction
+      )
+      .eq(
         "status",
         "active"
       )
@@ -668,6 +753,13 @@ export default function OfferRideForm({ locale, dict }: Props) {
      * dell'evento.
      */
 
+    /*
+     * Per l'andata l'origine è la città scelta dal
+     * conducente e la destinazione è fissa (la venue).
+     * Per il ritorno è l'opposto: si parte dalla venue
+     * verso la città scelta dal conducente.
+     */
+
     const {
       error,
     } = await supabase
@@ -677,14 +769,27 @@ export default function OfferRideForm({ locale, dict }: Props) {
 
         driver_id: user.id,
 
+        direction,
+
         origin_city_id:
-          originCityId,
+          direction === "outbound"
+            ? originCityId
+            : null,
+
+        destination_city_id:
+          direction === "return"
+            ? originCityId
+            : null,
 
         departure_city:
-          departureCity,
+          direction === "outbound"
+            ? departureCity
+            : event.venue,
 
         destination:
-          event.venue,
+          direction === "outbound"
+            ? event.venue
+            : departureCity,
 
         departure_date:
           departureDate,
@@ -808,6 +913,56 @@ export default function OfferRideForm({ locale, dict }: Props) {
           />
         </div>
 
+        {/* Direzione */}
+
+        <div className="md:col-span-2">
+          <Label>{dict.direction.label}</Label>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                handleDirectionChange("outbound")
+              }
+              className={cn(
+                "rounded-2xl border p-4 text-left transition",
+                direction === "outbound"
+                  ? "border-primary bg-accent"
+                  : "border-border hover:border-primary/30"
+              )}
+            >
+              <span className="block font-semibold text-foreground">
+                {dict.direction.outbound}
+              </span>
+
+              <span className="mt-1 block text-xs text-muted-foreground">
+                {dict.direction.outboundHint}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                handleDirectionChange("return")
+              }
+              className={cn(
+                "rounded-2xl border p-4 text-left transition",
+                direction === "return"
+                  ? "border-primary bg-accent"
+                  : "border-border hover:border-primary/30"
+              )}
+            >
+              <span className="block font-semibold text-foreground">
+                {dict.direction.return}
+              </span>
+
+              <span className="mt-1 block text-xs text-muted-foreground">
+                {dict.direction.returnHint}
+              </span>
+            </button>
+          </div>
+        </div>
+
         {/* Avviso passaggio già esistente */}
 
         {alreadyHasRide && (
@@ -848,7 +1003,9 @@ export default function OfferRideForm({ locale, dict }: Props) {
 
               <div>
                 <p className="text-sm font-semibold text-accent-foreground">
-                  {dict.eventInfo.destination}
+                  {direction === "outbound"
+                    ? dict.eventInfo.destination
+                    : dict.eventInfo.origin}
                 </p>
 
                 <p className="mt-1 text-base font-semibold text-foreground">
@@ -884,10 +1041,14 @@ export default function OfferRideForm({ locale, dict }: Props) {
           </div>
         )}
 
-        {/* Partenza */}
+        {/* Città (partenza per l'andata, destinazione per il ritorno) */}
 
         <div>
-          <Label>{dict.fields.originCityLabel}</Label>
+          <Label>
+            {direction === "outbound"
+              ? dict.fields.originCityLabel
+              : dict.fields.destinationCityLabel}
+          </Label>
 
           <CityCombobox
             value={originCityId}

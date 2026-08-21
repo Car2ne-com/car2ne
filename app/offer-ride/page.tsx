@@ -6,7 +6,18 @@ import OfferRideForm from "@/components/offerRide/OfferRideForm";
 
 import { getTranslations } from "@/lib/i18n";
 
-export default async function OfferRidePage() {
+type Props = {
+  searchParams: Promise<{
+    eventId?: string;
+    direction?: string;
+  }>;
+};
+
+export default async function OfferRidePage({
+  searchParams,
+}: Props) {
+  const params = await searchParams;
+
   const { locale, dict } = await getTranslations();
 
   return (
@@ -16,7 +27,12 @@ export default async function OfferRidePage() {
       <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
         <OfferRideHeader />
 
-        <OfferRideForm locale={locale} dict={dict.offerRide} />
+        <OfferRideForm
+          locale={locale}
+          dict={dict.offerRide}
+          initialEventId={params.eventId ?? ""}
+          initialDirection={params.direction ?? ""}
+        />
       </main>
 
       <Footer />

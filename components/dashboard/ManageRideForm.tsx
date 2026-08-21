@@ -62,6 +62,7 @@ type Dict = {
   };
   form: {
     originCityLabel: string;
+    destinationCityLabel: string;
     departureTimeLabel: string;
     seatsLabel: string;
     contributionLabel: string;
@@ -110,8 +111,11 @@ type Props = {
   ratingFormDict: RatingFormDict;
   ride: {
     id: string;
+    direction: "outbound" | "return";
     origin_city_id: string | null;
+    destination_city_id: string | null;
     departure_city: string;
+    destination: string;
     departure_date: string;
     departure_time: string;
     available_seats: number;
@@ -151,12 +155,24 @@ export default function ManageRideForm({
     []
   );
 
+  /*
+   * "originCityId"/"departureCity" qui rappresentano sempre la città
+   * scelta dal conducente, a prescindere dalla direzione: per un'andata
+   * è la partenza (origin_city_id/departure_city), per un ritorno è la
+   * destinazione (destination_city_id/destination) — l'altro capo del
+   * viaggio è sempre la venue, fissata dall'evento.
+   */
+
   const [originCityId, setOriginCityId] = useState(
-    ride.origin_city_id ?? ""
+    (ride.direction === "return"
+      ? ride.destination_city_id
+      : ride.origin_city_id) ?? ""
   );
 
   const [departureCity, setDepartureCity] = useState(
-    ride.departure_city
+    ride.direction === "return"
+      ? ride.destination
+      : ride.departure_city
   );
 
   function handleOriginCityChange(
@@ -467,14 +483,25 @@ export default function ManageRideForm({
 
     const { error } = await supabase
       .from("rides")
-      .update({
-        origin_city_id: originCityId,
-        departure_city: departureCity,
-        departure_time: departureTime,
-        available_seats: Number(availableSeats),
-        contribution: Number(contribution),
-        description: description || null,
-      })
+      .update(
+        ride.direction === "return"
+          ? {
+              destination_city_id: originCityId,
+              destination: departureCity,
+              departure_time: departureTime,
+              available_seats: Number(availableSeats),
+              contribution: Number(contribution),
+              description: description || null,
+            }
+          : {
+              origin_city_id: originCityId,
+              departure_city: departureCity,
+              departure_time: departureTime,
+              available_seats: Number(availableSeats),
+              contribution: Number(contribution),
+              description: description || null,
+            }
+      )
       .eq("id", ride.id)
       .eq("driver_id", user.id);
 
@@ -788,13 +815,15 @@ export default function ManageRideForm({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <Label>
-              {dict.form.originCityLabel}
+              {ride.direction === "return"
+                ? dict.form.destinationCityLabel
+                : dict.form.originCityLabel}
             </Label>
 
             <CityCombobox
               value={originCityId}
               onChange={handleOriginCityChange}
-              initialLabel={ride.departure_city}
+              initialLabel={departureCity}
               disabled={loading || deleting}
             />
           </div>
