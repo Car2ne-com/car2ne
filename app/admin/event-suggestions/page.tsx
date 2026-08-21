@@ -36,14 +36,7 @@ export default async function AdminEventSuggestionsPage() {
     .select(
       `
       id,
-      title,
-      artist,
-      venue,
-      city,
-      event_date,
       external_url,
-      image_url,
-      description,
       status,
       created_at,
       suggester:profiles!event_suggestions_suggested_by_fkey (
@@ -63,14 +56,7 @@ export default async function AdminEventSuggestionsPage() {
 
     return {
       id: s.id,
-      title: s.title,
-      artist: s.artist,
-      venue: s.venue,
-      city: s.city,
-      eventDate: s.event_date,
       externalUrl: s.external_url,
-      imageUrl: s.image_url,
-      description: s.description,
       status: s.status,
       createdAt: s.created_at,
       suggesterName: [suggester?.name, suggester?.surname]

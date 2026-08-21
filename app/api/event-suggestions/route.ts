@@ -2,22 +2,12 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 
-type EventSuggestionPayload = {
-  title: string;
-  artist: string;
-  venue: string;
-  city: string;
-  event_date: string;
-  external_url: string | null;
-  image_url: string | null;
-  description: string | null;
-};
-
 /*
- * Crea una segnalazione di evento mancante da parte di un utente
- * loggato (es. esclusiva TicketOne/Vivaticket non coperta
- * dall'import Ticketmaster). Chi segnala scrive già i campi
- * dell'evento: l'admin li legge e approva/rifiuta, non li ridigita.
+ * Crea una segnalazione di evento mancante: solo il link, niente
+ * altri campi liberi. Un utente loggato incolla l'URL della pagina
+ * dell'evento su qualsiasi circuito; l'admin la revisiona e, se
+ * valida, crea l'evento a mano da /admin/events/new consultando
+ * quel link nel proprio browser.
  */
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -34,18 +24,32 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json().catch(() => null)) as
-    | EventSuggestionPayload
+    | { url?: unknown }
     | null;
 
-  if (
-    !body?.title ||
-    !body.artist ||
-    !body.venue ||
-    !body.city ||
-    !body.event_date
-  ) {
+  const rawUrl = typeof body?.url === "string" ? body.url.trim() : "";
+
+  if (!rawUrl) {
     return NextResponse.json(
-      { error: "Campi obbligatori mancanti." },
+      { error: "URL mancante." },
+      { status: 400 }
+    );
+  }
+
+  let parsed: URL;
+
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return NextResponse.json(
+      { error: "URL non valido." },
+      { status: 400 }
+    );
+  }
+
+  if (parsed.protocol !== "https:") {
+    return NextResponse.json(
+      { error: "Sono supportati solo link https." },
       { status: 400 }
     );
   }
@@ -54,14 +58,7 @@ export async function POST(request: Request) {
     .from("event_suggestions")
     .insert({
       suggested_by: user.id,
-      title: body.title,
-      artist: body.artist,
-      venue: body.venue,
-      city: body.city,
-      event_date: body.event_date,
-      external_url: body.external_url || null,
-      image_url: body.image_url || null,
-      description: body.description || null,
+      external_url: parsed.toString(),
     })
     .select("id")
     .single();

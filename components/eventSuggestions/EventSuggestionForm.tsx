@@ -8,21 +8,12 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 type Dict = {
   form: {
-    titleLabel: string;
-    artistLabel: string;
-    venueLabel: string;
-    cityLabel: string;
-    eventDateLabel: string;
-    externalUrlLabel: string;
-    externalUrlHint: string;
-    imageUrlLabel: string;
-    imageUrlHint: string;
-    descriptionLabel: string;
+    urlLabel: string;
+    urlPlaceholder: string;
     submit: string;
     submitting: string;
   };
@@ -39,32 +30,12 @@ type Dict = {
 };
 
 export default function EventSuggestionForm({ dict }: { dict: Dict }) {
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [venue, setVenue] = useState("");
-  const [city, setCity] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [externalUrl, setExternalUrl] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [description, setDescription] = useState("");
-
+  const [url, setUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  function reset() {
-    setTitle("");
-    setArtist("");
-    setVenue("");
-    setCity("");
-    setEventDate("");
-    setExternalUrl("");
-    setImageUrl("");
-    setDescription("");
-    setSubmitted(false);
-  }
-
   async function handleSubmit() {
-    if (!title || !artist || !venue || !city || !eventDate) {
+    if (!url.trim()) {
       toast.error(dict.toasts.missingFields);
       return;
     }
@@ -75,16 +46,7 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
       const response = await fetch("/api/event-suggestions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          artist,
-          venue,
-          city,
-          event_date: eventDate,
-          external_url: externalUrl || null,
-          image_url: imageUrl || null,
-          description: description || null,
-        }),
+        body: JSON.stringify({ url: url.trim() }),
       });
 
       const data = await response.json();
@@ -116,7 +78,10 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
 
         <Button
           type="button"
-          onClick={reset}
+          onClick={() => {
+            setUrl("");
+            setSubmitted(false);
+          }}
           className="mt-6 h-12 rounded-2xl px-8 text-base font-semibold"
         >
           {dict.success.another}
@@ -127,106 +92,15 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
 
   return (
     <Card className="mt-10 p-8 shadow-sm">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div>
-          <Label>{dict.form.titleLabel}</Label>
+      <Label>{dict.form.urlLabel}</Label>
 
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            disabled={submitting}
-            className="h-12"
-          />
-        </div>
-
-        <div>
-          <Label>{dict.form.artistLabel}</Label>
-
-          <Input
-            value={artist}
-            onChange={(e) => setArtist(e.target.value)}
-            disabled={submitting}
-            className="h-12"
-          />
-        </div>
-
-        <div>
-          <Label>{dict.form.venueLabel}</Label>
-
-          <Input
-            value={venue}
-            onChange={(e) => setVenue(e.target.value)}
-            disabled={submitting}
-            className="h-12"
-          />
-        </div>
-
-        <div>
-          <Label>{dict.form.cityLabel}</Label>
-
-          <Input
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            disabled={submitting}
-            className="h-12"
-          />
-        </div>
-
-        <div>
-          <Label>{dict.form.eventDateLabel}</Label>
-
-          <Input
-            type="datetime-local"
-            value={eventDate}
-            onChange={(e) => setEventDate(e.target.value)}
-            disabled={submitting}
-            className="h-12"
-          />
-        </div>
-
-        <div>
-          <Label>{dict.form.externalUrlLabel}</Label>
-
-          <Input
-            value={externalUrl}
-            onChange={(e) => setExternalUrl(e.target.value)}
-            disabled={submitting}
-            placeholder="https://..."
-            className="h-12"
-          />
-
-          <p className="mt-1 text-xs text-muted-foreground">
-            {dict.form.externalUrlHint}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <Label>{dict.form.imageUrlLabel}</Label>
-
-        <Input
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          disabled={submitting}
-          placeholder="https://..."
-          className="h-12"
-        />
-
-        <p className="mt-1 text-xs text-muted-foreground">
-          {dict.form.imageUrlHint}
-        </p>
-      </div>
-
-      <div className="mt-6">
-        <Label>{dict.form.descriptionLabel}</Label>
-
-        <Textarea
-          rows={4}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          disabled={submitting}
-        />
-      </div>
+      <Input
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        disabled={submitting}
+        placeholder={dict.form.urlPlaceholder}
+        className="h-12"
+      />
 
       <div className="mt-8 flex justify-end border-t border-border pt-6">
         <Button

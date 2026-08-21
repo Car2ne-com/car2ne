@@ -4,7 +4,7 @@ export const eventSuggestions: (typeof it)["eventSuggestions"] = {
   page: {
     title: "Suggest an event",
     intro:
-      "Can't find the event you're looking for a ride to? Let us know: if approved, it becomes a real event on Car2ne.",
+      "Can't find the event you're looking for a ride to? Paste the event page link: if approved, it becomes a real event on Car2ne.",
   },
   guestNotice: {
     title: "Account required",
@@ -12,22 +12,13 @@ export const eventSuggestions: (typeof it)["eventSuggestions"] = {
     cta: "Log in",
   },
   form: {
-    titleLabel: "Event title *",
-    artistLabel: "Artist *",
-    venueLabel: "Venue *",
-    cityLabel: "City *",
-    eventDateLabel: "Event date *",
-    externalUrlLabel: "Ticket link (optional)",
-    externalUrlHint: "The URL of the page where you found the event.",
-    imageUrlLabel: "Image link (optional)",
-    imageUrlHint:
-      "Right-click the image on the event page → \"copy image address\" → paste it here.",
-    descriptionLabel: "Notes (optional)",
+    urlLabel: "Event link *",
+    urlPlaceholder: "https://...",
     submit: "Send suggestion",
     submitting: "Sending...",
   },
   toasts: {
-    missingFields: "Fill in all the required fields.",
+    missingFields: "Paste the event link.",
     submitFailed: "Couldn't send the suggestion.",
     submitSuccess: "Suggestion sent. Thank you!",
   },

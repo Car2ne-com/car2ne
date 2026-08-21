@@ -2,7 +2,7 @@ export const eventSuggestions = {
   page: {
     title: "Segnala un evento",
     intro:
-      "Non trovi l'evento per cui cerchi un passaggio? Segnalacelo: se viene approvato diventa un evento vero su Car2ne.",
+      "Non trovi l'evento per cui cerchi un passaggio? Incolla il link della pagina dell'evento: se viene approvato diventa un evento vero su Car2ne.",
   },
   guestNotice: {
     title: "Serve un account",
@@ -10,22 +10,13 @@ export const eventSuggestions = {
     cta: "Accedi",
   },
   form: {
-    titleLabel: "Titolo evento *",
-    artistLabel: "Artista *",
-    venueLabel: "Venue *",
-    cityLabel: "Città *",
-    eventDateLabel: "Data evento *",
-    externalUrlLabel: "Link biglietti (facoltativo)",
-    externalUrlHint: "L'URL della pagina dove hai trovato l'evento.",
-    imageUrlLabel: "Link immagine (facoltativo)",
-    imageUrlHint:
-      "Tasto destro sull'immagine nella pagina dell'evento → \"copia indirizzo immagine\" → incollalo qui.",
-    descriptionLabel: "Note (facoltativo)",
+    urlLabel: "Link dell'evento *",
+    urlPlaceholder: "https://...",
     submit: "Invia segnalazione",
     submitting: "Invio...",
   },
   toasts: {
-    missingFields: "Compila tutti i campi obbligatori.",
+    missingFields: "Incolla il link dell'evento.",
     submitFailed: "Non è stato possibile inviare la segnalazione.",
     submitSuccess: "Segnalazione inviata. Grazie!",
   },

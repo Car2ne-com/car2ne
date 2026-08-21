@@ -15,14 +15,7 @@ import { cn } from "@/lib/utils";
 
 type Suggestion = {
   id: string;
-  title: string;
-  artist: string;
-  venue: string;
-  city: string;
-  eventDate: string;
-  externalUrl: string | null;
-  imageUrl: string | null;
-  description: string | null;
+  externalUrl: string;
   status: string;
   createdAt: string;
   suggesterName: string;
@@ -77,7 +70,7 @@ export default function AdminEventSuggestionTable({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<{
     id: string;
-    title: string;
+    url: string;
     action: "approve" | "reject";
   } | null>(null);
 
@@ -152,51 +145,27 @@ export default function AdminEventSuggestionTable({
           {filtered.map((s) => (
             <Card key={s.id} className="p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex gap-4">
-                  {s.imageUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={s.imageUrl}
-                      alt={s.title}
-                      className="h-20 w-20 shrink-0 rounded-xl object-cover"
-                    />
-                  )}
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <a
+                      href={s.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="font-semibold text-primary hover:underline"
+                    >
+                      {dict.linkLabel}
+                    </a>
 
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-semibold text-foreground">
-                        {s.title}
-                      </span>
-
-                      <StatusBadge status={s.status} dict={dict} />
-                    </div>
-
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {s.artist} · {s.venue}, {s.city} ·{" "}
-                      {new Date(s.eventDate).toLocaleString("it-IT")}
-                    </p>
-
-                    {s.externalUrl && (
-                      <a
-                        href={s.externalUrl}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="mt-1 inline-block text-sm font-semibold text-primary hover:underline"
-                      >
-                        {dict.linkLabel}
-                      </a>
-                    )}
-
-                    {s.description && (
-                      <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
-                        {s.description}
-                      </p>
-                    )}
-
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      {dict.suggestedByPrefix} {s.suggesterName || "—"}
-                    </p>
+                    <StatusBadge status={s.status} dict={dict} />
                   </div>
+
+                  <p className="mt-1 break-all text-sm text-muted-foreground">
+                    {s.externalUrl}
+                  </p>
+
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {dict.suggestedByPrefix} {s.suggesterName || "—"}
+                  </p>
                 </div>
 
                 {s.status === "pending" && (
@@ -205,7 +174,7 @@ export default function AdminEventSuggestionTable({
                       onClick={() =>
                         setPendingAction({
                           id: s.id,
-                          title: s.title,
+                          url: s.externalUrl,
                           action: "approve",
                         })
                       }
@@ -222,7 +191,7 @@ export default function AdminEventSuggestionTable({
                       onClick={() =>
                         setPendingAction({
                           id: s.id,
-                          title: s.title,
+                          url: s.externalUrl,
                           action: "reject",
                         })
                       }
@@ -255,7 +224,7 @@ export default function AdminEventSuggestionTable({
         description={(pendingAction?.action === "approve"
           ? dict.approveConfirmDescription
           : dict.rejectConfirmDescription
-        ).replace("{title}", pendingAction?.title ?? "")}
+        ).replace("{url}", pendingAction?.url ?? "")}
         confirmLabel={dict.confirmButton}
         cancelLabel={dict.cancelButton}
         confirmTone={pendingAction?.action === "approve" ? "default" : "warning"}
