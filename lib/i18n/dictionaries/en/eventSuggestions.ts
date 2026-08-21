@@ -4,7 +4,7 @@ export const eventSuggestions: (typeof it)["eventSuggestions"] = {
   page: {
     title: "Suggest an event",
     intro:
-      "Can't find the event you're looking for a ride to? If it's sold on TicketOne, Vivaticket or another circuit we don't import automatically, let us know: if approved, it becomes a real event on Car2ne.",
+      "Can't find the event you're looking for a ride to? Let us know: if approved, it becomes a real event on Car2ne.",
   },
   guestNotice: {
     title: "Account required",
@@ -18,7 +18,7 @@ export const eventSuggestions: (typeof it)["eventSuggestions"] = {
     cityLabel: "City *",
     eventDateLabel: "Event date *",
     externalUrlLabel: "Ticket link (optional)",
-    externalUrlHint: "The event page URL on TicketOne, Vivaticket, etc.",
+    externalUrlHint: "The URL of the page where you found the event.",
     imageUrlLabel: "Image link (optional)",
     imageUrlHint:
       "Right-click the image on the event page → \"copy image address\" → paste it here.",

@@ -2,7 +2,7 @@ export const eventSuggestions = {
   page: {
     title: "Segnala un evento",
     intro:
-      "Non trovi l'evento per cui cerchi un passaggio? Se è in vendita su TicketOne, Vivaticket o un altro circuito che non importiamo automaticamente, segnalacelo: se qualcuno lo approva diventa un evento vero su Car2ne.",
+      "Non trovi l'evento per cui cerchi un passaggio? Segnalacelo: se viene approvato diventa un evento vero su Car2ne.",
   },
   guestNotice: {
     title: "Serve un account",
@@ -16,7 +16,7 @@ export const eventSuggestions = {
     cityLabel: "Città *",
     eventDateLabel: "Data evento *",
     externalUrlLabel: "Link biglietti (facoltativo)",
-    externalUrlHint: "L'URL della pagina evento su TicketOne, Vivaticket, ecc.",
+    externalUrlHint: "L'URL della pagina dove hai trovato l'evento.",
     imageUrlLabel: "Link immagine (facoltativo)",
     imageUrlHint:
       "Tasto destro sull'immagine nella pagina dell'evento → \"copia indirizzo immagine\" → incollalo qui.",

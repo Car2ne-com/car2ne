@@ -324,7 +324,7 @@ export const admin = {
   eventSuggestionsPage: {
     title: "Eventi segnalati",
     subtitle:
-      "Eventi segnalati dagli utenti (es. esclusive TicketOne/Vivaticket non coperte dall'import automatico). Approva per pubblicarli così come sono stati segnalati.",
+      "Eventi segnalati dagli utenti perché mancanti dal catalogo. Approva per pubblicarli così come sono stati segnalati.",
   },
   eventSuggestionTable: {
     emptyTitle: "Nessuna segnalazione",

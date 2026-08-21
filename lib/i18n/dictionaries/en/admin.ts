@@ -326,7 +326,7 @@ export const admin: (typeof it)["admin"] = {
   eventSuggestionsPage: {
     title: "Suggested events",
     subtitle:
-      "Events suggested by users (e.g. TicketOne/Vivaticket exclusives not covered by the automatic import). Approve to publish them as suggested.",
+      "Events suggested by users because they're missing from the catalog. Approve to publish them as suggested.",
   },
   eventSuggestionTable: {
     emptyTitle: "No suggestions",
