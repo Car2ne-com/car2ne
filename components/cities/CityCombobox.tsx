@@ -3,8 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Search, X } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxInputGroup,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxPopup,
+  ComboboxPortal,
+  ComboboxPositioner,
+} from "@/components/ui/combobox";
 
 type City = {
   id: string;
@@ -60,6 +69,12 @@ const DEBOUNCE_MS = 250;
  * valida) — mai testo libero. Digitare senza scegliere un
  * suggerimento azzera il valore: il campo torna "non compilato" agli
  * occhi del form che lo usa.
+ *
+ * La ricerca/navigazione tastiera è delegata a @base-ui/react's
+ * Combobox primitive (apertura/chiusura, click-outside, evidenziazione
+ * con le frecce, Invio per selezionare): qui restano solo la logica di
+ * business (fetch debounced, race-safety via requestId, stato di
+ * conferma/errore) e lo stile.
  */
 export default function CityCombobox({
   value,
@@ -77,31 +92,15 @@ export default function CityCombobox({
   );
 
   const [query, setQuery] = useState("");
+  const [highlighted, setHighlighted] = useState<City | null>(null);
   const [results, setResults] = useState<City[]>([]);
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState(false);
   const [open, setOpen] = useState(false);
   const [touched, setTouched] = useState(false);
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestIdRef = useRef(0);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   useEffect(() => {
     const trimmed = query.trim();
@@ -173,6 +172,7 @@ export default function CityCombobox({
     setResults([]);
     setOpen(false);
     setTouched(false);
+    setHighlighted(null);
   }
 
   function handleClear() {
@@ -189,6 +189,10 @@ export default function CityCombobox({
     open &&
     query.trim().length > 0 &&
     query.trim().length < MIN_QUERY_LENGTH;
+
+  // Il popup si apre solo con una query abbastanza lunga da avere senso:
+  // sotto soglia mostriamo l'hint dei caratteri minimi al suo posto.
+  const showPanel = open && query.trim().length >= MIN_QUERY_LENGTH;
 
   /*
    * Selezione confermata: chip di sola lettura con possibilità di
@@ -220,60 +224,82 @@ export default function CityCombobox({
   }
 
   return (
-    <div ref={containerRef} className="relative">
-      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-
-      <Input
-        type="text"
-        value={query}
+    <div className="relative">
+      <Combobox<City>
+        items={results}
+        filter={null}
+        inputValue={query}
+        onInputValueChange={(next) => setQuery(next)}
+        open={showPanel}
+        onOpenChange={(next) => setOpen(next)}
+        onItemHighlighted={(val) => setHighlighted(val ?? null)}
         disabled={disabled}
-        onChange={(event) => {
-          setQuery(event.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setTouched(true)}
-        placeholder={resolvedPlaceholder}
-        className="h-14 rounded-2xl pl-11"
-      />
+        autoHighlight
+      >
+        <ComboboxInputGroup>
+          <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
-      {open && query.trim().length >= MIN_QUERY_LENGTH && (
-        <div className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded-2xl border border-border bg-popover py-2 shadow-xl">
-          {searching ? (
-            <p className="px-4 py-2.5 text-sm text-muted-foreground">
-              {dict.searching}
-            </p>
-          ) : searchError ? (
-            <p className="px-4 py-2.5 text-sm text-destructive">
-              {dict.searchFailed}
-            </p>
-          ) : results.length > 0 ? (
-            results.map((city) => (
-              <button
-                key={city.id}
-                type="button"
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => handleSelect(city)}
-                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition hover:bg-accent"
-              >
-                <span className="font-medium text-popover-foreground">
-                  {city.name}
-                </span>
+          <ComboboxInput
+            placeholder={resolvedPlaceholder}
+            className="h-14 rounded-2xl pl-11"
+            onFocus={() => setOpen(true)}
+            onBlur={() => setTouched(true)}
+            onKeyDown={(event) => {
+              /*
+               * Fallback difensivo: vedi lo stesso commento in
+               * EventCombobox.tsx — non è stato possibile verificare in
+               * modo conclusivo se la selezione nativa di Combobox su
+               * Invio funzioni sempre in questo ambiente di test.
+               * Innocuo anche se il comportamento nativo funziona già.
+               */
+              if (event.key === "Enter" && highlighted) {
+                handleSelect(highlighted);
+              }
+            }}
+          />
+        </ComboboxInputGroup>
 
-                {city.region && (
-                  <span className="text-xs text-muted-foreground">
-                    {city.region}
-                  </span>
+        <ComboboxPortal>
+          <ComboboxPositioner>
+            <ComboboxPopup className="max-h-64 py-2">
+              <ComboboxList>
+                {searching ? (
+                  <p className="px-4 py-2.5 text-sm text-muted-foreground">
+                    {dict.searching}
+                  </p>
+                ) : searchError ? (
+                  <p className="px-4 py-2.5 text-sm text-destructive">
+                    {dict.searchFailed}
+                  </p>
+                ) : results.length === 0 ? (
+                  <p className="px-4 py-2.5 text-sm text-muted-foreground">
+                    {dict.noCityFound}
+                  </p>
+                ) : (
+                  (city: City, index: number) => (
+                    <ComboboxItem
+                      key={city.id}
+                      value={city}
+                      index={index}
+                      onClick={() => handleSelect(city)}
+                    >
+                      <span className="font-medium text-popover-foreground">
+                        {city.name}
+                      </span>
+
+                      {city.region && (
+                        <span className="text-xs text-muted-foreground">
+                          {city.region}
+                        </span>
+                      )}
+                    </ComboboxItem>
+                  )
                 )}
-              </button>
-            ))
-          ) : (
-            <p className="px-4 py-2.5 text-sm text-muted-foreground">
-              {dict.noCityFound}
-            </p>
-          )}
-        </div>
-      )}
+              </ComboboxList>
+            </ComboboxPopup>
+          </ComboboxPositioner>
+        </ComboboxPortal>
+      </Combobox>
 
       {showTooShortHint && (
         <p className="mt-2 text-xs text-muted-foreground">
