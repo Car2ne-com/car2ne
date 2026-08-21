@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { SearchX, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -7,9 +8,16 @@ type Props = {
   description: string;
   icon?: LucideIcon;
   className?: string;
+  children?: ReactNode;
 };
 
-function EmptyState({ title, description, icon: Icon = SearchX, className }: Props) {
+function EmptyState({
+  title,
+  description,
+  icon: Icon = SearchX,
+  className,
+  children,
+}: Props) {
   return (
     <div
       data-slot="empty-state"
@@ -25,6 +33,8 @@ function EmptyState({ title, description, icon: Icon = SearchX, className }: Pro
       <h3 className="text-2xl font-bold text-foreground">{title}</h3>
 
       <p className="mt-3 max-w-md text-muted-foreground">{description}</p>
+
+      {children}
     </div>
   );
 }

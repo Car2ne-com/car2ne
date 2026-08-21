@@ -26,6 +26,7 @@ export const events = {
   empty: {
     title: "Nessun evento trovato",
     description: "Prova a modificare la ricerca.",
+    suggestCta: "Non lo trovi? Segnalacelo",
   },
   concluded: {
     badge: "Evento concluso",

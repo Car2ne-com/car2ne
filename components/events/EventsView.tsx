@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 import EventSearch from "./EventSearch";
 import EventGrid from "./EventGrid";
@@ -30,7 +31,7 @@ type EventsDict = {
     ridesPlural: string;
     viewEvent: string;
   };
-  empty: { title: string; description: string };
+  empty: { title: string; description: string; suggestCta: string };
 };
 
 type Props = {
@@ -250,7 +251,14 @@ export default function EventsView({
           )}
         </>
       ) : (
-        <EmptyState title={dict.empty.title} description={dict.empty.description} />
+        <EmptyState title={dict.empty.title} description={dict.empty.description}>
+          <Link
+            href="/segnala-evento"
+            className="mt-6 inline-block text-sm font-semibold text-primary hover:underline"
+          >
+            {dict.empty.suggestCta}
+          </Link>
+        </EmptyState>
       )}
     </>
   );

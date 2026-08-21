@@ -28,6 +28,7 @@ export const events: (typeof it)["events"] = {
   empty: {
     title: "No events found",
     description: "Try changing your search.",
+    suggestCta: "Can't find it? Let us know",
   },
   concluded: {
     badge: "Event ended",
