@@ -54,6 +54,7 @@ export const layout = {
     cookiePolicy: "Cookie Policy",
     communityGuidelines: "Community Guidelines",
     reportProblem: "Segnala un problema",
+    suggestEvent: "Segnala un evento",
     rightsReserved: "Tutti i diritti riservati.",
   },
   languageSwitcher: {

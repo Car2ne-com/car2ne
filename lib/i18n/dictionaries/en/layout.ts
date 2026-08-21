@@ -55,6 +55,7 @@ export const layout: (typeof it)["layout"] = {
     cookiePolicy: "Cookie Policy",
     communityGuidelines: "Community Guidelines",
     reportProblem: "Report a problem",
+    suggestEvent: "Suggest an event",
     rightsReserved: "All rights reserved.",
   },
   languageSwitcher: {

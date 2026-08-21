@@ -12,6 +12,7 @@ type Tabs = {
   import: string;
   driverVerifications: string;
   reports: string;
+  eventSuggestions: string;
   analytics: string;
   betaChecklist: string;
 };
@@ -33,6 +34,10 @@ export default function AdminTabs({ tabs }: Props) {
       label: tabs.driverVerifications,
     },
     { href: "/admin/reports", label: tabs.reports },
+    {
+      href: "/admin/event-suggestions",
+      label: tabs.eventSuggestions,
+    },
     { href: "/admin/analytics", label: tabs.analytics },
     ...(isBetaChecklistEnabled
       ? [{ href: "/admin/beta-checklist", label: tabs.betaChecklist }]

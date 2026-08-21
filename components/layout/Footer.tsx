@@ -124,6 +124,15 @@ export default async function Footer() {
                     {t.reportProblem}
                   </Link>
                 </li>
+
+                <li>
+                  <Link
+                    href="/segnala-evento"
+                    className="transition hover:text-primary"
+                  >
+                    {t.suggestEvent}
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

@@ -18,6 +18,7 @@ import { dashboardHome } from "./dashboardHome";
 import { dashboardNotifications } from "./dashboardNotifications";
 import { chat } from "./chat";
 import { ratings } from "./ratings";
+import { eventSuggestions } from "./eventSuggestions";
 
 export const it = {
   layout,
@@ -40,4 +41,5 @@ export const it = {
   dashboardNotifications,
   chat,
   ratings,
+  eventSuggestions,
 };
