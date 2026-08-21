@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
+import { parsePastedEventText } from "@/lib/admin/parsePastedEventText";
+
 import type { Event, EventCategory } from "@/types/event";
 
 type Dict = {
@@ -36,6 +38,11 @@ type Dict = {
   saveFailed: string;
   eventUpdatedToast: string;
   eventCreatedToast: string;
+  pasteLabel: string;
+  pastePlaceholder: string;
+  pasteButton: string;
+  pasteHint: string;
+  pasteEmptyToast: string;
 };
 
 type Props = {
@@ -75,6 +82,28 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
   );
 
   const [loading, setLoading] = useState(false);
+
+  const [pastedText, setPastedText] = useState("");
+
+  /*
+   * Pura elaborazione del testo che l'admin ha già copiato a mano
+   * dal proprio browser: nessuna richiesta di rete. Best-effort —
+   * riempie solo titolo/data se li riconosce e mette il resto del
+   * testo in descrizione, l'admin corregge quello che manca (venue,
+   * città, artista non vengono indovinati).
+   */
+  function handlePasteParse() {
+    if (!pastedText.trim()) {
+      toast.error(dict.pasteEmptyToast);
+      return;
+    }
+
+    const parsed = parsePastedEventText(pastedText);
+
+    if (parsed.title) setTitle(parsed.title);
+    if (parsed.eventDate) setEventDate(parsed.eventDate);
+    if (parsed.description) setDescription(parsed.description);
+  }
 
   async function handleSubmit() {
     if (!title || !artist || !venue || !city || !eventDate) {
@@ -135,6 +164,34 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
           ? dict.editSubtitle
           : dict.newSubtitle}
       </p>
+
+      {!event && (
+        <div className="mt-10 rounded-2xl border border-dashed border-border p-4">
+          <Label>{dict.pasteLabel}</Label>
+
+          <Textarea
+            value={pastedText}
+            onChange={(e) => setPastedText(e.target.value)}
+            placeholder={dict.pastePlaceholder}
+            rows={4}
+          />
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {dict.pasteHint}
+          </p>
+
+          <div className="mt-3 flex justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePasteParse}
+              className="h-10 rounded-xl px-5"
+            >
+              {dict.pasteButton}
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
