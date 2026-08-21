@@ -227,6 +227,11 @@ export const admin = {
     saveFailed: "Salvataggio fallito.",
     eventUpdatedToast: "Evento aggiornato!",
     eventCreatedToast: "Evento creato!",
+    prefillUrlLabel: "Precompila da URL TicketOne",
+    prefillButton: "Precompila",
+    prefilling: "Lettura in corso...",
+    prefillSuccess: "Campi precompilati, rivedili prima di salvare.",
+    prefillFailed: "Precompilazione fallita.",
   },
   imageUploader: {
     previewAlt: "Anteprima evento",
