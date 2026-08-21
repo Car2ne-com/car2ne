@@ -229,11 +229,6 @@ export const admin: (typeof it)["admin"] = {
     saveFailed: "Save failed.",
     eventUpdatedToast: "Event updated!",
     eventCreatedToast: "Event created!",
-    prefillUrlLabel: "Prefill from TicketOne URL",
-    prefillButton: "Prefill",
-    prefilling: "Reading...",
-    prefillSuccess: "Fields prefilled, review them before saving.",
-    prefillFailed: "Prefill failed.",
   },
   imageUploader: {
     previewAlt: "Event preview",

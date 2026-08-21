@@ -36,11 +36,6 @@ type Dict = {
   saveFailed: string;
   eventUpdatedToast: string;
   eventCreatedToast: string;
-  prefillUrlLabel: string;
-  prefillButton: string;
-  prefilling: string;
-  prefillSuccess: string;
-  prefillFailed: string;
 };
 
 type Props = {
@@ -80,57 +75,6 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
   );
 
   const [loading, setLoading] = useState(false);
-
-  const [sourceUrl, setSourceUrl] = useState("");
-  const [prefilling, setPrefilling] = useState(false);
-
-  /*
-   * Legge UNA sola pagina ticketone.it (mai un crawl) su azione
-   * esplicita dell'admin e pre-compila i campi sottostanti.
-   * L'admin rivede e conferma prima di salvare: questa funzione non
-   * crea l'evento da sola.
-   */
-  async function handlePrefill() {
-    if (!sourceUrl) return;
-
-    setPrefilling(true);
-
-    try {
-      const response = await fetch(
-        "/api/admin/events/prefill-from-url",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: sourceUrl }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast.error(data.error ?? dict.prefillFailed);
-        return;
-      }
-
-      if (data.title) setTitle(data.title);
-      if (data.artist) setArtist(data.artist);
-      if (data.venue) setVenue(data.venue);
-      if (data.city) setCity(data.city);
-      if (data.eventDate) {
-        setEventDate(
-          new Date(data.eventDate).toISOString().slice(0, 16)
-        );
-      }
-      if (data.imageUrl) setImageUrl(data.imageUrl);
-      if (data.description) setDescription(data.description);
-
-      toast.success(dict.prefillSuccess);
-    } catch {
-      toast.error(dict.prefillFailed);
-    } finally {
-      setPrefilling(false);
-    }
-  }
 
   async function handleSubmit() {
     if (!title || !artist || !venue || !city || !eventDate) {
@@ -191,31 +135,6 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
           ? dict.editSubtitle
           : dict.newSubtitle}
       </p>
-
-      {!event && (
-        <div className="mt-10 flex flex-wrap items-end gap-3 rounded-2xl border border-dashed border-border p-4">
-          <div className="min-w-[280px] flex-1">
-            <Label>{dict.prefillUrlLabel}</Label>
-
-            <Input
-              value={sourceUrl}
-              onChange={(e) => setSourceUrl(e.target.value)}
-              placeholder="https://www.ticketone.it/..."
-              className="h-12"
-            />
-          </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handlePrefill}
-            disabled={prefilling || !sourceUrl}
-            className="h-12 rounded-xl px-6"
-          >
-            {prefilling ? dict.prefilling : dict.prefillButton}
-          </Button>
-        </div>
-      )}
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
