@@ -502,20 +502,17 @@ export default function ManageRideForm({
             .slice(0, 10)
         : ride.departure_date;
 
-    const { error } = await supabase
-      .from("rides")
-      .update({
-        origin_city_id: originCityId,
-        departure_city: departureCity,
-        departure_time: departureTime,
-        return_date: returnDate,
-        return_time: returnTime,
-        available_seats: Number(availableSeats),
-        contribution: Number(contribution),
-        description: description || null,
-      })
-      .eq("id", ride.id)
-      .eq("driver_id", user.id);
+    const { error } = await supabase.rpc("update_ride", {
+      p_ride_id: ride.id,
+      p_origin_city_id: originCityId,
+      p_departure_city: departureCity,
+      p_departure_time: departureTime,
+      p_return_date: returnDate,
+      p_return_time: returnTime,
+      p_available_seats: Number(availableSeats),
+      p_contribution: Number(contribution),
+      p_description: description || null,
+    });
 
     setLoading(false);
 

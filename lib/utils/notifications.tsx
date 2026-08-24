@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   Clock3,
   Flag,
+  Pencil,
   Star,
   User2,
   XCircle,
@@ -53,6 +54,16 @@ export function getNotificationIcon(
     return (
       <div className={`${wrapperClass} bg-amber-100`}>
         <User2
+          className={`${iconClass} text-amber-600`}
+        />
+      </div>
+    );
+  }
+
+  if (type === "ride_updated") {
+    return (
+      <div className={`${wrapperClass} bg-amber-100`}>
+        <Pencil
           className={`${iconClass} text-amber-600`}
         />
       </div>

@@ -30,6 +30,7 @@ const EMAIL_NOTIFICATION_TYPES = new Set([
   "booking_rejected",
   "booking_request",
   "ride_cancelled",
+  "ride_updated",
   "driver_verification_approved",
   "driver_verification_rejected",
   "report_resolved",
@@ -41,6 +42,7 @@ type NotificationType =
   | "booking_rejected"
   | "booking_request"
   | "ride_cancelled"
+  | "ride_updated"
   | "driver_verification_approved"
   | "driver_verification_rejected"
   | "report_resolved"
@@ -118,6 +120,20 @@ const EMAIL_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       subject: "Ride cancelled",
       heading: "Ride cancelled",
       body: "Hi {name},\n\n{counterpart} has cancelled the ride you had a request or booking for.",
+      ctaLabel: "Go to bookings",
+    },
+  },
+  ride_updated: {
+    it: {
+      subject: "Passaggio modificato",
+      heading: "Il passaggio è stato modificato",
+      body: "Ciao {name},\n\n{counterpart} ha modificato i dettagli del passaggio per cui avevi una richiesta o prenotazione. Controlla orari, posti e contributo aggiornati.",
+      ctaLabel: "Vai alle prenotazioni",
+    },
+    en: {
+      subject: "Ride updated",
+      heading: "The ride has been updated",
+      body: "Hi {name},\n\n{counterpart} has updated the details of the ride you had a request or booking for. Check the updated time, seats, and contribution.",
       ctaLabel: "Go to bookings",
     },
   },
