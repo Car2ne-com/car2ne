@@ -6,6 +6,7 @@ import ProfileForm from "@/components/profile/ProfileForm";
 import ChangePasswordForm from "@/components/profile/ChangePasswordForm";
 import MfaSettings from "@/components/profile/MfaSettings";
 import DeleteAccountForm from "@/components/profile/DeleteAccountForm";
+import BlockedUsersList from "@/components/profile/BlockedUsersList";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -31,6 +32,25 @@ export default async function ProfilePage() {
   if (error) {
     throw new Error(error.message);
   }
+
+  const { data: blockRows } = await supabase
+    .from("blocked_users")
+    .select("blocked_id, blocked:profiles!blocked_users_blocked_id_fkey(name, surname)")
+    .eq("blocker_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const blockedUsers = (blockRows ?? []).map((row) => {
+    const blockedProfile = Array.isArray(row.blocked)
+      ? row.blocked[0]
+      : row.blocked;
+
+    return {
+      id: row.blocked_id,
+      name: blockedProfile
+        ? `${blockedProfile.name ?? ""} ${blockedProfile.surname ?? ""}`.trim()
+        : "",
+    };
+  });
 
   return (
     <>
@@ -59,6 +79,11 @@ export default async function ProfilePage() {
           <ChangePasswordForm dict={dict.profile.changePassword} />
 
           <MfaSettings dict={dict.profile.mfa} />
+
+          <BlockedUsersList
+            blockedUsers={blockedUsers}
+            dict={dict.profile.blockedUsers}
+          />
 
           <DeleteAccountForm
             dict={dict.profile.deleteAccount}

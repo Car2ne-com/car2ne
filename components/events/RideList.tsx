@@ -19,6 +19,30 @@ export default async function RideList({
   const { locale, dict } = await getTranslations();
   const t = dict.events.rides;
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let blockedCounterpartIds: string[] = [];
+
+  if (user) {
+    const { data: blockRows, error: blockError } = await supabase
+      .from("blocked_users")
+      .select("blocker_id, blocked_id")
+      .or(`blocker_id.eq.${user.id},blocked_id.eq.${user.id}`);
+
+    if (blockError) {
+      console.error(
+        "Errore caricamento utenti bloccati:",
+        blockError
+      );
+    }
+
+    blockedCounterpartIds = (blockRows ?? []).map((row) =>
+      row.blocker_id === user.id ? row.blocked_id : row.blocker_id
+    );
+  }
+
   const { data: rides, error } = await supabase
     .from("rides")
     .select(`
@@ -64,9 +88,13 @@ export default async function RideList({
     );
   }
 
+  const visibleRides = (rides ?? []).filter(
+    (ride) => !blockedCounterpartIds.includes(ride.driver_id)
+  );
+
   const driverRatings = await getDriverRatings(
     supabase,
-    (rides ?? []).map((ride) => ride.driver_id)
+    visibleRides.map((ride) => ride.driver_id)
   );
 
   const dateFormatter = new Intl.DateTimeFormat(
@@ -77,7 +105,7 @@ export default async function RideList({
   );
 
   const formattedRides =
-    rides?.map((ride) => {
+    visibleRides.map((ride) => {
       const profile = toOne(ride.profiles);
 
       let avatarUrl: string | null = null;
@@ -167,7 +195,7 @@ export default async function RideList({
             ride.contribution
           ),
       };
-    }) ?? [];
+    });
 
   return (
     <section>

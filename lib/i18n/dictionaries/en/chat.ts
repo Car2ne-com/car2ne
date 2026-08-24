@@ -9,6 +9,7 @@ export const chat: (typeof it)["chat"] = {
     backLink: "Back to chats",
     otherUserFallback: "User",
     bookingInactiveReason: "The booking is no longer active.",
+    blockedReason: "You can no longer exchange messages in this conversation.",
   },
   list: {
     loading: "Loading chats...",

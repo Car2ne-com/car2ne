@@ -7,7 +7,14 @@ import { buttonVariants } from "@/components/ui/button";
 import { getTranslations } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function SegnalaUnProblemaPage() {
+type Props = {
+  searchParams: Promise<{ userId?: string }>;
+};
+
+export default async function SegnalaUnProblemaPage({
+  searchParams,
+}: Props) {
+  const { userId } = await searchParams;
   const { locale, dict } = await getTranslations();
   const t = dict.reports;
 
@@ -16,6 +23,50 @@ export default async function SegnalaUnProblemaPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  let targetUser: { id: string; name: string } | null = null;
+
+  if (user && userId && userId !== user.id) {
+    /*
+     * Puoi segnalare direttamente solo utenti con cui hai una
+     * relazione reale (stesso controllo del profilo pubblico):
+     * evita di poter targettare chiunque a caso.
+     */
+    const [asDriverResult, asPassengerResult] = await Promise.all([
+      supabase
+        .from("bookings")
+        .select("id, rides!inner(driver_id)")
+        .eq("passenger_id", userId)
+        .eq("rides.driver_id", user.id)
+        .limit(1),
+
+      supabase
+        .from("bookings")
+        .select("id, rides!inner(driver_id)")
+        .eq("passenger_id", user.id)
+        .eq("rides.driver_id", userId)
+        .limit(1),
+    ]);
+
+    const hasRelationship =
+      (asDriverResult.data?.length ?? 0) > 0 ||
+      (asPassengerResult.data?.length ?? 0) > 0;
+
+    if (hasRelationship) {
+      const { data: targetProfile } = await supabase
+        .from("profiles")
+        .select("name, surname")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (targetProfile) {
+        targetUser = {
+          id: userId,
+          name: `${targetProfile.name ?? ""} ${targetProfile.surname ?? ""}`.trim(),
+        };
+      }
+    }
+  }
 
   return (
     <>
@@ -29,7 +80,7 @@ export default async function SegnalaUnProblemaPage() {
         <p className="mt-4 text-muted-foreground">{t.page.intro}</p>
 
         {user ? (
-          <ReportForm dict={t} locale={locale} />
+          <ReportForm dict={t} locale={locale} targetUser={targetUser} />
         ) : (
           <Card className="mt-10 p-8 shadow-sm">
             <h2 className="text-lg font-bold text-foreground">

@@ -304,6 +304,38 @@ export default async function ConversationPage({
 
   /*
    * ==============================
+   * BLOCCO UTENTE
+   * ==============================
+   *
+   * Se una delle due parti ha bloccato l'altra, la chat resta
+   * chiusa a prescindere dallo stato della prenotazione. Il motivo
+   * mostrato resta generico: non riveliamo chi ha bloccato chi.
+   */
+
+  if (canSendMessages) {
+    const { data: blockRow, error: blockError } = await supabase
+      .from("blocked_users")
+      .select("id")
+      .or(
+        `and(blocker_id.eq.${conversation.driver_id},blocked_id.eq.${conversation.passenger_id}),and(blocker_id.eq.${conversation.passenger_id},blocked_id.eq.${conversation.driver_id})`
+      )
+      .maybeSingle();
+
+    if (blockError) {
+      console.error(
+        "Errore verifica blocco utente chat:",
+        blockError
+      );
+    }
+
+    if (blockRow) {
+      canSendMessages = false;
+      chatClosedReason = dict.chat.conversationPage.blockedReason;
+    }
+  }
+
+  /*
+   * ==============================
    * RENDER
    * ==============================
    */

@@ -7,6 +7,7 @@ export const chat = {
     backLink: "Torna alle chat",
     otherUserFallback: "Utente",
     bookingInactiveReason: "La prenotazione non è più attiva.",
+    blockedReason: "Non è più possibile scambiare messaggi in questa conversazione.",
   },
   list: {
     loading: "Caricamento chat...",

@@ -23,6 +23,7 @@ export const reports = {
       no_show: "Mancata presentazione",
       other: "Altro",
     },
+    targetUserBanner: "Stai segnalando: {name}",
     rideLabel: "Riguarda un passaggio specifico? (opzionale)",
     rideNone: "Nessuno / segnalazione generale",
     descriptionLabel: "Descrizione *",

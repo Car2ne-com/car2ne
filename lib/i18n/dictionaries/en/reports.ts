@@ -25,6 +25,7 @@ export const reports: (typeof it)["reports"] = {
       no_show: "No-show",
       other: "Other",
     },
+    targetUserBanner: "You're reporting: {name}",
     rideLabel: "Does this concern a specific ride? (optional)",
     rideNone: "None / general report",
     descriptionLabel: "Description *",

@@ -17,6 +17,7 @@ type Dict = {
   form: {
     categoryLabel: string;
     categories: Record<string, string>;
+    targetUserBanner: string;
     rideLabel: string;
     rideNone: string;
     descriptionLabel: string;
@@ -44,15 +45,23 @@ type RideOption = {
   bookingId: string | null;
 };
 
+type TargetUser = {
+  id: string;
+  name: string;
+};
+
 type Props = {
   dict: Dict;
   locale: "it" | "en";
+  targetUser?: TargetUser | null;
 };
 
-export default function ReportForm({ dict, locale }: Props) {
+export default function ReportForm({ dict, locale, targetUser }: Props) {
   const supabase = createClient();
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(
+    targetUser ? "user_behavior" : ""
+  );
   const [description, setDescription] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [options, setOptions] = useState<RideOption[]>([]);
@@ -142,6 +151,7 @@ export default function ReportForm({ dict, locale }: Props) {
           description: description.trim(),
           rideId: selected?.rideId ?? null,
           bookingId: selected?.bookingId ?? null,
+          targetUserId: targetUser?.id ?? null,
         }),
       });
 
@@ -188,6 +198,12 @@ export default function ReportForm({ dict, locale }: Props) {
 
   return (
     <Card className="mt-10 p-8 shadow-sm">
+      {targetUser && (
+        <div className="mb-6 rounded-2xl bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground">
+          {dict.form.targetUserBanner.replace("{name}", targetUser.name)}
+        </div>
+      )}
+
       <div className="mb-6">
         <Label>{dict.form.categoryLabel}</Label>
 

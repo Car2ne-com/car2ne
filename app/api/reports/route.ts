@@ -45,6 +45,8 @@ export async function POST(request: Request) {
   const bookingId =
     typeof body.bookingId === "string" ? body.bookingId : null;
   let rideId = typeof body.rideId === "string" ? body.rideId : null;
+  const targetUserId =
+    typeof body.targetUserId === "string" ? body.targetUserId : null;
 
   if (!CATEGORIES.includes(category)) {
     return NextResponse.json(
@@ -136,6 +138,41 @@ export async function POST(request: Request) {
 
     reportedUserId = isPassenger ? ride.driver_id : booking.passenger_id;
     rideId = booking.ride_id;
+  } else if (targetUserId && targetUserId !== user.id) {
+    /*
+     * Segnalazione diretta di un utente (es. dal suo profilo
+     * pubblico): puoi farlo solo verso qualcuno con cui hai una
+     * prenotazione in comune, stesso controllo della pagina
+     * /profile/[id].
+     */
+    const [asDriverResult, asPassengerResult] = await Promise.all([
+      supabase
+        .from("bookings")
+        .select("id, rides!inner(driver_id)")
+        .eq("passenger_id", targetUserId)
+        .eq("rides.driver_id", user.id)
+        .limit(1),
+
+      supabase
+        .from("bookings")
+        .select("id, rides!inner(driver_id)")
+        .eq("passenger_id", user.id)
+        .eq("rides.driver_id", targetUserId)
+        .limit(1),
+    ]);
+
+    const hasRelationship =
+      (asDriverResult.data?.length ?? 0) > 0 ||
+      (asPassengerResult.data?.length ?? 0) > 0;
+
+    if (!hasRelationship) {
+      return NextResponse.json(
+        { error: "Non autorizzato a segnalare questo utente." },
+        { status: 403 }
+      );
+    }
+
+    reportedUserId = targetUserId;
   }
 
   if (!description || description.length > 2000) {

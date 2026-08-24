@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RatingStars from "@/components/ratings/RatingStars";
 import VerifiedAvatar from "@/components/ui/VerifiedAvatar";
+import BlockUserButton from "@/components/profile/BlockUserButton";
 import { Card } from "@/components/ui/card";
 
 import { createClient } from "@/lib/supabase/server";
@@ -101,6 +102,13 @@ export default async function PublicProfilePage({
 
   const ratings = ratingRows ?? [];
 
+  const { data: existingBlock } = await supabase
+    .from("blocked_users")
+    .select("id")
+    .eq("blocker_id", user.id)
+    .eq("blocked_id", id)
+    .maybeSingle();
+
   const raterIds = Array.from(
     new Set(
       ratings.map((rating) => rating.rater_id)
@@ -188,6 +196,13 @@ export default async function PublicProfilePage({
                 {profile.bio}
               </p>
             )}
+
+            <BlockUserButton
+              targetUserId={id}
+              initiallyBlocked={!!existingBlock}
+              reportButtonLabel={dict.profile.publicProfile.reportButton}
+              dict={dict.profile.publicProfile.block}
+            />
           </div>
         </Card>
 
