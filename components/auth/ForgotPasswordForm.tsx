@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "@/lib/supabase/client";
 import type { it } from "@/lib/i18n/dictionaries/it";
 
 type AuthDict = (typeof it)["auth"];
@@ -18,81 +18,48 @@ type Props = {
 };
 
 export default function ForgotPasswordForm({ dict }: Props) {
-  const supabase = useMemo(
-    () => createClient(),
-    []
-  );
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
 
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
   ) {
     e.preventDefault();
 
-    if (!email.trim()) {
+    const trimmedEmail = email.trim();
+
+    if (!trimmedEmail) {
       toast.error(dict.forgotPasswordForm.errors.emptyEmail);
       return;
     }
 
     setLoading(true);
 
-    const redirectTo = new URL(
-      "/auth/callback",
-      window.location.origin
-    );
-
-    redirectTo.searchParams.set(
-      "next",
-      "/reset-password"
-    );
-
-    const { error } =
-      await supabase.auth.resetPasswordForEmail(
-        email.trim(),
+    try {
+      const response = await fetch(
+        "/api/auth/forgot-password",
         {
-          redirectTo: redirectTo.toString(),
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: trimmedEmail }),
         }
       );
 
-    setLoading(false);
+      if (!response.ok && response.status !== 429) {
+        toast.error(dict.resetPasswordForm.errors.generic);
+        return;
+      }
 
-    if (error) {
-      console.error(
-        "Errore reset password:",
-        error
+      toast.success(dict.forgotPasswordForm.codeSentToast);
+
+      router.push(
+        `/reset-password?email=${encodeURIComponent(trimmedEmail)}`
       );
-
-      toast.error(error.message);
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    setSent(true);
-  }
-
-  if (sent) {
-    return (
-      <Card className="space-y-6 p-8 text-center">
-        <h2 className="text-xl font-bold text-foreground">
-          {dict.forgotPasswordForm.sentTitle}
-        </h2>
-
-        <p className="text-sm text-muted-foreground">
-          {dict.forgotPasswordForm.sentDescriptionPrefix}{" "}
-          <strong>{email.trim()}</strong>
-          {dict.forgotPasswordForm.sentDescriptionSuffix}
-        </p>
-
-        <Link
-          href="/login"
-          className="inline-block text-sm font-semibold text-primary hover:text-primary/80"
-        >
-          {dict.common.backToLogin}
-        </Link>
-      </Card>
-    );
   }
 
   return (

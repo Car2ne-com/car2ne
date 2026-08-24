@@ -49,6 +49,7 @@ export async function POST() {
         SITE_URL
       ).toString(),
     }),
+    sender: "noreply",
   });
 
   return NextResponse.json({ success: true });

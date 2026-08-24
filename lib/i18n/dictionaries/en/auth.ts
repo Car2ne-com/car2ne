@@ -14,12 +14,13 @@ export const auth: (typeof it)["auth"] = {
   forgotPassword: {
     pageBadge: "🔑 Password recovery",
     pageTitle: "Forgot your password?",
-    pageSubtitle: "Enter your email and we'll send you a link to reset it.",
+    pageSubtitle: "Enter your email and we'll send you a code to reset it.",
   },
   resetPassword: {
     pageBadge: "🔑 New password",
     pageTitle: "Set a new password",
-    pageSubtitle: "Choose a secure password for your account.",
+    pageSubtitle:
+      "Enter the code we sent you by email and choose a new password.",
   },
   verifyAge: {
     pageBadge: "🎂 Last step",
@@ -139,24 +140,35 @@ export const auth: (typeof it)["auth"] = {
       "Registration complete! We've sent you a code to verify your email.",
   },
   forgotPasswordForm: {
-    sentTitle: "Check your email",
-    sentDescriptionPrefix: "If an account exists for",
-    sentDescriptionSuffix: ", we've sent you a link to reset your password.",
-    sendButton: "Send reset link",
+    codeSentToast:
+      "If an account exists for this email, we've sent you a code.",
+    sendButton: "Send code",
     sending: "Sending...",
     errors: {
       emptyEmail: "Enter your email.",
     },
   },
   resetPasswordForm: {
+    codeLabel: "Verification code",
     newPasswordLabel: "New password",
     confirmNewPasswordLabel: "Confirm new password",
     updateButton: "Update password",
     updating: "Updating...",
     success: "Password updated successfully!",
+    resendButton: "Resend code",
+    resendCooldown: "Resend in {seconds}s",
+    resending: "Sending...",
+    wrongEmailLink: "Wrong email? Start over",
     errors: {
       weakPassword: "Your password doesn't meet all the security requirements.",
       passwordMismatch: "Passwords don't match.",
+      codeLength: "Enter the 6-digit code.",
+      invalid: "Invalid code. Please try again.",
+      not_found: "No code found. Request a new one.",
+      expired: "The code has expired. Request a new one.",
+      too_many_attempts: "Too many failed attempts. Request a new code.",
+      generic: "Something went wrong. Please try again.",
+      cooldown: "Please wait a few seconds before requesting a new code.",
     },
   },
 };

@@ -4,17 +4,18 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 
-import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
 
-export default async function ResetPasswordPage() {
-  const supabase = await createClient();
+type Props = {
+  searchParams: Promise<{ email?: string }>;
+};
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default async function ResetPasswordPage({
+  searchParams,
+}: Props) {
+  const { email } = await searchParams;
 
-  if (!user) {
+  if (!email) {
     redirect("/forgot-password");
   }
 
@@ -41,7 +42,7 @@ export default async function ResetPasswordPage() {
             </p>
           </div>
 
-          <ResetPasswordForm dict={t} />
+          <ResetPasswordForm email={email} dict={t} />
         </div>
       </main>
 

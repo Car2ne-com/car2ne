@@ -10,10 +10,10 @@ import {
 } from "@/lib/email/brevo";
 
 /*
- * Verifica email via OTP inviato con Brevo (non il flusso "Confirm
- * email" nativo di Supabase). I codici sono salvati come hash SHA-256
- * in una tabella protetta da RLS senza policy: solo il client admin
- * (service role) usato qui può leggerli/scriverli.
+ * Reset password via OTP inviato con Brevo (non il flusso nativo
+ * "resetPasswordForEmail" di Supabase, abbandonato perché il link
+ * monouso veniva consumato dal click-tracking di Brevo prima che
+ * l'utente lo aprisse). Stesso pattern di lib/email/emailVerification.ts.
  */
 
 const CODE_LENGTH = 6;
@@ -29,11 +29,31 @@ function hashCode(code: string) {
   return createHash("sha256").update(code).digest("hex");
 }
 
-export async function getResendCooldownSeconds(userId: string) {
+/*
+ * L'Admin API di Supabase non offre un getUserByEmail diretto.
+ * generateLink risolve email -> utente (errore se non esiste) senza
+ * mandare nulla: scartiamo il link generato e usiamo solo `data.user`.
+ */
+export async function findUserByEmail(email: string) {
+  const admin = createAdminClient();
+
+  const { data, error } = await admin.auth.admin.generateLink({
+    type: "recovery",
+    email,
+  });
+
+  if (error || !data.user) {
+    return null;
+  }
+
+  return data.user;
+}
+
+export async function getResetCooldownSeconds(userId: string) {
   const admin = createAdminClient();
 
   const { data } = await admin
-    .from("email_verification_codes")
+    .from("password_reset_codes")
     .select("created_at")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
@@ -49,7 +69,7 @@ export async function getResendCooldownSeconds(userId: string) {
   return Math.max(0, Math.ceil((RESEND_COOLDOWN_MS - elapsedMs) / 1000));
 }
 
-export async function sendVerificationCode({
+export async function sendResetCode({
   userId,
   email,
   user,
@@ -67,12 +87,12 @@ export async function sendVerificationCode({
 
   // Un solo codice valido alla volta per utente.
   await admin
-    .from("email_verification_codes")
+    .from("password_reset_codes")
     .delete()
     .eq("user_id", userId);
 
   const { error } = await admin
-    .from("email_verification_codes")
+    .from("password_reset_codes")
     .insert({
       user_id: userId,
       code_hash: hashCode(code),
@@ -97,10 +117,7 @@ export async function sendVerificationCode({
   });
 
   if (!sent) {
-    // Il codice è già salvato: se l'invio fallisce lo segnaliamo con un
-    // errore reale (la route API lo trasforma in 500) invece di lasciar
-    // credere all'utente che l'email sia partita quando non è così.
-    throw new Error("Invio email di verifica fallito.");
+    throw new Error("Invio email di reset password fallito.");
   }
 }
 
@@ -111,14 +128,14 @@ type VerifyResult =
       reason: "not_found" | "expired" | "too_many_attempts" | "invalid";
     };
 
-export async function verifyEmailCode(
+export async function verifyResetCode(
   userId: string,
   submittedCode: string
 ): Promise<VerifyResult> {
   const admin = createAdminClient();
 
   const { data: row } = await admin
-    .from("email_verification_codes")
+    .from("password_reset_codes")
     .select("id, code_hash, expires_at, attempts")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
@@ -131,7 +148,7 @@ export async function verifyEmailCode(
 
   if (new Date(row.expires_at).getTime() < Date.now()) {
     await admin
-      .from("email_verification_codes")
+      .from("password_reset_codes")
       .delete()
       .eq("id", row.id);
 
@@ -140,7 +157,7 @@ export async function verifyEmailCode(
 
   if (row.attempts >= MAX_ATTEMPTS) {
     await admin
-      .from("email_verification_codes")
+      .from("password_reset_codes")
       .delete()
       .eq("id", row.id);
 
@@ -149,7 +166,7 @@ export async function verifyEmailCode(
 
   if (hashCode(submittedCode) !== row.code_hash) {
     await admin
-      .from("email_verification_codes")
+      .from("password_reset_codes")
       .update({ attempts: row.attempts + 1 })
       .eq("id", row.id);
 
@@ -157,14 +174,9 @@ export async function verifyEmailCode(
   }
 
   await admin
-    .from("email_verification_codes")
+    .from("password_reset_codes")
     .delete()
     .eq("id", row.id);
-
-  await admin
-    .from("profiles")
-    .update({ email_verified_at: new Date().toISOString() })
-    .eq("id", userId);
 
   return { ok: true };
 }

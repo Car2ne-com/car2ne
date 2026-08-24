@@ -148,6 +148,7 @@ export async function POST() {
         heading: copy.heading,
         body: copy.body.replace("{name}", name),
       }),
+      sender: "privacy",
     });
   }
 

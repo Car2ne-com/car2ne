@@ -7,6 +7,12 @@ export const email: (typeof it)["email"] = {
     body:
       "Hi {name},\n\nthanks for signing up to Car2ne! Use the code below to verify your email address. The code is valid for 10 minutes.\n\nIf you didn't create this account, you can safely ignore this email.",
   },
+  passwordReset: {
+    subject: "Your password reset code",
+    heading: "Reset your password",
+    body:
+      "Hi {name},\n\nwe received a request to reset the password for your Car2ne account. Use the code below to choose a new one. The code is valid for 10 minutes.\n\nIf you didn't request this, you can safely ignore this email: your password will stay unchanged.",
+  },
   mfaEnabled: {
     subject: "Two-factor authentication enabled",
     heading: "Two-factor authentication enabled",

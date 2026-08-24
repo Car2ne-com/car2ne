@@ -5,6 +5,12 @@ export const email = {
     body:
       "Ciao {name},\n\ngrazie per esserti registrato su Car2ne! Usa il codice qui sotto per verificare il tuo indirizzo email. Il codice è valido per 10 minuti.\n\nSe non hai creato tu questo account, ignora pure questa email.",
   },
+  passwordReset: {
+    subject: "Il tuo codice per reimpostare la password",
+    heading: "Reimposta la tua password",
+    body:
+      "Ciao {name},\n\nabbiamo ricevuto una richiesta di reset della password per il tuo account Car2ne. Usa il codice qui sotto per sceglierne una nuova. Il codice è valido per 10 minuti.\n\nSe non sei stato tu a richiederlo, ignora pure questa email: la tua password resterà invariata.",
+  },
   mfaEnabled: {
     subject: "Autenticazione a due fattori attivata",
     heading: "Autenticazione a due fattori attivata",

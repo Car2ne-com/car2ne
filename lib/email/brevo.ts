@@ -3,14 +3,29 @@ import "server-only";
 /*
  * Client email transazionali via Brevo (API v3).
  *
- * USO ESCLUSIVO SERVER-SIDE. Richiede BREVO_API_KEY e
- * EMAIL_FROM_ADDRESS in env (mai nel frontend).
+ * USO ESCLUSIVO SERVER-SIDE. Richiede BREVO_API_KEY in env
+ * (mai nel frontend).
  */
+
+/*
+ * Mittenti verificati su Brevo, uno per tipo di comunicazione
+ * (necessario perché Brevo autorizza l'invio solo dai singoli
+ * indirizzi verificati sul dominio, non dal dominio intero).
+ */
+export const EMAIL_SENDERS = {
+  noreply: { email: "noreply@car2ne.com", name: "Car2ne" },
+  otp: { email: "otp@car2ne.com", name: "Car2ne" },
+  privacy: { email: "privacy@car2ne.com", name: "Car2ne" },
+  report: { email: "report@car2ne.com", name: "Car2ne" },
+} as const;
+
+export type EmailSenderKey = keyof typeof EMAIL_SENDERS;
 
 type SendEmailParams = {
   to: { email: string; name?: string };
   subject: string;
   htmlContent: string;
+  sender: EmailSenderKey;
 };
 
 /*
@@ -35,14 +50,13 @@ export async function sendTransactionalEmail({
   to,
   subject,
   htmlContent,
+  sender,
 }: SendEmailParams): Promise<boolean> {
   const apiKey = process.env.BREVO_API_KEY;
-  const fromAddress = process.env.EMAIL_FROM_ADDRESS;
-  const fromName = process.env.EMAIL_FROM_NAME ?? "Car2ne";
 
-  if (!apiKey || !fromAddress) {
+  if (!apiKey) {
     console.error(
-      "BREVO_API_KEY o EMAIL_FROM_ADDRESS non configurate: email non inviata."
+      "BREVO_API_KEY non configurata: email non inviata."
     );
     return false;
   }
@@ -57,7 +71,7 @@ export async function sendTransactionalEmail({
         accept: "application/json",
       },
       body: JSON.stringify({
-        sender: { email: fromAddress, name: fromName },
+        sender: EMAIL_SENDERS[sender],
         to: [to],
         subject,
         htmlContent,

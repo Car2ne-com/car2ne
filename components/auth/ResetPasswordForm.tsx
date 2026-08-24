@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
@@ -9,23 +10,28 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label, FieldError } from "@/components/ui/label";
-import { createClient } from "@/lib/supabase/client";
 import type { it } from "@/lib/i18n/dictionaries/it";
 
 type AuthDict = (typeof it)["auth"];
 
 type Props = {
+  email: string;
   dict: AuthDict;
 };
 
-export default function ResetPasswordForm({ dict }: Props) {
+type ErrorReason =
+  | "invalid"
+  | "not_found"
+  | "expired"
+  | "too_many_attempts"
+  | "weak_password"
+  | "generic";
+
+export default function ResetPasswordForm({ email, dict }: Props) {
   const router = useRouter();
+  const t = dict.resetPasswordForm;
 
-  const supabase = useMemo(
-    () => createClient(),
-    []
-  );
-
+  const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] =
     useState("");
@@ -34,6 +40,20 @@ export default function ResetPasswordForm({ dict }: Props) {
     useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCooldown((current) => Math.max(0, current - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const passwordRules = useMemo(
     () => ({
@@ -53,43 +73,102 @@ export default function ResetPasswordForm({ dict }: Props) {
     passwordRules.lowercase &&
     passwordRules.special;
 
+  async function handleResend() {
+    setResending(true);
+
+    try {
+      const response = await fetch(
+        "/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status === 429) {
+        setCooldown(data.retryAfterSeconds ?? 0);
+        toast.error(t.errors.cooldown);
+        return;
+      }
+
+      if (!response.ok) {
+        toast.error(t.errors.generic);
+        return;
+      }
+
+      setCooldown(45);
+      toast.success(dict.forgotPasswordForm.codeSentToast);
+    } finally {
+      setResending(false);
+    }
+  }
+
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
   ) {
     e.preventDefault();
 
+    if (code.trim().length !== 6) {
+      toast.error(t.errors.codeLength);
+      return;
+    }
+
     if (!passwordIsValid) {
-      toast.error(dict.resetPasswordForm.errors.weakPassword);
+      toast.error(t.errors.weakPassword);
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error(dict.resetPasswordForm.errors.passwordMismatch);
+      toast.error(t.errors.passwordMismatch);
       return;
     }
 
     setLoading(true);
 
-    const { error } =
-      await supabase.auth.updateUser({
-        password,
-      });
-
-    setLoading(false);
-
-    if (error) {
-      console.error(
-        "Errore aggiornamento password:",
-        error
+    try {
+      const response = await fetch(
+        "/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            code: code.trim(),
+            password,
+          }),
+        }
       );
 
-      toast.error(error.message);
-      return;
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        const reason = (data.error ?? "generic") as ErrorReason;
+
+        let message = t.errors.generic;
+
+        if (reason === "weak_password") {
+          message = t.errors.weakPassword;
+        } else if (reason in t.errors) {
+          message =
+            t.errors[
+              reason as keyof typeof t.errors
+            ];
+        }
+
+        toast.error(message);
+
+        setCode("");
+        return;
+      }
+
+      toast.success(t.success);
+      router.push("/login");
+    } finally {
+      setLoading(false);
     }
-
-    toast.success(dict.resetPasswordForm.success);
-
-    router.push("/login");
   }
 
   return (
@@ -99,7 +178,25 @@ export default function ResetPasswordForm({ dict }: Props) {
         className="space-y-6"
       >
         <div>
-          <Label>{dict.resetPasswordForm.newPasswordLabel}</Label>
+          <Label>{t.codeLabel}</Label>
+
+          <Input
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            placeholder="123456"
+            value={code}
+            onChange={(e) =>
+              setCode(e.target.value.replace(/\D/g, ""))
+            }
+            maxLength={6}
+            disabled={loading}
+            className="h-14 rounded-2xl text-center text-lg tracking-[0.5em]"
+          />
+        </div>
+
+        <div>
+          <Label>{t.newPasswordLabel}</Label>
 
           <div className="relative">
             <Input
@@ -176,7 +273,7 @@ export default function ResetPasswordForm({ dict }: Props) {
         </div>
 
         <div>
-          <Label>{dict.resetPasswordForm.confirmNewPasswordLabel}</Label>
+          <Label>{t.confirmNewPasswordLabel}</Label>
 
           <Input
             type={
@@ -207,10 +304,34 @@ export default function ResetPasswordForm({ dict }: Props) {
           }
           className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
         >
-          {loading
-            ? dict.resetPasswordForm.updating
-            : dict.resetPasswordForm.updateButton}
+          {loading ? t.updating : t.updateButton}
         </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={handleResend}
+          disabled={resending || cooldown > 0}
+          className="w-full font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
+        >
+          {resending
+            ? t.resending
+            : cooldown > 0
+              ? t.resendCooldown.replace(
+                  "{seconds}",
+                  String(cooldown)
+                )
+              : t.resendButton}
+        </Button>
+
+        <p className="text-center text-sm text-muted-foreground">
+          <Link
+            href="/forgot-password"
+            className="font-semibold text-primary hover:text-primary/80"
+          >
+            {t.wrongEmailLink}
+          </Link>
+        </p>
       </form>
     </Card>
   );

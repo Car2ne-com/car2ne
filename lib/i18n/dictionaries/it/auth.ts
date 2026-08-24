@@ -14,12 +14,13 @@ export const auth = {
     pageBadge: "🔑 Recupero password",
     pageTitle: "Password dimenticata?",
     pageSubtitle:
-      "Inserisci la tua email e ti invieremo un link per reimpostarla.",
+      "Inserisci la tua email e ti invieremo un codice per reimpostarla.",
   },
   resetPassword: {
     pageBadge: "🔑 Nuova password",
     pageTitle: "Imposta una nuova password",
-    pageSubtitle: "Scegli una password sicura per il tuo account.",
+    pageSubtitle:
+      "Inserisci il codice che ti abbiamo inviato via email e scegli una nuova password.",
   },
   verifyAge: {
     pageBadge: "🎂 Ultimo passaggio",
@@ -142,25 +143,36 @@ export const auth = {
       "Registrazione completata! Ti abbiamo inviato un codice per verificare la tua email.",
   },
   forgotPasswordForm: {
-    sentTitle: "Controlla la tua email",
-    sentDescriptionPrefix: "Se esiste un account associato a",
-    sentDescriptionSuffix:
-      ", ti abbiamo inviato un link per reimpostare la password.",
-    sendButton: "Invia link di reset",
+    codeSentToast:
+      "Se esiste un account associato a questa email, ti abbiamo inviato un codice.",
+    sendButton: "Invia codice",
     sending: "Invio...",
     errors: {
       emptyEmail: "Inserisci la tua email.",
     },
   },
   resetPasswordForm: {
+    codeLabel: "Codice di verifica",
     newPasswordLabel: "Nuova password",
     confirmNewPasswordLabel: "Conferma nuova password",
     updateButton: "Aggiorna password",
     updating: "Aggiornamento...",
     success: "Password aggiornata con successo!",
+    resendButton: "Rinvia codice",
+    resendCooldown: "Rinvia tra {seconds}s",
+    resending: "Invio...",
+    wrongEmailLink: "Indirizzo sbagliato? Ricomincia",
     errors: {
       weakPassword: "La password non rispetta tutti i requisiti di sicurezza.",
       passwordMismatch: "Le password non coincidono.",
+      codeLength: "Inserisci il codice a 6 cifre.",
+      invalid: "Codice non valido. Riprova.",
+      not_found: "Nessun codice trovato. Richiedine uno nuovo.",
+      expired: "Il codice è scaduto. Richiedine uno nuovo.",
+      too_many_attempts:
+        "Troppi tentativi falliti. Richiedi un nuovo codice.",
+      generic: "Qualcosa è andato storto. Riprova.",
+      cooldown: "Attendi qualche secondo prima di richiedere un nuovo codice.",
     },
   },
 };

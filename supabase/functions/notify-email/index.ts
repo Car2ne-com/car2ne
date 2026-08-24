@@ -8,10 +8,11 @@
 //
 // Secrets richiesti (Dashboard -> Edge Functions -> Secrets):
 //   BREVO_API_KEY            chiave API v3 di Brevo
-//   EMAIL_FROM_ADDRESS        mittente verificato su Brevo
-//   EMAIL_FROM_NAME            (opzionale, default "Car2ne")
 //   NOTIFICATION_WEBHOOK_SECRET  stringa a caso, condivisa col webhook
 //   SITE_URL                  es. https://car2ne.vercel.app
+//
+// Il mittente è scelto per tipo di notifica tra gli indirizzi
+// verificati su Brevo (vedi EMAIL_SENDERS sotto), non da env.
 //
 // SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY sono già disponibili di
 // default in ogni Edge Function del progetto, non vanno impostati.
@@ -178,6 +179,21 @@ const EMAIL_COPY: Record<NotificationType, Record<Locale, Copy>> = {
   },
 };
 
+// Stessi mittenti verificati usati in lib/email/brevo.ts (app Next.js),
+// duplicati qui perché le Edge Function Deno non possono importare da lib/.
+const EMAIL_SENDERS = {
+  noreply: { email: "noreply@car2ne.com", name: "Car2ne" },
+  report: { email: "report@car2ne.com", name: "Car2ne" },
+} as const;
+
+function getSender(type: NotificationType) {
+  if (type === "report_resolved" || type === "report_dismissed") {
+    return EMAIL_SENDERS.report;
+  }
+
+  return EMAIL_SENDERS.noreply;
+}
+
 function getHref(type: string) {
   if (type === "booking_request") {
     return "/dashboard/rides";
@@ -321,15 +337,11 @@ Deno.serve(async (req) => {
   );
 
   const brevoApiKey = Deno.env.get("BREVO_API_KEY");
-  const fromAddress = Deno.env.get("EMAIL_FROM_ADDRESS");
-  const fromName = Deno.env.get("EMAIL_FROM_NAME") ?? "Car2ne";
   const siteUrl =
     Deno.env.get("SITE_URL") ?? "https://car2ne.vercel.app";
 
-  if (!brevoApiKey || !fromAddress) {
-    console.error(
-      "BREVO_API_KEY o EMAIL_FROM_ADDRESS non configurate."
-    );
+  if (!brevoApiKey) {
+    console.error("BREVO_API_KEY non configurata.");
 
     return new Response("Email config missing", { status: 200 });
   }
@@ -357,7 +369,7 @@ Deno.serve(async (req) => {
         accept: "application/json",
       },
       body: JSON.stringify({
-        sender: { email: fromAddress, name: fromName },
+        sender: getSender(type),
         to: [{ email: recipientEmail }],
         subject: copy.subject,
         htmlContent: html,
