@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
+import {
+  getUserDisplayName,
+  renderEmailHtml,
+  sendTransactionalEmail,
+} from "@/lib/email/brevo";
 import { isPastDateTime } from "@/lib/utils/date";
 import { toOne } from "@/lib/utils/relations";
 
@@ -164,6 +170,29 @@ export async function POST(request: Request) {
       { error: error.message },
       { status: 500 }
     );
+  }
+
+  if (user.email) {
+    const { dict, locale } = await getTranslations();
+    const copy = dict.email.reportReceived;
+
+    sendTransactionalEmail({
+      to: { email: user.email },
+      subject: copy.subject,
+      htmlContent: renderEmailHtml({
+        heading: copy.heading,
+        body: copy.body.replace(
+          "{name}",
+          getUserDisplayName(user, locale)
+        ),
+      }),
+      sender: "report",
+    }).catch((error) => {
+      console.error(
+        "Errore invio email conferma segnalazione:",
+        error
+      );
+    });
   }
 
   return NextResponse.json({ id: data.id });

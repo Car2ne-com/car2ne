@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "@/lib/i18n";
 import { verifyEmailCode } from "@/lib/email/emailVerification";
+import {
+  getUserDisplayName,
+  renderEmailHtml,
+  sendTransactionalEmail,
+} from "@/lib/email/brevo";
+import { SITE_URL } from "@/lib/siteConfig";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -35,6 +42,34 @@ export async function POST(request: Request) {
       { error: result.reason },
       { status: 400 }
     );
+  }
+
+  if (user.email) {
+    const { dict, locale } = await getTranslations();
+    const copy = dict.email.welcome;
+
+    sendTransactionalEmail({
+      to: { email: user.email },
+      subject: copy.subject,
+      htmlContent: renderEmailHtml({
+        heading: copy.heading,
+        body: copy.body.replace(
+          "{name}",
+          getUserDisplayName(user, locale)
+        ),
+        ctaLabel: copy.ctaLabel,
+        ctaHref: new URL(
+          "/dashboard",
+          SITE_URL
+        ).toString(),
+      }),
+      sender: "noreply",
+    }).catch((error) => {
+      console.error(
+        "Errore invio email di benvenuto:",
+        error
+      );
+    });
   }
 
   return NextResponse.json({ verified: true });

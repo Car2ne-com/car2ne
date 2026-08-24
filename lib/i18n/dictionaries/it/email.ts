@@ -1,4 +1,18 @@
 export const email = {
+  welcome: {
+    subject: "Benvenuto su Car2ne!",
+    heading: "Benvenuto su Car2ne!",
+    body:
+      "Ciao {name},\n\nil tuo account è pronto! Ora puoi cercare passaggi per i tuoi eventi preferiti oppure offrirne uno tu stesso e condividere le spese di viaggio.\n\nBuon viaggio!",
+    ctaLabel: "Vai alla dashboard",
+  },
+  reportReceived: {
+    subject: "Abbiamo ricevuto la tua segnalazione",
+    heading: "Segnalazione ricevuta",
+    body:
+      "Ciao {name},\n\nabbiamo ricevuto la tua segnalazione e il nostro team la esaminerà al più presto. Ti scriveremo di nuovo non appena l'avremo gestita.\n\nGrazie per aiutarci a mantenere Car2ne un posto sicuro.",
+    ctaLabel: "",
+  },
   verifyEmail: {
     subject: "Il tuo codice di verifica Car2ne",
     heading: "Verifica la tua email",

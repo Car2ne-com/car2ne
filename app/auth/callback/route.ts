@@ -3,6 +3,12 @@ import { cookies } from "next/headers";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getTranslations } from "@/lib/i18n";
+import {
+  getUserDisplayName,
+  renderEmailHtml,
+  sendTransactionalEmail,
+} from "@/lib/email/brevo";
 import {
   TRUSTED_DEVICE_COOKIE,
   isDeviceTrusted,
@@ -76,11 +82,40 @@ export async function GET(request: Request) {
    * normale, proprio per impedire che un utente si auto-verifichi.
    */
 
-  await createAdminClient()
+  const { data: justVerified } = await createAdminClient()
     .from("profiles")
     .update({ email_verified_at: new Date().toISOString() })
     .eq("id", user.id)
-    .is("email_verified_at", null);
+    .is("email_verified_at", null)
+    .select("id");
+
+  if (justVerified && justVerified.length > 0 && user.email) {
+    const { dict, locale } = await getTranslations();
+    const copy = dict.email.welcome;
+
+    sendTransactionalEmail({
+      to: { email: user.email },
+      subject: copy.subject,
+      htmlContent: renderEmailHtml({
+        heading: copy.heading,
+        body: copy.body.replace(
+          "{name}",
+          getUserDisplayName(user, locale)
+        ),
+        ctaLabel: copy.ctaLabel,
+        ctaHref: new URL(
+          "/dashboard",
+          requestUrl.origin
+        ).toString(),
+      }),
+      sender: "noreply",
+    }).catch((error) => {
+      console.error(
+        "Errore invio email di benvenuto (OAuth):",
+        error
+      );
+    });
+  }
 
   /*
    * ==============================

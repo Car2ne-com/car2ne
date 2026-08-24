@@ -1,6 +1,20 @@
 import type { it } from "../it";
 
 export const email: (typeof it)["email"] = {
+  welcome: {
+    subject: "Welcome to Car2ne!",
+    heading: "Welcome to Car2ne!",
+    body:
+      "Hi {name},\n\nyour account is ready! You can now search for rides to your favorite events, or offer one yourself and split the travel costs.\n\nHave a great trip!",
+    ctaLabel: "Go to dashboard",
+  },
+  reportReceived: {
+    subject: "We've received your report",
+    heading: "Report received",
+    body:
+      "Hi {name},\n\nwe've received your report and our team will review it as soon as possible. We'll get back to you once it's been handled.\n\nThanks for helping us keep Car2ne a safe place.",
+    ctaLabel: "",
+  },
   verifyEmail: {
     subject: "Your Car2ne verification code",
     heading: "Verify your email",
