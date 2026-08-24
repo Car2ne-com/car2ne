@@ -22,7 +22,6 @@ import CityCombobox from "@/components/cities/CityCombobox";
 import { Event } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
 import { haversineKm } from "@/lib/utils/distance";
-import { cn } from "@/lib/utils";
 
 /*
  * Soglia indicativa di prezzo equo, in stile BlaBlaCar: un
@@ -38,14 +37,12 @@ const MIN_DISTANCE_FOR_CAP_KM = 15;
 const DRAFT_KEY =
   "car2ne_offer_ride_draft";
 
-type RideDirection = "outbound" | "return";
-
 type RideDraft = {
   eventId: string;
-  direction: RideDirection;
   originCityId: string;
   departureCity: string;
   departureTime: string;
+  returnTime: string;
   availableSeats: string;
   contribution: string;
   description: string;
@@ -61,13 +58,6 @@ type OfferRideDict = {
     noResults: string;
     moreResults: string;
   };
-  direction: {
-    label: string;
-    outbound: string;
-    outboundHint: string;
-    return: string;
-    returnHint: string;
-  };
   alreadyHasRide: {
     title: string;
     description: string;
@@ -75,15 +65,15 @@ type OfferRideDict = {
   };
   eventInfo: {
     destination: string;
-    origin: string;
     eventDate: string;
     note: string;
   };
   fields: {
     originCityLabel: string;
-    destinationCityLabel: string;
     departureTimeLabel: string;
     departureTimeHint: string;
+    returnTimeLabel: string;
+    returnTimeHint: string;
     seatsLabel: string;
     contributionLabel: string;
     descriptionLabel: string;
@@ -120,14 +110,12 @@ type Props = {
   locale: Locale;
   dict: OfferRideDict;
   initialEventId?: string;
-  initialDirection?: string;
 };
 
 export default function OfferRideForm({
   locale,
   dict,
   initialEventId,
-  initialDirection,
 }: Props) {
   const router = useRouter();
 
@@ -144,13 +132,6 @@ export default function OfferRideForm({
 
   const [eventId, setEventId] =
     useState("");
-
-  const [direction, setDirection] =
-    useState<RideDirection>(
-      initialDirection === "return"
-        ? "return"
-        : "outbound"
-    );
 
   const [originCityId, setOriginCityId] =
     useState("");
@@ -224,6 +205,9 @@ export default function OfferRideForm({
   }, [originCityId, supabase]);
 
   const [departureTime, setDepartureTime] =
+    useState("");
+
+  const [returnTime, setReturnTime] =
     useState("");
 
   const [availableSeats, setAvailableSeats] =
@@ -376,11 +360,6 @@ export default function OfferRideForm({
               draft.eventId
             );
 
-            setDirection(
-              draft.direction ??
-                "outbound"
-            );
-
             setOriginCityId(
               draft.originCityId
             );
@@ -391,6 +370,10 @@ export default function OfferRideForm({
 
             setDepartureTime(
               draft.departureTime
+            );
+
+            setReturnTime(
+              draft.returnTime ?? ""
             );
 
             setAvailableSeats(
@@ -465,19 +448,16 @@ export default function OfferRideForm({
 
   /*
    * ==============================
-   * CAMBIO EVENTO / DIREZIONE
+   * CAMBIO EVENTO
    * ==============================
    *
-   * "Già hai un passaggio" va controllato per la coppia
-   * evento+direzione: un conducente può avere un'andata E
-   * un ritorno attivi per lo stesso evento, quindi il
-   * controllo va rifatto sia al cambio evento sia al
-   * cambio direzione.
+   * Un conducente può avere un solo passaggio attivo per
+   * evento (copre sempre sia andata che ritorno), quindi il
+   * controllo va rifatto al cambio evento.
    */
 
   async function checkAlreadyHasRide(
-    selectedEventId: string,
-    selectedDirection: RideDirection
+    selectedEventId: string
   ) {
     if (!selectedEventId) {
       setAlreadyHasRide(false);
@@ -506,10 +486,6 @@ export default function OfferRideForm({
       .eq(
         "event_id",
         selectedEventId
-      )
-      .eq(
-        "direction",
-        selectedDirection
       )
       .eq(
         "status",
@@ -550,19 +526,7 @@ export default function OfferRideForm({
     );
 
     await checkAlreadyHasRide(
-      selectedEventId,
-      direction
-    );
-  }
-
-  function handleDirectionChange(
-    newDirection: RideDirection
-  ) {
-    setDirection(newDirection);
-
-    void checkAlreadyHasRide(
-      eventId,
-      newDirection
+      selectedEventId
     );
   }
 
@@ -575,10 +539,10 @@ export default function OfferRideForm({
   function saveDraft() {
     const draft: RideDraft = {
       eventId,
-      direction,
       originCityId,
       departureCity,
       departureTime,
+      returnTime,
       availableSeats,
       contribution,
       description,
@@ -618,6 +582,7 @@ export default function OfferRideForm({
       !eventId ||
       !originCityId ||
       !departureTime ||
+      !returnTime ||
       !availableSeats ||
       !contribution
     ) {
@@ -689,10 +654,6 @@ export default function OfferRideForm({
         event.id
       )
       .eq(
-        "direction",
-        direction
-      )
-      .eq(
         "status",
         "active"
       )
@@ -749,15 +710,27 @@ export default function OfferRideForm({
       `${year}-${month}-${day}`;
 
     /*
-     * Destinazione presa dalla venue
-     * dell'evento.
+     * Il ritorno è normalmente lo stesso giorno
+     * dell'andata. Se l'orario di ritorno è precedente a
+     * quello di andata assumiamo che l'evento finisca dopo
+     * mezzanotte, quindi il ritorno cade il giorno dopo.
      */
 
+    const returnDate =
+      returnTime < departureTime
+        ? new Date(
+            eventDate.getTime() +
+              24 * 60 * 60 * 1000
+          )
+            .toISOString()
+            .slice(0, 10)
+        : departureDate;
+
     /*
-     * Per l'andata l'origine è la città scelta dal
-     * conducente e la destinazione è fissa (la venue).
-     * Per il ritorno è l'opposto: si parte dalla venue
-     * verso la città scelta dal conducente.
+     * Destinazione presa dalla venue dell'evento: per
+     * l'andata l'origine è la città scelta dal conducente e
+     * la destinazione è la venue, per il ritorno vale il
+     * contrario (stessa città, stesso conducente).
      */
 
     const {
@@ -769,33 +742,26 @@ export default function OfferRideForm({
 
         driver_id: user.id,
 
-        direction,
-
         origin_city_id:
-          direction === "outbound"
-            ? originCityId
-            : null,
-
-        destination_city_id:
-          direction === "return"
-            ? originCityId
-            : null,
+          originCityId,
 
         departure_city:
-          direction === "outbound"
-            ? departureCity
-            : event.venue,
+          departureCity,
 
         destination:
-          direction === "outbound"
-            ? event.venue
-            : departureCity,
+          event.venue,
 
         departure_date:
           departureDate,
 
         departure_time:
           departureTime,
+
+        return_date:
+          returnDate,
+
+        return_time:
+          returnTime,
 
         available_seats:
           Number(
@@ -913,56 +879,6 @@ export default function OfferRideForm({
           />
         </div>
 
-        {/* Direzione */}
-
-        <div className="md:col-span-2">
-          <Label>{dict.direction.label}</Label>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() =>
-                handleDirectionChange("outbound")
-              }
-              className={cn(
-                "rounded-2xl border p-4 text-left transition",
-                direction === "outbound"
-                  ? "border-primary bg-accent"
-                  : "border-border hover:border-primary/30"
-              )}
-            >
-              <span className="block font-semibold text-foreground">
-                {dict.direction.outbound}
-              </span>
-
-              <span className="mt-1 block text-xs text-muted-foreground">
-                {dict.direction.outboundHint}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                handleDirectionChange("return")
-              }
-              className={cn(
-                "rounded-2xl border p-4 text-left transition",
-                direction === "return"
-                  ? "border-primary bg-accent"
-                  : "border-border hover:border-primary/30"
-              )}
-            >
-              <span className="block font-semibold text-foreground">
-                {dict.direction.return}
-              </span>
-
-              <span className="mt-1 block text-xs text-muted-foreground">
-                {dict.direction.returnHint}
-              </span>
-            </button>
-          </div>
-        </div>
-
         {/* Avviso passaggio già esistente */}
 
         {alreadyHasRide && (
@@ -1003,9 +919,7 @@ export default function OfferRideForm({
 
               <div>
                 <p className="text-sm font-semibold text-accent-foreground">
-                  {direction === "outbound"
-                    ? dict.eventInfo.destination
-                    : dict.eventInfo.origin}
+                  {dict.eventInfo.destination}
                 </p>
 
                 <p className="mt-1 text-base font-semibold text-foreground">
@@ -1043,11 +957,9 @@ export default function OfferRideForm({
 
         {/* Città (partenza per l'andata, destinazione per il ritorno) */}
 
-        <div>
+        <div className="md:col-span-2">
           <Label>
-            {direction === "outbound"
-              ? dict.fields.originCityLabel
-              : dict.fields.destinationCityLabel}
+            {dict.fields.originCityLabel}
           </Label>
 
           <CityCombobox
@@ -1059,7 +971,7 @@ export default function OfferRideForm({
           />
         </div>
 
-        {/* Ora */}
+        {/* Orario di andata */}
 
         <div>
           <Label>{dict.fields.departureTimeLabel}</Label>
@@ -1080,6 +992,30 @@ export default function OfferRideForm({
 
           <p className="mt-2 text-xs text-muted-foreground">
             {dict.fields.departureTimeHint}
+          </p>
+        </div>
+
+        {/* Orario di ritorno */}
+
+        <div>
+          <Label>{dict.fields.returnTimeLabel}</Label>
+
+          <Input
+            type="time"
+            value={returnTime}
+            onChange={(e) =>
+              setReturnTime(
+                e.target.value
+              )
+            }
+            disabled={
+              alreadyHasRide
+            }
+            className="h-14 rounded-2xl"
+          />
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            {dict.fields.returnTimeHint}
           </p>
         </div>
 

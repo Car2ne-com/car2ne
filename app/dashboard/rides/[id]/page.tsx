@@ -43,13 +43,13 @@ export default async function ManageRidePage({
       .select(`
         id,
         event_id,
-        direction,
         origin_city_id,
-        destination_city_id,
         departure_city,
         destination,
         departure_date,
         departure_time,
+        return_date,
+        return_time,
         available_seats,
         contribution,
         description,
@@ -142,13 +142,11 @@ export default async function ManageRidePage({
 
           <div className="mt-5 grid gap-5 sm:grid-cols-3">
 
-            {/* Destinazione (o partenza, per un ritorno) */}
+            {/* Destinazione */}
 
             <div>
               <p className="text-sm text-muted-foreground">
-                {ride.direction === "return"
-                  ? t.managePage.originLabel
-                  : t.managePage.destinationLabel}
+                {t.managePage.destinationLabel}
               </p>
 
               <p className="mt-1 font-semibold text-foreground">
@@ -195,15 +193,13 @@ export default async function ManageRidePage({
           ratingFormDict={dict.ratings.form}
           ride={{
             id: ride.id,
-            direction:
-              ride.direction as "outbound" | "return",
             origin_city_id: ride.origin_city_id,
-            destination_city_id:
-              ride.destination_city_id,
             departure_city: ride.departure_city,
             destination: ride.destination,
             departure_date: ride.departure_date,
             departure_time: ride.departure_time,
+            return_date: ride.return_date,
+            return_time: ride.return_time,
             available_seats: ride.available_seats,
             contribution: Number(
               ride.contribution
@@ -211,8 +207,8 @@ export default async function ManageRidePage({
             description: ride.description,
             rideHasPassed:
               isPastDateTime(
-                ride.departure_date,
-                ride.departure_time
+                ride.return_date,
+                ride.return_time
               ),
           }}
         />

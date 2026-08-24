@@ -62,8 +62,8 @@ type Dict = {
   };
   form: {
     originCityLabel: string;
-    destinationCityLabel: string;
     departureTimeLabel: string;
+    returnTimeLabel: string;
     seatsLabel: string;
     contributionLabel: string;
     descriptionLabel: string;
@@ -111,13 +111,13 @@ type Props = {
   ratingFormDict: RatingFormDict;
   ride: {
     id: string;
-    direction: "outbound" | "return";
     origin_city_id: string | null;
-    destination_city_id: string | null;
     departure_city: string;
     destination: string;
     departure_date: string;
     departure_time: string;
+    return_date: string | null;
+    return_time: string | null;
     available_seats: number;
     contribution: number;
     description: string | null;
@@ -156,23 +156,17 @@ export default function ManageRideForm({
   );
 
   /*
-   * "originCityId"/"departureCity" qui rappresentano sempre la città
-   * scelta dal conducente, a prescindere dalla direzione: per un'andata
-   * è la partenza (origin_city_id/departure_city), per un ritorno è la
-   * destinazione (destination_city_id/destination) — l'altro capo del
-   * viaggio è sempre la venue, fissata dall'evento.
+   * "originCityId"/"departureCity" sono la città scelta dal
+   * conducente: l'altro capo del viaggio è sempre la venue,
+   * fissata dall'evento, per entrambe le tratte.
    */
 
   const [originCityId, setOriginCityId] = useState(
-    (ride.direction === "return"
-      ? ride.destination_city_id
-      : ride.origin_city_id) ?? ""
+    ride.origin_city_id ?? ""
   );
 
   const [departureCity, setDepartureCity] = useState(
-    ride.direction === "return"
-      ? ride.destination
-      : ride.departure_city
+    ride.departure_city
   );
 
   function handleOriginCityChange(
@@ -185,6 +179,12 @@ export default function ManageRideForm({
 
   const [departureTime, setDepartureTime] = useState(
     ride.departure_time.slice(0, 5)
+  );
+
+  const [returnTime, setReturnTime] = useState(
+    ride.return_time
+      ? ride.return_time.slice(0, 5)
+      : ""
   );
 
   const [availableSeats, setAvailableSeats] = useState(
@@ -452,12 +452,14 @@ export default function ManageRideForm({
     const missingOnlyCity =
       !originCityId &&
       departureTime &&
+      returnTime &&
       availableSeats &&
       contribution;
 
     if (
       !originCityId ||
       !departureTime ||
+      !returnTime ||
       !availableSeats ||
       !contribution
     ) {
@@ -481,27 +483,37 @@ export default function ManageRideForm({
       return;
     }
 
+    /*
+     * Il ritorno è normalmente lo stesso giorno dell'andata. Se
+     * l'orario di ritorno è precedente a quello di andata
+     * assumiamo che l'evento finisca dopo mezzanotte, quindi il
+     * ritorno cade il giorno dopo.
+     */
+
+    const returnDate =
+      returnTime < departureTime
+        ? new Date(
+            new Date(
+              `${ride.departure_date}T00:00:00`
+            ).getTime() +
+              24 * 60 * 60 * 1000
+          )
+            .toISOString()
+            .slice(0, 10)
+        : ride.departure_date;
+
     const { error } = await supabase
       .from("rides")
-      .update(
-        ride.direction === "return"
-          ? {
-              destination_city_id: originCityId,
-              destination: departureCity,
-              departure_time: departureTime,
-              available_seats: Number(availableSeats),
-              contribution: Number(contribution),
-              description: description || null,
-            }
-          : {
-              origin_city_id: originCityId,
-              departure_city: departureCity,
-              departure_time: departureTime,
-              available_seats: Number(availableSeats),
-              contribution: Number(contribution),
-              description: description || null,
-            }
-      )
+      .update({
+        origin_city_id: originCityId,
+        departure_city: departureCity,
+        departure_time: departureTime,
+        return_date: returnDate,
+        return_time: returnTime,
+        available_seats: Number(availableSeats),
+        contribution: Number(contribution),
+        description: description || null,
+      })
       .eq("id", ride.id)
       .eq("driver_id", user.id);
 
@@ -813,11 +825,9 @@ export default function ManageRideForm({
         className="rounded-3xl border border-border bg-card p-8 shadow-sm"
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
+          <div className="md:col-span-2">
             <Label>
-              {ride.direction === "return"
-                ? dict.form.destinationCityLabel
-                : dict.form.originCityLabel}
+              {dict.form.originCityLabel}
             </Label>
 
             <CityCombobox
@@ -839,6 +849,23 @@ export default function ManageRideForm({
               value={departureTime}
               onChange={(event) =>
                 setDepartureTime(event.target.value)
+              }
+              disabled={loading || deleting}
+              className="h-14 rounded-2xl"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="return-time">
+              {dict.form.returnTimeLabel}
+            </Label>
+
+            <Input
+              id="return-time"
+              type="time"
+              value={returnTime}
+              onChange={(event) =>
+                setReturnTime(event.target.value)
               }
               disabled={loading || deleting}
               className="h-14 rounded-2xl"

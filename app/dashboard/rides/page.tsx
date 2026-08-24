@@ -26,11 +26,12 @@ export default async function MyRidesPage() {
     .select(`
       id,
       event_id,
-      direction,
       departure_city,
       destination,
       departure_date,
       departure_time,
+      return_date,
+      return_time,
       available_seats,
       contribution,
       description,
@@ -136,23 +137,15 @@ export default async function MyRidesPage() {
                       </h2>
                     </div>
 
-                    <div className="flex shrink-0 flex-col items-end gap-2">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          ride.status === "active"
-                            ? "bg-accent text-accent-foreground"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {statusLabel}
-                      </span>
-
-                      <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                        {ride.direction === "return"
-                          ? t.directionReturn
-                          : t.directionOutbound}
-                      </span>
-                    </div>
+                    <span
+                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+                        ride.status === "active"
+                          ? "bg-accent text-accent-foreground"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {statusLabel}
+                    </span>
 
                   </div>
 
@@ -199,6 +192,18 @@ export default async function MyRidesPage() {
 
                       <p className="mt-1 font-semibold text-foreground">
                         {ride.departure_time.slice(0, 5)}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {t.returnLabel}
+                      </p>
+
+                      <p className="mt-1 font-semibold text-foreground">
+                        {ride.return_time
+                          ? ride.return_time.slice(0, 5)
+                          : "—"}
                       </p>
                     </div>
 

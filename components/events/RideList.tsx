@@ -25,11 +25,12 @@ export default async function RideList({
       id,
       event_id,
       driver_id,
-      direction,
       departure_city,
       destination,
       departure_date,
       departure_time,
+      return_date,
+      return_time,
       available_seats,
       contribution,
       profiles (
@@ -41,6 +42,14 @@ export default async function RideList({
     `)
     .eq("event_id", eventId)
     .eq("status", "active")
+    /*
+     * return_date/return_time sono obbligatori solo per i nuovi
+     * passaggi (CHECK NOT VALID in migration 0026): righe create
+     * prima del modello andata+ritorno possono averli nulli. Non
+     * sono passaggi completi, quindi non li mostriamo qui.
+     */
+    .not("return_date", "is", null)
+    .not("return_time", "is", null)
     .order("departure_date", {
       ascending: true,
     })
@@ -58,6 +67,13 @@ export default async function RideList({
   const driverRatings = await getDriverRatings(
     supabase,
     (rides ?? []).map((ride) => ride.driver_id)
+  );
+
+  const dateFormatter = new Intl.DateTimeFormat(
+    locale === "en" ? "en-US" : "it-IT",
+    {
+      dateStyle: "medium",
+    }
   );
 
   const formattedRides =
@@ -97,8 +113,6 @@ export default async function RideList({
 
         driverId: ride.driver_id,
 
-        direction: ride.direction as "outbound" | "return",
-
         driverRating:
           driverRatings[ride.driver_id] ?? null,
 
@@ -121,14 +135,26 @@ export default async function RideList({
         to:
           ride.destination,
 
-        date: new Date(
-          `${ride.departure_date}T${ride.departure_time}`
-        ).toLocaleDateString(
-          locale === "en" ? "en-US" : "it-IT"
+        date: dateFormatter.format(
+          new Date(
+            `${ride.departure_date}T${ride.departure_time}`
+          )
         ),
 
         departure:
           ride.departure_time.slice(
+            0,
+            5
+          ),
+
+        returnDate: dateFormatter.format(
+          new Date(
+            `${ride.return_date}T${ride.return_time}`
+          )
+        ),
+
+        returnTime:
+          ride.return_time.slice(
             0,
             5
           ),
@@ -173,72 +199,14 @@ export default async function RideList({
           </Link>
         </div>
       ) : (
-        <div className="space-y-12">
-          {(
-            [
-              {
-                direction: "outbound" as const,
-                title: t.sectionOutbound,
-                sectionId: undefined,
-              },
-              {
-                direction: "return" as const,
-                title: t.sectionReturn,
-                sectionId: "return-section",
-              },
-            ]
-          ).map(({ direction, title, sectionId }) => {
-            const rides = formattedRides.filter(
-              (ride) => ride.direction === direction
-            );
-
-            /*
-             * Passata solo alle card di andata: permette al passeggero
-             * di richiedere anche il ritorno con un click in più,
-             * invece di dover scorrere fino alla sezione qui sotto.
-             */
-            const matchingReturnRides =
-              direction === "outbound"
-                ? formattedRides.filter(
-                    (ride) => ride.direction === "return"
-                  )
-                : [];
-
-            return (
-              <div key={direction} id={sectionId}>
-                <h3 className="mb-5 text-xl font-bold text-foreground">
-                  {title}
-                </h3>
-
-                {rides.length === 0 ? (
-                  <div className="text-center">
-                    <EmptyState
-                      title={t.emptyTitle}
-                      description={t.emptyDescription}
-                    />
-
-                    <Link
-                      href={`/offer-ride?eventId=${eventId}&direction=${direction}`}
-                      className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
-                    >
-                      {t.emptyCta}
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="grid gap-8 lg:grid-cols-2">
-                    {rides.map((ride) => (
-                      <RideCard
-                        key={ride.id}
-                        ride={ride}
-                        dict={t}
-                        matchingReturnRides={matchingReturnRides}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div className="grid gap-8 lg:grid-cols-2">
+          {formattedRides.map((ride) => (
+            <RideCard
+              key={ride.id}
+              ride={ride}
+              dict={t}
+            />
+          ))}
         </div>
       )}
     </section>

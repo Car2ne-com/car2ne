@@ -9,7 +9,6 @@ import { getTranslations } from "@/lib/i18n";
 type Props = {
   searchParams: Promise<{
     eventId?: string;
-    direction?: string;
   }>;
 };
 
@@ -31,7 +30,6 @@ export default async function OfferRidePage({
           locale={locale}
           dict={dict.offerRide}
           initialEventId={params.eventId ?? ""}
-          initialDirection={params.direction ?? ""}
         />
       </main>
 
