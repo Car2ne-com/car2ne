@@ -32,6 +32,10 @@ type Dict = {
   confirmDisableQuestion: string;
   disableButton: string;
   enableButton: string;
+  reauthTitle: string;
+  reauthDescription: string;
+  reauthCodeLabel: string;
+  reauthButton: string;
   errors: {
     codeLength: string;
     invalidCode: string;
@@ -63,6 +67,9 @@ export default function MfaSettings({ dict }: Props) {
 
   const [confirmingDisable, setConfirmingDisable] =
     useState(false);
+
+  const [needsReauth, setNeedsReauth] = useState(false);
+  const [reauthCode, setReauthCode] = useState("");
 
   async function loadFactors() {
     const { data, error } =
@@ -231,6 +238,30 @@ export default function MfaSettings({ dict }: Props) {
     }
 
     setConfirmingDisable(false);
+
+    /*
+     * Supabase richiede una sessione AAL2 per poter disattivare un
+     * fattore MFA verificato (altrimenti basterebbe la password per
+     * rimuovere la 2FA, vanificandola). Se la sessione corrente è
+     * ancora AAL1 (es. dopo un refresh della pagina), chiediamo prima
+     * un codice dell'app di autenticazione per elevarla.
+     */
+    const { data: aal } =
+      await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+
+    if (aal?.currentLevel !== "aal2") {
+      setNeedsReauth(true);
+      return;
+    }
+
+    await disableFactor();
+  }
+
+  async function disableFactor() {
+    if (!verifiedFactorId) {
+      return;
+    }
+
     setBusy(true);
 
     const { error } =
@@ -264,6 +295,67 @@ export default function MfaSettings({ dict }: Props) {
     setVerifiedFactorId(null);
   }
 
+  async function handleReauthAndDisable(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
+    e.preventDefault();
+
+    if (!verifiedFactorId) {
+      return;
+    }
+
+    if (reauthCode.trim().length !== 6) {
+      toast.error(dict.errors.codeLength);
+      return;
+    }
+
+    setBusy(true);
+
+    const {
+      data: challenge,
+      error: challengeError,
+    } = await supabase.auth.mfa.challenge({
+      factorId: verifiedFactorId,
+    });
+
+    if (challengeError) {
+      setBusy(false);
+
+      console.error(
+        "Errore challenge MFA (riautenticazione):",
+        challengeError
+      );
+
+      toast.error(challengeError.message);
+      return;
+    }
+
+    const { error: verifyError } =
+      await supabase.auth.mfa.verify({
+        factorId: verifiedFactorId,
+        challengeId: challenge.id,
+        code: reauthCode.trim(),
+      });
+
+    if (verifyError) {
+      setBusy(false);
+
+      console.error(
+        "Errore verifica MFA (riautenticazione):",
+        verifyError
+      );
+
+      toast.error(dict.errors.invalidCode);
+      setReauthCode("");
+      return;
+    }
+
+    setNeedsReauth(false);
+    setReauthCode("");
+
+    await disableFactor();
+  }
+
   /*
    * ==============================
    * RENDER
@@ -287,6 +379,67 @@ export default function MfaSettings({ dict }: Props) {
           <p className="text-sm text-muted-foreground">
             {dict.loading}
           </p>
+        ) : needsReauth ? (
+          <form
+            onSubmit={handleReauthAndDisable}
+            className="space-y-6"
+          >
+            <div>
+              <p className="font-semibold text-foreground">
+                {dict.reauthTitle}
+              </p>
+
+              <p className="mt-1 text-sm text-muted-foreground">
+                {dict.reauthDescription}
+              </p>
+            </div>
+
+            <div>
+              <Label>{dict.reauthCodeLabel}</Label>
+
+              <Input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="123456"
+                value={reauthCode}
+                onChange={(e) =>
+                  setReauthCode(
+                    e.target.value.replace(
+                      /\D/g,
+                      ""
+                    )
+                  )
+                }
+                maxLength={6}
+                disabled={busy}
+                className="h-14 max-w-xs rounded-2xl text-center text-lg tracking-[0.5em]"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                type="submit"
+                disabled={busy}
+                className="h-11 rounded-2xl bg-destructive px-6 font-semibold text-destructive-foreground hover:bg-destructive/90"
+              >
+                {dict.reauthButton}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                disabled={busy}
+                onClick={() => {
+                  setNeedsReauth(false);
+                  setReauthCode("");
+                }}
+                className="h-11 rounded-2xl px-6 font-semibold"
+              >
+                {dict.cancelButton}
+              </Button>
+            </div>
+          </form>
         ) : enrollState ? (
           <form
             onSubmit={handleConfirmEnroll}

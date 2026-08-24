@@ -114,6 +114,11 @@ export const profile = {
     confirmDisableQuestion: "Confermi la disattivazione?",
     disableButton: "Disattiva",
     enableButton: "Attiva autenticazione a due fattori",
+    reauthTitle: "Conferma la tua identità",
+    reauthDescription:
+      "Per sicurezza, inserisci un codice generato dalla tua app di autenticazione prima di disattivare la 2FA.",
+    reauthCodeLabel: "Codice di verifica",
+    reauthButton: "Conferma e disattiva",
     errors: {
       codeLength: "Inserisci il codice a 6 cifre.",
       invalidCode: "Codice non valido. Riprova.",
