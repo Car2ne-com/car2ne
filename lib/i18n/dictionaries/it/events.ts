@@ -33,6 +33,7 @@ export const events = {
     description:
       "Questo evento si è già svolto, quindi non è più possibile cercare o offrire passaggi. Trova il tuo prossimo evento qui sotto.",
     browseEvents: "Sfoglia gli eventi",
+    leaveReviewButton: "Lascia una recensione",
   },
   rides: {
     badge: "🚗 Passaggi disponibili",

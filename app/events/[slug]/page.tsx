@@ -35,12 +35,19 @@ export default async function EventPage({ params }: Props) {
   }
 
   if (isEventConcluded(event.event_date)) {
+    const reviewHref = await getReviewHref(supabase, event.id);
+
     return (
       <>
         <Navbar />
 
         <main className="pt-28">
-          <EventConcluded event={event} locale={locale} dict={dict.events.concluded} />
+          <EventConcluded
+            event={event}
+            locale={locale}
+            dict={dict.events.concluded}
+            reviewHref={reviewHref}
+          />
         </main>
 
         <Footer />
@@ -75,4 +82,51 @@ export default async function EventPage({ params }: Props) {
       <Footer />
     </>
   );
+}
+
+/*
+ * Link al punto in cui l'utente può lasciare una recensione per
+ * questo evento, solo se ha partecipato: conducente di un passaggio
+ * legato all'evento (-> gestione del passaggio) oppure passeggero con
+ * una prenotazione confermata (-> le sue prenotazioni). null se non
+ * ha partecipato o non è loggato.
+ */
+async function getReviewHref(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  eventId: string
+) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const { data: driverRide } = await supabase
+    .from("rides")
+    .select("id")
+    .eq("event_id", eventId)
+    .eq("driver_id", user.id)
+    .limit(1)
+    .maybeSingle();
+
+  if (driverRide) {
+    return `/dashboard/rides/${driverRide.id}`;
+  }
+
+  const { data: passengerBooking } = await supabase
+    .from("bookings")
+    .select("id, rides!inner(event_id)")
+    .eq("status", "confirmed")
+    .eq("rides.event_id", eventId)
+    .eq("passenger_id", user.id)
+    .limit(1)
+    .maybeSingle();
+
+  if (passengerBooking) {
+    return "/dashboard/bookings";
+  }
+
+  return null;
 }

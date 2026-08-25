@@ -35,6 +35,7 @@ export const events: (typeof it)["events"] = {
     description:
       "This event has already taken place, so it's no longer possible to search for or offer rides. Find your next event below.",
     browseEvents: "Browse events",
+    leaveReviewButton: "Leave a review",
   },
   rides: {
     badge: "🚗 Available rides",

@@ -9,6 +9,7 @@ type ConcludedDict = {
   badge: string;
   description: string;
   browseEvents: string;
+  leaveReviewButton: string;
 };
 
 type Props = {
@@ -21,12 +22,14 @@ type Props = {
     venue: string;
     event_date: string;
   };
+  reviewHref: string | null;
 };
 
 export default function EventConcluded({
   event,
   locale,
   dict,
+  reviewHref,
 }: Props) {
   const formattedDate = new Intl.DateTimeFormat(
     locale === "en" ? "en-US" : "it-IT",
@@ -68,12 +71,23 @@ export default function EventConcluded({
         {dict.description}
       </p>
 
-      <Link
-        href="/events"
-        className={buttonVariants({ size: "lg", className: "mt-8 h-auto rounded-2xl px-8 py-4 text-base" })}
-      >
-        {dict.browseEvents}
-      </Link>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {reviewHref && (
+          <Link
+            href={reviewHref}
+            className={buttonVariants({ variant: "outline", size: "lg", className: "h-auto rounded-2xl px-8 py-4 text-base" })}
+          >
+            {dict.leaveReviewButton}
+          </Link>
+        )}
+
+        <Link
+          href="/events"
+          className={buttonVariants({ size: "lg", className: "h-auto rounded-2xl px-8 py-4 text-base" })}
+        >
+          {dict.browseEvents}
+        </Link>
+      </div>
     </section>
   );
 }
