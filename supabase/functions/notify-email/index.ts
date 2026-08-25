@@ -1,7 +1,8 @@
 // Edge Function: invia un'email transazionale via Brevo quando viene
 // inserita una notifica "critica" (conferma/rifiuto prenotazione,
-// nuova richiesta, passaggio annullato). Innescata da un Database
-// Webhook su INSERT in public.notifications.
+// nuova richiesta, passaggio annullato, promemoria recensione, esito
+// segnalazione evento). Innescata da un Database Webhook su INSERT in
+// public.notifications.
 //
 // Da creare via Dashboard Supabase -> Edge Functions -> Deploy a new
 // function (incolla questo file). Nessuna CLI necessaria.
@@ -35,6 +36,10 @@ const EMAIL_NOTIFICATION_TYPES = new Set([
   "driver_verification_rejected",
   "report_resolved",
   "report_dismissed",
+  "review_reminder_passenger",
+  "review_reminder_driver",
+  "event_suggestion_approved",
+  "event_suggestion_rejected",
 ]);
 
 type NotificationType =
@@ -46,7 +51,11 @@ type NotificationType =
   | "driver_verification_approved"
   | "driver_verification_rejected"
   | "report_resolved"
-  | "report_dismissed";
+  | "report_dismissed"
+  | "review_reminder_passenger"
+  | "review_reminder_driver"
+  | "event_suggestion_approved"
+  | "event_suggestion_rejected";
 
 type NotificationRecord = {
   user_id: string;
@@ -193,6 +202,62 @@ const EMAIL_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       ctaLabel: "Go to reports",
     },
   },
+  review_reminder_passenger: {
+    it: {
+      subject: "Com'è andato il viaggio?",
+      heading: "Com'è andato il viaggio?",
+      body: "Ciao {name},\n\nIl tuo passaggio con {counterpart} è terminato ieri. Lascia una recensione per aiutare la community di Car2ne a crescere.",
+      ctaLabel: "Lascia una recensione",
+    },
+    en: {
+      subject: "How was your trip?",
+      heading: "How was your trip?",
+      body: "Hi {name},\n\nYour ride with {counterpart} ended yesterday. Leave a review to help the Car2ne community grow.",
+      ctaLabel: "Leave a review",
+    },
+  },
+  review_reminder_driver: {
+    it: {
+      subject: "Com'è andato il viaggio?",
+      heading: "Com'è andato il viaggio?",
+      body: "Ciao {name},\n\nIl tuo passaggio con {counterpart} è terminato ieri. Lascia una recensione per aiutare la community di Car2ne a crescere.",
+      ctaLabel: "Lascia una recensione",
+    },
+    en: {
+      subject: "How was your trip?",
+      heading: "How was your trip?",
+      body: "Hi {name},\n\nYour ride with {counterpart} ended yesterday. Leave a review to help the Car2ne community grow.",
+      ctaLabel: "Leave a review",
+    },
+  },
+  event_suggestion_approved: {
+    it: {
+      subject: "Segnalazione evento approvata",
+      heading: "Grazie per la segnalazione!",
+      body: "Ciao {name},\n\nAbbiamo esaminato l'evento che ci hai segnalato e lo stiamo aggiungendo a Car2ne. Grazie per aver contribuito alla community!",
+      ctaLabel: "Vai agli eventi",
+    },
+    en: {
+      subject: "Event suggestion approved",
+      heading: "Thanks for the suggestion!",
+      body: "Hi {name},\n\nWe've reviewed the event you suggested and we're adding it to Car2ne. Thanks for contributing to the community!",
+      ctaLabel: "Go to events",
+    },
+  },
+  event_suggestion_rejected: {
+    it: {
+      subject: "Segnalazione evento non approvata",
+      heading: "Segnalazione non approvata",
+      body: "Ciao {name},\n\nAbbiamo esaminato l'evento che ci hai segnalato e per questa volta non lo aggiungeremo a Car2ne. Grazie comunque per il tuo contributo: puoi segnalarci un altro evento quando vuoi.",
+      ctaLabel: "Segnala un altro evento",
+    },
+    en: {
+      subject: "Event suggestion not approved",
+      heading: "Suggestion not approved",
+      body: "Hi {name},\n\nWe've reviewed the event you suggested and we won't be adding it to Car2ne this time. Thanks anyway for your contribution: feel free to suggest another event any time.",
+      ctaLabel: "Suggest another event",
+    },
+  },
 };
 
 // Stessi mittenti verificati usati in lib/email/brevo.ts (app Next.js),
@@ -210,7 +275,7 @@ function getSender(type: NotificationType) {
   return EMAIL_SENDERS.noreply;
 }
 
-function getHref(type: string) {
+function getHref(type: string, record: NotificationRecord) {
   if (type === "booking_request") {
     return "/dashboard/rides";
   }
@@ -224,6 +289,22 @@ function getHref(type: string) {
 
   if (type === "report_resolved" || type === "report_dismissed") {
     return "/segnala-un-problema";
+  }
+
+  if (type === "review_reminder_driver" && record.ride_id) {
+    return `/dashboard/rides/${record.ride_id}`;
+  }
+
+  if (type === "review_reminder_passenger") {
+    return "/dashboard/bookings";
+  }
+
+  if (type === "event_suggestion_approved") {
+    return "/eventi";
+  }
+
+  if (type === "event_suggestion_rejected") {
+    return "/segnala-evento";
   }
 
   return "/dashboard/bookings";
@@ -372,7 +453,7 @@ Deno.serve(async (req) => {
     copy.heading,
     body,
     copy.ctaLabel,
-    `${siteUrl}${getHref(type)}`
+    `${siteUrl}${getHref(type, record)}`
   );
 
   const brevoResponse = await fetch(
@@ -411,10 +492,12 @@ Deno.serve(async (req) => {
 /*
  * Nome di chi ha compiuto l'azione (chi ha confermato/rifiutato/
  * richiesto/annullato), non del destinatario dell'email:
- * - booking_request: il destinatario è l'autista, la controparte è
- *   il passeggero che ha fatto la richiesta (via booking_id).
- * - negli altri tre casi il destinatario è il passeggero, la
+ * - booking_request e review_reminder_driver: il destinatario è
+ *   l'autista, la controparte è il passeggero (via booking_id).
+ * - negli altri casi con ride_id il destinatario è il passeggero, la
  *   controparte è l'autista del passaggio (via ride_id).
+ * - event_suggestion_approved/rejected non hanno controparte: la
+ *   copy non usa {counterpart}, si torna subito al fallback.
  */
 async function getCounterpartName(
   supabaseAdmin: ReturnType<typeof createClient>,
@@ -425,7 +508,7 @@ async function getCounterpartName(
   const fallback = locale === "en" ? "A user" : "Un utente";
 
   try {
-    if (type === "booking_request") {
+    if (type === "booking_request" || type === "review_reminder_driver") {
       if (!record.booking_id) return fallback;
 
       const { data: booking } = await supabaseAdmin

@@ -1,5 +1,6 @@
 import {
   BadgeCheck,
+  CalendarCheck,
   CheckCircle2,
   Clock3,
   Flag,
@@ -119,6 +120,26 @@ export function getNotificationIcon(
     );
   }
 
+  if (type === "event_suggestion_approved") {
+    return (
+      <div className={`${wrapperClass} bg-emerald-100`}>
+        <CalendarCheck
+          className={`${iconClass} text-emerald-600`}
+        />
+      </div>
+    );
+  }
+
+  if (type === "event_suggestion_rejected") {
+    return (
+      <div className={`${wrapperClass} bg-slate-100`}>
+        <CalendarCheck
+          className={`${iconClass} text-slate-500`}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={`${wrapperClass} bg-slate-100`}>
       <Clock3
@@ -163,6 +184,14 @@ export function getNotificationHref(
     notification.type === "report_dismissed"
   ) {
     return "/segnala-un-problema";
+  }
+
+  if (notification.type === "event_suggestion_approved") {
+    return "/eventi";
+  }
+
+  if (notification.type === "event_suggestion_rejected") {
+    return "/segnala-evento";
   }
 
   return "/dashboard";
