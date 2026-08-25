@@ -11,6 +11,7 @@ import AdminNoteDialog from "./AdminNoteDialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 
 type Verification = {
@@ -218,7 +219,7 @@ export default function AdminVerificationTable({
                   <td className="px-6 py-5">{v.licenseNumber}</td>
 
                   <td className="px-6 py-5">
-                    <StatusBadge status={v.status} dict={dict} />
+                    <VerificationStatusBadge status={v.status} dict={dict} />
 
                     {v.adminNote && v.status === "rejected" && (
                       <p className="mt-1 text-[11px] text-muted-foreground">
@@ -308,7 +309,7 @@ export default function AdminVerificationTable({
   );
 }
 
-function StatusBadge({
+function VerificationStatusBadge({
   status,
   dict,
 }: {
@@ -322,31 +323,21 @@ function StatusBadge({
 }) {
   if (status === "approved") {
     return (
-      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        {dict.statusApproved}
-      </span>
+      <StatusBadge variant="success">{dict.statusApproved}</StatusBadge>
     );
   }
 
   if (status === "rejected") {
     return (
-      <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-        {dict.statusRejected}
-      </span>
+      <StatusBadge variant="danger">{dict.statusRejected}</StatusBadge>
     );
   }
 
   if (status === "expired") {
     return (
-      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-        {dict.statusExpired}
-      </span>
+      <StatusBadge variant="neutral">{dict.statusExpired}</StatusBadge>
     );
   }
 
-  return (
-    <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-      {dict.statusPending}
-    </span>
-  );
+  return <StatusBadge variant="warning">{dict.statusPending}</StatusBadge>;
 }

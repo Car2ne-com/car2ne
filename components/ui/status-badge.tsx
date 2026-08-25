@@ -1,0 +1,38 @@
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+
+const statusBadgeVariants = cva(
+  "inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold",
+  {
+    variants: {
+      variant: {
+        success: "bg-accent text-accent-foreground",
+        neutral: "bg-secondary text-secondary-foreground",
+        danger: "bg-red-100 text-red-700",
+        warning: "bg-amber-100 text-amber-700",
+        info: "bg-blue-100 text-blue-700",
+      },
+    },
+    defaultVariants: {
+      variant: "neutral",
+    },
+  }
+);
+
+function StatusBadge({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"span"> &
+  VariantProps<typeof statusBadgeVariants>) {
+  return (
+    <span
+      data-slot="status-badge"
+      className={cn(statusBadgeVariants({ variant, className }))}
+      {...props}
+    />
+  );
+}
+
+export { StatusBadge, statusBadgeVariants };

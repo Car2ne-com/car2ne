@@ -11,6 +11,7 @@ import AdminNoteDialog from "./AdminNoteDialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 
 type Report = {
@@ -180,7 +181,7 @@ export default function AdminReportTable({
                       {CATEGORY_LABELS[r.category] ?? r.category}
                     </span>
 
-                    <StatusBadge status={r.status} dict={dict} />
+                    <ReportStatusBadge status={r.status} dict={dict} />
                   </div>
 
                   <p className="mt-3 text-sm text-muted-foreground">
@@ -285,7 +286,7 @@ export default function AdminReportTable({
   );
 }
 
-function StatusBadge({
+function ReportStatusBadge({
   status,
   dict,
 }: {
@@ -299,31 +300,21 @@ function StatusBadge({
 }) {
   if (status === "resolved") {
     return (
-      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        {dict.statusResolved}
-      </span>
+      <StatusBadge variant="success">{dict.statusResolved}</StatusBadge>
     );
   }
 
   if (status === "dismissed") {
     return (
-      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-        {dict.statusDismissed}
-      </span>
+      <StatusBadge variant="neutral">{dict.statusDismissed}</StatusBadge>
     );
   }
 
   if (status === "reviewing") {
     return (
-      <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-        {dict.statusReviewing}
-      </span>
+      <StatusBadge variant="info">{dict.statusReviewing}</StatusBadge>
     );
   }
 
-  return (
-    <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-      {dict.statusOpen}
-    </span>
-  );
+  return <StatusBadge variant="warning">{dict.statusOpen}</StatusBadge>;
 }

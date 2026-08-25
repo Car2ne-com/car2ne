@@ -6,6 +6,7 @@ import ImportTicketmasterButton from "@/components/admin/ImportTicketmasterButto
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 import { getTranslations } from "@/lib/i18n";
 
@@ -127,7 +128,7 @@ export default async function AdminImportPage({
 
               <Stat
                 label={t.statusLabel}
-                value={<StatusBadge status={lastImport.status} dict={t} />}
+                value={<ImportStatusBadge status={lastImport.status} dict={t} />}
               />
 
               <Stat
@@ -232,7 +233,7 @@ export default async function AdminImportPage({
                       </td>
 
                       <td className="px-6 py-5">
-                        <StatusBadge status={log.status} dict={t} />
+                        <ImportStatusBadge status={log.status} dict={t} />
                       </td>
 
                       <td className="px-6 py-5 font-semibold text-foreground">
@@ -355,7 +356,7 @@ function Stat({
  * 0004_ticketmaster_import.sql): solo running / success / failed.
  * Nessuno stato inventato.
  */
-function StatusBadge({
+function ImportStatusBadge({
   status,
   dict,
 }: {
@@ -364,25 +365,17 @@ function StatusBadge({
 }) {
   if (status === "success") {
     return (
-      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        {dict.statusSuccess}
-      </span>
+      <StatusBadge variant="success">{dict.statusSuccess}</StatusBadge>
     );
   }
 
   if (status === "failed") {
     return (
-      <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-        {dict.statusFailed}
-      </span>
+      <StatusBadge variant="danger">{dict.statusFailed}</StatusBadge>
     );
   }
 
-  return (
-    <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-      {dict.statusRunning}
-    </span>
-  );
+  return <StatusBadge variant="info">{dict.statusRunning}</StatusBadge>;
 }
 
 function formatDuration(

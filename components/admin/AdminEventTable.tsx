@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 
 type Event = {
@@ -720,15 +721,15 @@ export default function AdminEventTable({
 
                   <td className="px-6 py-5">
                     {event.source ? (
-                      <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                      <StatusBadge variant="info">
                         {event.source === "ticketmaster"
                           ? dict.sourceTicketmaster
                           : event.source}
-                      </span>
+                      </StatusBadge>
                     ) : (
-                      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                      <StatusBadge variant="neutral">
                         {dict.sourceManual}
-                      </span>
+                      </StatusBadge>
                     )}
 
                     {event.external_id && (
@@ -739,7 +740,7 @@ export default function AdminEventTable({
                   </td>
 
                   <td className="px-6 py-5">
-                    <StatusBadge status={event.status} dict={dict} />
+                    <EventStatusBadge status={event.status} dict={dict} />
                   </td>
 
                   <td className="sticky right-0 z-10 bg-card px-6 py-5 shadow-[-6px_0_8px_-4px_rgba(15,23,42,0.12)]">
@@ -899,7 +900,7 @@ export default function AdminEventTable({
   );
 }
 
-function StatusBadge({
+function EventStatusBadge({
   status,
   dict,
 }: {
@@ -913,31 +914,21 @@ function StatusBadge({
 }) {
   if (status === "published") {
     return (
-      <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        {dict.statusPublished}
-      </span>
+      <StatusBadge variant="success">{dict.statusPublished}</StatusBadge>
     );
   }
 
   if (status === "cancelled") {
     return (
-      <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-        {dict.statusCancelled}
-      </span>
+      <StatusBadge variant="danger">{dict.statusCancelled}</StatusBadge>
     );
   }
 
   if (status === "rejected") {
     return (
-      <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
-        {dict.statusRejected}
-      </span>
+      <StatusBadge variant="neutral">{dict.statusRejected}</StatusBadge>
     );
   }
 
-  return (
-    <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-      {dict.statusPending}
-    </span>
-  );
+  return <StatusBadge variant="warning">{dict.statusPending}</StatusBadge>;
 }
