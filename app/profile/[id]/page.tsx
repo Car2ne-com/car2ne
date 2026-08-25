@@ -207,7 +207,7 @@ export default async function PublicProfilePage({
         </Card>
 
         {ratings.length > 0 && (
-          <Card className="mt-8 p-8">
+          <Card id="reviews" className="mt-8 p-8">
             <h2 className="text-lg font-semibold text-foreground">
               {dict.profile.publicProfile.reviewsTitle}
             </h2>

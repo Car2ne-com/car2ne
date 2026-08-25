@@ -99,6 +99,7 @@ export default async function DashboardPage() {
 
         <DashboardStats
           dict={dict.dashboardHome.stats}
+          userId={user.id}
           ridesCount={
             ridesResult.count ?? 0
           }
