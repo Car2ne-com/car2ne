@@ -27,7 +27,7 @@ export async function POST(_request: Request, { params }: Props) {
 
   const { data: suggestion, error: fetchError } = await adminClient
     .from("event_suggestions")
-    .select("status, suggested_by")
+    .select("status")
     .eq("id", id)
     .single();
 
@@ -60,17 +60,6 @@ export async function POST(_request: Request, { params }: Props) {
       { status: 500 }
     );
   }
-
-  await adminClient.from("notifications").insert({
-    user_id: suggestion.suggested_by,
-    type: "event_suggestion_approved",
-    title: "Segnalazione approvata",
-    message:
-      "Abbiamo esaminato l'evento che ci hai segnalato e lo stiamo aggiungendo a Car2ne. Grazie per il contributo!",
-    booking_id: null,
-    ride_id: null,
-    is_read: false,
-  });
 
   return NextResponse.json({ id });
 }
