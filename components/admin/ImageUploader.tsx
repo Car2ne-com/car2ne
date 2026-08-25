@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { Upload, ImageIcon, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -62,11 +63,14 @@ export default function ImageUploader({
   return (
     <div className="space-y-4">
       {value ? (
-        <img
-          src={value}
-          alt={dict.previewAlt}
-          className="h-56 w-full rounded-2xl object-cover"
-        />
+        <div className="relative h-56 w-full overflow-hidden rounded-2xl">
+          <Image
+            src={value}
+            alt={dict.previewAlt}
+            fill
+            className="object-cover"
+          />
+        </div>
       ) : (
         <div className="flex h-56 items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted">
           <div className="text-center">

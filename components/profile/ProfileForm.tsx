@@ -421,6 +421,7 @@ export default function ProfileForm({
           <div className="relative">
 
             {previewUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- blob: URI (local file preview), not eligible for next/image optimization
               <img
                 src={previewUrl}
                 alt={dict.avatarPreviewAlt}

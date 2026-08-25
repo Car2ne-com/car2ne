@@ -446,6 +446,7 @@ export default function MfaSettings({ dict }: Props) {
             className="space-y-6"
           >
             <div className="flex flex-col items-center gap-4 rounded-2xl bg-muted p-6 sm:flex-row sm:items-start">
+              {/* eslint-disable-next-line @next/next/no-img-element -- data: URI (QR code from Supabase), not eligible for next/image optimization */}
               <img
                 src={enrollState.qrCode}
                 alt={dict.qrAlt}
