@@ -46,3 +46,6 @@ next-env.d.ts
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# supabase
+supabase/.temp/
