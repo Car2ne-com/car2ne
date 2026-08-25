@@ -33,6 +33,9 @@ const PUSH_NOTIFICATION_TYPES = new Set([
   "driver_verification_rejected",
   "report_resolved",
   "report_dismissed",
+  "rating_received",
+  "review_reminder_passenger",
+  "review_reminder_driver",
 ]);
 
 type NotificationType =
@@ -43,7 +46,10 @@ type NotificationType =
   | "driver_verification_approved"
   | "driver_verification_rejected"
   | "report_resolved"
-  | "report_dismissed";
+  | "report_dismissed"
+  | "rating_received"
+  | "review_reminder_passenger"
+  | "review_reminder_driver";
 
 type NotificationRecord = {
   user_id: string;
@@ -153,6 +159,44 @@ const PUSH_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       href: "/segnala-un-problema",
     },
   },
+  rating_received: {
+    it: {
+      title: "Hai ricevuto una recensione",
+      body: "Qualcuno ha lasciato una recensione sul passaggio che avete condiviso.",
+      href: "/dashboard",
+    },
+    en: {
+      title: "You've received a review",
+      body: "Someone left you a review for the ride you shared.",
+      href: "/dashboard",
+    },
+  },
+  review_reminder_passenger: {
+    it: {
+      title: "Com'è andato il viaggio?",
+      body: "Lascia una recensione al conducente per aiutare la community.",
+      href: "/dashboard/bookings",
+    },
+    en: {
+      title: "How was your trip?",
+      body: "Leave a review for the driver to help the community.",
+      href: "/dashboard/bookings",
+    },
+  },
+  review_reminder_driver: {
+    it: {
+      title: "Com'è andato il viaggio?",
+      body: "Lascia una recensione al passeggero per aiutare la community.",
+      // Fallback statico: sovrascritto a runtime con l'id del
+      // passaggio quando disponibile (vedi Deno.serve sotto).
+      href: "/dashboard/rides",
+    },
+    en: {
+      title: "How was your trip?",
+      body: "Leave a review for the passenger to help the community.",
+      href: "/dashboard/rides",
+    },
+  },
 };
 
 Deno.serve(async (req) => {
@@ -209,6 +253,11 @@ Deno.serve(async (req) => {
   const locale: Locale = profileResult.data?.locale === "en" ? "en" : "it";
   const copy = PUSH_COPY[type][locale];
 
+  const href =
+    type === "review_reminder_driver" && record.ride_id
+      ? `/dashboard/rides/${record.ride_id}`
+      : copy.href;
+
   const results = await Promise.allSettled(
     subscriptions.map((subscription) =>
       webpush.sendNotification(
@@ -222,7 +271,7 @@ Deno.serve(async (req) => {
         JSON.stringify({
           title: copy.title,
           body: copy.body,
-          url: copy.href,
+          url: href,
         })
       )
     )

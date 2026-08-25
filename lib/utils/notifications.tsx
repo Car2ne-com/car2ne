@@ -83,6 +83,16 @@ export function getNotificationIcon(
     );
   }
 
+  if (type === "rating_received") {
+    return (
+      <div className={`${wrapperClass} bg-emerald-100`}>
+        <Star
+          className={`${iconClass} text-emerald-600`}
+        />
+      </div>
+    );
+  }
+
   if (type === "driver_verification_approved") {
     return (
       <div className={`${wrapperClass} bg-emerald-100`}>
@@ -140,6 +150,10 @@ export function getNotificationHref(
     notification.ride_id
   ) {
     return `/dashboard/rides/${notification.ride_id}`;
+  }
+
+  if (notification.type === "rating_received") {
+    return "/dashboard";
   }
 
   if (

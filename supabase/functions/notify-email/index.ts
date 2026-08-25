@@ -1,7 +1,8 @@
 // Edge Function: invia un'email transazionale via Brevo quando viene
 // inserita una notifica "critica" (conferma/rifiuto prenotazione,
-// nuova richiesta, passaggio annullato). Innescata da un Database
-// Webhook su INSERT in public.notifications.
+// nuova richiesta, passaggio annullato, recensione ricevuta,
+// promemoria recensione). Innescata da un Database Webhook su INSERT
+// in public.notifications.
 //
 // Da creare via Dashboard Supabase -> Edge Functions -> Deploy a new
 // function (incolla questo file). Nessuna CLI necessaria.
@@ -35,6 +36,9 @@ const EMAIL_NOTIFICATION_TYPES = new Set([
   "driver_verification_rejected",
   "report_resolved",
   "report_dismissed",
+  "rating_received",
+  "review_reminder_passenger",
+  "review_reminder_driver",
 ]);
 
 type NotificationType =
@@ -46,7 +50,10 @@ type NotificationType =
   | "driver_verification_approved"
   | "driver_verification_rejected"
   | "report_resolved"
-  | "report_dismissed";
+  | "report_dismissed"
+  | "rating_received"
+  | "review_reminder_passenger"
+  | "review_reminder_driver";
 
 type NotificationRecord = {
   user_id: string;
@@ -193,6 +200,48 @@ const EMAIL_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       ctaLabel: "Go to reports",
     },
   },
+  rating_received: {
+    it: {
+      subject: "Hai ricevuto una recensione",
+      heading: "Hai ricevuto una recensione",
+      body: "Ciao {name},\n\n{counterpart} ti ha lasciato una recensione sul passaggio che avete condiviso.",
+      ctaLabel: "Vai alla dashboard",
+    },
+    en: {
+      subject: "You've received a review",
+      heading: "You've received a review",
+      body: "Hi {name},\n\n{counterpart} left you a review for the ride you shared.",
+      ctaLabel: "Go to your dashboard",
+    },
+  },
+  review_reminder_passenger: {
+    it: {
+      subject: "Com'è andato il viaggio?",
+      heading: "Com'è andato il viaggio?",
+      body: "Ciao {name},\n\nIl tuo passaggio con {counterpart} è terminato ieri. Lascia una recensione per aiutare la community di Car2ne a crescere.",
+      ctaLabel: "Lascia una recensione",
+    },
+    en: {
+      subject: "How was your trip?",
+      heading: "How was your trip?",
+      body: "Hi {name},\n\nYour ride with {counterpart} ended yesterday. Leave a review to help the Car2ne community grow.",
+      ctaLabel: "Leave a review",
+    },
+  },
+  review_reminder_driver: {
+    it: {
+      subject: "Com'è andato il viaggio?",
+      heading: "Com'è andato il viaggio?",
+      body: "Ciao {name},\n\nIl tuo passaggio con {counterpart} è terminato ieri. Lascia una recensione per aiutare la community di Car2ne a crescere.",
+      ctaLabel: "Lascia una recensione",
+    },
+    en: {
+      subject: "How was your trip?",
+      heading: "How was your trip?",
+      body: "Hi {name},\n\nYour ride with {counterpart} ended yesterday. Leave a review to help the Car2ne community grow.",
+      ctaLabel: "Leave a review",
+    },
+  },
 };
 
 // Stessi mittenti verificati usati in lib/email/brevo.ts (app Next.js),
@@ -210,7 +259,7 @@ function getSender(type: NotificationType) {
   return EMAIL_SENDERS.noreply;
 }
 
-function getHref(type: string) {
+function getHref(type: string, record: NotificationRecord) {
   if (type === "booking_request") {
     return "/dashboard/rides";
   }
@@ -224,6 +273,14 @@ function getHref(type: string) {
 
   if (type === "report_resolved" || type === "report_dismissed") {
     return "/segnala-un-problema";
+  }
+
+  if (type === "rating_received") {
+    return "/dashboard";
+  }
+
+  if (type === "review_reminder_driver" && record.ride_id) {
+    return `/dashboard/rides/${record.ride_id}`;
   }
 
   return "/dashboard/bookings";
@@ -372,7 +429,7 @@ Deno.serve(async (req) => {
     copy.heading,
     body,
     copy.ctaLabel,
-    `${siteUrl}${getHref(type)}`
+    `${siteUrl}${getHref(type, record)}`
   );
 
   const brevoResponse = await fetch(
@@ -410,10 +467,13 @@ Deno.serve(async (req) => {
 
 /*
  * Nome di chi ha compiuto l'azione (chi ha confermato/rifiutato/
- * richiesto/annullato), non del destinatario dell'email:
- * - booking_request: il destinatario è l'autista, la controparte è
- *   il passeggero che ha fatto la richiesta (via booking_id).
- * - negli altri tre casi il destinatario è il passeggero, la
+ * richiesto/annullato/recensito), non del destinatario dell'email:
+ * - booking_request e review_reminder_driver: il destinatario è
+ *   l'autista, la controparte è il passeggero (via booking_id).
+ * - rating_received: il destinatario è chi è stato recensito, la
+ *   controparte è l'altra parte del passaggio (autista o passeggero
+ *   a seconda di chi ha ricevuto la recensione).
+ * - negli altri casi con ride_id il destinatario è il passeggero, la
  *   controparte è l'autista del passaggio (via ride_id).
  */
 async function getCounterpartName(
@@ -425,7 +485,7 @@ async function getCounterpartName(
   const fallback = locale === "en" ? "A user" : "Un utente";
 
   try {
-    if (type === "booking_request") {
+    if (type === "booking_request" || type === "review_reminder_driver") {
       if (!record.booking_id) return fallback;
 
       const { data: booking } = await supabaseAdmin
@@ -440,6 +500,38 @@ async function getCounterpartName(
         .from("profiles")
         .select("name")
         .eq("id", booking.passenger_id)
+        .single();
+
+      return profile?.name?.trim() || fallback;
+    }
+
+    if (type === "rating_received") {
+      if (!record.ride_id || !record.booking_id) return fallback;
+
+      const { data: ride } = await supabaseAdmin
+        .from("rides")
+        .select("driver_id")
+        .eq("id", record.ride_id)
+        .single();
+
+      if (!ride?.driver_id) return fallback;
+
+      const counterpartId =
+        record.user_id === ride.driver_id
+          ? await supabaseAdmin
+              .from("bookings")
+              .select("passenger_id")
+              .eq("id", record.booking_id)
+              .single()
+              .then(({ data }) => data?.passenger_id ?? null)
+          : ride.driver_id;
+
+      if (!counterpartId) return fallback;
+
+      const { data: profile } = await supabaseAdmin
+        .from("profiles")
+        .select("name")
+        .eq("id", counterpartId)
         .single();
 
       return profile?.name?.trim() || fallback;
