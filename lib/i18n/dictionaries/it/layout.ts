@@ -62,4 +62,17 @@ export const layout = {
   },
   loading: "Caricamento",
   siteDescription: "Trova o offri un passaggio per il tuo prossimo evento.",
+  notFound: {
+    title: "Pagina non trovata",
+    description:
+      "La pagina che cerchi non esiste o è stata spostata. Controlla l'indirizzo oppure torna alla home.",
+    cta: "Torna alla home",
+  },
+  error: {
+    title: "Qualcosa è andato storto",
+    description:
+      "Si è verificato un errore imprevisto. Riprova, oppure torna alla home se il problema persiste.",
+    retry: "Riprova",
+    home: "Torna alla home",
+  },
 };

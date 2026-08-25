@@ -159,9 +159,10 @@ export default function MfaChallengeForm({
         className="space-y-6"
       >
         <div>
-          <Label>{dict.loginForm.mfaCodeLabel}</Label>
+          <Label htmlFor="mfa-challenge-code">{dict.loginForm.mfaCodeLabel}</Label>
 
           <Input
+            id="mfa-challenge-code"
             type="text"
             inputMode="numeric"
             autoComplete="one-time-code"

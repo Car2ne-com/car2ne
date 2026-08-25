@@ -27,6 +27,7 @@ type Dict = {
   venueLabel: string;
   cityLabel: string;
   categoryLabel: string;
+  categoryOptions: Record<Extract<EventCategory, "Concerto" | "Festival" | "Sport" | "Fiera" | "Teatro">, string>;
   eventDateLabel: string;
   imageLabel: string;
   descriptionLabel: string;
@@ -138,9 +139,10 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
 
       <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
-          <Label>{dict.titleLabel}</Label>
+          <Label htmlFor="event-title">{dict.titleLabel}</Label>
 
           <Input
+            id="event-title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="h-12"
@@ -148,9 +150,10 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
         </div>
 
         <div>
-          <Label>{dict.artistLabel}</Label>
+          <Label htmlFor="event-artist">{dict.artistLabel}</Label>
 
           <Input
+            id="event-artist"
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
             className="h-12"
@@ -158,9 +161,10 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
         </div>
 
         <div>
-          <Label>{dict.venueLabel}</Label>
+          <Label htmlFor="event-venue">{dict.venueLabel}</Label>
 
           <Input
+            id="event-venue"
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
             className="h-12"
@@ -168,9 +172,10 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
         </div>
 
         <div>
-          <Label>{dict.cityLabel}</Label>
+          <Label htmlFor="event-city">{dict.cityLabel}</Label>
 
           <Input
+            id="event-city"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className="h-12"
@@ -178,9 +183,10 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
         </div>
 
         <div>
-          <Label>{dict.categoryLabel}</Label>
+          <Label htmlFor="event-category">{dict.categoryLabel}</Label>
 
           <Select
+            id="event-category"
             value={category}
             onChange={(e) =>
               setCategory(
@@ -189,18 +195,19 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
             }
             className="h-12"
           >
-            <option>Concerto</option>
-            <option>Festival</option>
-            <option>Sport</option>
-            <option>Fiera</option>
-            <option>Teatro</option>
+            <option value="Concerto">{dict.categoryOptions.Concerto}</option>
+            <option value="Festival">{dict.categoryOptions.Festival}</option>
+            <option value="Sport">{dict.categoryOptions.Sport}</option>
+            <option value="Fiera">{dict.categoryOptions.Fiera}</option>
+            <option value="Teatro">{dict.categoryOptions.Teatro}</option>
           </Select>
         </div>
 
         <div>
-          <Label>{dict.eventDateLabel}</Label>
+          <Label htmlFor="event-date">{dict.eventDateLabel}</Label>
 
           <Input
+            id="event-date"
             type="datetime-local"
             value={eventDate}
             onChange={(e) => setEventDate(e.target.value)}
@@ -220,9 +227,10 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
       </div>
 
       <div className="mt-8">
-        <Label>{dict.descriptionLabel}</Label>
+        <Label htmlFor="event-description">{dict.descriptionLabel}</Label>
 
         <Textarea
+          id="event-description"
           rows={6}
           value={description}
           onChange={(e) => setDescription(e.target.value)}

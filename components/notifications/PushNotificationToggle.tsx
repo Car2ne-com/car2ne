@@ -4,6 +4,7 @@ import { Bell, BellOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { usePushSubscription } from "@/lib/hooks/usePushSubscription";
 
 export type PushDict = {
@@ -51,7 +52,7 @@ export default function PushNotificationToggle({ dict }: Props) {
   }
 
   return (
-    <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <Card className="mb-8 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
         <div
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${
@@ -90,6 +91,6 @@ export default function PushNotificationToggle({ dict }: Props) {
             ? dict.disable
             : dict.enable}
       </Button>
-    </div>
+    </Card>
   );
 }

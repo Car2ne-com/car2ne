@@ -221,6 +221,13 @@ export const admin: (typeof it)["admin"] = {
     venueLabel: "Venue *",
     cityLabel: "City *",
     categoryLabel: "Category",
+    categoryOptions: {
+      Concerto: "Concert",
+      Festival: "Festival",
+      Sport: "Sport",
+      Fiera: "Fair",
+      Teatro: "Theatre",
+    },
     eventDateLabel: "Event date *",
     imageLabel: "Event image",
     descriptionLabel: "Description",

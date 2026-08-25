@@ -1,5 +1,6 @@
 import { ShieldCheck, Wallet, Users, MapPinned } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
 import { getTranslations } from "@/lib/i18n";
 
 const featureIcons = [Wallet, Users, MapPinned, ShieldCheck];
@@ -34,9 +35,9 @@ export default async function Features() {
             const Icon = featureIcons[index];
 
             return (
-              <div
+              <Card
                 key={feature.title}
-                className="flex gap-5 rounded-2xl border border-border bg-card p-6 transition hover:shadow-xl"
+                className="flex gap-5 rounded-2xl p-6 shadow-none transition hover:shadow-xl"
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent">
                   <Icon className="h-7 w-7 text-accent-foreground" />
@@ -51,7 +52,7 @@ export default async function Features() {
                     {feature.description}
                   </p>
                 </div>
-              </div>
+              </Card>
             );
           })}
 

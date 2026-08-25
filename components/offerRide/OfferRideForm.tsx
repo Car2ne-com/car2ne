@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -853,10 +854,8 @@ export default function OfferRideForm({
    */
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-3xl border border-border bg-card p-8 shadow-sm"
-    >
+    <Card className="p-8">
+      <form onSubmit={handleSubmit}>
       {isLoggedIn === false && (
         <div className="mb-6 rounded-2xl bg-accent p-5 text-sm leading-6 text-accent-foreground">
           {dict.loginNotice}
@@ -974,9 +973,10 @@ export default function OfferRideForm({
         {/* Orario di andata */}
 
         <div>
-          <Label>{dict.fields.departureTimeLabel}</Label>
+          <Label htmlFor="offer-ride-departure-time">{dict.fields.departureTimeLabel}</Label>
 
           <Input
+            id="offer-ride-departure-time"
             type="time"
             value={departureTime}
             onChange={(e) =>
@@ -998,9 +998,10 @@ export default function OfferRideForm({
         {/* Orario di ritorno */}
 
         <div>
-          <Label>{dict.fields.returnTimeLabel}</Label>
+          <Label htmlFor="offer-ride-return-time">{dict.fields.returnTimeLabel}</Label>
 
           <Input
+            id="offer-ride-return-time"
             type="time"
             value={returnTime}
             onChange={(e) =>
@@ -1022,9 +1023,10 @@ export default function OfferRideForm({
         {/* Posti */}
 
         <div>
-          <Label>{dict.fields.seatsLabel}</Label>
+          <Label htmlFor="offer-ride-seats">{dict.fields.seatsLabel}</Label>
 
           <Input
+            id="offer-ride-seats"
             type="number"
             min="1"
             max="8"
@@ -1045,9 +1047,10 @@ export default function OfferRideForm({
         {/* Contributo */}
 
         <div>
-          <Label>{dict.fields.contributionLabel}</Label>
+          <Label htmlFor="offer-ride-contribution">{dict.fields.contributionLabel}</Label>
 
           <Input
+            id="offer-ride-contribution"
             type="number"
             min="0"
             step="0.01"
@@ -1092,9 +1095,10 @@ export default function OfferRideForm({
         {/* Descrizione */}
 
         <div className="md:col-span-2">
-          <Label>{dict.fields.descriptionLabel}</Label>
+          <Label htmlFor="offer-ride-description">{dict.fields.descriptionLabel}</Label>
 
           <Textarea
+            id="offer-ride-description"
             rows={5}
             value={description}
             onChange={(e) =>
@@ -1127,6 +1131,7 @@ export default function OfferRideForm({
           </Button>
         </div>
       )}
-    </form>
+      </form>
+    </Card>
   );
 }

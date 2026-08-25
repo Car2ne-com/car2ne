@@ -19,6 +19,7 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 
 type Conversation = {
@@ -835,7 +836,7 @@ export default function FloatingChat({
   return (
     <div className="fixed bottom-6 right-6 z-[60]">
       {open && (
-        <div className="absolute bottom-16 right-0 mb-3 w-[380px] max-w-[calc(100vw-32px)] overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
+        <Card className="absolute bottom-16 right-0 mb-3 w-[380px] max-w-[calc(100vw-32px)] overflow-hidden shadow-2xl">
           <div className="flex items-center justify-between border-b border-border bg-card px-5 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent">
@@ -1046,7 +1047,7 @@ export default function FloatingChat({
               {dict.viewAllLink}
             </Link>
           </div>
-        </div>
+        </Card>
       )}
 
       <Button

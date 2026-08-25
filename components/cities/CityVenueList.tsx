@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Building2, ChevronRight } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
@@ -27,18 +28,23 @@ export default function CityVenueList({ city, venues, dict }: Props) {
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {venues.map((venue) => (
-          <Link
+          <Card
             key={venue.id}
-            href={`/citta/${city.slug}/venue/${venue.slug}`}
-            className="flex items-center justify-between rounded-2xl border border-border bg-card px-5 py-4 transition hover:border-primary/30 hover:bg-accent"
+            className="relative flex items-center justify-between rounded-2xl px-5 py-4 shadow-none transition hover:border-primary/30 hover:bg-accent"
           >
+            <Link
+              href={`/citta/${city.slug}/venue/${venue.slug}`}
+              aria-label={venue.name}
+              className="absolute inset-0 z-10"
+            />
+
             <span className="flex items-center gap-3 font-semibold text-foreground/90">
               <Building2 className="h-4 w-4 text-primary" />
               {venue.name}
             </span>
 
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </Link>
+          </Card>
         ))}
       </div>
     </section>

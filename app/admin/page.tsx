@@ -306,7 +306,7 @@ export default async function AdminDashboardPage() {
               )}
 
               {lastImport.error_message && (
-                <p className="mt-3 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">
+                <p className="mt-3 rounded-xl bg-destructive/10 px-3 py-2 text-xs text-destructive">
                   {lastImport.error_message}
                 </p>
               )}

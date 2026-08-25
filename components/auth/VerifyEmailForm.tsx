@@ -174,9 +174,10 @@ export default function VerifyEmailForm({
         </div>
 
         <div>
-          <Label>{t.codeLabel}</Label>
+          <Label htmlFor="verify-email-code">{t.codeLabel}</Label>
 
           <Input
+            id="verify-email-code"
             type="text"
             inputMode="numeric"
             autoComplete="one-time-code"

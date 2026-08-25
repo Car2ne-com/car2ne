@@ -149,10 +149,11 @@ export default function ChangePasswordForm({ dict }: Props) {
             className="space-y-6"
           >
             <div>
-              <Label>{dict.newPasswordLabel}</Label>
+              <Label htmlFor="change-password-new">{dict.newPasswordLabel}</Label>
 
               <div className="relative">
                 <Input
+                  id="change-password-new"
                   type={
                     showPassword
                       ? "text"
@@ -240,9 +241,10 @@ export default function ChangePasswordForm({ dict }: Props) {
             </div>
 
             <div>
-              <Label>{dict.confirmNewPasswordLabel}</Label>
+              <Label htmlFor="change-password-confirm">{dict.confirmNewPasswordLabel}</Label>
 
               <Input
+                id="change-password-confirm"
                 type={
                   showPassword
                     ? "text"

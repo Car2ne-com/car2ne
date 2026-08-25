@@ -178,9 +178,10 @@ export default function ResetPasswordForm({ email, dict }: Props) {
         className="space-y-6"
       >
         <div>
-          <Label>{t.codeLabel}</Label>
+          <Label htmlFor="reset-code">{t.codeLabel}</Label>
 
           <Input
+            id="reset-code"
             type="text"
             inputMode="numeric"
             autoComplete="one-time-code"
@@ -196,10 +197,11 @@ export default function ResetPasswordForm({ email, dict }: Props) {
         </div>
 
         <div>
-          <Label>{t.newPasswordLabel}</Label>
+          <Label htmlFor="reset-new-password">{t.newPasswordLabel}</Label>
 
           <div className="relative">
             <Input
+              id="reset-new-password"
               type={
                 showPassword ? "text" : "password"
               }
@@ -273,9 +275,10 @@ export default function ResetPasswordForm({ email, dict }: Props) {
         </div>
 
         <div>
-          <Label>{t.confirmNewPasswordLabel}</Label>
+          <Label htmlFor="reset-confirm-password">{t.confirmNewPasswordLabel}</Label>
 
           <Input
+            id="reset-confirm-password"
             type={
               showPassword ? "text" : "password"
             }

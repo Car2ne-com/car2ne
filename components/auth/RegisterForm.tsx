@@ -234,9 +234,10 @@ export default function RegisterForm({ dict }: Props) {
         {/* Nome */}
 
         <div>
-          <Label>{dict.registerForm.nameLabel}</Label>
+          <Label htmlFor="register-name">{dict.registerForm.nameLabel}</Label>
 
           <Input
+            id="register-name"
             type="text"
             placeholder={dict.registerForm.namePlaceholder}
             value={name}
@@ -253,9 +254,10 @@ export default function RegisterForm({ dict }: Props) {
         {/* Cognome */}
 
         <div>
-          <Label>{dict.registerForm.surnameLabel}</Label>
+          <Label htmlFor="register-surname">{dict.registerForm.surnameLabel}</Label>
 
           <Input
+            id="register-surname"
             type="text"
             placeholder={dict.registerForm.surnamePlaceholder}
             value={surname}
@@ -272,9 +274,10 @@ export default function RegisterForm({ dict }: Props) {
         {/* Data di nascita */}
 
         <div>
-          <Label>{dict.registerForm.birthDateLabel}</Label>
+          <Label htmlFor="register-birth-date">{dict.registerForm.birthDateLabel}</Label>
 
           <Input
+            id="register-birth-date"
             type="date"
             value={birthDate}
             onChange={(e) =>
@@ -305,9 +308,10 @@ export default function RegisterForm({ dict }: Props) {
         {/* Email */}
 
         <div>
-          <Label>{dict.common.emailLabel}</Label>
+          <Label htmlFor="register-email">{dict.common.emailLabel}</Label>
 
           <Input
+            id="register-email"
             type="email"
             placeholder={dict.common.emailPlaceholder}
             value={email}
@@ -324,10 +328,11 @@ export default function RegisterForm({ dict }: Props) {
         {/* Password */}
 
         <div>
-          <Label>{dict.common.passwordLabel}</Label>
+          <Label htmlFor="register-password">{dict.common.passwordLabel}</Label>
 
           <div className="relative">
             <Input
+              id="register-password"
               type={
                 showPassword
                   ? "text"
@@ -422,10 +427,11 @@ export default function RegisterForm({ dict }: Props) {
         {/* Conferma Password */}
 
         <div>
-          <Label>{dict.registerForm.confirmPasswordLabel}</Label>
+          <Label htmlFor="register-confirm-password">{dict.registerForm.confirmPasswordLabel}</Label>
 
           <div className="relative">
             <Input
+              id="register-confirm-password"
               type={
                 showConfirmPassword
                   ? "text"

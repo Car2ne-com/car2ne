@@ -395,9 +395,10 @@ export default function MfaSettings({ dict }: Props) {
             </div>
 
             <div>
-              <Label>{dict.reauthCodeLabel}</Label>
+              <Label htmlFor="mfa-reauth-code">{dict.reauthCodeLabel}</Label>
 
               <Input
+                id="mfa-reauth-code"
                 type="text"
                 inputMode="numeric"
                 autoComplete="one-time-code"
@@ -473,9 +474,10 @@ export default function MfaSettings({ dict }: Props) {
             </div>
 
             <div>
-              <Label>{dict.step2Label}</Label>
+              <Label htmlFor="mfa-enroll-code">{dict.step2Label}</Label>
 
               <Input
+                id="mfa-enroll-code"
                 type="text"
                 inputMode="numeric"
                 autoComplete="one-time-code"

@@ -171,9 +171,10 @@ export default function VerifyAgeForm({
         className="space-y-6"
       >
         <div>
-          <Label>{dict.registerForm.birthDateLabel}</Label>
+          <Label htmlFor="verify-age-birth-date">{dict.registerForm.birthDateLabel}</Label>
 
           <Input
+            id="verify-age-birth-date"
             type="date"
             value={birthDate}
             onChange={(e) =>

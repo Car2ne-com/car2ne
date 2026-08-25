@@ -92,9 +92,10 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
 
   return (
     <Card className="mt-10 p-8 shadow-sm">
-      <Label>{dict.form.urlLabel}</Label>
+      <Label htmlFor="event-suggestion-url">{dict.form.urlLabel}</Label>
 
       <Input
+        id="event-suggestion-url"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         disabled={submitting}

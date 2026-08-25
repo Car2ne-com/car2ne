@@ -205,9 +205,10 @@ export default function ReportForm({ dict, locale, targetUser }: Props) {
       )}
 
       <div className="mb-6">
-        <Label>{dict.form.categoryLabel}</Label>
+        <Label htmlFor="report-category">{dict.form.categoryLabel}</Label>
 
         <Select
+          id="report-category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           disabled={submitting}
@@ -225,9 +226,10 @@ export default function ReportForm({ dict, locale, targetUser }: Props) {
 
       {options.length > 0 && (
         <div className="mb-6">
-          <Label>{dict.form.rideLabel}</Label>
+          <Label htmlFor="report-ride">{dict.form.rideLabel}</Label>
 
           <Select
+            id="report-ride"
             value={selectedOption}
             onChange={(e) => setSelectedOption(e.target.value)}
             disabled={submitting}
@@ -245,9 +247,10 @@ export default function ReportForm({ dict, locale, targetUser }: Props) {
       )}
 
       <div>
-        <Label>{dict.form.descriptionLabel}</Label>
+        <Label htmlFor="report-description">{dict.form.descriptionLabel}</Label>
 
         <Textarea
+          id="report-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           disabled={submitting}

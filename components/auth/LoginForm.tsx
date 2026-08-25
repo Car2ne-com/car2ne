@@ -400,9 +400,10 @@ export default function LoginForm({ dict }: Props) {
           </div>
 
           <div>
-            <Label>{dict.loginForm.mfaCodeLabel}</Label>
+            <Label htmlFor="login-mfa-code">{dict.loginForm.mfaCodeLabel}</Label>
 
             <Input
+              id="login-mfa-code"
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
@@ -470,9 +471,10 @@ export default function LoginForm({ dict }: Props) {
         {/* Email */}
 
         <div>
-          <Label>{dict.common.emailLabel}</Label>
+          <Label htmlFor="login-email">{dict.common.emailLabel}</Label>
 
           <Input
+            id="login-email"
             type="email"
             placeholder={dict.common.emailPlaceholder}
             value={email}
@@ -491,10 +493,11 @@ export default function LoginForm({ dict }: Props) {
         {/* Password */}
 
         <div>
-          <Label>{dict.common.passwordLabel}</Label>
+          <Label htmlFor="login-password">{dict.common.passwordLabel}</Label>
 
           <div className="relative">
             <Input
+              id="login-password"
               type={
                 showPassword
                   ? "text"

@@ -70,9 +70,10 @@ export default function AdminNoteDialog({
         <AlertDialogDescription>{description}</AlertDialogDescription>
 
         <div className="mt-4">
-          <Label>{noteLabel}</Label>
+          <Label htmlFor="admin-note-text">{noteLabel}</Label>
 
           <Textarea
+            id="admin-note-text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}

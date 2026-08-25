@@ -7,6 +7,8 @@ import {
   User,
 } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
+
 type VerificationDict = {
   title: string;
   description: string;
@@ -42,10 +44,13 @@ export default function DashboardActions({
     <section className="mt-12 grid gap-6 lg:grid-cols-2">
       {/* Modifica profilo */}
 
-      <Link
-        href="/profile"
-        className="group rounded-3xl border border-border bg-card p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
-      >
+      <Card className="group relative p-8 transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl">
+        <Link
+          href="/profile"
+          aria-label={dict.editProfileTitle}
+          className="absolute inset-0 z-10"
+        />
+
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent">
           <User className="h-8 w-8 text-accent-foreground" />
         </div>
@@ -63,7 +68,7 @@ export default function DashboardActions({
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>
-      </Link>
+      </Card>
 
       {/* Offri un passaggio */}
 
@@ -92,10 +97,13 @@ export default function DashboardActions({
 
       {/* Cerca un evento */}
 
-      <Link
-        href="/events"
-        className="group rounded-3xl border border-border bg-card p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
-      >
+      <Card className="group relative p-8 transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl">
+        <Link
+          href="/events"
+          aria-label={dict.findEventTitle}
+          className="absolute inset-0 z-10"
+        />
+
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent">
           <Search className="h-8 w-8 text-accent-foreground" />
         </div>
@@ -113,14 +121,17 @@ export default function DashboardActions({
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>
-      </Link>
+      </Card>
 
       {/* Verifica conducente */}
 
-      <Link
-        href="/dashboard/verification"
-        className="group rounded-3xl border border-border bg-card p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
-      >
+      <Card className="group relative p-8 transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl">
+        <Link
+          href="/dashboard/verification"
+          aria-label={verificationDict.title}
+          className="absolute inset-0 z-10"
+        />
+
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent">
           <BadgeCheck className="h-8 w-8 text-accent-foreground" />
         </div>
@@ -142,7 +153,7 @@ export default function DashboardActions({
 
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </div>
-      </Link>
+      </Card>
     </section>
   );
 }

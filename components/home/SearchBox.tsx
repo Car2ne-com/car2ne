@@ -5,6 +5,7 @@ import { CalendarDays, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   dict: {
@@ -59,14 +60,14 @@ export default function SearchBox({ dict }: Props) {
         <div className="flex items-center rounded-2xl border border-input bg-muted px-4 transition focus-within:border-ring focus-within:bg-background">
           <Search className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
-          <input
+          <Input
             type="text"
             value={search}
             onChange={(event) =>
               setSearch(event.target.value)
             }
             placeholder={dict.eventPlaceholder}
-            className="h-14 w-full bg-transparent outline-none placeholder:text-muted-foreground"
+            className="h-14 rounded-none border-none bg-transparent px-0 focus-visible:border-transparent focus-visible:ring-0"
           />
         </div>
 
@@ -75,14 +76,14 @@ export default function SearchBox({ dict }: Props) {
         <div className="flex items-center rounded-2xl border border-input bg-muted px-4 transition focus-within:border-ring focus-within:bg-background">
           <MapPin className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
-          <input
+          <Input
             type="text"
             value={departure}
             onChange={(event) =>
               setDeparture(event.target.value)
             }
             placeholder={dict.departurePlaceholder}
-            className="h-14 w-full bg-transparent outline-none placeholder:text-muted-foreground"
+            className="h-14 rounded-none border-none bg-transparent px-0 focus-visible:border-transparent focus-visible:ring-0"
           />
         </div>
 
@@ -91,13 +92,13 @@ export default function SearchBox({ dict }: Props) {
         <div className="flex items-center rounded-2xl border border-input bg-muted px-4 transition focus-within:border-ring focus-within:bg-background">
           <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
-          <input
+          <Input
             type="date"
             value={date}
             onChange={(event) =>
               setDate(event.target.value)
             }
-            className="h-14 w-full bg-transparent outline-none"
+            className="h-14 rounded-none border-none bg-transparent px-0 focus-visible:border-transparent focus-visible:ring-0"
           />
         </div>
 

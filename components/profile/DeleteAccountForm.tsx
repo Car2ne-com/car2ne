@@ -126,9 +126,10 @@ export default function DeleteAccountForm({
             </div>
 
             <div>
-              <Label>{dict.confirmLabel}</Label>
+              <Label htmlFor="delete-account-confirm">{dict.confirmLabel}</Label>
 
               <Input
+                id="delete-account-confirm"
                 type="text"
                 value={confirmText}
                 onChange={(e) =>

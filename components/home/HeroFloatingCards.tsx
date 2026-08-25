@@ -5,6 +5,8 @@ import {
   Users,
 } from "lucide-react";
 
+import { Card } from "@/components/ui/card";
+
 type Props = {
   dict: {
     eventName: string;
@@ -22,7 +24,7 @@ export default function HeroFloatingCards({ dict }: Props) {
   return (
     <>
       {/* Evento */}
-      <div className="absolute left-0 top-10 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <Card className="absolute left-0 top-10 rounded-2xl border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
@@ -42,10 +44,10 @@ export default function HeroFloatingCards({ dict }: Props) {
 
         </div>
 
-      </div>
+      </Card>
 
       {/* Rating */}
-      <div className="absolute right-0 top-40 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <Card className="absolute right-0 top-40 rounded-2xl border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
@@ -66,10 +68,10 @@ export default function HeroFloatingCards({ dict }: Props) {
 
         </div>
 
-      </div>
+      </Card>
 
       {/* Posti */}
-      <div className="absolute bottom-10 left-12 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <Card className="absolute bottom-10 left-12 rounded-2xl border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
@@ -87,10 +89,10 @@ export default function HeroFloatingCards({ dict }: Props) {
 
         </div>
 
-      </div>
+      </Card>
 
       {/* Destinazione */}
-      <div className="absolute bottom-24 right-10 rounded-2xl border border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
+      <Card className="absolute bottom-24 right-10 rounded-2xl border-border/40 bg-card/70 px-5 py-4 shadow-[0_15px_50px_rgba(15,23,42,.10)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03]">
 
         <div className="flex items-center gap-3">
 
@@ -108,7 +110,7 @@ export default function HeroFloatingCards({ dict }: Props) {
 
         </div>
 
-      </div>
+      </Card>
     </>
   );
 }

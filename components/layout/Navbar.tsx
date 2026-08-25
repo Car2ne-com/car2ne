@@ -91,13 +91,21 @@ export default async function Navbar() {
             md:gap-3
           "
         >
-          <LanguageSwitcher locale={locale} srLabel={languageSwitcher.label} />
+          <div className="hidden md:block">
+            <LanguageSwitcher locale={locale} srLabel={languageSwitcher.label} />
+          </div>
 
           <NotificationBell locale={locale} dict={notifications} />
 
           <NavbarAuth />
 
-          <MobileMenu dict={nav} ariaOpen={dict.layout.mobileMenu.open} ariaClose={dict.layout.mobileMenu.close} />
+          <MobileMenu
+            dict={nav}
+            ariaOpen={dict.layout.mobileMenu.open}
+            ariaClose={dict.layout.mobileMenu.close}
+            locale={locale}
+            languageSwitcherLabel={languageSwitcher.label}
+          />
         </div>
 
       </div>

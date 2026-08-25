@@ -4,13 +4,25 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
+import LanguageSwitcher from "./LanguageSwitcher";
+
+import type { Locale } from "@/lib/i18n/locales";
+
 type Props = {
   dict: { home: string; events: string; offerRide: string };
   ariaOpen: string;
   ariaClose: string;
+  locale: Locale;
+  languageSwitcherLabel: string;
 };
 
-export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
+export default function MobileMenu({
+  dict,
+  ariaOpen,
+  ariaClose,
+  locale,
+  languageSwitcherLabel,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -60,6 +72,10 @@ export default function MobileMenu({ dict, ariaOpen, ariaClose }: Props) {
               {dict.offerRide}
             </Link>
           </nav>
+
+          <div className="mt-1 border-t border-border px-4 pt-3 md:hidden">
+            <LanguageSwitcher locale={locale} srLabel={languageSwitcherLabel} />
+          </div>
         </div>
       )}
     </div>

@@ -69,9 +69,10 @@ export default function ForgotPasswordForm({ dict }: Props) {
         className="space-y-6"
       >
         <div>
-          <Label>{dict.common.emailLabel}</Label>
+          <Label htmlFor="forgot-password-email">{dict.common.emailLabel}</Label>
 
           <Input
+            id="forgot-password-email"
             type="email"
             placeholder={dict.common.emailPlaceholder}
             value={email}

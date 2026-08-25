@@ -63,4 +63,17 @@ export const layout: (typeof it)["layout"] = {
   },
   loading: "Loading",
   siteDescription: "Find or offer a ride to your next event.",
+  notFound: {
+    title: "Page not found",
+    description:
+      "The page you're looking for doesn't exist or has moved. Check the address, or head back to the home page.",
+    cta: "Back to home",
+  },
+  error: {
+    title: "Something went wrong",
+    description:
+      "An unexpected error occurred. Try again, or head back to the home page if the problem persists.",
+    retry: "Try again",
+    home: "Back to home",
+  },
 };

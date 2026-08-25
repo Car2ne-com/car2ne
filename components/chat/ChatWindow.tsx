@@ -21,6 +21,7 @@ import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 
 type Message = {
@@ -455,7 +456,7 @@ export default function ChatWindow({
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+    <Card className="overflow-hidden">
 
       {/* HEADER */}
 
@@ -665,7 +666,7 @@ export default function ChatWindow({
 
         <div className="border-t border-border bg-muted p-5">
 
-          <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4">
+          <Card className="flex items-start gap-3 rounded-2xl p-4 shadow-none">
 
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
               <LockKeyhole className="h-5 w-5 text-muted-foreground" />
@@ -684,12 +685,12 @@ export default function ChatWindow({
 
             </div>
 
-          </div>
+          </Card>
 
         </div>
 
       )}
 
-    </div>
+    </Card>
   );
 }

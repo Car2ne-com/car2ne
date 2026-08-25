@@ -5,6 +5,7 @@ import { CheckCircle2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
 import type {
@@ -130,7 +131,7 @@ export default function BetaChecklistForm({
 
   return (
     <div className="space-y-8">
-      <div className="sticky top-4 z-10 rounded-3xl border border-border bg-card/95 p-6 shadow-sm backdrop-blur">
+      <Card className="sticky top-4 z-10 bg-card/95 p-6 backdrop-blur">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <span className="text-2xl font-black text-foreground">{progressPct}%</span>
 
@@ -160,7 +161,7 @@ export default function BetaChecklistForm({
             style={{ width: `${totalItems > 0 ? (problemCount / totalItems) * 100 : 0}%` }}
           />
         </div>
-      </div>
+      </Card>
 
       {sections.map((section) => {
         const sectionTested = section.items.filter((item) => results[item.id]).length;
