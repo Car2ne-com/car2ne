@@ -1,5 +1,6 @@
 import {
   BadgeCheck,
+  Bell,
   CheckCircle2,
   Clock3,
   Flag,
@@ -93,6 +94,16 @@ export function getNotificationIcon(
     );
   }
 
+  if (type === "ride_available_for_watched_event") {
+    return (
+      <div className={`${wrapperClass} bg-emerald-100`}>
+        <Bell
+          className={`${iconClass} text-emerald-600`}
+        />
+      </div>
+    );
+  }
+
   if (type === "driver_verification_approved") {
     return (
       <div className={`${wrapperClass} bg-emerald-100`}>
@@ -154,6 +165,10 @@ export function getNotificationHref(
 
   if (notification.type === "rating_received") {
     return "/dashboard";
+  }
+
+  if (notification.type === "ride_available_for_watched_event") {
+    return "/dashboard/watchlist";
   }
 
   if (

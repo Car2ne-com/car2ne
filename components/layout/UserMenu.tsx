@@ -9,6 +9,7 @@ import {
   MessageCircle,
   Car,
   Ticket,
+  Bell,
   User,
   CalendarDays,
   ClipboardCheck,
@@ -35,6 +36,7 @@ type UserMenuDict = {
   myChats: string;
   myRides: string;
   myBookings: string;
+  myWatchlist: string;
   myProfile: string;
   betaChecklist: string;
   admin: string;
@@ -233,6 +235,17 @@ export default function UserMenu({
             <Link href="/dashboard/bookings">
               <Ticket className="mr-2 h-4 w-4" />
               {dict.myBookings}
+            </Link>
+          }
+        />
+
+        {/* Eventi seguiti */}
+
+        <DropdownMenuItem
+          render={
+            <Link href="/dashboard/watchlist">
+              <Bell className="mr-2 h-4 w-4" />
+              {dict.myWatchlist}
             </Link>
           }
         />

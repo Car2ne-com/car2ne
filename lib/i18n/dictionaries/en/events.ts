@@ -75,5 +75,17 @@ export const events: (typeof it)["events"] = {
     buttonRequestSeat: "Request outbound and return",
     errorOwnRide: "You can't request a seat on your own ride.",
     successRequestSent: "Request sent! The driver will need to confirm your seat.",
+    mapToggleShow: "Show the meeting point",
+    mapToggleHide: "Hide the map",
+    mapOriginLabel: "Meeting point",
+    mapVenueLabel: "Event venue",
+  },
+  watchlist: {
+    notifyMe: "Notify me when a ride is posted",
+    stopNotifying: "Stop notifying me",
+    watchingBadge: "Waiting for a ride",
+    toastAdded: "We'll let you know as soon as someone offers a ride for this event.",
+    toastRemoved: "You won't get alerts for this event anymore.",
+    toastError: "Something went wrong. Please try again.",
   },
 };

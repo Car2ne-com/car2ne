@@ -74,5 +74,17 @@ export const events = {
     errorOwnRide: "Non puoi richiedere un posto sul tuo stesso passaggio.",
     successRequestSent:
       "Richiesta inviata! Il conducente dovrà confermare il tuo posto.",
+    mapToggleShow: "Mostra il punto di ritrovo",
+    mapToggleHide: "Nascondi la mappa",
+    mapOriginLabel: "Punto di ritrovo",
+    mapVenueLabel: "Luogo dell'evento",
+  },
+  watchlist: {
+    notifyMe: "Avvisami quando c'è un passaggio",
+    stopNotifying: "Non avvisarmi più",
+    watchingBadge: "In attesa di un passaggio",
+    toastAdded: "Ti avviseremo appena qualcuno offre un passaggio per questo evento.",
+    toastRemoved: "Non riceverai più avvisi per questo evento.",
+    toastError: "Non è stato possibile completare l'operazione. Riprova.",
   },
 };

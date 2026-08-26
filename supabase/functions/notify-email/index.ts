@@ -39,6 +39,7 @@ const EMAIL_NOTIFICATION_TYPES = new Set([
   "rating_received",
   "review_reminder_passenger",
   "review_reminder_driver",
+  "ride_available_for_watched_event",
 ]);
 
 type NotificationType =
@@ -53,7 +54,8 @@ type NotificationType =
   | "report_dismissed"
   | "rating_received"
   | "review_reminder_passenger"
-  | "review_reminder_driver";
+  | "review_reminder_driver"
+  | "ride_available_for_watched_event";
 
 type NotificationRecord = {
   user_id: string;
@@ -242,6 +244,20 @@ const EMAIL_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       ctaLabel: "Leave a review",
     },
   },
+  ride_available_for_watched_event: {
+    it: {
+      subject: "Nuovo passaggio disponibile",
+      heading: "Nuovo passaggio disponibile!",
+      body: "Ciao {name},\n\nQualcuno ha pubblicato un passaggio per un evento che stai seguendo.",
+      ctaLabel: "Vedi il passaggio",
+    },
+    en: {
+      subject: "New ride available",
+      heading: "New ride available!",
+      body: "Hi {name},\n\nSomeone posted a ride for an event you're following.",
+      ctaLabel: "View the ride",
+    },
+  },
 };
 
 // Stessi mittenti verificati usati in lib/email/brevo.ts (app Next.js),
@@ -259,9 +275,32 @@ function getSender(type: NotificationType) {
   return EMAIL_SENDERS.noreply;
 }
 
-function getHref(type: string, record: NotificationRecord) {
+async function getHref(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  type: string,
+  record: NotificationRecord
+) {
   if (type === "booking_request") {
     return "/dashboard/rides";
+  }
+
+  if (type === "ride_available_for_watched_event" && record.ride_id) {
+    const { data: ride } = await supabaseAdmin
+      .from("rides")
+      .select("events(slug)")
+      .eq("id", record.ride_id)
+      .single();
+
+    const eventRelation = ride?.events;
+    const event = Array.isArray(eventRelation)
+      ? eventRelation[0]
+      : eventRelation;
+
+    if (event?.slug) {
+      return `/events/${event.slug}`;
+    }
+
+    return "/dashboard/watchlist";
   }
 
   if (
@@ -429,7 +468,7 @@ Deno.serve(async (req) => {
     copy.heading,
     body,
     copy.ctaLabel,
-    `${siteUrl}${getHref(type, record)}`
+    `${siteUrl}${await getHref(supabaseAdmin, type, record)}`
   );
 
   const brevoResponse = await fetch(

@@ -21,6 +21,7 @@ export const layout: (typeof it)["layout"] = {
     myChats: "My chats",
     myRides: "My rides",
     myBookings: "My bookings",
+    myWatchlist: "Followed events",
     myProfile: "My profile",
     betaChecklist: "Beta checklist",
     admin: "Admin",

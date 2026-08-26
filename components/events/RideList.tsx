@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import RideCard from "./RideCard";
+import WatchlistToggleButton from "./WatchlistToggleButton";
 import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
@@ -10,10 +11,16 @@ import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   eventId: string;
+  venue?: {
+    lat: number;
+    lng: number;
+    name: string;
+  } | null;
 };
 
 export default async function RideList({
   eventId,
+  venue,
 }: Props) {
   const supabase = await createClient();
   const { locale, dict } = await getTranslations();
@@ -22,6 +29,19 @@ export default async function RideList({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  let initiallyWatching = false;
+
+  if (user) {
+    const { data: watchRow } = await supabase
+      .from("event_watchlist")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("event_id", eventId)
+      .maybeSingle();
+
+    initiallyWatching = !!watchRow;
+  }
 
   let blockedCounterpartIds: string[] = [];
 
@@ -57,6 +77,11 @@ export default async function RideList({
       return_time,
       available_seats,
       contribution,
+      cities:origin_city_id (
+        latitude,
+        longitude,
+        name
+      ),
       profiles (
         name,
         surname,
@@ -107,6 +132,7 @@ export default async function RideList({
   const formattedRides =
     visibleRides.map((ride) => {
       const profile = toOne(ride.profiles);
+      const originCity = toOne(ride.cities);
 
       let avatarUrl: string | null = null;
 
@@ -163,6 +189,14 @@ export default async function RideList({
         to:
           ride.destination,
 
+        originLat:
+          originCity?.latitude ?? null,
+
+        originLng:
+          originCity?.longitude ?? null,
+
+        venue: venue ?? null,
+
         date: dateFormatter.format(
           new Date(
             `${ride.departure_date}T${ride.departure_time}`
@@ -213,6 +247,12 @@ export default async function RideList({
             {t.subtitle}
           </p>
         </div>
+
+        <WatchlistToggleButton
+          eventId={eventId}
+          initiallyWatching={initiallyWatching}
+          dict={dict.events.watchlist}
+        />
       </div>
 
       {formattedRides.length === 0 ? (

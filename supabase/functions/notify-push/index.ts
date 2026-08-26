@@ -36,6 +36,7 @@ const PUSH_NOTIFICATION_TYPES = new Set([
   "rating_received",
   "review_reminder_passenger",
   "review_reminder_driver",
+  "ride_available_for_watched_event",
 ]);
 
 type NotificationType =
@@ -49,7 +50,8 @@ type NotificationType =
   | "report_dismissed"
   | "rating_received"
   | "review_reminder_passenger"
-  | "review_reminder_driver";
+  | "review_reminder_driver"
+  | "ride_available_for_watched_event";
 
 type NotificationRecord = {
   user_id: string;
@@ -197,6 +199,20 @@ const PUSH_COPY: Record<NotificationType, Record<Locale, Copy>> = {
       href: "/dashboard/rides",
     },
   },
+  ride_available_for_watched_event: {
+    it: {
+      title: "Nuovo passaggio disponibile!",
+      body: "Qualcuno ha pubblicato un passaggio per un evento che stai seguendo.",
+      // Fallback statico: sovrascritto a runtime con lo slug
+      // dell'evento quando disponibile (vedi Deno.serve sotto).
+      href: "/dashboard/watchlist",
+    },
+    en: {
+      title: "New ride available!",
+      body: "Someone posted a ride for an event you're following.",
+      href: "/dashboard/watchlist",
+    },
+  },
 };
 
 Deno.serve(async (req) => {
@@ -253,10 +269,7 @@ Deno.serve(async (req) => {
   const locale: Locale = profileResult.data?.locale === "en" ? "en" : "it";
   const copy = PUSH_COPY[type][locale];
 
-  const href =
-    type === "review_reminder_driver" && record.ride_id
-      ? `/dashboard/rides/${record.ride_id}`
-      : copy.href;
+  const href = await resolveHref(supabaseAdmin, type, record, copy.href);
 
   const results = await Promise.allSettled(
     subscriptions.map((subscription) =>
@@ -300,3 +313,40 @@ Deno.serve(async (req) => {
 
   return new Response("OK", { status: 200 });
 });
+
+/*
+ * review_reminder_driver e ride_available_for_watched_event non hanno
+ * un href statico: il primo punta alla gestione del passaggio, il
+ * secondo all'evento del passaggio appena pubblicato (lookup via
+ * ride_id -> rides.event_id -> events.slug). Fallback all'href
+ * statico della copy se il ride/evento non si trova più.
+ */
+async function resolveHref(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  type: NotificationType,
+  record: NotificationRecord,
+  fallbackHref: string
+): Promise<string> {
+  if (type === "review_reminder_driver" && record.ride_id) {
+    return `/dashboard/rides/${record.ride_id}`;
+  }
+
+  if (type === "ride_available_for_watched_event" && record.ride_id) {
+    const { data: ride } = await supabaseAdmin
+      .from("rides")
+      .select("events(slug)")
+      .eq("id", record.ride_id)
+      .single();
+
+    const eventRelation = ride?.events;
+    const event = Array.isArray(eventRelation)
+      ? eventRelation[0]
+      : eventRelation;
+
+    if (event?.slug) {
+      return `/events/${event.slug}`;
+    }
+  }
+
+  return fallbackHref;
+}

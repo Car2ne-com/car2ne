@@ -19,6 +19,7 @@ export const layout = {
     myChats: "Le mie chat",
     myRides: "I miei passaggi",
     myBookings: "Le mie prenotazioni",
+    myWatchlist: "Eventi seguiti",
     myProfile: "Il mio profilo",
     betaChecklist: "Beta checklist",
     admin: "Admin",

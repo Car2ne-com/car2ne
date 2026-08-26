@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
 import { getTranslations } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/siteConfig";
+import { toOne } from "@/lib/utils/relations";
 
 type Props = {
   params: Promise<{
@@ -23,12 +24,26 @@ type EventRecord = NonNullable<
   Awaited<ReturnType<typeof getEvent>>
 >;
 
+function getEventVenue(event: EventRecord) {
+  const venue = toOne(event.venues);
+
+  if (!venue?.latitude || !venue?.longitude) {
+    return null;
+  }
+
+  return {
+    lat: venue.latitude,
+    lng: venue.longitude,
+    name: event.venue,
+  };
+}
+
 async function getEvent(slug: string) {
   const supabase = await createClient();
 
   const { data } = await supabase
     .from("events")
-    .select("*, cities(slug), venues(slug)")
+    .select("*, cities(slug), venues(slug, latitude, longitude)")
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle();
@@ -170,7 +185,7 @@ export default async function EventPage({ params }: Props) {
         <EventHero event={event} locale={locale} />
 
         <div className="mx-auto mt-14 max-w-7xl px-6">
-          <RideList eventId={event.id} />
+          <RideList eventId={event.id} venue={getEventVenue(event)} />
         </div>
       </main>
 

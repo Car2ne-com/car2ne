@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { useRouter } from "next/navigation";
 
@@ -10,6 +11,7 @@ import {
   CalendarDays,
   CarFront,
   Clock3,
+  Map as MapIcon,
   MapPin,
 } from "lucide-react";
 
@@ -21,6 +23,8 @@ import VerifiedAvatar from "@/components/ui/VerifiedAvatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const RideMap = dynamic(() => import("./RideMap"), { ssr: false });
 
 type RidesDict = {
   driverFallback: string;
@@ -40,6 +44,10 @@ type RidesDict = {
   buttonRequestSeat: string;
   errorOwnRide: string;
   successRequestSent: string;
+  mapToggleShow: string;
+  mapToggleHide: string;
+  mapOriginLabel: string;
+  mapVenueLabel: string;
 };
 
 type Props = {
@@ -67,6 +75,14 @@ type Props = {
     returnTime: string;
     seats: number;
     price: number;
+
+    originLat: number | null;
+    originLng: number | null;
+    venue: {
+      lat: number;
+      lng: number;
+      name: string;
+    } | null;
   };
 };
 
@@ -95,6 +111,9 @@ export default function RideCard({
     useState(false);
 
   const [isDriver, setIsDriver] =
+    useState(false);
+
+  const [showMap, setShowMap] =
     useState(false);
 
   const driverRating = ride.driverRating;
@@ -373,6 +392,38 @@ export default function RideCard({
             {ride.to}
           </span>
         </div>
+
+        {ride.originLat != null && ride.originLng != null && (
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowMap((prev) => !prev)}
+              className="gap-1.5 text-primary hover:text-primary"
+            >
+              <MapIcon className="h-3.5 w-3.5" />
+              {showMap ? dict.mapToggleHide : dict.mapToggleShow}
+            </Button>
+
+            {showMap && (
+              <RideMap
+                origin={{
+                  lat: ride.originLat,
+                  lng: ride.originLng,
+                  label: `${dict.mapOriginLabel}: ${ride.from}`,
+                }}
+                venue={
+                  ride.venue && {
+                    lat: ride.venue.lat,
+                    lng: ride.venue.lng,
+                    label: `${dict.mapVenueLabel}: ${ride.venue.name}`,
+                  }
+                }
+              />
+            )}
+          </>
+        )}
       </div>
 
       {/* Ritorno */}
