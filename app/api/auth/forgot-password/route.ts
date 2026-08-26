@@ -6,6 +6,7 @@ import {
   getResetCooldownSeconds,
   sendResetCode,
 } from "@/lib/email/passwordReset";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 /*
  * Non riveliamo mai se l'email esiste: se non troviamo un utente
@@ -21,6 +22,25 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "invalid" },
       { status: 400 }
+    );
+  }
+
+  /*
+   * Per IP, non per email: senza questo un attacker può martellare
+   * l'endpoint con email diverse (spam di invii/costo email, tentativi
+   * di enumerazione) prima ancora di arrivare al cooldown per-utente
+   * sotto, che scatta solo se l'email esiste davvero.
+   */
+  const allowed = await checkRateLimit(
+    "forgot-password",
+    getClientIp(request),
+    { windowSeconds: 15 * 60, maxHits: 8 }
+  );
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429 }
     );
   }
 

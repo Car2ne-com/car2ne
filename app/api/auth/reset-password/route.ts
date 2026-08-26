@@ -5,6 +5,7 @@ import {
   findUserByEmail,
   verifyResetCode,
 } from "@/lib/email/passwordReset";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 function isStrongPassword(password: string) {
   return (
@@ -39,6 +40,25 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "weak_password" },
       { status: 400 }
+    );
+  }
+
+  /*
+   * Il codice è già limitato a 5 tentativi (vedi verifyResetCode), ma
+   * quel contatore si azzera richiedendo un nuovo codice: senza un
+   * limite anche per IP, un attacker potrebbe continuare a chiedere
+   * codici freschi e provare a indovinarli.
+   */
+  const allowed = await checkRateLimit(
+    "reset-password",
+    getClientIp(request),
+    { windowSeconds: 15 * 60, maxHits: 15 }
+  );
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429 }
     );
   }
 

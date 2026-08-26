@@ -9,6 +9,7 @@ import {
 } from "@/lib/email/brevo";
 import { isPastDateTime } from "@/lib/utils/date";
 import { toOne } from "@/lib/utils/relations";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 const CATEGORIES = [
   "user_behavior",
@@ -35,6 +36,18 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Non autenticato." },
       { status: 401 }
+    );
+  }
+
+  const allowed = await checkRateLimit("reports", user.id, {
+    windowSeconds: 60 * 60,
+    maxHits: 10,
+  });
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Troppe segnalazioni in poco tempo. Riprova più tardi." },
+      { status: 429 }
     );
   }
 
