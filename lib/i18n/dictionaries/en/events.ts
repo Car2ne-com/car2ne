@@ -29,8 +29,10 @@ export const events: (typeof it)["events"] = {
     allVenues: "All venues",
     departureBadge: "📍 Departure searched",
     departureSearching: "You're looking for rides departing from",
-    loadMore: "Load more events",
-    remaining: "remaining",
+    resultsCount: "{count} events found",
+    previous: "Previous",
+    next: "Next",
+    pageIndicator: "Page {page} of {total}",
   },
   card: {
     ridesSingular: "ride",

@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useRef, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import EventSearch from "./EventSearch";
@@ -12,7 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Event } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
 
-const PAGE_SIZE = 24;
+const SEARCH_DEBOUNCE_MS = 400;
+
+type FilterOption = { id: string; name: string };
 
 type EventsDict = {
   search: { placeholder: string };
@@ -23,8 +26,10 @@ type EventsDict = {
     allVenues: string;
     departureBadge: string;
     departureSearching: string;
-    loadMore: string;
-    remaining: string;
+    resultsCount: string;
+    previous: string;
+    next: string;
+    pageIndicator: string;
   };
   card: {
     ridesSingular: string;
@@ -36,8 +41,14 @@ type EventsDict = {
 
 type Props = {
   events: Event[];
+  totalCount: number;
+  page: number;
+  totalPages: number;
+  cityOptions: FilterOption[];
+  venueOptions: FilterOption[];
   initialSearch?: string;
-  initialDate?: string;
+  initialCity?: string;
+  initialVenue?: string;
   initialDeparture?: string;
   locale: Locale;
   dict: EventsDict;
@@ -45,139 +56,99 @@ type Props = {
 
 export default function EventsView({
   events,
+  totalCount,
+  page,
+  totalPages,
+  cityOptions,
+  venueOptions,
   initialSearch = "",
-  initialDate = "",
+  initialCity = "",
+  initialVenue = "",
   initialDeparture = "",
   locale,
   dict,
 }: Props) {
-  const [search, setSearch] =
-    useState(initialSearch);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const [cityId, setCityId] = useState("");
-  const [venueId, setVenueId] = useState("");
-
-  const [visibleCount, setVisibleCount] =
-    useState(PAGE_SIZE);
+  const [search, setSearch] = useState(initialSearch);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /*
-   * Filtro Città/Venue basato sull'entità reale (city_id/venue_id
-   * via le relazioni embedded cities/venues), non sul solo testo
-   * event.city. Gli eventi senza city_id/venue_id restano visibili
-   * di default e semplicemente non compaiono quando si filtra.
+   * Ricerca/filtri/paginazione girano lato server (vedi
+   * app/events/page.tsx): ogni cambiamento aggiorna l'URL, che
+   * ritrigghera il render server con i nuovi searchParams. startTransition
+   * evita che l'interazione (digitare, cambiare select) sembri bloccata
+   * in attesa della risposta.
    */
-  const cityOptions = useMemo(() => {
-    const byId = new Map<string, string>();
+  function navigate(overrides: Record<string, string | null>) {
+    const next = new URLSearchParams(searchParams.toString());
 
-    events.forEach((event) => {
-      if (event.cities) {
-        byId.set(event.cities.id, event.cities.name);
+    for (const [key, value] of Object.entries(overrides)) {
+      if (value) {
+        next.set(key, value);
+      } else {
+        next.delete(key);
       }
+    }
+
+    /*
+     * Qualunque cambio di filtro invalida la pagina corrente: restare
+     * su "pagina 3" quando i risultati sono appena cambiati mostrerebbe
+     * un elenco vuoto o troncato.
+     */
+    if (!("page" in overrides)) {
+      next.delete("page");
+    }
+
+    startTransition(() => {
+      router.push(`/events?${next.toString()}`);
     });
-
-    return Array.from(byId.entries())
-      .map(([id, name]) => ({ id, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [events]);
-
-  const eventsInSelectedCity = useMemo(() => {
-    if (!cityId) return events;
-
-    return events.filter(
-      (event) => event.cities?.id === cityId
-    );
-  }, [events, cityId]);
-
-  const venueOptions = useMemo(() => {
-    const byId = new Map<string, string>();
-
-    eventsInSelectedCity.forEach((event) => {
-      if (event.venues) {
-        byId.set(event.venues.id, event.venues.name);
-      }
-    });
-
-    return Array.from(byId.entries())
-      .map(([id, name]) => ({ id, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [eventsInSelectedCity]);
-
-  /*
-   * Se il venue selezionato non appartiene più alla città
-   * selezionata (es. si cambia città dopo aver scelto un venue),
-   * lo si considera implicitamente deselezionato calcolandolo in
-   * render invece che con un effect che resetta lo state.
-   */
-  const effectiveVenueId = venueOptions.some(
-    (venue) => venue.id === venueId
-  )
-    ? venueId
-    : "";
-
-  const filteredEvents = useMemo(() => {
-    const query =
-      search.toLowerCase().trim();
-
-    return events.filter((event) => {
-      const matchesSearch =
-        !query ||
-        event.artist.toLowerCase().includes(query) ||
-        event.title.toLowerCase().includes(query) ||
-        event.city.toLowerCase().includes(query) ||
-        event.venue.toLowerCase().includes(query);
-
-      const matchesDate =
-        !initialDate ||
-        event.event_date.startsWith(initialDate);
-
-      const matchesCity =
-        !cityId || event.cities?.id === cityId;
-
-      const matchesVenue =
-        !effectiveVenueId || event.venues?.id === effectiveVenueId;
-
-      return (
-        matchesSearch &&
-        matchesDate &&
-        matchesCity &&
-        matchesVenue
-      );
-    });
-  }, [events, search, initialDate, cityId, effectiveVenueId]);
-
-  /*
-   * Reset della paginazione quando cambiano i filtri, calcolato
-   * durante il render (pattern "Adjusting state when a prop
-   * changes" di React) invece che con un effect + setState, per
-   * evitare un render extra a cascata.
-   */
-  const filterKey = `${search}|${initialDate}|${cityId}|${effectiveVenueId}`;
-  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
-
-  if (filterKey !== prevFilterKey) {
-    setPrevFilterKey(filterKey);
-    setVisibleCount(PAGE_SIZE);
   }
 
-  const visibleEvents = filteredEvents.slice(
-    0,
-    visibleCount
-  );
+  function handleSearchChange(value: string) {
+    setSearch(value);
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      navigate({ search: value.trim() || null });
+    }, SEARCH_DEBOUNCE_MS);
+  }
+
+  function handleCityChange(cityId: string) {
+    /*
+     * Le opzioni venue dipendono dalla città: cambiandola, un venue già
+     * selezionato potrebbe non appartenerci più.
+     */
+    navigate({ city: cityId || null, venue: null });
+  }
+
+  function handleVenueChange(venueId: string) {
+    navigate({ venue: venueId || null });
+  }
+
+  function goToPage(nextPage: number) {
+    navigate({ page: String(nextPage) });
+  }
 
   return (
     <>
       <div className="mb-8 space-y-4">
         <EventSearch
           value={search}
-          onChange={setSearch}
+          onChange={handleSearchChange}
           placeholder={dict.search.placeholder}
         />
 
         {cityOptions.length > 0 && (
           <div className="flex flex-wrap gap-3">
             <Select
-              value={cityId}
-              onChange={(e) => setCityId(e.target.value)}
+              value={initialCity}
+              onChange={(e) => handleCityChange(e.target.value)}
               aria-label={dict.filters.cityAriaLabel}
               containerClassName="w-auto"
               className="h-12 w-auto rounded-2xl pr-9 text-sm font-medium shadow-sm"
@@ -193,8 +164,8 @@ export default function EventsView({
 
             {venueOptions.length > 0 && (
               <Select
-                value={effectiveVenueId}
-                onChange={(e) => setVenueId(e.target.value)}
+                value={initialVenue}
+                onChange={(e) => handleVenueChange(e.target.value)}
                 aria-label={dict.filters.venueAriaLabel}
                 containerClassName="w-auto"
                 className="h-12 w-auto rounded-2xl pr-9 text-sm font-medium shadow-sm"
@@ -225,31 +196,55 @@ export default function EventsView({
         </div>
       )}
 
-      {visibleEvents.length > 0 ? (
-        <>
-          <EventGrid events={visibleEvents} locale={locale} dict={dict.card} />
+      {totalCount > 0 ? (
+        <div
+          className={
+            isPending
+              ? "opacity-60 transition-opacity"
+              : "transition-opacity"
+          }
+        >
+          <p className="mb-4 text-sm text-muted-foreground">
+            {dict.filters.resultsCount.replace(
+              "{count}",
+              String(totalCount)
+            )}
+          </p>
 
-          {visibleCount < filteredEvents.length && (
-            <div className="mt-10 flex justify-center">
+          <EventGrid events={events} locale={locale} dict={dict.card} />
+
+          {totalPages > 1 && (
+            <div className="mt-10 flex items-center justify-center gap-4">
               <Button
                 type="button"
                 variant="outline"
                 size="lg"
-                onClick={() =>
-                  setVisibleCount(
-                    (count) => count + PAGE_SIZE
-                  )
-                }
-                className="h-auto rounded-2xl px-8 py-3 text-base"
+                disabled={page <= 1 || isPending}
+                onClick={() => goToPage(page - 1)}
+                className="h-auto rounded-2xl px-6 py-3 text-base"
               >
-                {dict.filters.loadMore} (
-                {filteredEvents.length -
-                  visibleCount}{" "}
-                {dict.filters.remaining})
+                {dict.filters.previous}
+              </Button>
+
+              <span className="text-sm font-medium text-muted-foreground">
+                {dict.filters.pageIndicator
+                  .replace("{page}", String(page))
+                  .replace("{total}", String(totalPages))}
+              </span>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                disabled={page >= totalPages || isPending}
+                onClick={() => goToPage(page + 1)}
+                className="h-auto rounded-2xl px-6 py-3 text-base"
+              >
+                {dict.filters.next}
               </Button>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <EmptyState title={dict.empty.title} description={dict.empty.description}>
           <Link

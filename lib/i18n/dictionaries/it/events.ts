@@ -27,8 +27,10 @@ export const events = {
     allVenues: "Tutti i venue",
     departureBadge: "📍 Partenza cercata",
     departureSearching: "Stai cercando passaggi con partenza da",
-    loadMore: "Carica altri eventi",
-    remaining: "rimanenti",
+    resultsCount: "{count} eventi trovati",
+    previous: "Precedente",
+    next: "Successivo",
+    pageIndicator: "Pagina {page} di {total}",
   },
   card: {
     ridesSingular: "passaggio",
