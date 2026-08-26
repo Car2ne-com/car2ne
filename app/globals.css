@@ -29,6 +29,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -64,6 +68,12 @@
 
   --destructive: var(--color-red-600);
   --destructive-foreground: var(--color-white);
+
+  /* Stessi colori già usati (non tokenizzati) da StatusBadge prima d'ora */
+  --warning: var(--color-amber-100);
+  --warning-foreground: var(--color-amber-700);
+  --info: var(--color-blue-100);
+  --info-foreground: var(--color-blue-700);
 
   --border: var(--color-slate-200);
   --input: var(--color-slate-200);

@@ -10,8 +10,8 @@ const statusBadgeVariants = cva(
         success: "bg-accent text-accent-foreground",
         neutral: "bg-secondary text-secondary-foreground",
         danger: "bg-destructive/10 text-destructive",
-        warning: "bg-amber-100 text-amber-700",
-        info: "bg-blue-100 text-blue-700",
+        warning: "bg-warning text-warning-foreground",
+        info: "bg-info text-info-foreground",
       },
     },
     defaultVariants: {
