@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
 import { getTranslations } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/siteConfig";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
 
@@ -88,6 +89,38 @@ export async function generateMetadata({
   };
 }
 
+/*
+ * Schema.org Place: la venue è un'entità fisica reale (indirizzo,
+ * coordinate se disponibili), il candidato più naturale a dati
+ * strutturati fra le pagine città/venue.
+ */
+function buildVenueJsonLd(city: City, venue: Venue) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    name: venue.name,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: venue.address ?? undefined,
+      addressLocality: city.name,
+      addressCountry: city.country_code,
+    },
+    ...(venue.latitude != null && venue.longitude != null
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: venue.latitude,
+            longitude: venue.longitude,
+          },
+        }
+      : {}),
+    url: new URL(
+      `/citta/${city.slug}/venue/${venue.slug}`,
+      SITE_URL
+    ).toString(),
+  };
+}
+
 export default async function VenuePage({ params }: Props) {
   const { slug, venueSlug } = await params;
   const result = await getCityAndVenue(slug, venueSlug);
@@ -97,6 +130,7 @@ export default async function VenuePage({ params }: Props) {
   }
 
   const { city, venue } = result;
+  const jsonLd = buildVenueJsonLd(city, venue);
 
   const supabase = await createClient();
   const { locale, dict } = await getTranslations();
@@ -127,6 +161,13 @@ export default async function VenuePage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">

@@ -28,6 +28,15 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: SITE_URL,
     title: "Car2ne",
     description: dict.layout.siteDescription,
+    /*
+     * Applica a ogni pagina che non definisce il proprio blocco
+     * `twitter`: Twitter/X ripiega comunque sui tag og:title/
+     * og:description/og:image di quella pagina se non sovrascritti,
+     * quindi basta dichiarare il tipo di card qui una sola volta.
+     */
+    twitter: {
+      card: "summary_large_image",
+    },
   };
 }
 

@@ -1,6 +1,11 @@
 import type { it } from "../it";
 
 export const home: (typeof it)["home"] = {
+  meta: {
+    title: "Car2ne — Find or offer a ride to your next event",
+    description:
+      "Concerts, festivals, fairs and much more. Car2ne connects people going to the same event so they can share the ride.",
+  },
   hero: {
     badge: "🚗 Travel together. Save money. Meet new people.",
     titleLine1: "Find your",

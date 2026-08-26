@@ -1,4 +1,9 @@
 export const home = {
+  meta: {
+    title: "Car2ne — Trova o offri un passaggio per il tuo prossimo evento",
+    description:
+      "Concerti, festival, fiere e molto altro. Car2ne mette in contatto persone che stanno andando allo stesso evento per condividere il viaggio.",
+  },
   hero: {
     badge: "🚗 Viaggia insieme. Risparmia. Conosci nuove persone.",
     titleLine1: "Trova il tuo",
