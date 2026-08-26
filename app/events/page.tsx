@@ -49,7 +49,18 @@ export default async function EventsPage({
     .gte("event_date", new Date().toISOString())
     .order("event_date", {
       ascending: true,
-    });
+    })
+    /*
+     * Tetto di sicurezza, non una vera paginazione server-side: la
+     * ricerca/filtro di EventsView restano lato client su questo
+     * risultato. Senza un limite la query cresce senza freni con il
+     * catalogo eventi (era proprio l'assenza di un .limit() qui dietro
+     * al payload da megabyte del form "Offri un passaggio" — vedi
+     * audit). 500 è ben oltre il volume attuale (~450 eventi pubblicati
+     * futuri): non cambia il comportamento oggi, evita solo che la
+     * pagina si aggravi in silenzio man mano che il catalogo cresce.
+     */
+    .limit(500);
 
   if (error) {
     throw new Error(error.message);
