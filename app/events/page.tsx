@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -6,6 +7,7 @@ import EventHeader from "@/components/events/EventHeader";
 import EventsView from "@/components/events/EventsView";
 
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
 import { getTranslations } from "@/lib/i18n";
 
@@ -54,24 +56,35 @@ function sanitizeForOrFilter(value: string) {
  * Opzioni per le select Città/Venue: una query leggera a parte,
  * indipendente dai filtri di ricerca correnti (le opzioni disponibili
  * non devono restringersi insieme ai risultati), che seleziona solo
- * gli id/nomi embedded invece delle righe evento complete.
+ * gli id/nomi embedded invece delle righe evento complete. Uguale per
+ * ogni visitatore (dato pubblico) e richiamata a ogni caricamento di
+ * /events indipendentemente dai filtri: cacheabile, con client
+ * pubblico dato che unstable_cache non supporta cookies() al suo
+ * interno.
  */
-async function getFilterOptions(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  cityId: string
-) {
-  const { data } = await supabase
-    .from("events")
-    .select("city_id, cities(id, name), venue_id, venues(id, name)")
-    .eq("status", "published")
-    .gte("event_date", new Date().toISOString());
+const getAllFilterRows = unstable_cache(
+  async () => {
+    const supabase = createPublicClient();
 
-  const rows = (data ?? []) as unknown as Array<{
-    city_id: string | null;
-    cities: { id: string; name: string } | null;
-    venue_id: string | null;
-    venues: { id: string; name: string } | null;
-  }>;
+    const { data } = await supabase
+      .from("events")
+      .select("city_id, cities(id, name), venue_id, venues(id, name)")
+      .eq("status", "published")
+      .gte("event_date", new Date().toISOString());
+
+    return (data ?? []) as unknown as Array<{
+      city_id: string | null;
+      cities: { id: string; name: string } | null;
+      venue_id: string | null;
+      venues: { id: string; name: string } | null;
+    }>;
+  },
+  ["events-filter-rows"],
+  { revalidate: 60 }
+);
+
+async function getFilterOptions(cityId: string) {
+  const rows = await getAllFilterRows();
 
   const cityById = new Map<string, string>();
   const venueById = new Map<string, string>();
@@ -157,10 +170,7 @@ export default async function EventsPage({
     throw new Error(error.message);
   }
 
-  const { cityOptions, venueOptions } = await getFilterOptions(
-    supabase,
-    cityId
-  );
+  const { cityOptions, venueOptions } = await getFilterOptions(cityId);
 
   const rideCounts = await getRideCounts(
     supabase,

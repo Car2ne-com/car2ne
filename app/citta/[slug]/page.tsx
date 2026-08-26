@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -8,8 +9,9 @@ import CityVenueList from "@/components/cities/CityVenueList";
 import EventGrid from "@/components/events/EventGrid";
 import { EmptyState } from "@/components/ui/empty-state";
 
-import { createClient } from "@/lib/supabase/server";
 import { getRideCounts } from "@/lib/supabase/getRideCounts";
+import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { getTranslations } from "@/lib/i18n";
 import type { City } from "@/types/city";
 import type { Venue } from "@/types/venue";
@@ -18,21 +20,71 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-async function getCity(slug: string): Promise<City | null> {
-  const supabase = await createClient();
+/*
+ * Città e i suoi eventi/venue pubblicati sono dati pubblici, identici
+ * per ogni visitatore: cacheabili con client pubblico (unstable_cache
+ * non supporta cookies() al suo interno, quindi non il solito
+ * lib/supabase/server.ts). I conteggi passaggi restano fuori dalla
+ * cache: cambiano più spesso e sono già una query separata e leggera.
+ */
+const getCity = unstable_cache(
+  async (slug: string): Promise<City | null> => {
+    const supabase = createPublicClient();
 
-  const { data, error } = await supabase
-    .from("cities")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
+    const { data, error } = await supabase
+      .from("cities")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
 
-  if (error) {
-    throw new Error(error.message);
-  }
+    if (error) {
+      throw new Error(error.message);
+    }
 
-  return data;
-}
+    return data;
+  },
+  ["city-by-slug"],
+  { revalidate: 60 }
+);
+
+const getCityEventsAndVenues = unstable_cache(
+  async (cityId: string) => {
+    const supabase = createPublicClient();
+
+    const [
+      { data: events, error: eventsError },
+      { data: venues, error: venuesError },
+    ] = await Promise.all([
+      supabase
+        .from("events")
+        .select("*, cities(id, name, slug), venues(id, name, slug)")
+        .eq("city_id", cityId)
+        .eq("status", "published")
+        .gte("event_date", new Date().toISOString())
+        .order("event_date", { ascending: true }),
+      supabase
+        .from("venues")
+        .select("*")
+        .eq("city_id", cityId)
+        .order("name", { ascending: true }),
+    ]);
+
+    if (eventsError) {
+      throw new Error(eventsError.message);
+    }
+
+    if (venuesError) {
+      throw new Error(venuesError.message);
+    }
+
+    return {
+      events: events ?? [],
+      venues: (venues ?? []) as Venue[],
+    };
+  },
+  ["city-events-and-venues"],
+  { revalidate: 60 }
+);
 
 export async function generateMetadata({
   params,
@@ -72,39 +124,18 @@ export default async function CityPage({ params }: Props) {
     notFound();
   }
 
-  const supabase = await createClient();
   const { locale, dict } = await getTranslations();
 
-  const [{ data: events, error: eventsError }, { data: venues, error: venuesError }] =
-    await Promise.all([
-      supabase
-        .from("events")
-        .select("*, cities(id, name, slug), venues(id, name, slug)")
-        .eq("city_id", city.id)
-        .eq("status", "published")
-        .gte("event_date", new Date().toISOString())
-        .order("event_date", { ascending: true }),
-      supabase
-        .from("venues")
-        .select("*")
-        .eq("city_id", city.id)
-        .order("name", { ascending: true }),
-    ]);
+  const { events, venues } = await getCityEventsAndVenues(city.id);
 
-  if (eventsError) {
-    throw new Error(eventsError.message);
-  }
-
-  if (venuesError) {
-    throw new Error(venuesError.message);
-  }
+  const supabase = await createClient();
 
   const rideCounts = await getRideCounts(
     supabase,
-    (events ?? []).map((event) => event.id)
+    events.map((event) => event.id)
   );
 
-  const eventsWithRideCount = (events ?? []).map(
+  const eventsWithRideCount = events.map(
     (event) => ({
       ...event,
       ride_count: rideCounts[event.id] ?? 0,
@@ -116,7 +147,7 @@ export default async function CityPage({ params }: Props) {
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
-        <CityHero city={city} eventCount={events?.length ?? 0} dict={dict.cities.hero} />
+        <CityHero city={city} eventCount={events.length} dict={dict.cities.hero} />
 
         {eventsWithRideCount.length > 0 ? (
           <EventGrid events={eventsWithRideCount} locale={locale} dict={dict.events.card} />
@@ -124,7 +155,7 @@ export default async function CityPage({ params }: Props) {
           <EmptyState title={dict.events.empty.title} description={dict.events.empty.description} />
         )}
 
-        <CityVenueList city={city} venues={(venues ?? []) as Venue[]} dict={dict.cities.venueList} />
+        <CityVenueList city={city} venues={venues} dict={dict.cities.venueList} />
       </main>
 
       <Footer />
