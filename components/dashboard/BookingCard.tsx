@@ -11,10 +11,12 @@ import { useRouter } from "next/navigation";
 
 import {
   ArrowRight,
+  Banknote,
   CalendarDays,
   CarFront,
   CheckCircle2,
   Clock3,
+  ExternalLink,
   MapPin,
   MessageCircle,
   User2,
@@ -24,6 +26,10 @@ import {
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
+import {
+  buildPaypalMeLink,
+  buildRevolutMeLink,
+} from "@/lib/payments/links";
 import RatingForm from "@/components/ratings/RatingForm";
 import ReportNoShowButton, {
   type NoShowDict,
@@ -48,6 +54,13 @@ type Dict = {
   cancelError: string;
   dialogCancelButton: string;
   dialogPleaseWait: string;
+  payTitle: string;
+  payDisclaimer: string;
+  payWithPaypal: string;
+  payWithRevolut: string;
+  payWithSatispay: string;
+  payInPerson: string;
+  payInPersonNote: string;
 };
 
 type RatingFormDict = {
@@ -88,6 +101,10 @@ type Props = {
 
     driverId: string;
     driverName: string;
+
+    driverPaypalMe: string | null;
+    driverRevolutMe: string | null;
+    driverSatispayLink: string | null;
 
     rideHasPassed: boolean;
   };
@@ -332,6 +349,69 @@ export default function BookingCard({
           </span>
         </div>
       </div>
+
+      {isConfirmed && (
+        <div className="mt-6 space-y-3 border-t border-border pt-6">
+          <p className="text-sm font-semibold text-foreground">
+            {dict.payTitle}
+          </p>
+
+          <div className="flex flex-wrap gap-3">
+            {booking.driverPaypalMe && (
+              <a
+                href={buildPaypalMeLink(
+                  booking.driverPaypalMe,
+                  booking.contribution
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+              >
+                {dict.payWithPaypal}
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
+
+            {booking.driverRevolutMe && (
+              <a
+                href={buildRevolutMeLink(
+                  booking.driverRevolutMe,
+                  booking.contribution
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+              >
+                {dict.payWithRevolut}
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
+
+            {booking.driverSatispayLink && (
+              <a
+                href={booking.driverSatispayLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+              >
+                {dict.payWithSatispay}
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
+
+            <span className="flex items-center gap-2 rounded-2xl bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground">
+              <Banknote className="h-4 w-4" />
+              {dict.payInPerson}
+            </span>
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            {dict.payInPersonNote}
+            {" "}
+            {dict.payDisclaimer}
+          </p>
+        </div>
+      )}
 
       <div className="mt-6 flex flex-wrap gap-3 border-t border-border pt-5">
         {booking.eventSlug && !booking.rideHasPassed && (

@@ -66,6 +66,31 @@ export const profile: (typeof it)["profile"] = {
       profileUpdated: "Profile updated successfully!",
     },
   },
+  paymentMethods: {
+    title: "Payment methods",
+    description:
+      "Add your payment links so passengers can pay you more easily for the shared cost. Car2ne never handles or holds any payment: the money goes directly between you and the passenger.",
+    paypalLabel: "PayPal.me link",
+    paypalPlaceholder: "yourname",
+    paypalHint: "Your PayPal.me username, without leading slashes (e.g. \"mario.rossi\").",
+    revolutLabel: "Revolut.me link",
+    revolutPlaceholder: "yourname",
+    revolutHint: "Your Revolut.me username.",
+    satispayLabel: "Satispay link",
+    satispayPlaceholder: "https://...",
+    satispayHint:
+      "Open the Satispay app → Receive → Share my code, and paste the generated link here.",
+    saving: "Saving...",
+    saveButton: "Save changes",
+    errors: {
+      invalidUsername: "Use only letters, numbers, dots and hyphens.",
+      invalidUrl: "Enter a valid link starting with https://.",
+      updateFailed: "Couldn't update payment methods.",
+    },
+    success: {
+      updated: "Payment methods updated!",
+    },
+  },
   myReviews: {
     title: "Reviews received",
     noReviewsYet: "You haven't received any reviews yet.",

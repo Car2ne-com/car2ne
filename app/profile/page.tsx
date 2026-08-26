@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProfileForm from "@/components/profile/ProfileForm";
+import PaymentMethodsForm from "@/components/profile/PaymentMethodsForm";
 import ChangePasswordForm from "@/components/profile/ChangePasswordForm";
 import MfaSettings from "@/components/profile/MfaSettings";
 import DeleteAccountForm from "@/components/profile/DeleteAccountForm";
@@ -162,6 +163,16 @@ export default async function ProfilePage() {
               email: user.email ?? "",
             }}
             dict={dict.profile.form}
+          />
+
+          <PaymentMethodsForm
+            profile={{
+              id: profile.id,
+              payment_paypal_me: profile.payment_paypal_me,
+              payment_revolut_me: profile.payment_revolut_me,
+              payment_satispay_link: profile.payment_satispay_link,
+            }}
+            dict={dict.profile.paymentMethods}
           />
 
           <ChangePasswordForm dict={dict.profile.changePassword} />

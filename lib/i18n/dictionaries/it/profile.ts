@@ -67,6 +67,31 @@ export const profile = {
       profileUpdated: "Profilo aggiornato con successo!",
     },
   },
+  paymentMethods: {
+    title: "Metodi di pagamento",
+    description:
+      "Aggiungi i tuoi link di pagamento per farti pagare più facilmente dai passeggeri per il contributo spese. Car2ne non gestisce né trattiene mai i pagamenti: il denaro passa direttamente tra te e il passeggero.",
+    paypalLabel: "Link PayPal.me",
+    paypalPlaceholder: "iltuonome",
+    paypalHint: "Il tuo username PayPal.me, senza slash iniziali (es. \"mario.rossi\").",
+    revolutLabel: "Link Revolut.me",
+    revolutPlaceholder: "iltuonome",
+    revolutHint: "Il tuo username Revolut.me.",
+    satispayLabel: "Link Satispay",
+    satispayPlaceholder: "https://...",
+    satispayHint:
+      "Apri l'app Satispay → Ricevi → Condividi il mio codice, e incolla qui il link generato.",
+    saving: "Salvataggio...",
+    saveButton: "Salva modifiche",
+    errors: {
+      invalidUsername: "Usa solo lettere, numeri, punti e trattini.",
+      invalidUrl: "Inserisci un link valido che inizi con https://.",
+      updateFailed: "Non è stato possibile aggiornare i metodi di pagamento.",
+    },
+    success: {
+      updated: "Metodi di pagamento aggiornati!",
+    },
+  },
   myReviews: {
     title: "Recensioni ricevute",
     noReviewsYet: "Non hai ancora ricevuto recensioni.",

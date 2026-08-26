@@ -41,5 +41,14 @@ export const dashboardBookings = {
       "Sei sicuro di voler annullare questa prenotazione?\n\nIl posto tornerà disponibile per gli altri utenti.",
     cancelSuccess: "Prenotazione annullata con successo.",
     cancelError: "Impossibile annullare la prenotazione.",
+    payTitle: "Paga l'autista",
+    payDisclaimer:
+      "Il pagamento avviene direttamente tra te e l'autista. Car2ne non interviene né garantisce la transazione.",
+    payWithPaypal: "Paga con PayPal",
+    payWithRevolut: "Paga con Revolut",
+    payWithSatispay: "Paga con Satispay",
+    payInPerson: "Pagamento di persona",
+    payInPersonNote:
+      "Accordati con l'autista per pagare in contanti o di persona all'appuntamento.",
   },
 };

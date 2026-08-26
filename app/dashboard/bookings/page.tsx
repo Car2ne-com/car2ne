@@ -40,7 +40,10 @@ export default async function MyBookingsPage() {
         driver_id,
         profiles (
           id,
-          name
+          name,
+          payment_paypal_me,
+          payment_revolut_me,
+          payment_satispay_link
         ),
         events (
           title,
@@ -161,6 +164,15 @@ export default async function MyBookingsPage() {
 
                     driverName:
                       profile?.name ?? dict.dashboardBookings.card.driverFallback,
+
+                    driverPaypalMe:
+                      profile?.payment_paypal_me ?? null,
+
+                    driverRevolutMe:
+                      profile?.payment_revolut_me ?? null,
+
+                    driverSatispayLink:
+                      profile?.payment_satispay_link ?? null,
 
                     rideHasPassed:
                       isPastDateTime(

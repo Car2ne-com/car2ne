@@ -43,5 +43,14 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
       "Are you sure you want to cancel this booking?\n\nThe seat will become available to other users again.",
     cancelSuccess: "Booking cancelled successfully.",
     cancelError: "Couldn't cancel the booking.",
+    payTitle: "Pay the driver",
+    payDisclaimer:
+      "Payment happens directly between you and the driver. Car2ne does not take part in or guarantee the transaction.",
+    payWithPaypal: "Pay with PayPal",
+    payWithRevolut: "Pay with Revolut",
+    payWithSatispay: "Pay with Satispay",
+    payInPerson: "Pay in person",
+    payInPersonNote:
+      "Arrange with the driver to pay in cash or in person at the meeting point.",
   },
 };
