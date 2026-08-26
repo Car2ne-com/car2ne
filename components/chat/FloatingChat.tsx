@@ -21,6 +21,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 
 type Conversation = {
   id: string;
@@ -35,6 +36,16 @@ type Profile = {
   name: string | null;
   surname: string | null;
   avatar_url: string | null;
+};
+
+type Ride = {
+  id: string;
+  event_id: string | null;
+};
+
+type Event = {
+  id: string;
+  event_date: string;
 };
 
 type Message = {
@@ -277,9 +288,19 @@ export default function FloatingChat({
        * ==============================
        */
 
+      const rideIds = Array.from(
+        new Set(
+          conversations.map(
+            (conversation) =>
+              conversation.ride_id
+          )
+        )
+      );
+
       const [
         profilesResult,
         messagesResult,
+        ridesResult,
       ] = await Promise.all([
         supabase
           .from("profiles")
@@ -313,6 +334,17 @@ export default function FloatingChat({
               ascending: false,
             }
           ),
+
+        supabase
+          .from("rides")
+          .select(`
+            id,
+            event_id
+          `)
+          .in(
+            "id",
+            rideIds
+          ),
       ]);
 
       if (profilesResult.error) {
@@ -329,6 +361,13 @@ export default function FloatingChat({
         );
       }
 
+      if (ridesResult.error) {
+        console.error(
+          "Errore caricamento passaggi chat flottante:",
+          ridesResult.error
+        );
+      }
+
       const profiles =
         (profilesResult.data ??
           []) as Profile[];
@@ -336,6 +375,63 @@ export default function FloatingChat({
       const messages =
         (messagesResult.data ??
           []) as Message[];
+
+      const rides =
+        (ridesResult.data ??
+          []) as Ride[];
+
+      const rideMap = new Map(
+        rides.map((ride) => [
+          ride.id,
+          ride,
+        ])
+      );
+
+      const eventIds = rides
+        .map((ride) => ride.event_id)
+        .filter(
+          (
+            eventId
+          ): eventId is string =>
+            Boolean(eventId)
+        );
+
+      const {
+        data: eventsData,
+        error: eventsError,
+      } =
+        eventIds.length > 0
+          ? await supabase
+              .from("events")
+              .select(`
+                id,
+                event_date
+              `)
+              .in(
+                "id",
+                eventIds
+              )
+          : {
+              data: [],
+              error: null,
+            };
+
+      if (eventsError) {
+        console.error(
+          "Errore caricamento eventi chat flottante:",
+          eventsError
+        );
+      }
+
+      const eventMap = new Map(
+        (
+          (eventsData ??
+            []) as Event[]
+        ).map((event) => [
+          event.id,
+          event,
+        ])
+      );
 
       /*
        * ==============================
@@ -409,6 +505,25 @@ export default function FloatingChat({
 
       const chatItems =
         conversations
+          .filter((conversation) => {
+            const ride = rideMap.get(
+              conversation.ride_id
+            );
+
+            const event =
+              ride?.event_id
+                ? eventMap.get(
+                    ride.event_id
+                  )
+                : undefined;
+
+            return !(
+              event &&
+              isEventConcluded(
+                event.event_date
+              )
+            );
+          })
           .map((conversation) => {
             const otherUserId =
               conversation.driver_id ===

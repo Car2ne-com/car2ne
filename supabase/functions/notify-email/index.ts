@@ -58,6 +58,7 @@ type NotificationType =
   | "ride_available_for_watched_event";
 
 type NotificationRecord = {
+  id: string;
   user_id: string;
   type: string;
   title: string;
@@ -399,6 +400,11 @@ Deno.serve(async (req) => {
   const payload = await req.json();
   const record = payload.record as NotificationRecord | undefined;
 
+  // Difesa in profondità: la funzione è pensata solo per INSERT.
+  if (payload.type !== "INSERT") {
+    return new Response("Skipped", { status: 200 });
+  }
+
   if (
     !record ||
     !EMAIL_NOTIFICATION_TYPES.has(record.type)
@@ -412,6 +418,38 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
+
+  /*
+   * ==============================
+   * IDEMPOTENZA CONSEGNA
+   * ==============================
+   *
+   * I Database Webhook di Supabase hanno consegna "at-least-once": una
+   * singola INSERT può invocare questa funzione più di una volta (es.
+   * timeout su cold start seguito da retry), producendo altrimenti due
+   * email Brevo identiche per la stessa notifica (bug segnalato il
+   * 2026-08-26 - confermato: una sola riga in notifications, un solo
+   * webhook registrato, ma due invii distinti nel log Brevo).
+   *
+   * UPDATE atomica "reclama" l'invio: se un'altra invocazione l'ha già
+   * reclamato (email_sent_at non più null), questa si ferma qui.
+   */
+  const { data: claimed, error: claimError } = await supabaseAdmin
+    .from("notifications")
+    .update({ email_sent_at: new Date().toISOString() })
+    .eq("id", record.id)
+    .is("email_sent_at", null)
+    .select("id")
+    .maybeSingle();
+
+  if (claimError) {
+    console.error("Errore claim invio email:", claimError);
+    return new Response("Claim error", { status: 500 });
+  }
+
+  if (!claimed) {
+    return new Response("Already sent", { status: 200 });
+  }
 
   const [authResult, profileResult] = await Promise.all([
     supabaseAdmin.auth.admin.getUserById(record.user_id),

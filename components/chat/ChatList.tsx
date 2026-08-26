@@ -19,6 +19,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 
 type Conversation = {
   id: string;
@@ -47,6 +48,7 @@ type Event = {
   id: string;
   title: string;
   artist: string | null;
+  event_date: string;
 };
 
 type Message = {
@@ -298,7 +300,8 @@ export default function ChatList({
               .select(`
                 id,
                 title,
-                artist
+                artist,
+                event_date
               `)
               .in(
                 "id",
@@ -360,6 +363,25 @@ export default function ChatList({
 
       const chatItems =
         conversations
+          .filter((conversation) => {
+            const ride = rideMap.get(
+              conversation.ride_id
+            );
+
+            const event =
+              ride?.event_id
+                ? eventMap.get(
+                    ride.event_id
+                  )
+                : undefined;
+
+            return !(
+              event &&
+              isEventConcluded(
+                event.event_date
+              )
+            );
+          })
           .map((conversation) => {
             const otherUserId =
               conversation.driver_id ===

@@ -10,6 +10,7 @@ import ChatWindow from "@/components/chat/ChatWindow";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 
 type Props = {
   params: Promise<{
@@ -187,6 +188,21 @@ export default async function ConversationPage({
     }
 
     event = eventData;
+  }
+
+  /*
+   * ==============================
+   * EVENTO CONCLUSO
+   * ==============================
+   *
+   * La chat non deve restare visibile oltre il giorno successivo
+   * all'evento: stesso cutoff usato per i promemoria recensione
+   * (isEventConcluded), coerente con la coppia già rimossa dalla
+   * lista in ChatList.
+   */
+
+  if (event && isEventConcluded(event.event_date)) {
+    notFound();
   }
 
   /*

@@ -7,6 +7,8 @@ import ChangePasswordForm from "@/components/profile/ChangePasswordForm";
 import MfaSettings from "@/components/profile/MfaSettings";
 import DeleteAccountForm from "@/components/profile/DeleteAccountForm";
 import BlockedUsersList from "@/components/profile/BlockedUsersList";
+import RatingStars from "@/components/ratings/RatingStars";
+import { Card } from "@/components/ui/card";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
@@ -52,6 +54,37 @@ export default async function ProfilePage() {
     };
   });
 
+  const { data: ratingRows } = await supabase
+    .from("ratings")
+    .select("rating, comment, created_at, rater_id")
+    .eq("ratee_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const ratings = ratingRows ?? [];
+
+  const raterIds = Array.from(
+    new Set(ratings.map((rating) => rating.rater_id))
+  );
+
+  const { data: raterProfiles } =
+    raterIds.length > 0
+      ? await supabase
+          .from("profiles")
+          .select("id, name")
+          .in("id", raterIds)
+      : { data: [] as { id: string; name: string }[] };
+
+  const raterNameById = new Map(
+    (raterProfiles ?? []).map((rater) => [rater.id, rater.name])
+  );
+
+  const ratingAverage =
+    ratings.length > 0
+      ? ratings.reduce((total, r) => total + r.rating, 0) /
+        ratings.length
+      : null;
+
   return (
     <>
       <Navbar />
@@ -75,6 +108,61 @@ export default async function ProfilePage() {
             }}
             dict={dict.profile.form}
           />
+
+          <Card className="p-8">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold text-foreground">
+                {dict.profile.myReviews.title}
+              </h2>
+
+              {ratingAverage !== null && (
+                <div className="flex items-center gap-2">
+                  <RatingStars
+                    value={ratingAverage}
+                    starLabel={dict.ratings.form.starLabel}
+                  />
+
+                  <span className="text-sm font-semibold text-muted-foreground">
+                    {ratingAverage.toFixed(1)} ({ratings.length})
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {ratings.length === 0 ? (
+              <p className="mt-4 text-sm text-muted-foreground">
+                {dict.profile.myReviews.noReviewsYet}
+              </p>
+            ) : (
+              <div className="mt-6 space-y-5">
+                {ratings.map((rating, index) => (
+                  <div
+                    key={index}
+                    className="border-t border-border pt-5 first:border-t-0 first:pt-0"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-semibold text-foreground">
+                        {raterNameById.get(rating.rater_id) ??
+                          dict.profile.myReviews.anonymousReviewerFallback}
+                      </p>
+
+                      <RatingStars
+                        value={rating.rating}
+                        size={16}
+                        starLabel={dict.ratings.form.starLabel}
+                      />
+                    </div>
+
+                    {rating.comment && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {rating.comment}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
 
           <ChangePasswordForm dict={dict.profile.changePassword} />
 

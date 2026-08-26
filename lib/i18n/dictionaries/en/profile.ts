@@ -66,6 +66,11 @@ export const profile: (typeof it)["profile"] = {
       profileUpdated: "Profile updated successfully!",
     },
   },
+  myReviews: {
+    title: "Reviews received",
+    noReviewsYet: "You haven't received any reviews yet.",
+    anonymousReviewerFallback: "Car2ne user",
+  },
   publicProfile: {
     noReviewsYet: "No reviews yet",
     reviewsTitle: "Reviews",

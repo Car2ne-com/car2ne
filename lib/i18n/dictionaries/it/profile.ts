@@ -67,6 +67,11 @@ export const profile = {
       profileUpdated: "Profilo aggiornato con successo!",
     },
   },
+  myReviews: {
+    title: "Recensioni ricevute",
+    noReviewsYet: "Non hai ancora ricevuto recensioni.",
+    anonymousReviewerFallback: "Utente Car2ne",
+  },
   publicProfile: {
     noReviewsYet: "Nessuna recensione ancora",
     reviewsTitle: "Recensioni",

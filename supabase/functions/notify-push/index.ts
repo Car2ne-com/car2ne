@@ -54,6 +54,7 @@ type NotificationType =
   | "ride_available_for_watched_event";
 
 type NotificationRecord = {
+  id: string;
   user_id: string;
   type: string;
   booking_id: string | null;
@@ -225,6 +226,11 @@ Deno.serve(async (req) => {
   const payload = await req.json();
   const record = payload.record as NotificationRecord | undefined;
 
+  // Difesa in profondità: la funzione è pensata solo per INSERT.
+  if (payload.type !== "INSERT") {
+    return new Response("Skipped", { status: 200 });
+  }
+
   if (!record || !PUSH_NOTIFICATION_TYPES.has(record.type)) {
     return new Response("Skipped", { status: 200 });
   }
@@ -246,6 +252,27 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
+
+  /*
+   * Idempotenza consegna: stesso motivo/pattern di notify-email
+   * (Database Webhook "at-least-once" - vedi 0034_notification_delivery_idempotency.sql).
+   */
+  const { data: claimed, error: claimError } = await supabaseAdmin
+    .from("notifications")
+    .update({ push_sent_at: new Date().toISOString() })
+    .eq("id", record.id)
+    .is("push_sent_at", null)
+    .select("id")
+    .maybeSingle();
+
+  if (claimError) {
+    console.error("Errore claim invio push:", claimError);
+    return new Response("Claim error", { status: 500 });
+  }
+
+  if (!claimed) {
+    return new Response("Already sent", { status: 200 });
+  }
 
   const [subscriptionsResult, profileResult] = await Promise.all([
     supabaseAdmin
