@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Bell, MessageCircle } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { Card } from "@/components/ui/card";
 import {
   getNotificationHref,
   getNotificationIcon,
@@ -660,11 +661,10 @@ export default function NotificationBell({ locale, dict }: Props) {
       </button>
 
       {open && (
-        <div
+        <Card
           className="
             fixed inset-x-4 top-20 z-50 max-h-[calc(100vh-96px)]
-            overflow-hidden rounded-3xl border border-border
-            bg-card shadow-2xl
+            overflow-hidden shadow-2xl
             sm:absolute sm:inset-x-auto sm:right-0 sm:top-14 sm:max-h-none
             sm:w-[380px] sm:max-w-[calc(100vw-32px)]
           "
@@ -874,7 +874,7 @@ export default function NotificationBell({ locale, dict }: Props) {
 
           </div>
 
-        </div>
+        </Card>
       )}
     </div>
   );

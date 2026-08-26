@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 
 import LanguageSwitcher from "./LanguageSwitcher";
 
+import { Card } from "@/components/ui/card";
 import type { Locale } from "@/lib/i18n/locales";
 
 type Props = {
@@ -46,7 +47,7 @@ export default function MobileMenu({
       </button>
 
       {open && (
-        <div className="absolute inset-x-2 top-full mt-2 rounded-2xl border border-border bg-card p-2 shadow-[0_10px_40px_rgba(15,23,42,.08)] sm:inset-x-4">
+        <Card className="absolute inset-x-2 top-full mt-2 rounded-2xl p-2 shadow-[0_10px_40px_rgba(15,23,42,.08)] sm:inset-x-4">
           <nav className="flex flex-col text-sm font-medium text-muted-foreground">
             <Link
               href="/"
@@ -76,7 +77,7 @@ export default function MobileMenu({
           <div className="mt-1 border-t border-border px-4 pt-3 md:hidden">
             <LanguageSwitcher locale={locale} srLabel={languageSwitcherLabel} />
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
