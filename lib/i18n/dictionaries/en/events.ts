@@ -1,6 +1,18 @@
 import type { it } from "../it";
 
 export const events: (typeof it)["events"] = {
+  meta: {
+    index: {
+      title: "Events | Car2ne",
+      description:
+        "Concerts, festivals, sports and fairs all over Italy: find a ride or share your trip with Car2ne.",
+    },
+    detail: {
+      title: "{title} | Car2ne",
+      description:
+        "{artist} — {venue}, {city}. Find a ride to the event or share your trip with Car2ne.",
+    },
+  },
   header: {
     badge: "🎫 All events",
     title: "Find your next event",

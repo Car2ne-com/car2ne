@@ -1,4 +1,16 @@
 export const events = {
+  meta: {
+    index: {
+      title: "Eventi | Car2ne",
+      description:
+        "Concerti, festival, sport e fiere in tutta Italia: trova un passaggio auto o condividi il tuo viaggio con Car2ne.",
+    },
+    detail: {
+      title: "{title} | Car2ne",
+      description:
+        "{artist} — {venue}, {city}. Trova un passaggio auto per raggiungere l'evento o condividi il tuo viaggio con Car2ne.",
+    },
+  },
   header: {
     badge: "🎫 Tutti gli eventi",
     title: "Trova il tuo prossimo evento",

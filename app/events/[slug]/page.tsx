@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import Navbar from "@/components/layout/Navbar";
@@ -10,6 +11,7 @@ import RideList from "@/components/events/RideList";
 import { createClient } from "@/lib/supabase/server";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
 import { getTranslations } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/siteConfig";
 
 type Props = {
   params: Promise<{
@@ -17,28 +19,114 @@ type Props = {
   }>;
 };
 
+type EventRecord = NonNullable<
+  Awaited<ReturnType<typeof getEvent>>
+>;
+
+async function getEvent(slug: string) {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("events")
+    .select("*, cities(slug), venues(slug)")
+    .eq("slug", slug)
+    .eq("status", "published")
+    .maybeSingle();
+
+  return data;
+}
+
+/*
+ * Schema.org Event: aiuta Google a mostrare rich result (data, luogo,
+ * immagine) per le pagine evento, il contenuto a più alto valore SEO
+ * del sito.
+ */
+function buildEventJsonLd(event: EventRecord) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    startDate: event.event_date,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode:
+      "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      name: event.venue,
+      address: event.city,
+    },
+    performer: {
+      "@type": "PerformingGroup",
+      name: event.artist,
+    },
+    ...(event.image_url ? { image: [event.image_url] } : {}),
+    ...(event.description
+      ? { description: event.description }
+      : {}),
+    url: new URL(`/events/${event.slug}`, SITE_URL).toString(),
+  };
+}
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const event = await getEvent(slug);
+
+  if (!event) {
+    return {};
+  }
+
+  const { dict } = await getTranslations();
+  const { title: titleTemplate, description: descriptionTemplate } =
+    dict.events.meta.detail;
+
+  const title = titleTemplate.replace("{title}", event.title);
+  const description = descriptionTemplate
+    .replace("{artist}", event.artist)
+    .replace("{venue}", event.venue)
+    .replace("{city}", event.city);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/events/${event.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      images: event.image_url ? [event.image_url] : undefined,
+    },
+  };
+}
+
 export default async function EventPage({ params }: Props) {
   const { slug } = await params;
 
   const supabase = await createClient();
   const { locale, dict } = await getTranslations();
 
-  const { data: event, error } = await supabase
-    .from("events")
-    .select("*, cities(slug), venues(slug)")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single();
+  const event = await getEvent(slug);
 
-  if (error || !event) {
+  if (!event) {
     notFound();
   }
+
+  const jsonLd = buildEventJsonLd(event);
 
   if (isEventConcluded(event.event_date)) {
     const reviewHref = await getReviewHref(supabase, event.id);
 
     return (
       <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+
         <Navbar />
 
         <main className="pt-28">
@@ -69,6 +157,13 @@ export default async function EventPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+
       <Navbar />
 
       <main className="pb-24 pt-28">

@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import EventHeader from "@/components/events/EventHeader";
@@ -14,6 +16,23 @@ type Props = {
     date?: string;
   }>;
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { dict } = await getTranslations();
+  const { title, description } = dict.events.meta.index;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: "/events",
+    },
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}
 
 export default async function EventsPage({
   searchParams,
