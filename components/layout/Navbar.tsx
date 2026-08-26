@@ -7,10 +7,25 @@ import NotificationBell from "./NotificationBell";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 import { getTranslations } from "@/lib/i18n";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function Navbar() {
   const { locale, dict } = await getTranslations();
   const { nav, languageSwitcher, notifications } = dict.layout;
+
+  /*
+   * NotificationBell è un client component con la sua auth/realtime:
+   * per un visitatore anonimo non ha nulla da mostrare (ritornerebbe
+   * null dopo il mount), ma verrebbe comunque spedito e idratato su
+   * ogni pagina pubblica. Il check qui è server-side ed economico
+   * (Next deduplica automaticamente le fetch identiche nella stessa
+   * request, incluso il getUser() già fatto da NavbarAuth).
+   */
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-2 pt-[max(0.5rem,env(safe-area-inset-top))] sm:px-4 sm:pt-[max(1rem,env(safe-area-inset-top))]">
@@ -95,7 +110,9 @@ export default async function Navbar() {
             <LanguageSwitcher locale={locale} srLabel={languageSwitcher.label} />
           </div>
 
-          <NotificationBell locale={locale} dict={notifications} />
+          {user && (
+            <NotificationBell locale={locale} dict={notifications} />
+          )}
 
           <NavbarAuth />
 

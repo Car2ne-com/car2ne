@@ -6,6 +6,7 @@ import FloatingChat from "@/components/chat/FloatingChat";
 
 import { SITE_URL } from "@/lib/siteConfig";
 import { getTranslations } from "@/lib/i18n";
+import { createClient } from "@/lib/supabase/server";
 
 import "./globals.css";
 
@@ -47,6 +48,18 @@ export default async function RootLayout({
 }) {
   const { locale, dict } = await getTranslations();
 
+  /*
+   * FloatingChat non mostra nulla per un visitatore anonimo (ritorna
+   * null dopo aver verificato di non avere una sessione), ma verrebbe
+   * comunque spedito e idratato su ogni pagina del sito, compresa la
+   * home e le pagine marketing. Il check qui è server-side.
+   */
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html
       lang={locale}
@@ -58,7 +71,7 @@ export default async function RootLayout({
 
         {children}
 
-        <FloatingChat dict={dict.chat.floating} />
+        {user && <FloatingChat dict={dict.chat.floating} />}
 
         <Toaster
           position="bottom-right"
