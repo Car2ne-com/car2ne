@@ -67,3 +67,22 @@ export interface Event {
     longitude: number | null;
   } | null;
 }
+
+/*
+ * Sottoinsieme di campi che serve al form "Offri un passaggio" per
+ * scegliere l'evento (combobox + coordinate per il prezzo equo +
+ * redirect finale via slug). Evita di dover selezionare `description`/
+ * `image_url` (i campi più pesanti) solo per popolare un menu a tendina.
+ */
+export type OfferRideEventOption = Pick<
+  Event,
+  | "id"
+  | "title"
+  | "artist"
+  | "city"
+  | "venue"
+  | "slug"
+  | "event_date"
+  | "cities"
+  | "venues"
+>;

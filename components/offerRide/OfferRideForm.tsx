@@ -20,7 +20,7 @@ import { createClient } from "@/lib/supabase/client";
 import EventCombobox from "./EventCombobox";
 import CityCombobox from "@/components/cities/CityCombobox";
 
-import { Event } from "@/types/event";
+import { OfferRideEventOption } from "@/types/event";
 import type { Locale } from "@/lib/i18n/locales";
 import { haversineKm } from "@/lib/utils/distance";
 
@@ -89,6 +89,7 @@ type OfferRideDict = {
     fillRequiredFields: string;
     selectValidEvent: string;
     checkExistingRideFailed: string;
+    loadEventsFailed: string;
     publishFailed: string;
     publishSuccess: string;
   };
@@ -123,7 +124,7 @@ export default function OfferRideForm({
   const supabase = createClient();
 
   const [events, setEvents] =
-    useState<Event[]>([]);
+    useState<OfferRideEventOption[]>([]);
 
   const [loadingEvents, setLoadingEvents] =
     useState(true);
@@ -221,7 +222,7 @@ export default function OfferRideForm({
     useState("");
 
   const [selectedEvent, setSelectedEvent] =
-    useState<Event | null>(null);
+    useState<OfferRideEventOption | null>(null);
 
   const [alreadyHasRide, setAlreadyHasRide] =
     useState(false);
@@ -311,36 +312,79 @@ export default function OfferRideForm({
    */
 
   useEffect(() => {
+    let cancelled = false;
+
+    /*
+     * Timeout difensivo: se la query dovesse restare appesa (visto in
+     * produzione — vedi audit), sblocchiamo comunque la UI invece di
+     * lasciare il combobox su "Caricamento eventi..." per sempre.
+     */
     async function loadEvents() {
-      const {
-        data,
-        error,
-      } = await supabase
-        .from("events")
-        .select(
-          "*, cities(id,name,slug,latitude,longitude), venues(id,name,slug,latitude,longitude)"
-        )
-        .eq("status", "published")
-        .gte(
-          "event_date",
-          new Date().toISOString()
-        )
-        .order("event_date", {
-          ascending: true,
-        });
+      const timedOut = Symbol("timeout");
 
-      if (error) {
-        console.warn(
-          "Errore caricamento eventi:",
-          error.message
-        );
+      try {
+        const result = await Promise.race([
+          supabase
+            .from("events")
+            .select(
+              /*
+               * Solo i campi usati da questo form (combobox + coordinate
+               * + redirect finale via slug): niente description/image_url,
+               * che sui ~400 eventi pubblicati gonfiavano la risposta a
+               * diversi MB.
+               */
+              "id, title, artist, city, venue, slug, event_date, cities(id,name,slug,latitude,longitude), venues(id,name,slug,latitude,longitude)"
+            )
+            .eq("status", "published")
+            .gte(
+              "event_date",
+              new Date().toISOString()
+            )
+            .order("event_date", {
+              ascending: true,
+            }),
+          new Promise<typeof timedOut>((resolve) =>
+            setTimeout(() => resolve(timedOut), 15000)
+          ),
+        ]);
 
-        setEvents([]);
-      } else {
-        const loadedEvents =
-          data ?? [];
+        if (cancelled) {
+          return;
+        }
 
-        setEvents(loadedEvents);
+        if (result === timedOut) {
+          console.warn(
+            "Timeout caricamento eventi"
+          );
+
+          toast.error(dict.toasts.loadEventsFailed);
+          setEvents([]);
+
+          return;
+        }
+
+        const { data, error } = result;
+
+        if (error) {
+          console.warn(
+            "Errore caricamento eventi:",
+            error.message
+          );
+
+          toast.error(dict.toasts.loadEventsFailed);
+          setEvents([]);
+        } else {
+          /*
+           * Senza uno schema Database tipizzato, supabase-js non può
+           * sapere che cities/venues sono relazioni to-one (FK singola):
+           * le inferisce come array. A runtime sono sempre oggetti
+           * singoli (o null), come dichiarato in OfferRideEventOption.
+           */
+          const loadedEvents = (
+            data ?? []
+          ) as unknown as OfferRideEventOption[];
+
+          setEvents(loadedEvents);
 
         /*
          * Recuperiamo un'eventuale bozza
@@ -432,12 +476,29 @@ export default function OfferRideForm({
             setSelectedEvent(event);
           }
         }
-      }
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.warn(
+            "Errore imprevisto caricamento eventi:",
+            error
+          );
 
-      setLoadingEvents(false);
+          toast.error(dict.toasts.loadEventsFailed);
+          setEvents([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingEvents(false);
+        }
+      }
     }
 
     void loadEvents();
+
+    return () => {
+      cancelled = true;
+    };
     // supabase è un client singleton (createBrowserClient di @supabase/ssr
     // restituisce sempre la stessa istanza lato client), quindi includerlo
     // qui non cambia quando l'effect viene eseguito rispetto a `[]`.
@@ -445,7 +506,7 @@ export default function OfferRideForm({
     // caricamento: va letto una volta sola, non deve far ripartire il
     // fetch degli eventi se cambiasse (non cambia, è un prop da server).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supabase]);
+  }, [supabase, dict.toasts.loadEventsFailed]);
 
   /*
    * ==============================

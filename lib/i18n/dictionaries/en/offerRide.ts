@@ -48,6 +48,7 @@ export const offerRide: (typeof it)["offerRide"] = {
     fillRequiredFields: "Fill in all required fields.",
     selectValidEvent: "Select a valid event.",
     checkExistingRideFailed: "Couldn't verify your rides. Please try again.",
+    loadEventsFailed: "Couldn't load events. Reload the page and try again.",
     publishFailed: "Couldn't publish the ride.",
     publishSuccess: "Ride published successfully!",
   },

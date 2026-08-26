@@ -47,6 +47,8 @@ export const offerRide = {
     selectValidEvent: "Seleziona un evento valido.",
     checkExistingRideFailed:
       "Non è stato possibile verificare i tuoi passaggi. Riprova.",
+    loadEventsFailed:
+      "Non è stato possibile caricare gli eventi. Ricarica la pagina e riprova.",
     publishFailed: "Non è stato possibile pubblicare il passaggio.",
     publishSuccess: "Passaggio pubblicato con successo!",
   },

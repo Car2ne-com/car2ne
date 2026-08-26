@@ -16,7 +16,7 @@ import {
   ComboboxTrigger,
 } from "@/components/ui/combobox";
 
-import { Event } from "@/types/event";
+import { OfferRideEventOption } from "@/types/event";
 
 type EventComboboxDict = {
   loading: string;
@@ -27,7 +27,7 @@ type EventComboboxDict = {
 };
 
 type Props = {
-  events: Event[];
+  events: OfferRideEventOption[];
   value: string;
   onChange: (eventId: string) => void;
   loading?: boolean;
@@ -50,7 +50,7 @@ export default function EventCombobox({
   dict,
 }: Props) {
   const [query, setQuery] = useState("");
-  const [highlighted, setHighlighted] = useState<Event | null>(null);
+  const [highlighted, setHighlighted] = useState<OfferRideEventOption | null>(null);
 
   const selectedEvent = events.find((event) => event.id === value) ?? null;
 
@@ -79,7 +79,7 @@ export default function EventCombobox({
   }
 
   return (
-    <Combobox<Event>
+    <Combobox<OfferRideEventOption>
       items={visibleEvents}
       filter={null}
       inputValue={query}
@@ -150,7 +150,7 @@ export default function EventCombobox({
                   {dict.noResults}
                 </p>
               ) : (
-                (event: Event) => (
+                (event: OfferRideEventOption) => (
                   <ComboboxItem key={event.id} value={event}>
                     <span className="min-w-0">
                       <span className="block truncate font-medium text-popover-foreground">
