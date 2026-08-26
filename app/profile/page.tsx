@@ -101,14 +101,6 @@ export default async function ProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <ProfileForm
-            profile={{
-              ...profile,
-              email: user.email ?? "",
-            }}
-            dict={dict.profile.form}
-          />
-
           <Card className="p-8">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-semibold text-foreground">
@@ -163,6 +155,14 @@ export default async function ProfilePage() {
               </div>
             )}
           </Card>
+
+          <ProfileForm
+            profile={{
+              ...profile,
+              email: user.email ?? "",
+            }}
+            dict={dict.profile.form}
+          />
 
           <ChangePasswordForm dict={dict.profile.changePassword} />
 
