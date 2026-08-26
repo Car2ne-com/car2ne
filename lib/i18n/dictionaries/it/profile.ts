@@ -75,8 +75,9 @@ export const profile = {
     paypalPlaceholder: "iltuonome",
     paypalHint: "Il tuo username PayPal.me, senza slash iniziali (es. \"mario.rossi\").",
     revolutLabel: "Link Revolut.me",
-    revolutPlaceholder: "iltuonome",
-    revolutHint: "Il tuo username Revolut.me.",
+    revolutPlaceholder: "https://revolut.me/...",
+    revolutHint:
+      "Il link al tuo profilo Revolut.me (Revolut non permette di precompilare l'importo: il passeggero lo inserirà a mano).",
     satispayLabel: "Link Satispay",
     satispayPlaceholder: "https://...",
     satispayHint:

@@ -88,8 +88,8 @@ export default function PaymentMethodsForm({
       return;
     }
 
-    if (trimmedRevolut && !USERNAME_PATTERN.test(trimmedRevolut)) {
-      toast.error(dict.errors.invalidUsername);
+    if (trimmedRevolut && !/^https:\/\/.+/.test(trimmedRevolut)) {
+      toast.error(dict.errors.invalidUrl);
       return;
     }
 

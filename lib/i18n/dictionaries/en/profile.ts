@@ -74,8 +74,9 @@ export const profile: (typeof it)["profile"] = {
     paypalPlaceholder: "yourname",
     paypalHint: "Your PayPal.me username, without leading slashes (e.g. \"mario.rossi\").",
     revolutLabel: "Revolut.me link",
-    revolutPlaceholder: "yourname",
-    revolutHint: "Your Revolut.me username.",
+    revolutPlaceholder: "https://revolut.me/...",
+    revolutHint:
+      "Your Revolut.me profile link (Revolut doesn't support pre-filling the amount: the passenger will type it in manually).",
     satispayLabel: "Satispay link",
     satispayPlaceholder: "https://...",
     satispayHint:

@@ -26,10 +26,7 @@ import {
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
-import {
-  buildPaypalMeLink,
-  buildRevolutMeLink,
-} from "@/lib/payments/links";
+import { buildPaypalMeLink } from "@/lib/payments/links";
 import RatingForm from "@/components/ratings/RatingForm";
 import ReportNoShowButton, {
   type NoShowDict,
@@ -374,10 +371,7 @@ export default function BookingCard({
 
             {booking.driverRevolutMe && (
               <a
-                href={buildRevolutMeLink(
-                  booking.driverRevolutMe,
-                  booking.contribution
-                )}
+                href={booking.driverRevolutMe}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
