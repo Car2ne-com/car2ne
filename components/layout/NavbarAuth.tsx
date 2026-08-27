@@ -17,18 +17,20 @@ export default async function NavbarAuth() {
 
   if (!user) {
     return (
-      <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-        <Link href="/login">
+      <div className="flex shrink-0 items-center gap-2">
+        {/* Su mobile "Accedi" vive nel menu (MobileMenu) per non
+            affollare la pill: qui resta solo da sm in su. */}
+        <Link href="/login" className="hidden sm:block">
           <Button
-            variant="outline"
-            className="rounded-xl px-2.5 text-xs sm:px-5 sm:text-sm"
+            variant="ghost"
+            className="h-10 rounded-full px-4 text-sm"
           >
             {auth.login}
           </Button>
         </Link>
 
         <Link href="/register">
-          <Button className="rounded-xl px-2.5 text-xs shadow-lg sm:px-5 sm:text-sm">
+          <Button className="h-10 rounded-full px-4 text-sm shadow-sm">
             {auth.register}
           </Button>
         </Link>

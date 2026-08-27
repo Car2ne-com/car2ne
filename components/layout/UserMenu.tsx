@@ -73,20 +73,20 @@ export default function UserMenu({
           shrink-0
           items-center
           gap-2
-          rounded-2xl
+          rounded-full
           border
           border-border
           bg-card
-          px-2
-          py-1.5
+          px-1.5
+          py-1
           shadow-sm
           transition
           hover:border-primary/40
           hover:shadow-md
-          sm:gap-3
-          sm:px-3
-          sm:py-2
-          md:px-4
+          sm:gap-2.5
+          sm:px-2
+          sm:py-1.5
+          md:pr-3
         "
       >
         {/* Avatar */}
@@ -104,8 +104,8 @@ export default function UserMenu({
               object-cover
               ring-2
               ring-accent
-              sm:h-11
-              sm:w-11
+              sm:h-10
+              sm:w-10
             "
           />
         ) : (
@@ -122,9 +122,9 @@ export default function UserMenu({
               text-sm
               font-bold
               text-accent-foreground
-              sm:h-11
-              sm:w-11
-              sm:text-lg
+              sm:h-10
+              sm:w-10
+              sm:text-base
             "
           >
             {initials}
@@ -157,7 +157,7 @@ export default function UserMenu({
 
       <DropdownMenuContent
         align="end"
-        className="w-64 rounded-2xl"
+        className="w-64 rounded-xl"
       >
         <DropdownMenuGroup>
           <DropdownMenuLabel>

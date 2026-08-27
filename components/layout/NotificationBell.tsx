@@ -646,7 +646,7 @@ export default function NotificationBell({ locale, dict }: Props) {
               !current
           )
         }
-        className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background/80 text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
         aria-label={dict.ariaLabel}
       >
         <Bell className="h-5 w-5" />
@@ -663,9 +663,9 @@ export default function NotificationBell({ locale, dict }: Props) {
       {open && (
         <Card
           className="
-            fixed inset-x-4 top-20 z-50 max-h-[calc(100vh-96px)]
+            fixed inset-x-4 top-[4.25rem] z-[60] max-h-[calc(100vh-88px)]
             overflow-hidden shadow-2xl
-            sm:absolute sm:inset-x-auto sm:right-0 sm:top-14 sm:max-h-none
+            sm:absolute sm:inset-x-auto sm:right-0 sm:top-[4.75rem] sm:max-h-none
             sm:w-[380px] sm:max-w-[calc(100vw-32px)]
           "
         >
