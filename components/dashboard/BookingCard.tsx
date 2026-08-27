@@ -399,10 +399,14 @@ export default function BookingCard({
               </a>
             )}
 
-            <span className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+            <Button
+              type="button"
+              onClick={() => toast.info(dict.payInPersonNote)}
+              className="h-auto flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            >
               <Banknote className="h-4 w-4" />
               {dict.payInPerson}
-            </span>
+            </Button>
           </div>
 
           <p className="text-xs text-muted-foreground">
