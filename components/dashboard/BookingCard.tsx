@@ -23,10 +23,13 @@ import {
   XCircle,
 } from "lucide-react";
 
+import { SiPaypal, SiRevolut } from "react-icons/si";
+
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 import { buildPaypalMeLink } from "@/lib/payments/links";
+import { SatispayMark } from "@/components/payments/BrandIcons";
 import RatingForm from "@/components/ratings/RatingForm";
 import ReportNoShowButton, {
   type NoShowDict,
@@ -362,10 +365,11 @@ export default function BookingCard({
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+                className="flex items-center gap-2 rounded-full bg-[#003087] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
               >
+                <SiPaypal className="h-4 w-4" />
                 {dict.payWithPaypal}
-                <ExternalLink className="h-4 w-4" />
+                <ExternalLink className="h-3.5 w-3.5 opacity-70" />
               </a>
             )}
 
@@ -374,10 +378,11 @@ export default function BookingCard({
                 href={booking.driverRevolutMe}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+                className="flex items-center gap-2 rounded-full bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
               >
+                <SiRevolut className="h-4 w-4" />
                 {dict.payWithRevolut}
-                <ExternalLink className="h-4 w-4" />
+                <ExternalLink className="h-3.5 w-3.5 opacity-70" />
               </a>
             )}
 
@@ -386,14 +391,15 @@ export default function BookingCard({
                 href={booking.driverSatispayLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-2xl border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+                className="flex items-center gap-2 rounded-full bg-[#FF3D00] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
               >
+                <SatispayMark className="h-4 w-4 text-white" />
                 {dict.payWithSatispay}
-                <ExternalLink className="h-4 w-4" />
+                <ExternalLink className="h-3.5 w-3.5 opacity-70" />
               </a>
             )}
 
-            <span className="flex items-center gap-2 rounded-2xl bg-muted px-4 py-2.5 text-sm font-semibold text-muted-foreground">
+            <span className="flex items-center gap-2 rounded-full bg-muted px-5 py-2.5 text-sm font-semibold text-muted-foreground">
               <Banknote className="h-4 w-4" />
               {dict.payInPerson}
             </span>
