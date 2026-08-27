@@ -223,6 +223,27 @@ export const help: (typeof it)["help"] = {
       },
     ],
   },
+  assistant: {
+    title: "Car2ne assistant",
+    subtitle:
+      "Type your question: we search the frequently asked questions and show you the most relevant answers.",
+    disclaimer:
+      "This assistant searches the FAQ above, it is not an AI. For specific issues with your account, write to report@car2ne.com.",
+    greeting:
+      "Hi! Type a question about Car2ne (rides, bookings, payments, reviews, driver verification...) and I'll show you the answers that match best.",
+    inputPlaceholder: "Type your question...",
+    sendLabel: "Search",
+    resultsIntro: "Here's what I found:",
+    noResults:
+      "I couldn't find an answer to this question. Try rephrasing it with different words, or write to report@car2ne.com.",
+    suggestionsTitle: "Try asking:",
+    suggestions: [
+      "How do I book a ride?",
+      "How much can I ask as a cost contribution?",
+      "How does driver verification work?",
+      "How do I delete my account?",
+    ],
+  },
   contact: {
     title: "Didn't find the answer?",
     description:

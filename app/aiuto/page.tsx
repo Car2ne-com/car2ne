@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import AssistantPanel from "@/components/help/AssistantPanel";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -28,6 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AiutoPage() {
   const { dict } = await getTranslations();
   const t = dict.help;
+
+  const faqItems = t.faq.categories.flatMap((category) =>
+    category.items.map((item) => ({
+      q: item.q,
+      a: item.a,
+      category: category.title,
+    }))
+  );
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -93,6 +102,8 @@ export default async function AiutoPage() {
             ))}
           </ol>
         </section>
+
+        <AssistantPanel dict={t.assistant} faqItems={faqItems} />
 
         <section className="mt-16">
           <h2 className="text-2xl font-black tracking-tight text-foreground">

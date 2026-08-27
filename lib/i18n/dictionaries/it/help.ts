@@ -221,6 +221,27 @@ export const help = {
       },
     ],
   },
+  assistant: {
+    title: "Assistente Car2ne",
+    subtitle:
+      "Scrivi la tua domanda: cerchiamo tra le domande frequenti e ti mostriamo le risposte più pertinenti.",
+    disclaimer:
+      "Questo assistente cerca tra le FAQ qui sopra, non è un'intelligenza artificiale. Per casi specifici sul tuo account scrivi a report@car2ne.com.",
+    greeting:
+      "Ciao! Scrivi una domanda su Car2ne (passaggi, prenotazioni, pagamenti, recensioni, verifica conducente...) e ti mostro le risposte che corrispondono meglio.",
+    inputPlaceholder: "Scrivi la tua domanda...",
+    sendLabel: "Cerca",
+    resultsIntro: "Ecco cosa ho trovato:",
+    noResults:
+      "Non ho trovato una risposta a questa domanda. Prova a riformularla con parole diverse, oppure scrivi a report@car2ne.com.",
+    suggestionsTitle: "Prova a chiedere:",
+    suggestions: [
+      "Come prenoto un passaggio?",
+      "Quanto posso chiedere di contributo spese?",
+      "Come funziona la verifica conducente?",
+      "Come elimino il mio account?",
+    ],
+  },
   contact: {
     title: "Non hai trovato la risposta?",
     description:
