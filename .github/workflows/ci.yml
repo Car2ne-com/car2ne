@@ -27,5 +27,9 @@ jobs:
 
       - run: npm run build
         env:
+          # lib/siteConfig.ts fa fallire il build in produzione se manca
+          # (serve a canonical URL, Open Graph, sitemap.xml). Non è un
+          # segreto — è già `NEXT_PUBLIC_` e finisce nel bundle client.
+          NEXT_PUBLIC_SITE_URL: https://car2ne.com
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
