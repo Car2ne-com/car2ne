@@ -58,6 +58,9 @@ export const layout: (typeof it)["layout"] = {
     reportProblem: "Report a problem",
     suggestEvent: "Suggest an event",
     rightsReserved: "All rights reserved.",
+    socialHeading: "Follow us",
+    instagram: "Instagram",
+    tiktok: "TikTok",
   },
   languageSwitcher: {
     label: "Language",

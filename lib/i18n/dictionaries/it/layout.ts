@@ -57,6 +57,9 @@ export const layout = {
     reportProblem: "Segnala un problema",
     suggestEvent: "Segnala un evento",
     rightsReserved: "Tutti i diritti riservati.",
+    socialHeading: "Seguici",
+    instagram: "Instagram",
+    tiktok: "TikTok",
   },
   languageSwitcher: {
     label: "Lingua",

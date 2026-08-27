@@ -42,6 +42,23 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+/*
+ * Schema.org Organization a livello di sito: dà a Google l'entità
+ * "Car2ne" con logo e profili social ufficiali (`sameAs`), utile per
+ * il Knowledge Panel e per collegare il brand ai suoi account.
+ */
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Car2ne",
+  url: SITE_URL.origin,
+  logo: new URL("/icon-512.png", SITE_URL).href,
+  sameAs: [
+    "https://www.instagram.com/car2ne_official",
+    "https://www.tiktok.com/@car2ne_official",
+  ],
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -67,6 +84,16 @@ export default async function RootLayout({
       className={`${manrope.variable} overflow-x-hidden antialiased`}
     >
       <body className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-background via-accent to-background font-sans text-foreground">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd).replace(
+              /</g,
+              "\\u003c"
+            ),
+          }}
+        />
+
         <div className="pointer-events-none absolute -left-64 top-10 -z-10 hidden h-[700px] w-[700px] rounded-full bg-primary/20 blur-[110px] md:block" />
         <div className="pointer-events-none absolute -right-64 top-0 -z-10 hidden h-[700px] w-[700px] rounded-full bg-primary/15 blur-[110px] md:block" />
 
