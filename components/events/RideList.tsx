@@ -233,7 +233,7 @@ export default async function RideList({
 
   return (
     <section>
-      <div className="mb-10 flex items-end justify-between">
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
           <span className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
             {t.badge}

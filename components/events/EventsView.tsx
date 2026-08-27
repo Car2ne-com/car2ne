@@ -150,8 +150,8 @@ export default function EventsView({
               value={initialCity}
               onChange={(e) => handleCityChange(e.target.value)}
               aria-label={dict.filters.cityAriaLabel}
-              containerClassName="w-auto"
-              className="h-12 w-auto rounded-2xl pr-9 text-sm font-medium shadow-sm"
+              containerClassName="w-auto max-w-full"
+              className="h-12 w-auto max-w-full rounded-2xl pr-9 text-sm font-medium shadow-sm"
             >
               <option value="">{dict.filters.allCities}</option>
 
@@ -167,8 +167,8 @@ export default function EventsView({
                 value={initialVenue}
                 onChange={(e) => handleVenueChange(e.target.value)}
                 aria-label={dict.filters.venueAriaLabel}
-                containerClassName="w-auto"
-                className="h-12 w-auto rounded-2xl pr-9 text-sm font-medium shadow-sm"
+                containerClassName="w-auto max-w-full"
+                className="h-12 w-auto max-w-full rounded-2xl pr-9 text-sm font-medium shadow-sm"
               >
                 <option value="">{dict.filters.allVenues}</option>
 
