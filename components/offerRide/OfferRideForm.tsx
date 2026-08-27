@@ -25,15 +25,41 @@ import type { Locale } from "@/lib/i18n/locales";
 import { haversineKm } from "@/lib/utils/distance";
 
 /*
- * Soglia indicativa di prezzo equo, in stile BlaBlaCar: un
- * contributo pensato per dividere le spese reali del viaggio
- * (carburante, pedaggi), non per generare profitto. Sotto i
- * MIN_DISTANCE_FOR_CAP_KM il calcolo per km è poco significativo
- * (es. costi fissi come il parcheggio), quindi usiamo comunque
- * quella distanza minima come base del calcolo.
+ * ==============================
+ * FLUSSO "KMETRICO" DEL CONTRIBUTO
+ * ==============================
+ *
+ * Car2ne è no-profit: il conducente non deve mai guadagnarci.
+ *
+ * Distanza stradale stimata di andata + ritorno:
+ *   roundTripKm = max(haversine(partenza, venue), MIN_DISTANCE_KM)
+ *                 x ROAD_WINDING_FACTOR x 2
+ *
+ * SUGGERITO (precompilato): tariffa "da carpooling" a passeggero,
+ * tarata sui prezzi tipici BlaBlaCar in Italia (~0,042 €/km a
+ * passeggero sulla tratta reale, cioè Milano-Bologna A/R ~19 €).
+ *   suggested = roundTripKm x RATE_PER_KM_PER_SEAT
+ *
+ * MASSIMO: il minore fra
+ *   - un tetto per posto (RATE_MAX_PER_KM_PER_SEAT), e
+ *   - la spesa totale dell'auto divisa SOLO fra i passeggeri
+ *     (COST_PER_KM_CAR / posti): così "posti × massimo" non supera
+ *     mai la spesa stimata e il conducente al più rientra dei costi.
  */
-const FAIR_PRICE_PER_KM = 0.15;
-const MIN_DISTANCE_FOR_CAP_KM = 15;
+const RATE_PER_KM_PER_SEAT = 0.042;
+const RATE_MAX_PER_KM_PER_SEAT = 0.07;
+const COST_PER_KM_CAR = 0.2;
+const ROAD_WINDING_FACTOR = 1.12;
+const MIN_DISTANCE_KM = 10;
+const MIN_CONTRIBUTION = 2;
+const DEFAULT_SEATS_FOR_ESTIMATE = 3;
+
+/*
+ * Quando non abbiamo le coordinate (evento senza città/venue
+ * georeferenziati) non possiamo stimare i km: resta solo questo tetto
+ * di sicurezza, comunque generoso per qualsiasi tratta nazionale.
+ */
+const ABSOLUTE_MAX_CONTRIBUTION = 150;
 
 const DRAFT_KEY =
   "car2ne_offer_ride_draft";
@@ -77,6 +103,8 @@ type OfferRideDict = {
     returnTimeHint: string;
     seatsLabel: string;
     contributionLabel: string;
+    contributionHint: string;
+    contributionHintNoDistance: string;
     descriptionLabel: string;
     descriptionPlaceholder: string;
   };
@@ -92,6 +120,7 @@ type OfferRideDict = {
     loadEventsFailed: string;
     publishFailed: string;
     publishSuccess: string;
+    contributionTooHigh: string;
   };
   cityCombobox: {
     changeCityAriaLabel: string;
@@ -218,6 +247,14 @@ export default function OfferRideForm({
   const [contribution, setContribution] =
     useState("");
 
+  /*
+   * Il conducente ha toccato a mano il campo contributo? Finché è
+   * false, il valore resta agganciato alla quota suggerita e si
+   * aggiorna se cambiano evento/città (e quindi i km).
+   */
+  const [contributionEdited, setContributionEdited] =
+    useState(false);
+
   const [description, setDescription] =
     useState("");
 
@@ -232,14 +269,13 @@ export default function OfferRideForm({
 
   /*
    * ==============================
-   * SOGLIA PREZZO EQUO
+   * QUOTA SPESE KMETRICA
    * ==============================
    *
    * Preferiamo le coordinate della venue (più precise), con
    * fallback su quelle della città evento. Se nessuna delle due
    * è disponibile (evento non ancora risolto da città/venue),
-   * niente avviso: non blocchiamo mai la pubblicazione per un
-   * dato mancante.
+   * non stimiamo i km: resta solo il tetto assoluto.
    */
 
   const destinationCoords = useMemo(() => {
@@ -263,33 +299,131 @@ export default function OfferRideForm({
     return null;
   }, [selectedEvent]);
 
-  const distanceKm = useMemo(() => {
+  /*
+   * Distanza stradale stimata di andata + ritorno (un solo passaggio
+   * copre entrambe le tratte).
+   */
+  const roundTripKm = useMemo(() => {
     if (!originCoords || !destinationCoords) {
       return null;
     }
 
-    return haversineKm(
+    const oneWayStraight = haversineKm(
       originCoords.latitude,
       originCoords.longitude,
       destinationCoords.latitude,
       destinationCoords.longitude
     );
+
+    const oneWayRoad =
+      Math.max(oneWayStraight, MIN_DISTANCE_KM) *
+      ROAD_WINDING_FACTOR;
+
+    return oneWayRoad * 2;
   }, [originCoords, destinationCoords]);
 
-  const fairPriceThreshold = useMemo(() => {
-    if (distanceKm === null) {
+  /*
+   * Posti usati per calcolare il tetto. Se il conducente non ha ancora
+   * indicato i posti, si assume un valore tipico solo per la stima
+   * mostrata a schermo (la validazione allo submit usa il valore reale).
+   */
+  const seatsForEstimate = useMemo(() => {
+    const parsed = Number(availableSeats);
+
+    if (!Number.isFinite(parsed) || parsed < 1) {
+      return DEFAULT_SEATS_FOR_ESTIMATE;
+    }
+
+    return Math.min(Math.floor(parsed), 8);
+  }, [availableSeats]);
+
+  /*
+   * Quota "da carpooling" a passeggero, tarata sui prezzi tipici
+   * BlaBlaCar. Arrotondata a 0,50 €, con un minimo. `null` quando non
+   * possiamo stimare i km.
+   */
+  const suggestedContribution = useMemo(() => {
+    if (roundTripKm === null) {
       return null;
     }
 
-    return (
-      Math.max(distanceKm, MIN_DISTANCE_FOR_CAP_KM) *
-      FAIR_PRICE_PER_KM
-    );
-  }, [distanceKm]);
+    const raw = roundTripKm * RATE_PER_KM_PER_SEAT;
 
-  const contributionAboveFairPrice =
-    fairPriceThreshold !== null &&
-    Number(contribution) > fairPriceThreshold;
+    return Math.max(
+      MIN_CONTRIBUTION,
+      Math.round(raw * 2) / 2
+    );
+  }, [roundTripKm]);
+
+  /*
+   * Tetto massimo pubblicabile: il minore fra un tetto per posto e la
+   * spesa totale dell'auto divisa solo fra i passeggeri — così
+   * "posti × massimo" non supera mai la spesa stimata (niente
+   * guadagno). Oppure il tetto assoluto quando i km non sono stimabili.
+   */
+  const maxContribution = useMemo(() => {
+    if (roundTripKm === null || suggestedContribution === null) {
+      return ABSOLUTE_MAX_CONTRIBUTION;
+    }
+
+    const perSeatRate = Math.min(
+      RATE_MAX_PER_KM_PER_SEAT,
+      COST_PER_KM_CAR / seatsForEstimate
+    );
+
+    const raw = roundTripKm * perSeatRate;
+
+    return Math.max(
+      suggestedContribution,
+      MIN_CONTRIBUTION + 3,
+      Math.floor(raw * 2) / 2
+    );
+  }, [roundTripKm, suggestedContribution, seatsForEstimate]);
+
+  const contributionValue = Number(contribution);
+
+  const contributionAboveSuggested =
+    suggestedContribution !== null &&
+    contribution.trim() !== "" &&
+    Number.isFinite(contributionValue) &&
+    contributionValue > suggestedContribution &&
+    contributionValue <= maxContribution;
+
+  const contributionOverMax =
+    contribution.trim() !== "" &&
+    Number.isFinite(contributionValue) &&
+    contributionValue > maxContribution;
+
+  /*
+   * Aggancio del campo alla quota suggerita finché il conducente non
+   * lo modifica a mano: cambiando evento/città (e quindi i km) il
+   * contributo si riallinea da solo.
+   */
+  useEffect(() => {
+    if (contributionEdited) {
+      return;
+    }
+
+    if (suggestedContribution === null) {
+      return;
+    }
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setContribution(String(suggestedContribution));
+  }, [suggestedContribution, contributionEdited]);
+
+  const euroFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(
+        locale === "en" ? "en-US" : "it-IT",
+        {
+          style: "currency",
+          currency: "EUR",
+          maximumFractionDigits: 2,
+        }
+      ),
+    [locale]
+  );
 
   /*
    * ==============================
@@ -428,6 +562,12 @@ export default function OfferRideForm({
             setContribution(
               draft.contribution
             );
+
+            if (draft.contribution.trim() !== "") {
+              // Valore ripristinato da una bozza: è una scelta del
+              // conducente, non va sovrascritto dalla quota suggerita.
+              setContributionEdited(true);
+            }
 
             setDescription(
               draft.description
@@ -652,6 +792,22 @@ export default function OfferRideForm({
         missingOnlyCity
           ? dict.toasts.selectDepartureCity
           : dict.toasts.fillRequiredFields
+      );
+
+      return;
+    }
+
+    /*
+     * Tetto sul contributo: kmetrico se abbiamo le coordinate,
+     * altrimenti il tetto assoluto. Bloccante: oltre non è più una
+     * condivisione spese.
+     */
+    if (contributionOverMax) {
+      toast.error(
+        dict.toasts.contributionTooHigh.replace(
+          "{max}",
+          euroFormatter.format(maxContribution)
+        )
       );
 
       return;
@@ -1114,26 +1270,57 @@ export default function OfferRideForm({
             id="offer-ride-contribution"
             type="number"
             min="0"
-            step="0.01"
+            step="0.5"
+            max={maxContribution}
             value={contribution}
-            onChange={(e) =>
-              setContribution(
-                e.target.value
-              )
-            }
-            placeholder="15"
+            onChange={(e) => {
+              setContribution(e.target.value);
+              setContributionEdited(
+                e.target.value.trim() !== ""
+              );
+            }}
+            aria-invalid={contributionOverMax}
+            placeholder={String(
+              suggestedContribution ?? 15
+            )}
             disabled={
               alreadyHasRide
             }
             className="h-14 rounded-2xl"
           />
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            {roundTripKm !== null &&
+            suggestedContribution !== null
+              ? dict.fields.contributionHint
+                  .replace(
+                    "{distance}",
+                    String(Math.round(roundTripKm))
+                  )
+                  .replace(
+                    "{seats}",
+                    String(seatsForEstimate)
+                  )
+                  .replace(
+                    "{suggested}",
+                    euroFormatter.format(suggestedContribution)
+                  )
+                  .replace(
+                    "{max}",
+                    euroFormatter.format(maxContribution)
+                  )
+              : dict.fields.contributionHintNoDistance.replace(
+                  "{max}",
+                  euroFormatter.format(ABSOLUTE_MAX_CONTRIBUTION)
+                )}
+          </p>
         </div>
 
-        {/* Avviso prezzo equo (non bloccante) */}
+        {/* Avviso quota equa (non bloccante) */}
 
-        {contributionAboveFairPrice &&
-          distanceKm !== null &&
-          fairPriceThreshold !== null && (
+        {contributionAboveSuggested &&
+          roundTripKm !== null &&
+          suggestedContribution !== null && (
             <div className="md:col-span-2 rounded-2xl border border-amber-200 bg-amber-50 p-5">
               <h4 className="font-bold text-amber-900">
                 {dict.fairPrice.title}
@@ -1143,11 +1330,11 @@ export default function OfferRideForm({
                 {dict.fairPrice.body
                   .replace(
                     "{distance}",
-                    String(Math.round(distanceKm))
+                    String(Math.round(roundTripKm))
                   )
                   .replace(
-                    "{threshold}",
-                    fairPriceThreshold.toFixed(2)
+                    "{suggested}",
+                    euroFormatter.format(suggestedContribution)
                   )}
               </p>
             </div>

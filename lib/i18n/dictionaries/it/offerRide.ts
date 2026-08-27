@@ -33,7 +33,11 @@ export const offerRide = {
     returnTimeLabel: "Ora di ritorno *",
     returnTimeHint: "Scegli l'orario in cui prevedi di ripartire dall'evento.",
     seatsLabel: "Posti disponibili *",
-    contributionLabel: "Contributo (€) *",
+    contributionLabel: "Contributo a passeggero (€) *",
+    contributionHint:
+      "Andata e ritorno ~{distance} km · ~{suggested} a passeggero, in linea con un carpooling · con {seats} posti il massimo è {max}",
+    contributionHintNoDistance:
+      "Quota per passeggero, andata e ritorno. Serve a dividere le spese, non a guadagnarci: massimo {max}.",
     descriptionLabel: "Descrizione",
     descriptionPlaceholder: "Aggiungi informazioni utili per i passeggeri...",
   },
@@ -51,6 +55,8 @@ export const offerRide = {
       "Non è stato possibile caricare gli eventi. Ricarica la pagina e riprova.",
     publishFailed: "Non è stato possibile pubblicare il passaggio.",
     publishSuccess: "Passaggio pubblicato con successo!",
+    contributionTooHigh:
+      "Con questi posti e questa tratta, oltre {max} a passeggero il viaggio ti frutterebbe un guadagno. Car2ne serve a dividere le spese, non a guadagnarci.",
   },
   cityCombobox: {
     changeCityAriaLabel: "Cambia città",
@@ -62,7 +68,7 @@ export const offerRide = {
     placeholder: "Cerca un comune...",
   },
   fairPrice: {
-    title: "Contributo più alto della media",
-    body: "Per una tratta di circa {distance} km il contributo indicativo per condividere le spese è fino a circa {threshold} €. Car2ne è pensato per dividere i costi del viaggio, non per generare profitto: puoi comunque pubblicare, ma valuta di abbassare il contributo.",
+    title: "Contributo sopra la quota equa",
+    body: "Per un viaggio di andata e ritorno di circa {distance} km, circa {suggested} a passeggero è già in linea con un carpooling. Puoi pubblicare lo stesso, ma oltre questa cifra il passaggio inizia a generare un guadagno: valuta di abbassare il contributo.",
   },
 };

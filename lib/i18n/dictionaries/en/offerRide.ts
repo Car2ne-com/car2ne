@@ -35,7 +35,11 @@ export const offerRide: (typeof it)["offerRide"] = {
     returnTimeLabel: "Return time *",
     returnTimeHint: "Choose the time you expect to leave from the event.",
     seatsLabel: "Available seats *",
-    contributionLabel: "Contribution (€) *",
+    contributionLabel: "Contribution per passenger (€) *",
+    contributionHint:
+      "Round trip ~{distance} km · ~{suggested} per passenger, in line with a carpool · with {seats} seats the maximum is {max}",
+    contributionHintNoDistance:
+      "Per-passenger amount for the round trip. It's for splitting costs, not making money: maximum {max}.",
     descriptionLabel: "Description",
     descriptionPlaceholder: "Add useful information for passengers...",
   },
@@ -51,6 +55,8 @@ export const offerRide: (typeof it)["offerRide"] = {
     loadEventsFailed: "Couldn't load events. Reload the page and try again.",
     publishFailed: "Couldn't publish the ride.",
     publishSuccess: "Ride published successfully!",
+    contributionTooHigh:
+      "With these seats and this route, above {max} per passenger the trip would earn you a profit. Car2ne is for splitting costs, not making money.",
   },
   cityCombobox: {
     changeCityAriaLabel: "Change city",
@@ -62,7 +68,7 @@ export const offerRide: (typeof it)["offerRide"] = {
     placeholder: "Search a city...",
   },
   fairPrice: {
-    title: "Contribution above average",
-    body: "For a trip of about {distance} km, a fair cost-sharing contribution is up to about {threshold} €. Car2ne is meant for splitting travel costs, not for profit: you can still publish, but consider lowering the contribution.",
+    title: "Contribution above the fair share",
+    body: "For a round trip of about {distance} km, around {suggested} per passenger is already in line with a carpool. You can still publish, but above this the ride starts making you money: consider lowering the contribution.",
   },
 };
