@@ -399,7 +399,7 @@ export default function BookingCard({
               </a>
             )}
 
-            <span className="flex items-center gap-2 rounded-full bg-muted px-5 py-2.5 text-sm font-semibold text-muted-foreground">
+            <span className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
               <Banknote className="h-4 w-4" />
               {dict.payInPerson}
             </span>
