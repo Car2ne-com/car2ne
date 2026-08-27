@@ -48,6 +48,7 @@ export const layout = {
     legalHeading: "Legale",
     events: "Eventi",
     offerRide: "Offri un passaggio",
+    help: "Aiuto e FAQ",
     login: "Accedi",
     register: "Registrati",
     privacyPolicy: "Privacy Policy",

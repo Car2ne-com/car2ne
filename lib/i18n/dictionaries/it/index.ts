@@ -20,6 +20,7 @@ import { dashboardNotifications } from "./dashboardNotifications";
 import { chat } from "./chat";
 import { ratings } from "./ratings";
 import { eventSuggestions } from "./eventSuggestions";
+import { help } from "./help";
 
 export const it = {
   layout,
@@ -44,4 +45,5 @@ export const it = {
   chat,
   ratings,
   eventSuggestions,
+  help,
 };

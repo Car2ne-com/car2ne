@@ -10,7 +10,7 @@ export const profile: (typeof it)["profile"] = {
     openButton: "Delete my account",
     warningTitle: "Are you sure?",
     warningBody:
-      "Your personal data (name, photo, phone, city, bio) will be removed and you will no longer be able to sign in. Your ride and review history will remain visible to other users in anonymized form.",
+      "Your personal data (name, photo, city, bio) will be removed and you will no longer be able to sign in. Your ride and review history will remain visible to other users in anonymized form.",
     confirmLabel: 'Type "DELETE" to confirm',
     confirmPlaceholder: "DELETE",
     confirmWord: "DELETE",

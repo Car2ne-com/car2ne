@@ -87,6 +87,15 @@ export default async function Footer() {
                     {t.offerRide}
                   </Link>
                 </li>
+
+                <li>
+                  <Link
+                    href="/aiuto"
+                    className="transition hover:text-primary"
+                  >
+                    {t.help}
+                  </Link>
+                </li>
               </ul>
             </div>
 

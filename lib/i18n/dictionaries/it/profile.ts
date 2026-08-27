@@ -8,7 +8,7 @@ export const profile = {
     openButton: "Elimina il mio account",
     warningTitle: "Sei sicuro?",
     warningBody:
-      "I tuoi dati personali (nome, foto, telefono, città, bio) verranno rimossi e non potrai più effettuare il login. Lo storico di passaggi e recensioni resterà visibile agli altri utenti in forma anonima.",
+      "I tuoi dati personali (nome, foto, città, bio) verranno rimossi e non potrai più effettuare il login. Lo storico di passaggi e recensioni resterà visibile agli altri utenti in forma anonima.",
     confirmLabel:
       'Scrivi "ELIMINA" per confermare',
     confirmPlaceholder: "ELIMINA",

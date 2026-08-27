@@ -49,6 +49,7 @@ export const layout: (typeof it)["layout"] = {
     legalHeading: "Legal",
     events: "Events",
     offerRide: "Offer a ride",
+    help: "Help & FAQ",
     login: "Log in",
     register: "Sign up",
     privacyPolicy: "Privacy Policy",
