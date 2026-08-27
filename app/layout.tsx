@@ -43,6 +43,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /*
+ * Profili social ufficiali di Car2ne. Referenziati in tre punti dei
+ * metadati di sito: `sameAs` del JSON-LD Organization (Google /
+ * Knowledge Panel), `<link rel="me">` (standard IndieWeb sito↔account,
+ * usato anche dalla verifica Mastodon) e `<meta property="og:see_also">`
+ * (Open Graph, link correlati).
+ */
+const SOCIAL_PROFILE_URLS = [
+  "https://www.instagram.com/car2ne_official",
+  "https://www.tiktok.com/@car2ne_official",
+];
+
+/*
  * Schema.org Organization a livello di sito: dà a Google l'entità
  * "Car2ne" con logo e profili social ufficiali (`sameAs`), utile per
  * il Knowledge Panel e per collegare il brand ai suoi account.
@@ -53,10 +65,7 @@ const organizationJsonLd = {
   name: "Car2ne",
   url: SITE_URL.origin,
   logo: new URL("/icon-512.png", SITE_URL).href,
-  sameAs: [
-    "https://www.instagram.com/car2ne_official",
-    "https://www.tiktok.com/@car2ne_official",
-  ],
+  sameAs: SOCIAL_PROFILE_URLS,
 };
 
 export default async function RootLayout({
@@ -84,6 +93,23 @@ export default async function RootLayout({
       className={`${manrope.variable} overflow-x-hidden antialiased`}
     >
       <body className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-background via-accent to-background font-sans text-foreground">
+        {/*
+         * React 19 solleva automaticamente <meta>/<link> nel <head>.
+         * L'API Metadata di Next non tipizza né `rel="me"` né
+         * `og:see_also`, quindi li rendiamo qui come tag grezzi.
+         */}
+        {SOCIAL_PROFILE_URLS.map((profileUrl) => (
+          <link key={`me-${profileUrl}`} rel="me" href={profileUrl} />
+        ))}
+
+        {SOCIAL_PROFILE_URLS.map((profileUrl) => (
+          <meta
+            key={`see-also-${profileUrl}`}
+            property="og:see_also"
+            content={profileUrl}
+          />
+        ))}
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
