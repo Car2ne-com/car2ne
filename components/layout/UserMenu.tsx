@@ -68,8 +68,10 @@ export default function UserMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
+        aria-label={displayName}
         className="
           flex
+          h-10
           shrink-0
           items-center
           gap-2
@@ -77,15 +79,12 @@ export default function UserMenu({
           border
           border-border
           bg-card
-          px-1.5
-          py-1
+          pr-1
+          pl-1
           shadow-sm
           transition
           hover:border-primary/40
           hover:shadow-md
-          sm:gap-2.5
-          sm:px-2
-          sm:py-1.5
           md:pr-3
         "
       >
@@ -95,64 +94,23 @@ export default function UserMenu({
           <Image
             src={avatarUrl}
             alt={displayName}
-            width={44}
-            height={44}
-            className="
-              h-9
-              w-9
-              rounded-full
-              object-cover
-              ring-2
-              ring-accent
-              sm:h-10
-              sm:w-10
-            "
+            width={40}
+            height={40}
+            className="h-8 w-8 rounded-full object-cover ring-2 ring-accent"
           />
         ) : (
-          <div
-            className="
-              flex
-              h-9
-              w-9
-              shrink-0
-              items-center
-              justify-center
-              rounded-full
-              bg-accent
-              text-sm
-              font-bold
-              text-accent-foreground
-              sm:h-10
-              sm:w-10
-              sm:text-base
-            "
-          >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-foreground">
             {initials}
           </div>
         )}
 
-        {/* Nome */}
+        {/* Nome — solo su desktop, riga singola */}
 
-        <div className="text-left">
-          <p className="text-[10px] text-muted-foreground sm:text-xs">
-            {dict.welcomeBack}
-          </p>
+        <span className="hidden max-w-[10ch] truncate text-sm font-semibold text-foreground md:inline">
+          {name}
+        </span>
 
-          <p className="max-w-[80px] truncate text-sm font-semibold text-foreground sm:max-w-none sm:text-base">
-            {name}
-          </p>
-        </div>
-
-        <ChevronDown
-          className="
-            h-3.5
-            w-3.5
-            shrink-0
-            text-muted-foreground
-            sm:h-4
-            sm:w-4
-          "
-        />
+        <ChevronDown className="hidden h-4 w-4 shrink-0 text-muted-foreground md:block" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
