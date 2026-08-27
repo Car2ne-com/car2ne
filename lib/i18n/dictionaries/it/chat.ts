@@ -17,6 +17,8 @@ export const chat = {
     otherUserFallback: "Utente",
     youPrefix: "Tu: ",
     noMessageYet: "Nessun messaggio ancora",
+    loadErrorTitle: "Non è stato possibile caricare le chat",
+    loadErrorRetry: "Riprova",
   },
   window: {
     subtitle: "Conversazione Car2ne",
@@ -45,5 +47,7 @@ export const chat = {
     youPrefix: "Tu: ",
     noMessageYet: "Nessun messaggio ancora",
     viewAllLink: "Vedi tutte le chat →",
+    loadErrorTitle: "Non è stato possibile caricare le chat",
+    loadErrorRetry: "Riprova",
   },
 };

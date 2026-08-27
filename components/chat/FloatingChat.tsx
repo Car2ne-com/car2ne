@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import {
+  AlertTriangle,
   ChevronRight,
   Loader2,
   MessageCircle,
@@ -22,6 +23,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
+
+/*
+ * Se le query Supabase non risolvono entro questo tempo (visto in
+ * produzione: connessione appesa senza errore), fermiamo lo spinner e
+ * proponiamo un retry invece di restare su "Caricamento chat...".
+ */
+const LOAD_TIMEOUT_MS = 15000;
 
 type Conversation = {
   id: string;
@@ -78,6 +86,8 @@ type FloatingChatDict = {
   youPrefix: string;
   noMessageYet: string;
   viewAllLink: string;
+  loadErrorTitle: string;
+  loadErrorRetry: string;
 };
 
 type Props = {
@@ -107,6 +117,12 @@ export default function FloatingChat({
 
   const [loading, setLoading] =
     useState(true);
+
+  const [loadError, setLoadError] =
+    useState(false);
+
+  const [reloadKey, setReloadKey] =
+    useState(0);
 
   /*
    * ==============================
@@ -205,6 +221,7 @@ export default function FloatingChat({
 
   const loadChats = useCallback(
     async () => {
+    try {
       const {
         data: { user },
       } =
@@ -213,6 +230,7 @@ export default function FloatingChat({
       if (!user) {
         setCurrentUserId(null);
         setChats([]);
+        setLoadError(false);
         setLoading(false);
         return;
       }
@@ -247,6 +265,7 @@ export default function FloatingChat({
           conversationsError
         );
 
+        setLoadError(true);
         setChats([]);
         setLoading(false);
         return;
@@ -259,6 +278,7 @@ export default function FloatingChat({
       if (
         conversations.length === 0
       ) {
+        setLoadError(false);
         setChats([]);
         setLoading(false);
         return;
@@ -613,8 +633,18 @@ export default function FloatingChat({
               ).getTime()
           );
 
+      setLoadError(false);
       setChats(chatItems);
       setLoading(false);
+    } catch (error) {
+      console.error(
+        "Errore imprevisto caricamento chat flottante:",
+        error
+      );
+
+      setLoadError(true);
+      setLoading(false);
+    }
     },
     [supabase, dict.otherUserFallback]
   );
@@ -632,6 +662,30 @@ export default function FloatingChat({
    */
 
   useEffect(() => {
+    let active = true;
+
+    // Reset dello stato di caricamento prima di ogni (ri)fetch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    setLoadError(false);
+
+    // Watchdog: se le query non risolvono (né dati né errore) entro il
+    // tempo massimo, sblocchiamo la UI con un retry.
+    const watchdog = window.setTimeout(() => {
+      if (active) {
+        setLoadError(true);
+        setLoading(false);
+      }
+    }, LOAD_TIMEOUT_MS);
+
+    const run = () => {
+      void loadChats().finally(() => {
+        if (active) {
+          window.clearTimeout(watchdog);
+        }
+      });
+    };
+
     const win = window as typeof window & {
       requestIdleCallback?: (
         callback: () => void
@@ -641,25 +695,28 @@ export default function FloatingChat({
       ) => void;
     };
 
-    if (win.requestIdleCallback) {
-      const handle = win.requestIdleCallback(
-        () => void loadChats()
-      );
+    let idleHandle: number | undefined;
+    let timeoutId: number | undefined;
 
-      return () => {
-        win.cancelIdleCallback?.(handle);
-      };
+    if (win.requestIdleCallback) {
+      idleHandle = win.requestIdleCallback(run);
+    } else {
+      timeoutId = window.setTimeout(run, 200);
     }
 
-    const timeoutId = window.setTimeout(
-      () => void loadChats(),
-      200
-    );
-
     return () => {
-      window.clearTimeout(timeoutId);
+      active = false;
+      window.clearTimeout(watchdog);
+
+      if (idleHandle !== undefined) {
+        win.cancelIdleCallback?.(idleHandle);
+      }
+
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
     };
-  }, [loadChats]);
+  }, [loadChats, reloadKey]);
 
   /*
    * ==============================
@@ -988,6 +1045,23 @@ export default function FloatingChat({
               <div className="flex items-center justify-center gap-2 px-5 py-12 text-center text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span>{dict.loading}</span>
+              </div>
+            ) : loadError ? (
+              <div className="flex flex-col items-center justify-center gap-3 px-5 py-12 text-center">
+                <AlertTriangle className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">
+                  {dict.loadErrorTitle}
+                </span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setReloadKey((key) => key + 1)
+                  }
+                >
+                  {dict.loadErrorRetry}
+                </Button>
               </div>
             ) : chats.length ===
               0 ? (

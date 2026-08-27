@@ -19,6 +19,8 @@ export const chat: (typeof it)["chat"] = {
     otherUserFallback: "User",
     youPrefix: "You: ",
     noMessageYet: "No messages yet",
+    loadErrorTitle: "We couldn't load your chats",
+    loadErrorRetry: "Try again",
   },
   window: {
     subtitle: "Car2ne conversation",
@@ -47,5 +49,7 @@ export const chat: (typeof it)["chat"] = {
     youPrefix: "You: ",
     noMessageYet: "No messages yet",
     viewAllLink: "See all chats →",
+    loadErrorTitle: "We couldn't load your chats",
+    loadErrorRetry: "Try again",
   },
 };

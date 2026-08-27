@@ -11,15 +11,25 @@ import Image from "next/image";
 import Link from "next/link";
 
 import {
+  AlertTriangle,
   ChevronRight,
   Loader2,
   MessageCircle,
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
+
+/*
+ * Se le query Supabase non risolvono entro questo tempo (visto in
+ * produzione: la connessione resta appesa senza errore), smettiamo di
+ * mostrare lo spinner e proponiamo un retry invece di lasciare
+ * "Caricamento chat..." all'infinito.
+ */
+const LOAD_TIMEOUT_MS = 15000;
 
 type Conversation = {
   id: string;
@@ -78,6 +88,8 @@ type ChatListDict = {
   otherUserFallback: string;
   youPrefix: string;
   noMessageYet: string;
+  loadErrorTitle: string;
+  loadErrorRetry: string;
 };
 
 type Props = {
@@ -100,8 +112,15 @@ export default function ChatList({
   const [loading, setLoading] =
     useState(true);
 
+  const [loadError, setLoadError] =
+    useState(false);
+
+  const [reloadKey, setReloadKey] =
+    useState(0);
+
   const loadChats = useCallback(
     async () => {
+    try {
       const {
         data: conversationsData,
         error: conversationsError,
@@ -125,6 +144,7 @@ export default function ChatList({
           conversationsError
         );
 
+        setLoadError(true);
         setChats([]);
         setLoading(false);
         return;
@@ -134,6 +154,7 @@ export default function ChatList({
         (conversationsData ?? []) as Conversation[];
 
       if (conversations.length === 0) {
+        setLoadError(false);
         setChats([]);
         setLoading(false);
         return;
@@ -487,8 +508,18 @@ export default function ChatList({
               ).getTime()
           );
 
+      setLoadError(false);
       setChats(chatItems);
       setLoading(false);
+    } catch (error) {
+      console.error(
+        "Errore imprevisto caricamento chat:",
+        error
+      );
+
+      setLoadError(true);
+      setLoading(false);
+    }
     },
     [
       currentUserId,
@@ -498,12 +529,35 @@ export default function ChatList({
   );
 
   useEffect(() => {
-    // Caricamento chat al mount + sottoscrizione realtime: sync
-    // legittima con dati remoti (fetch iniziale), non derivazione di
-    // stato da altro stato/props.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void loadChats();
+    // Caricamento chat al mount / al retry: sync legittima con dati
+    // remoti, non derivazione di stato da altro stato/props.
+    let active = true;
 
+    // Reset dello stato di caricamento prima di ogni (ri)fetch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    setLoadError(false);
+
+    // Watchdog: se le query non risolvono (né dati né errore) entro il
+    // tempo massimo, sblocchiamo comunque la UI con un retry.
+    const watchdog = window.setTimeout(() => {
+      if (active) {
+        setLoadError(true);
+        setLoading(false);
+      }
+    }, LOAD_TIMEOUT_MS);
+
+    void loadChats().finally(() => {
+      window.clearTimeout(watchdog);
+    });
+
+    return () => {
+      active = false;
+      window.clearTimeout(watchdog);
+    };
+  }, [reloadKey, loadChats]);
+
+  useEffect(() => {
     const channel =
       supabase
         .channel(
@@ -552,6 +606,26 @@ export default function ChatList({
       <Card className="flex flex-col items-center justify-center gap-3 px-8 py-20 text-center text-muted-foreground">
         <Loader2 className="h-6 w-6 animate-spin" />
         <span>{dict.loading}</span>
+      </Card>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <Card className="flex flex-col items-center justify-center gap-4 px-8 py-20 text-center">
+        <AlertTriangle className="h-6 w-6 text-muted-foreground" />
+        <span className="text-muted-foreground">
+          {dict.loadErrorTitle}
+        </span>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() =>
+            setReloadKey((key) => key + 1)
+          }
+        >
+          {dict.loadErrorRetry}
+        </Button>
       </Card>
     );
   }

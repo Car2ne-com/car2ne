@@ -158,6 +158,8 @@ export const profile = {
     description:
       "Aggiungi un livello di sicurezza in più: oltre alla password, ti verrà richiesto un codice generato da un'app di autenticazione (es. Google Authenticator, Authy).",
     loading: "Caricamento...",
+    loadError: "Non è stato possibile verificare lo stato della verifica in due passaggi.",
+    retry: "Riprova",
     qrAlt: "QR code per l'autenticazione a due fattori",
     step1Title: "1. Scansiona il QR code",
     step1Description: "Usa un'app come Google Authenticator o Authy.",

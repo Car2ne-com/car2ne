@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, ShieldOff } from "lucide-react";
+import { AlertTriangle, ShieldCheck, ShieldOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,13 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+
+/*
+ * Se listFactors() non risolve entro questo tempo (connessione appesa
+ * senza errore), fermiamo lo spinner e proponiamo un retry invece di
+ * restare su "Caricamento..." all'infinito.
+ */
+const LOAD_TIMEOUT_MS = 15000;
 
 type EnrollState = {
   factorId: string;
@@ -27,6 +34,8 @@ type Dict = {
   step2Label: string;
   verifyAndEnableButton: string;
   cancelButton: string;
+  loadError: string;
+  retry: string;
   activeLabel: string;
   inactiveLabel: string;
   confirmDisableQuestion: string;
@@ -56,6 +65,12 @@ export default function MfaSettings({ dict }: Props) {
   const [loadingFactors, setLoadingFactors] =
     useState(true);
 
+  const [loadError, setLoadError] =
+    useState(false);
+
+  const [reloadKey, setReloadKey] =
+    useState(0);
+
   const [verifiedFactorId, setVerifiedFactorId] =
     useState<string | null>(null);
 
@@ -72,33 +87,68 @@ export default function MfaSettings({ dict }: Props) {
   const [reauthCode, setReauthCode] = useState("");
 
   async function loadFactors() {
-    const { data, error } =
-      await supabase.auth.mfa.listFactors();
+    try {
+      const { data, error } =
+        await supabase.auth.mfa.listFactors();
 
-    setLoadingFactors(false);
+      if (error) {
+        console.error(
+          "Errore recupero fattori MFA:",
+          error
+        );
 
-    if (error) {
+        setLoadError(true);
+        setLoadingFactors(false);
+        return;
+      }
+
+      const verified = data.totp.find(
+        (factor) => factor.status === "verified"
+      );
+
+      setVerifiedFactorId(verified?.id ?? null);
+      setLoadError(false);
+      setLoadingFactors(false);
+    } catch (error) {
       console.error(
         "Errore recupero fattori MFA:",
         error
       );
 
-      return;
+      setLoadError(true);
+      setLoadingFactors(false);
     }
-
-    const verified = data.totp.find(
-      (factor) => factor.status === "verified"
-    );
-
-    setVerifiedFactorId(verified?.id ?? null);
   }
 
   useEffect(() => {
-    // Caricamento fattori MFA al mount: sync legittima con dati remoti.
+    // Caricamento fattori MFA al mount / al retry: sync legittima con
+    // dati remoti.
+    let active = true;
+
+    // Reset dello stato di caricamento prima di ogni (ri)fetch.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadFactors();
+    setLoadingFactors(true);
+    setLoadError(false);
+
+    // Watchdog: se listFactors() non risolve entro il tempo massimo,
+    // sblocchiamo la UI con un retry.
+    const watchdog = window.setTimeout(() => {
+      if (active) {
+        setLoadError(true);
+        setLoadingFactors(false);
+      }
+    }, LOAD_TIMEOUT_MS);
+
+    void loadFactors().finally(() => {
+      window.clearTimeout(watchdog);
+    });
+
+    return () => {
+      active = false;
+      window.clearTimeout(watchdog);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reloadKey]);
 
   /*
    * ==============================
@@ -379,6 +429,24 @@ export default function MfaSettings({ dict }: Props) {
           <p className="text-sm text-muted-foreground">
             {dict.loading}
           </p>
+        ) : loadError ? (
+          <div className="flex flex-col items-start gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <AlertTriangle className="h-4 w-4" />
+              {dict.loadError}
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() =>
+                setReloadKey((key) => key + 1)
+              }
+              className="h-11 rounded-2xl px-6 font-semibold"
+            >
+              {dict.retry}
+            </Button>
+          </div>
         ) : needsReauth ? (
           <form
             onSubmit={handleReauthAndDisable}
