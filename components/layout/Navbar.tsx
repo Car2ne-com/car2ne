@@ -118,6 +118,11 @@ export default async function Navbar() {
 
           <MobileMenu
             dict={nav}
+            social={{
+              heading: dict.layout.footer.socialHeading,
+              instagram: dict.layout.footer.instagram,
+              tiktok: dict.layout.footer.tiktok,
+            }}
             ariaOpen={dict.layout.mobileMenu.open}
             ariaClose={dict.layout.mobileMenu.close}
             locale={locale}
