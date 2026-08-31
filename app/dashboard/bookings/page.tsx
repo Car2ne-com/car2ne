@@ -29,6 +29,8 @@ export default async function MyBookingsPage() {
       status,
       created_at,
       updated_at,
+      paid_at,
+      payment_method,
       rides (
         id,
         departure_city,
@@ -173,6 +175,10 @@ export default async function MyBookingsPage() {
 
                     driverSatispayLink:
                       profile?.payment_satispay_link ?? null,
+
+                    paidAt: booking.paid_at,
+
+                    paymentMethod: booking.payment_method,
 
                     rideHasPassed:
                       isPastDateTime(

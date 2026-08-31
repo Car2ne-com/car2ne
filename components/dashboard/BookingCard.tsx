@@ -61,7 +61,20 @@ type Dict = {
   payWithSatispay: string;
   payInPerson: string;
   payInPersonNote: string;
+  payConfirmTitle: string;
+  payConfirmDescription: string;
+  payConfirmButton: string;
+  markingPaid: string;
+  markPaidSuccess: string;
+  markPaidError: string;
+  methodPaypal: string;
+  methodRevolut: string;
+  methodSatispay: string;
+  paidBadge: string;
+  paidWith: string;
 };
+
+type PaymentMethod = "paypal" | "revolut" | "satispay" | "in_person";
 
 type RatingFormDict = {
   starLabel: string;
@@ -106,6 +119,9 @@ type Props = {
     driverRevolutMe: string | null;
     driverSatispayLink: string | null;
 
+    paidAt: string | null;
+    paymentMethod: PaymentMethod | null;
+
     rideHasPassed: boolean;
   };
 };
@@ -133,8 +149,29 @@ export default function BookingCard({
   const [conversationId, setConversationId] =
     useState<string | null>(null);
 
+  const [confirmMethod, setConfirmMethod] =
+    useState<PaymentMethod | null>(null);
+
+  const [marking, setMarking] =
+    useState(false);
+
   const isConfirmed =
     booking.status === "confirmed";
+
+  const isPaid = Boolean(booking.paidAt);
+
+  function methodLabel(method: PaymentMethod): string {
+    switch (method) {
+      case "paypal":
+        return dict.methodPaypal;
+      case "revolut":
+        return dict.methodRevolut;
+      case "satispay":
+        return dict.methodSatispay;
+      case "in_person":
+        return dict.payInPerson;
+    }
+  }
 
   const rideHasPassed = booking.rideHasPassed;
 
@@ -223,6 +260,44 @@ export default function BookingCard({
     router.refresh();
   }
 
+  async function handleMarkPaidConfirm() {
+    if (!confirmMethod) {
+      return;
+    }
+
+    setMarking(true);
+
+    const { error } = await supabase.rpc(
+      "mark_booking_paid",
+      {
+        p_booking_id: booking.id,
+        p_payment_method: confirmMethod,
+      }
+    );
+
+    if (error) {
+      console.error(
+        "Errore registrazione pagamento:",
+        error
+      );
+
+      setMarking(false);
+
+      toast.error(
+        error.message || dict.markPaidError
+      );
+
+      return;
+    }
+
+    setMarking(false);
+    setConfirmMethod(null);
+
+    toast.success(dict.markPaidSuccess);
+
+    router.refresh();
+  }
+
   const formattedDate =
     new Intl.DateTimeFormat(
       locale === "en" ? "en-US" : "it-IT",
@@ -233,6 +308,14 @@ export default function BookingCard({
 
   const formattedTime =
     booking.departureTime.slice(0, 5);
+
+  const formattedPaidDate =
+    booking.paidAt
+      ? new Intl.DateTimeFormat(
+          locale === "en" ? "en-US" : "it-IT",
+          { dateStyle: "long" }
+        ).format(new Date(booking.paidAt))
+      : null;
 
   return (
     <Card
@@ -350,7 +433,21 @@ export default function BookingCard({
         </div>
       </div>
 
-      {isConfirmed && (
+      {isConfirmed && isPaid && (
+        <div className="mt-6 flex items-center gap-2 rounded-2xl border-t border-border bg-primary/10 px-5 py-4 text-sm font-semibold text-primary">
+          <CheckCircle2 className="h-4 w-4" />
+          {dict.paidBadge}
+          {booking.paymentMethod && formattedPaidDate && (
+            <span className="font-normal text-primary/80">
+              {dict.paidWith
+                .replace("{method}", methodLabel(booking.paymentMethod))
+                .replace("{date}", formattedPaidDate)}
+            </span>
+          )}
+        </div>
+      )}
+
+      {isConfirmed && !isPaid && (
         <div className="mt-6 space-y-3 border-t border-border pt-6">
           <p className="text-sm font-semibold text-foreground">
             {dict.payTitle}
@@ -365,6 +462,7 @@ export default function BookingCard({
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => setConfirmMethod("paypal")}
                 className="flex items-center gap-2 rounded-full bg-[#003087] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
               >
                 <SiPaypal className="h-4 w-4" />
@@ -378,6 +476,7 @@ export default function BookingCard({
                 href={booking.driverRevolutMe}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => setConfirmMethod("revolut")}
                 className="flex items-center gap-2 rounded-full bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
               >
                 <SiRevolut className="h-4 w-4" />
@@ -391,6 +490,7 @@ export default function BookingCard({
                 href={booking.driverSatispayLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => setConfirmMethod("satispay")}
                 className="flex items-center gap-2 rounded-full bg-[#FF3D00] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
               >
                 <SatispayMark className="h-4 w-4 text-white" />
@@ -401,7 +501,7 @@ export default function BookingCard({
 
             <Button
               type="button"
-              onClick={() => toast.info(dict.payInPersonNote)}
+              onClick={() => setConfirmMethod("in_person")}
               className="h-auto flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               <Banknote className="h-4 w-4" />
@@ -481,6 +581,32 @@ export default function BookingCard({
         confirmTone="danger"
         busy={cancelling}
         onConfirm={handleCancelConfirm}
+      />
+
+      <ConfirmDialog
+        open={confirmMethod !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setConfirmMethod(null);
+          }
+        }}
+        title={dict.payConfirmTitle}
+        description={
+          confirmMethod
+            ? dict.payConfirmDescription.replace(
+                "{method}",
+                methodLabel(confirmMethod)
+              )
+            : ""
+        }
+        confirmLabel={
+          marking ? dict.markingPaid : dict.payConfirmButton
+        }
+        cancelLabel={dict.dialogCancelButton}
+        pleaseWaitLabel={dict.dialogPleaseWait}
+        confirmTone="default"
+        busy={marking}
+        onConfirm={handleMarkPaidConfirm}
       />
     </Card>
   );

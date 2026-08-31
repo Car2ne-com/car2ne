@@ -50,5 +50,17 @@ export const dashboardBookings = {
     payInPerson: "Pagamento di persona",
     payInPersonNote:
       "Accordati con l'autista per pagare in contanti o di persona all'appuntamento.",
+    payConfirmTitle: "Confermi il pagamento?",
+    payConfirmDescription:
+      "Hai completato il pagamento tramite {method}? Una volta confermato, la prenotazione risulterà pagata e questa sezione si disattiverà.",
+    payConfirmButton: "Sì, ho pagato",
+    markingPaid: "Registrazione...",
+    markPaidSuccess: "Pagamento registrato!",
+    markPaidError: "Non è stato possibile registrare il pagamento.",
+    methodPaypal: "PayPal",
+    methodRevolut: "Revolut",
+    methodSatispay: "Satispay",
+    paidBadge: "Pagato ✓",
+    paidWith: "Pagato con {method} il {date}",
   },
 };

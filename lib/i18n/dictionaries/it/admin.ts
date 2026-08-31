@@ -394,6 +394,16 @@ export const admin = {
     newUsersPerDay: "Nuovi utenti al giorno",
     newRidesPerDay: "Nuove ride pubblicate al giorno",
     newBookingsPerDay: "Nuove prenotazioni al giorno",
+    paymentMethodsBreakdown: {
+      title: "Metodi di pagamento preferiti",
+      subtitle:
+        "Prenotazioni segnate come pagate dai passeggeri, per metodo (tutto il periodo).",
+      empty: "Nessun pagamento ancora registrato.",
+      paypal: "PayPal",
+      revolut: "Revolut",
+      satispay: "Satispay",
+      inPerson: "Di persona",
+    },
   },
   confirmDialog: {
     cancel: "Annulla",

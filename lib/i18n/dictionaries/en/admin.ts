@@ -396,6 +396,16 @@ export const admin: (typeof it)["admin"] = {
     newUsersPerDay: "New users per day",
     newRidesPerDay: "New rides published per day",
     newBookingsPerDay: "New bookings per day",
+    paymentMethodsBreakdown: {
+      title: "Preferred payment methods",
+      subtitle:
+        "Bookings marked as paid by passengers, by method (all time).",
+      empty: "No payments recorded yet.",
+      paypal: "PayPal",
+      revolut: "Revolut",
+      satispay: "Satispay",
+      inPerson: "In person",
+    },
   },
   confirmDialog: {
     cancel: "Cancel",

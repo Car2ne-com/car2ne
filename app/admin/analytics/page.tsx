@@ -2,7 +2,17 @@ import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { romeDay } from "@/lib/utils/date";
 import AdminTrendChart from "@/components/admin/AdminTrendChart";
+import AdminCategoryBreakdown from "@/components/admin/AdminCategoryBreakdown";
 import { getTranslations } from "@/lib/i18n";
+
+type PaymentMethod = "paypal" | "revolut" | "satispay" | "in_person";
+
+const PAYMENT_METHOD_COLORS: Record<PaymentMethod, string> = {
+  paypal: "#003087",
+  revolut: "#000000",
+  satispay: "#FF3D00",
+  in_person: "#10b981",
+};
 
 const DAYS = 30;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -53,7 +63,12 @@ export default async function AdminAnalyticsPage() {
     now.getTime() - (DAYS - 1) * DAY_MS
   ).toISOString();
 
-  const [usersResult, ridesResult, bookingsResult] = await Promise.all([
+  const [
+    usersResult,
+    ridesResult,
+    bookingsResult,
+    paymentMethodsResult,
+  ] = await Promise.all([
     adminClient
       .from("profiles")
       .select("created_at")
@@ -68,14 +83,50 @@ export default async function AdminAnalyticsPage() {
       .from("bookings")
       .select("created_at")
       .gte("created_at", sinceIso),
+
+    adminClient
+      .from("bookings")
+      .select("payment_method")
+      .not("paid_at", "is", null),
   ]);
 
   const usersSeries = bucketByDay(usersResult.data ?? [], days);
   const ridesSeries = bucketByDay(ridesResult.data ?? [], days);
   const bookingsSeries = bucketByDay(bookingsResult.data ?? [], days);
 
+  const paymentMethodCounts = new Map<PaymentMethod, number>();
+
+  for (const row of paymentMethodsResult.data ?? []) {
+    const method = row.payment_method as PaymentMethod | null;
+
+    if (!method) {
+      continue;
+    }
+
+    paymentMethodCounts.set(
+      method,
+      (paymentMethodCounts.get(method) ?? 0) + 1
+    );
+  }
+
+  const paymentMethodCategories = (
+    [
+      ["paypal", t.paymentMethodsBreakdown.paypal],
+      ["revolut", t.paymentMethodsBreakdown.revolut],
+      ["satispay", t.paymentMethodsBreakdown.satispay],
+      ["in_person", t.paymentMethodsBreakdown.inPerson],
+    ] as [PaymentMethod, string][]
+  ).map(([method, label]) => ({
+    label,
+    count: paymentMethodCounts.get(method) ?? 0,
+    color: PAYMENT_METHOD_COLORS[method],
+  }));
+
   const hasError =
-    usersResult.error || ridesResult.error || bookingsResult.error;
+    usersResult.error ||
+    ridesResult.error ||
+    bookingsResult.error ||
+    paymentMethodsResult.error;
 
   return (
     <main className="mx-auto max-w-7xl p-10">
@@ -112,6 +163,13 @@ export default async function AdminAnalyticsPage() {
             data={bookingsSeries}
             color="#f59e0b"
             last30DaysLabel={dict.admin.trendChart.last30Days}
+          />
+
+          <AdminCategoryBreakdown
+            title={t.paymentMethodsBreakdown.title}
+            subtitle={t.paymentMethodsBreakdown.subtitle}
+            categories={paymentMethodCategories}
+            emptyLabel={t.paymentMethodsBreakdown.empty}
           />
         </div>
       )}

@@ -52,5 +52,17 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     payInPerson: "Pay in person",
     payInPersonNote:
       "Arrange with the driver to pay in cash or in person at the meeting point.",
+    payConfirmTitle: "Confirm payment?",
+    payConfirmDescription:
+      "Did you complete the payment via {method}? Once confirmed, the booking will be marked as paid and this section will be disabled.",
+    payConfirmButton: "Yes, I paid",
+    markingPaid: "Recording...",
+    markPaidSuccess: "Payment recorded!",
+    markPaidError: "Couldn't record the payment.",
+    methodPaypal: "PayPal",
+    methodRevolut: "Revolut",
+    methodSatispay: "Satispay",
+    paidBadge: "Paid ✓",
+    paidWith: "Paid with {method} on {date}",
   },
 };
