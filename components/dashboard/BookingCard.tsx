@@ -47,6 +47,7 @@ type Dict = {
   rideLabel: string;
   viewEvent: string;
   openChat: string;
+  concludedBadge: string;
   cancelButton: string;
   cancelling: string;
   cancelConfirmMessage: string;
@@ -123,6 +124,7 @@ type Props = {
     paymentMethod: PaymentMethod | null;
 
     rideHasPassed: boolean;
+    eventConcluded: boolean;
   };
 };
 
@@ -177,7 +179,7 @@ export default function BookingCard({
 
   useEffect(() => {
     async function loadConversation() {
-      if (!isConfirmed) {
+      if (!isConfirmed || booking.eventConcluded) {
         setConversationId(null);
         return;
       }
@@ -215,6 +217,7 @@ export default function BookingCard({
     void loadConversation();
   }, [
     booking.rideId,
+    booking.eventConcluded,
     isConfirmed,
     supabase,
   ]);
@@ -338,7 +341,12 @@ export default function BookingCard({
           </h2>
         </div>
 
-        {isConfirmed ? (
+        {isConfirmed && booking.eventConcluded ? (
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            {dict.concludedBadge}
+          </span>
+        ) : isConfirmed ? (
           <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-accent-foreground">
             <CheckCircle2 className="h-3.5 w-3.5" />
             {dict.statusConfirmed}
@@ -528,7 +536,7 @@ export default function BookingCard({
           </Link>
         )}
 
-        {isConfirmed && conversationId && (
+        {isConfirmed && conversationId && !booking.eventConcluded && (
           <Link
             href={`/chat/${conversationId}`}
             className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"

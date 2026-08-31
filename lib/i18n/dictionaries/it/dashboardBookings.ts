@@ -16,12 +16,19 @@ export const dashboardBookings = {
     badge: "🎟️ Le mie prenotazioni",
     title: "Le mie prenotazioni",
     subtitle: "Gestisci i passaggi che hai prenotato su Car2ne.",
+    tabActive: "In programma",
+    tabConcluded: "Concluse",
   },
   empty: {
     title: "Non hai ancora prenotazioni",
     description:
       "Quando prenoterai un passaggio, lo troverai qui e potrai gestirlo direttamente dal tuo account.",
     cta: "Cerca un evento",
+  },
+  concludedEmpty: {
+    title: "Nessuna prenotazione conclusa",
+    description:
+      "Qui finiscono i passaggi dopo la fine dell'evento. La chat si chiude e resta solo lo storico.",
   },
   card: {
     eventFallback: "Evento",
@@ -33,6 +40,7 @@ export const dashboardBookings = {
     rideLabel: "Passaggio prenotato",
     viewEvent: "Vedi evento",
     openChat: "Apri chat",
+    concludedBadge: "Concluso",
     cancelButton: "Annulla prenotazione",
     dialogCancelButton: "Annulla",
     dialogPleaseWait: "Attendere…",

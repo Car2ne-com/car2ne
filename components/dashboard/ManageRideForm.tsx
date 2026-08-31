@@ -122,6 +122,7 @@ type Props = {
     contribution: number;
     description: string | null;
     rideHasPassed: boolean;
+    eventConcluded: boolean;
   };
 };
 
@@ -779,7 +780,7 @@ export default function ManageRideForm({
                     </div>
                   </div>
 
-                  {passenger.conversationId && (
+                  {passenger.conversationId && !ride.eventConcluded && (
                     <Link
                       href={`/chat/${passenger.conversationId}`}
                       className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"

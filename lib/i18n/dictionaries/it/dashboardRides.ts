@@ -9,6 +9,12 @@ export const dashboardRides = {
     emptyCta: "Offri un passaggio",
     statusActive: "Attivo",
     statusCancelled: "Annullato",
+    statusConcluded: "Concluso",
+    tabActive: "In programma",
+    tabConcluded: "Conclusi",
+    concludedEmptyTitle: "Nessun passaggio concluso",
+    concludedEmptyDescription:
+      "Qui finiscono i passaggi dopo la fine dell'evento. La chat con i passeggeri si chiude e resta solo lo storico.",
     eventLabel: "Evento",
     dateLabel: "Data",
     departureLabel: "Andata",

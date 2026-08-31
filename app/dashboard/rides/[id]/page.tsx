@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
 import { isPastDateTime } from "@/lib/utils/date";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 
 type Props = {
   params: Promise<{
@@ -210,6 +211,9 @@ export default async function ManageRidePage({
                 ride.return_date,
                 ride.return_time
               ),
+            eventConcluded: isEventConcluded(
+              event.event_date
+            ),
           }}
         />
 

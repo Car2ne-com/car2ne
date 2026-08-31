@@ -18,12 +18,19 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     badge: "🎟️ My bookings",
     title: "My bookings",
     subtitle: "Manage the rides you've booked on Car2ne.",
+    tabActive: "Upcoming",
+    tabConcluded: "Concluded",
   },
   empty: {
     title: "No bookings yet",
     description:
       "When you book a ride, you'll find it here and can manage it directly from your account.",
     cta: "Search an event",
+  },
+  concludedEmpty: {
+    title: "No concluded bookings",
+    description:
+      "Rides land here once the event is over. The chat closes and only the history remains.",
   },
   card: {
     eventFallback: "Event",
@@ -35,6 +42,7 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     rideLabel: "Booked ride",
     viewEvent: "View event",
     openChat: "Open chat",
+    concludedBadge: "Concluded",
     cancelButton: "Cancel booking",
     dialogCancelButton: "Cancel",
     dialogPleaseWait: "Please wait…",

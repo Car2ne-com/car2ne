@@ -2,10 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
+import { DashboardTabs } from "@/components/dashboard/DashboardTabs";
 import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 import { toOne } from "@/lib/utils/relations";
 
 export default async function MyRidesPage() {
@@ -93,10 +95,13 @@ export default async function MyRidesPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-2">
-
-            {rides.map((ride) => {
+          (() => {
+            const cards = rides.map((ride) => {
               const event = toOne(ride.events);
+
+              const eventConcluded = event?.event_date
+                ? isEventConcluded(event.event_date)
+                : false;
 
               const formattedDate =
                 new Intl.DateTimeFormat(
@@ -109,13 +114,15 @@ export default async function MyRidesPage() {
                 );
 
               const statusLabel =
-                ride.status === "active"
-                  ? t.statusActive
-                  : ride.status === "cancelled"
-                    ? t.statusCancelled
-                    : ride.status;
+                ride.status === "cancelled"
+                  ? t.statusCancelled
+                  : eventConcluded
+                    ? t.statusConcluded
+                    : ride.status === "active"
+                      ? t.statusActive
+                      : ride.status;
 
-              return (
+              const node = (
                 <Card
                   key={ride.id}
                   className="p-7 transition hover:border-primary/30 hover:shadow-lg"
@@ -139,7 +146,7 @@ export default async function MyRidesPage() {
 
                     <span
                       className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                        ride.status === "active"
+                        ride.status === "active" && !eventConcluded
                           ? "bg-accent text-accent-foreground"
                           : "bg-muted text-muted-foreground"
                       }`}
@@ -276,9 +283,57 @@ export default async function MyRidesPage() {
 
                 </Card>
               );
-            })}
 
-          </div>
+              return { eventConcluded, node };
+            });
+
+            const activeCards = cards.filter(
+              (card) => !card.eventConcluded
+            );
+
+            const concludedCards = cards.filter(
+              (card) => card.eventConcluded
+            );
+
+            return (
+              <DashboardTabs
+                tabs={[
+                  {
+                    id: "active",
+                    label: t.tabActive,
+                    count: activeCards.length,
+                    content:
+                      activeCards.length === 0 ? (
+                        <EmptyState
+                          title={t.emptyTitle}
+                          description={t.emptyDescription}
+                        />
+                      ) : (
+                        <div className="grid gap-6 lg:grid-cols-2">
+                          {activeCards.map((card) => card.node)}
+                        </div>
+                      ),
+                  },
+                  {
+                    id: "concluded",
+                    label: t.tabConcluded,
+                    count: concludedCards.length,
+                    content:
+                      concludedCards.length === 0 ? (
+                        <EmptyState
+                          title={t.concludedEmptyTitle}
+                          description={t.concludedEmptyDescription}
+                        />
+                      ) : (
+                        <div className="grid gap-6 lg:grid-cols-2">
+                          {concludedCards.map((card) => card.node)}
+                        </div>
+                      ),
+                  },
+                ]}
+              />
+            );
+          })()
         )}
 
     </main>

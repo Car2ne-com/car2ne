@@ -2,11 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import BookingCard from "@/components/dashboard/BookingCard";
+import { DashboardTabs } from "@/components/dashboard/DashboardTabs";
 import { EmptyState } from "@/components/ui/empty-state";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
 import { isPastDateTime } from "@/lib/utils/date";
+import { isEventConcluded } from "@/lib/utils/eventStatus";
 import { toOne } from "@/lib/utils/relations";
 
 export default async function MyBookingsPage() {
@@ -106,91 +108,143 @@ export default async function MyBookingsPage() {
             </Link>
           </div>
         ) : (
+          (() => {
+            const cards = bookings
+              .flatMap((booking) => {
+                const ride = toOne(booking.rides);
 
-          /* Lista prenotazioni */
+                if (!ride) {
+                  return [];
+                }
 
-          <div className="grid gap-6 lg:grid-cols-2">
+                const event = toOne(ride.events);
+                const profile = toOne(ride.profiles);
 
-            {bookings.map((booking) => {
-              const ride = toOne(booking.rides);
+                const eventConcluded = event?.event_date
+                  ? isEventConcluded(event.event_date)
+                  : false;
 
-              if (!ride) {
-                return null;
-              }
+                return [{
+                  eventConcluded,
+                  node: (
+                    <BookingCard
+                      key={booking.id}
+                      dict={dict.dashboardBookings.card}
+                      noShowDict={dict.reports.noShow}
+                      ratingFormDict={dict.ratings.form}
+                      locale={locale}
+                      booking={{
+                        id: booking.id,
 
-              const event = toOne(ride.events);
-              const profile = toOne(ride.profiles);
+                        status: booking.status,
 
-              return (
-                <BookingCard
-                  key={booking.id}
-                  dict={dict.dashboardBookings.card}
-                  noShowDict={dict.reports.noShow}
-                  ratingFormDict={dict.ratings.form}
-                  locale={locale}
-                  booking={{
-                    id: booking.id,
+                        rideId: booking.ride_id,
 
-                    status: booking.status,
+                        eventTitle:
+                          event?.title ??
+                          dict.dashboardBookings.card.eventFallback,
 
-                    rideId: booking.ride_id,
+                        eventSlug: event?.slug ?? null,
 
-                    eventTitle:
-                      event?.title ?? dict.dashboardBookings.card.eventFallback,
+                        eventVenue: event?.venue ?? null,
 
-                    eventSlug:
-                      event?.slug ?? null,
+                        eventCity: event?.city ?? null,
 
-                    eventVenue:
-                      event?.venue ?? null,
+                        departureCity: ride.departure_city,
 
-                    eventCity:
-                      event?.city ?? null,
+                        destination: ride.destination,
 
-                    departureCity:
-                      ride.departure_city,
+                        departureDate: ride.departure_date,
 
-                    destination:
-                      ride.destination,
+                        departureTime: ride.departure_time,
 
-                    departureDate:
-                      ride.departure_date,
+                        contribution: Number(ride.contribution),
 
-                    departureTime:
-                      ride.departure_time,
+                        driverId: ride.driver_id,
 
-                    contribution:
-                      Number(ride.contribution),
+                        driverName:
+                          profile?.name ??
+                          dict.dashboardBookings.card.driverFallback,
 
-                    driverId: ride.driver_id,
+                        driverPaypalMe:
+                          profile?.payment_paypal_me ?? null,
 
-                    driverName:
-                      profile?.name ?? dict.dashboardBookings.card.driverFallback,
+                        driverRevolutMe:
+                          profile?.payment_revolut_me ?? null,
 
-                    driverPaypalMe:
-                      profile?.payment_paypal_me ?? null,
+                        driverSatispayLink:
+                          profile?.payment_satispay_link ?? null,
 
-                    driverRevolutMe:
-                      profile?.payment_revolut_me ?? null,
+                        paidAt: booking.paid_at,
 
-                    driverSatispayLink:
-                      profile?.payment_satispay_link ?? null,
+                        paymentMethod: booking.payment_method,
 
-                    paidAt: booking.paid_at,
+                        rideHasPassed: isPastDateTime(
+                          ride.departure_date,
+                          ride.departure_time
+                        ),
 
-                    paymentMethod: booking.payment_method,
+                        eventConcluded,
+                      }}
+                    />
+                  ),
+                }];
+              });
 
-                    rideHasPassed:
-                      isPastDateTime(
-                        ride.departure_date,
-                        ride.departure_time
+            const activeCards = cards.filter(
+              (card) => !card.eventConcluded
+            );
+
+            const concludedCards = cards.filter(
+              (card) => card.eventConcluded
+            );
+
+            return (
+              <DashboardTabs
+                tabs={[
+                  {
+                    id: "active",
+                    label: dict.dashboardBookings.page.tabActive,
+                    count: activeCards.length,
+                    content:
+                      activeCards.length === 0 ? (
+                        <EmptyState
+                          title={dict.dashboardBookings.empty.title}
+                          description={
+                            dict.dashboardBookings.empty.description
+                          }
+                        />
+                      ) : (
+                        <div className="grid gap-6 lg:grid-cols-2">
+                          {activeCards.map((card) => card.node)}
+                        </div>
                       ),
-                  }}
-                />
-              );
-            })}
-
-          </div>
+                  },
+                  {
+                    id: "concluded",
+                    label: dict.dashboardBookings.page.tabConcluded,
+                    count: concludedCards.length,
+                    content:
+                      concludedCards.length === 0 ? (
+                        <EmptyState
+                          title={
+                            dict.dashboardBookings.concludedEmpty.title
+                          }
+                          description={
+                            dict.dashboardBookings.concludedEmpty
+                              .description
+                          }
+                        />
+                      ) : (
+                        <div className="grid gap-6 lg:grid-cols-2">
+                          {concludedCards.map((card) => card.node)}
+                        </div>
+                      ),
+                  },
+                ]}
+              />
+            );
+          })()
         )}
     </main>
   );

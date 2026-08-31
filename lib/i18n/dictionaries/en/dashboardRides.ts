@@ -11,6 +11,12 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
     emptyCta: "Offer a ride",
     statusActive: "Active",
     statusCancelled: "Cancelled",
+    statusConcluded: "Concluded",
+    tabActive: "Upcoming",
+    tabConcluded: "Concluded",
+    concludedEmptyTitle: "No concluded rides",
+    concludedEmptyDescription:
+      "Rides land here once the event is over. The passenger chat closes and only the history remains.",
     eventLabel: "Event",
     dateLabel: "Date",
     departureLabel: "Outbound",
