@@ -13,7 +13,7 @@ export default async function TerminiPage() {
     return (
       <LegalPageLayout
         title="Terms and Conditions"
-        updatedAt="August 20, 2026"
+        updatedAt="September 1, 2026"
       >
         <LegalSection title="1. Purpose">
           <p>
@@ -72,6 +72,17 @@ export default async function TerminiPage() {
             reduce the independence of the agreement
             between users described above.
           </p>
+
+          <p>
+            If a driver publishes a payment link on
+            their profile (PayPal.me, Revolut.me or
+            Satispay), Car2ne merely displays it as
+            entered, without verifying it or guaranteeing
+            that it is correct or works. Likewise, an
+            indication that a booking has been paid is a
+            statement made by the user themselves, which
+            Car2ne does not verify.
+          </p>
         </LegalSection>
 
         <LegalSection title="5. Account">
@@ -99,7 +110,18 @@ export default async function TerminiPage() {
           </p>
         </LegalSection>
 
-        <LegalSection title="7. Account suspension">
+        <LegalSection title="7. Blocking other users">
+          <p>
+            You can block another user at any time from
+            their profile: from that moment you will no
+            longer be able to exchange messages or make
+            new bookings with each other. Blocking is
+            your own independent choice and does not
+            require Car2ne&apos;s intervention.
+          </p>
+        </LegalSection>
+
+        <LegalSection title="8. Account suspension">
           <p>
             We reserve the right to suspend or restrict
             an account in case of violation of these
@@ -107,14 +129,14 @@ export default async function TerminiPage() {
           </p>
         </LegalSection>
 
-        <LegalSection title="8. Changes to the service">
+        <LegalSection title="9. Changes to the service">
           <p>
             Car2ne may modify or discontinue, in whole
             or in part, the features offered.
           </p>
         </LegalSection>
 
-        <LegalSection title="9. Governing law and jurisdiction">
+        <LegalSection title="10. Governing law and jurisdiction">
           <p>
             These Terms are governed by Italian law.
             Any dispute shall be subject to the
@@ -124,7 +146,7 @@ export default async function TerminiPage() {
           </p>
         </LegalSection>
 
-        <LegalSection title="10. Contact">
+        <LegalSection title="11. Contact">
           <p>
             For any question regarding these Terms you
             can write to{" "}
@@ -144,7 +166,7 @@ export default async function TerminiPage() {
   return (
     <LegalPageLayout
       title="Termini e Condizioni"
-      updatedAt="20 agosto 2026"
+      updatedAt="1 settembre 2026"
     >
       <LegalSection title="1. Oggetto">
         <p>
@@ -209,6 +231,20 @@ export default async function TerminiPage() {
           dell&apos;accordo tra utenti descritta
           sopra.
         </p>
+
+        <p>
+          Se un conducente pubblica sul proprio
+          profilo un link di pagamento
+          (PayPal.me, Revolut.me o Satispay),
+          Car2ne si limita a mostrarlo così come
+          inserito, senza verificarlo né
+          garantirne la correttezza o il
+          funzionamento. Allo stesso modo,
+          l&apos;indicazione che una prenotazione
+          è stata pagata è una dichiarazione
+          dell&apos;utente stesso, che Car2ne non
+          verifica.
+        </p>
       </LegalSection>
 
       <LegalSection title="5. Account">
@@ -238,7 +274,19 @@ export default async function TerminiPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="7. Sospensione dell'account">
+      <LegalSection title="7. Blocco di altri utenti">
+        <p>
+          Puoi bloccare in qualsiasi momento un
+          altro utente dal suo profilo: da quel
+          momento non potrete più scambiarvi
+          messaggi né effettuare nuove
+          prenotazioni reciproche. Il blocco è
+          una tua scelta autonoma e non richiede
+          l&apos;intervento di Car2ne.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="8. Sospensione dell'account">
         <p>
           Ci riserviamo il diritto di sospendere
           o limitare un account in caso di
@@ -247,7 +295,7 @@ export default async function TerminiPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="8. Modifiche al servizio">
+      <LegalSection title="9. Modifiche al servizio">
         <p>
           Car2ne può modificare o interrompere,
           in tutto o in parte, le funzionalità
@@ -255,7 +303,7 @@ export default async function TerminiPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="9. Legge applicabile e foro competente">
+      <LegalSection title="10. Legge applicabile e foro competente">
         <p>
           I presenti Termini sono regolati dalla
           legge italiana. Per qualsiasi
@@ -266,7 +314,7 @@ export default async function TerminiPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="10. Contatti">
+      <LegalSection title="11. Contatti">
         <p>
           Per qualsiasi domanda relativa ai
           presenti Termini puoi scrivere a{" "}

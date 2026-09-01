@@ -11,7 +11,7 @@ export default async function CookiePolicyPage() {
     return (
       <LegalPageLayout
         title="Cookie Policy"
-        updatedAt="August 17, 2026"
+        updatedAt="September 1, 2026"
       >
         <LegalSection title="1. What cookies are">
           <p>
@@ -52,6 +52,13 @@ export default async function CookiePolicyPage() {
               days and is used to avoid asking you for
               the verification code again on that
               device.
+            </li>
+
+            <li>
+              <strong>NEXT_LOCALE</strong> — remembers
+              the language you chose (Italian or
+              English), so we don&apos;t have to ask
+              you again on every visit.
             </li>
           </ul>
         </LegalSection>
@@ -98,7 +105,7 @@ export default async function CookiePolicyPage() {
   return (
     <LegalPageLayout
       title="Cookie Policy"
-      updatedAt="17 agosto 2026"
+      updatedAt="1 settembre 2026"
     >
       <LegalSection title="1. Cosa sono i cookie">
         <p>
@@ -148,6 +155,13 @@ export default async function CookiePolicyPage() {
             evitare di richiederti nuovamente il
             codice di verifica su quel
             dispositivo.
+          </li>
+
+          <li>
+            <strong>NEXT_LOCALE</strong> —
+            memorizza la lingua che hai scelto
+            (italiano o inglese), così non te la
+            richiediamo a ogni visita.
           </li>
         </ul>
       </LegalSection>

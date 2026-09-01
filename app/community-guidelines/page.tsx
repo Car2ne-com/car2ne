@@ -13,7 +13,7 @@ export default async function CommunityGuidelinesPage() {
     return (
       <LegalPageLayout
         title="Community Guidelines"
-        updatedAt="August 17, 2026"
+        updatedAt="September 1, 2026"
       >
         <LegalSection title="1. Our goal">
           <p>
@@ -96,7 +96,7 @@ export default async function CommunityGuidelinesPage() {
           </p>
         </LegalSection>
 
-        <LegalSection title="9. Reports">
+        <LegalSection title="9. Reports and blocking">
           <p>
             If you witness inappropriate behavior or
             have a problem with another user, use the{" "}
@@ -106,7 +106,12 @@ export default async function CommunityGuidelinesPage() {
             >
               Report a problem
             </Link>{" "}
-            page to let us know.
+            page to let us know. You can also block a
+            user directly from their profile at any
+            time, without needing to report them first:
+            once blocked, you will no longer be able to
+            message each other or make new bookings
+            together.
           </p>
         </LegalSection>
       </LegalPageLayout>
@@ -116,7 +121,7 @@ export default async function CommunityGuidelinesPage() {
   return (
     <LegalPageLayout
       title="Community Guidelines"
-      updatedAt="17 agosto 2026"
+      updatedAt="1 settembre 2026"
     >
       <LegalSection title="1. Il nostro obiettivo">
         <p>
@@ -208,7 +213,7 @@ export default async function CommunityGuidelinesPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="9. Segnalazioni">
+      <LegalSection title="9. Segnalazioni e blocco utenti">
         <p>
           Se assisti a un comportamento scorretto
           o hai un problema con un altro utente,
@@ -219,7 +224,12 @@ export default async function CommunityGuidelinesPage() {
           >
             Segnala un problema
           </Link>{" "}
-          per farcelo sapere.
+          per farcelo sapere. Puoi anche bloccare
+          un utente direttamente dal suo profilo
+          in qualsiasi momento, senza dover prima
+          segnalarlo: una volta bloccato, non
+          potrete più scambiarvi messaggi né
+          effettuare nuove prenotazioni insieme.
         </p>
       </LegalSection>
     </LegalPageLayout>

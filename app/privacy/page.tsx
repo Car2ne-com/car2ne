@@ -11,7 +11,7 @@ export default async function PrivacyPolicyPage() {
     return (
       <LegalPageLayout
         title="Privacy Policy"
-        updatedAt="August 20, 2026"
+        updatedAt="September 1, 2026"
       >
         <LegalSection title="1. Data Controller">
           <p>
@@ -98,6 +98,36 @@ export default async function PrivacyPolicyPage() {
               pending; only the outcome of the
               verification (approved/rejected) is kept
               afterwards.
+            </li>
+
+            <li>
+              <strong>Payment data (optional):</strong>{" "}
+              if you choose to publish a payment link
+              on your profile (PayPal.me, Revolut.me or
+              Satispay), we store it exactly as entered,
+              without verifying it. If you book a ride,
+              you can also self-declare that you have
+              paid and which method you used (PayPal,
+              Revolut, Satispay or in person): we record
+              this self-declaration, which Car2ne does
+              not verify in any way.
+            </li>
+
+            <li>
+              <strong>Blocked users:</strong> if you
+              block another user, we record this
+              relationship to prevent further contact
+              (chat, new bookings) between the two of
+              you.
+            </li>
+
+            <li>
+              <strong>Missing event suggestions (optional):</strong>{" "}
+              if you suggest an event that is not on
+              Car2ne, we record the event details you
+              provide (title, artist, venue, city, date,
+              any link or image) together with your
+              identity as the person who submitted it.
             </li>
 
             <li>
@@ -223,17 +253,44 @@ export default async function PrivacyPolicyPage() {
               handles delivery to your device and does
               not have access to your Car2ne account.
             </li>
+
+            <li>
+              <strong>Brevo</strong> — sends our
+              transactional emails (e.g. the email
+              verification code, password reset code,
+              and notifications about your account); it
+              receives your email address and the
+              content of the email sent.
+            </li>
+
+            <li>
+              <strong>OpenStreetMap</strong> — if you
+              view the meeting-point map for a ride,
+              your browser requests the map images
+              directly from OpenStreetMap Foundation
+              servers, which therefore receive your IP
+              address.
+            </li>
           </ul>
         </LegalSection>
 
         <LegalSection title="6. Data retention">
           <p>
             Data is retained for the entire duration of
-            the account. Upon account deletion, data is
-            removed, except as necessary to comply with
-            legal obligations. Driver verification
-            documents follow a shorter, dedicated
-            retention period described in Section 2.
+            the account. If you delete your account, we
+            do not physically erase your profile row:
+            we anonymize it (name, surname, photo, city
+            and bio are removed) and permanently lock
+            access to it (email and password are
+            replaced and the account is disabled). This
+            is because rides, bookings, reviews and chat
+            messages tied to your account can also
+            concern other users (e.g. a review you left
+            or received): deleting them entirely would
+            also delete data that belongs to those other
+            users. Driver verification documents follow
+            a shorter, dedicated retention period
+            described in Section 2.
           </p>
         </LegalSection>
 
@@ -254,6 +311,13 @@ export default async function PrivacyPolicyPage() {
             Authority (Garante per la protezione dei
             dati personali).
           </p>
+
+          <p>
+            You can also delete your account yourself
+            from your profile settings: see Section 6
+            above for what actually happens to your
+            data when you do.
+          </p>
         </LegalSection>
 
         <LegalSection title="8. Changes to this policy">
@@ -270,7 +334,7 @@ export default async function PrivacyPolicyPage() {
   return (
     <LegalPageLayout
       title="Privacy Policy"
-      updatedAt="20 agosto 2026"
+      updatedAt="1 settembre 2026"
     >
       <LegalSection title="1. Titolare del trattamento">
         <p>
@@ -365,6 +429,40 @@ export default async function PrivacyPolicyPage() {
             resta in attesa; in seguito viene
             conservato solo l&apos;esito della
             verifica (approvata/rifiutata).
+          </li>
+
+          <li>
+            <strong>Dati di pagamento (facoltativi):</strong>{" "}
+            se scegli di pubblicare sul tuo
+            profilo un link di pagamento
+            (PayPal.me, Revolut.me o Satispay),
+            lo memorizziamo così come lo inserisci,
+            senza verificarlo. Se prenoti un
+            passaggio, puoi inoltre dichiarare tu
+            stesso di aver pagato e con quale
+            metodo (PayPal, Revolut, Satispay o di
+            persona): registriamo questa
+            autodichiarazione, che Car2ne non
+            verifica in alcun modo.
+          </li>
+
+          <li>
+            <strong>Utenti bloccati:</strong> se
+            blocchi un altro utente, registriamo
+            questa relazione per impedire
+            ulteriori contatti (chat, nuove
+            prenotazioni) tra voi due.
+          </li>
+
+          <li>
+            <strong>Segnalazioni di eventi mancanti (facoltative):</strong>{" "}
+            se segnali un evento non presente su
+            Car2ne, registriamo i dati
+            dell&apos;evento che inserisci
+            (titolo, artista, locale, città, data,
+            eventuali link o immagini) insieme
+            alla tua identità di chi ha effettuato
+            la segnalazione.
           </li>
 
           <li>
@@ -514,20 +612,51 @@ export default async function PrivacyPolicyPage() {
             al dispositivo e non ha accesso al
             tuo account Car2ne.
           </li>
+
+          <li>
+            <strong>Brevo</strong> — invia le
+            nostre email transazionali (es. il
+            codice di verifica email, il codice
+            di reset password e le notifiche
+            relative al tuo account); riceve il
+            tuo indirizzo email e il contenuto
+            dell&apos;email inviata.
+          </li>
+
+          <li>
+            <strong>OpenStreetMap</strong> — se
+            visualizzi la mappa del punto di
+            incontro di un passaggio, il tuo
+            browser richiede le immagini della
+            mappa direttamente ai server di
+            OpenStreetMap Foundation, che
+            ricevono quindi il tuo indirizzo IP.
+          </li>
         </ul>
       </LegalSection>
 
       <LegalSection title="6. Conservazione dei dati">
         <p>
           I dati sono conservati per tutta la
-          durata dell&apos;account. Alla
-          cancellazione dell&apos;account, i
-          dati vengono rimossi, salvo quanto
-          necessario per adempiere a obblighi di
-          legge. I documenti di verifica
-          conducente seguono un periodo di
-          conservazione più breve e dedicato,
-          descritto al punto 2.
+          durata dell&apos;account. Se elimini il
+          tuo account, non cancelliamo
+          fisicamente la tua riga di profilo: la
+          anonimizziamo (nome, cognome, foto,
+          città e biografia vengono rimossi) e
+          blocchiamo permanentemente
+          l&apos;accesso (email e password
+          vengono sostituite e l&apos;account
+          viene disabilitato). Questo perché
+          passaggi, prenotazioni, recensioni e
+          messaggi di chat legati al tuo account
+          possono riguardare anche altri utenti
+          (es. una recensione che hai lasciato o
+          ricevuto): cancellarli del tutto
+          cancellerebbe anche dati che
+          appartengono a loro. I documenti di
+          verifica conducente seguono invece un
+          periodo di conservazione più breve e
+          dedicato, descritto al punto 2.
         </p>
       </LegalSection>
 
@@ -546,6 +675,14 @@ export default async function PrivacyPolicyPage() {
           . Hai inoltre diritto di proporre
           reclamo al Garante per la protezione
           dei dati personali.
+        </p>
+
+        <p>
+          Puoi inoltre eliminare il tuo account
+          in autonomia dalle impostazioni del
+          profilo: vedi il punto 6 qui sopra per
+          capire cosa succede realmente ai tuoi
+          dati quando lo fai.
         </p>
       </LegalSection>
 
