@@ -334,7 +334,7 @@ export default function BookingCard({
             {booking.eventTitle}
           </p>
 
-          <h2 className="mt-1 text-2xl font-black text-foreground">
+          <h2 className="mt-1 text-2xl font-semibold text-foreground">
             {booking.departureCity}
             {" → "}
             {booking.destination}
@@ -529,7 +529,7 @@ export default function BookingCard({
         {booking.eventSlug && !booking.rideHasPassed && (
           <Link
             href={`/events/${booking.eventSlug}`}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-border px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border px-4 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
           >
             {dict.viewEvent}
             <ArrowRight className="h-4 w-4" />
@@ -539,7 +539,7 @@ export default function BookingCard({
         {isConfirmed && conversationId && !booking.eventConcluded && (
           <Link
             href={`/chat/${conversationId}`}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             <MessageCircle className="h-4 w-4" />
             {dict.openChat}
@@ -551,7 +551,7 @@ export default function BookingCard({
             type="button"
             onClick={handleCancelRequest}
             disabled={cancelling}
-            className="h-auto flex-1 rounded-2xl bg-destructive px-4 py-3 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
+            className="h-auto flex-1 bg-destructive px-4 py-3 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
           >
             {cancelling
               ? dict.cancelling

@@ -79,7 +79,7 @@ export default async function AdminDriverVerificationsPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground">
           {dict.admin.verificationsPage.title}
         </h1>
 

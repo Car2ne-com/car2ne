@@ -258,7 +258,7 @@ export default function AdminUserTable({
                               ? dict.removeAdminSelfTitle
                               : dict.removeAdminTitle
                           }
-                          className="h-auto gap-2 rounded-xl bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
+                          className="h-auto gap-2 bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
                         >
                           <ShieldOff className="h-4 w-4" />
                           {dict.removeAdminButton}
@@ -276,7 +276,7 @@ export default function AdminUserTable({
                             busyId === user.id
                           }
                           title={dict.makeAdminTitle}
-                          className="h-auto gap-2 rounded-xl px-4 py-2"
+                          className="h-auto gap-2 px-4 py-2"
                         >
                           <ShieldCheck className="h-4 w-4" />
                           {dict.makeAdminButton}
@@ -301,7 +301,7 @@ export default function AdminUserTable({
                 (count) => count + PAGE_SIZE
               )
             }
-            className="h-auto rounded-2xl px-8 py-3"
+            className="h-auto px-8 py-3"
           >
             {dict.loadMore.replace(
               "{count}",

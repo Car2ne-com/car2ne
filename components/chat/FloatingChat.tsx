@@ -1016,7 +1016,7 @@ export default function FloatingChat({
               </div>
 
               <div>
-                <h2 className="font-bold text-foreground">
+                <h2 className="font-semibold text-foreground">
                   {dict.title}
                 </h2>
 

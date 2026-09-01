@@ -478,11 +478,11 @@ export default function ChatWindow({
           )}
 
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-bold text-foreground">
+            <h1 className="truncate text-xl font-semibold text-foreground">
               {otherName}
             </h1>
 
-            <p className="text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               {dict.subtitle}
             </p>
           </div>
@@ -648,7 +648,7 @@ export default function ChatWindow({
                 !content.trim()
               }
               size="icon"
-              className="h-12 w-12 shrink-0 rounded-2xl"
+              className="h-12 w-12 shrink-0"
               aria-label={dict.sendAriaLabel}
             >
               <Send className="h-5 w-5" />

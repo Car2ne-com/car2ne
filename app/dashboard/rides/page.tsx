@@ -65,11 +65,7 @@ export default async function MyRidesPage() {
         {/* Header */}
 
         <div className="mb-10">
-          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {t.badge}
-          </span>
-
-          <h1 className="mt-5 text-2xl font-bold text-foreground">
+          <h1 className="mt-5 text-2xl font-semibold text-foreground">
             {t.title}
           </h1>
 
@@ -89,7 +85,7 @@ export default async function MyRidesPage() {
 
             <Link
               href="/offer-ride"
-              className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+              className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               {t.emptyCta}
             </Link>
@@ -137,7 +133,7 @@ export default async function MyRidesPage() {
                         {event?.title ?? t.eventLabel}
                       </p>
 
-                      <h2 className="mt-1 text-2xl font-black text-foreground">
+                      <h2 className="mt-1 text-2xl font-semibold text-foreground">
                         {ride.departure_city}
                         {" → "}
                         {ride.destination}
@@ -183,7 +179,7 @@ export default async function MyRidesPage() {
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
 
                     <div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t.dateLabel}
                       </p>
 
@@ -193,7 +189,7 @@ export default async function MyRidesPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t.departureLabel}
                       </p>
 
@@ -203,7 +199,7 @@ export default async function MyRidesPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t.returnLabel}
                       </p>
 
@@ -215,7 +211,7 @@ export default async function MyRidesPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t.seatsLabel}
                       </p>
 
@@ -225,7 +221,7 @@ export default async function MyRidesPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t.contributionLabel}
                       </p>
 
@@ -261,7 +257,7 @@ export default async function MyRidesPage() {
                         new Date() && (
                       <Link
                         href={`/events/${event.slug}`}
-                        className="flex-1 rounded-2xl border border-border px-4 py-3 text-center text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
+                        className="flex-1 rounded-full border border-border px-4 py-3 text-center text-sm font-semibold text-foreground transition hover:border-primary/30 hover:bg-accent hover:text-accent-foreground"
                       >
                         {t.viewEvent}
                       </Link>
@@ -273,7 +269,7 @@ export default async function MyRidesPage() {
                       <a
                         href={`/dashboard/rides/${ride.id}`}
                         target="_self"
-                        className="flex-1 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                        className="flex-1 rounded-full bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                       >
                         {t.manage}
                       </a>

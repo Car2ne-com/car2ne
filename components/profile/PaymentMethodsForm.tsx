@@ -194,7 +194,7 @@ export default function PaymentMethodsForm({
           type="button"
           onClick={handleSave}
           disabled={loading}
-          className="h-12 rounded-2xl bg-primary px-8 font-semibold hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-12 bg-primary px-8 font-semibold hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? (
             <>

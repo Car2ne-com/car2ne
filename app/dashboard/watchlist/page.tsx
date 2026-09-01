@@ -62,11 +62,7 @@ export default async function MyWatchlistPage() {
   return (
     <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
       <div className="mb-10">
-        <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-          {dict.dashboardWatchlist.listPage.badge}
-        </span>
-
-        <h1 className="mt-5 text-2xl font-bold text-foreground">
+        <h1 className="mt-5 text-2xl font-semibold text-foreground">
           {dict.dashboardWatchlist.listPage.title}
         </h1>
 
@@ -84,7 +80,7 @@ export default async function MyWatchlistPage() {
 
           <Link
             href="/events"
-            className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+            className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             {dict.dashboardWatchlist.listPage.emptyCta}
           </Link>

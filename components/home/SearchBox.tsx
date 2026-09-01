@@ -51,7 +51,7 @@ export default function SearchBox({ dict }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[32px] border border-border bg-card p-4 shadow-2xl"
+      className="rounded-[32px] border border-border bg-card p-4 shadow-pop"
     >
       <div className="grid gap-4 md:grid-cols-[1.5fr_1.2fr_1fr_auto]">
 
@@ -106,7 +106,7 @@ export default function SearchBox({ dict }: Props) {
 
         <Button
           type="submit"
-          className="h-14 rounded-2xl px-8 shadow-lg transition duration-300 hover:scale-105 hover:shadow-xl"
+          className="h-14 px-8 text-[0.95rem]"
         >
           {dict.searchButton}
         </Button>

@@ -64,11 +64,7 @@ export default async function NotificationsPage() {
         <div className="mb-10 flex items-start justify-between gap-6">
 
           <div>
-            <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-              {t.badge}
-            </span>
-
-            <h1 className="mt-5 text-2xl font-bold text-foreground">
+            <h1 className="mt-5 text-2xl font-semibold text-foreground">
               {t.title}
             </h1>
 
@@ -106,7 +102,7 @@ export default async function NotificationsPage() {
 
             <Link
               href="/events"
-              className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+              className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               {t.findEvent}
             </Link>
@@ -150,7 +146,7 @@ export default async function NotificationsPage() {
 
                         <div className="flex items-center gap-2">
 
-                          <h2 className="font-bold text-foreground">
+                          <h2 className="font-semibold text-foreground">
                             {notification.title}
                           </h2>
 

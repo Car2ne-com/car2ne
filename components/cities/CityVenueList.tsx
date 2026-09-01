@@ -22,7 +22,7 @@ export default function CityVenueList({ city, venues, dict }: Props) {
 
   return (
     <section className="mt-16">
-      <h2 className="text-2xl font-bold text-foreground">
+      <h2 className="text-2xl font-semibold text-foreground">
         {dict.title.replace("{city}", city.name)}
       </h2>
 

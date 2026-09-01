@@ -1,5 +1,3 @@
-import { CarFront } from "lucide-react";
-
 import { getTranslations } from "@/lib/i18n";
 
 export default async function OfferRideHeader() {
@@ -8,12 +6,7 @@ export default async function OfferRideHeader() {
 
   return (
     <section className="mb-12">
-      <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-        <CarFront className="h-4 w-4" />
-        {t.badge}
-      </span>
-
-      <h1 className="mt-6 text-5xl font-black tracking-tight text-foreground">
+      <h1 className="mt-6 text-5xl font-medium tracking-tight text-foreground">
         {t.title}
       </h1>
 

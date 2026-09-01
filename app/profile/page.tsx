@@ -92,7 +92,7 @@ export default async function ProfilePage() {
 
       <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
         <div className="mb-10">
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground">
             {dict.profile.title}
           </h1>
 

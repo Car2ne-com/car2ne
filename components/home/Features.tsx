@@ -1,6 +1,5 @@
 import { ShieldCheck, Wallet, Users, MapPinned } from "lucide-react";
 
-import { Card } from "@/components/ui/card";
 import { getTranslations } from "@/lib/i18n";
 
 const featureIcons = [Wallet, Users, MapPinned, ShieldCheck];
@@ -11,53 +10,41 @@ export default async function Features() {
 
   return (
     <section className="bg-background py-24">
-      <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
-
-        <div>
-
-          <span className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {t.badge}
-          </span>
-
-          <h2 className="mt-6 text-5xl font-bold text-foreground">
+      <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <h2 className="mt-6 font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-foreground md:text-5xl">
             {t.title}
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
             {t.description}
           </p>
-
         </div>
 
-        <div className="grid gap-6">
-
+        <ul className="grid gap-5 sm:grid-cols-2">
           {t.items.map((feature, index) => {
             const Icon = featureIcons[index];
 
             return (
-              <Card
+              <li
                 key={feature.title}
-                className="flex gap-5 rounded-2xl p-6 shadow-none transition hover:shadow-xl"
+                className="rounded-3xl border border-border bg-card p-7 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-pop"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent">
-                  <Icon className="h-7 w-7 text-accent-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+                  <Icon className="h-6 w-6" />
                 </div>
 
-                <div>
-                  <h3 className="text-xl font-bold text-foreground">
-                    {feature.title}
-                  </h3>
+                <h3 className="text-lg font-bold text-foreground">
+                  {feature.title}
+                </h3>
 
-                  <p className="mt-2 text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </div>
-              </Card>
+                <p className="mt-2 leading-7 text-muted-foreground">
+                  {feature.description}
+                </p>
+              </li>
             );
           })}
-
-        </div>
-
+        </ul>
       </div>
     </section>
   );

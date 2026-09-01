@@ -88,7 +88,7 @@ export default function ForgotPasswordForm({ dict }: Props) {
         <Button
           type="submit"
           disabled={loading}
-          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
+          className="h-12 w-full text-base font-semibold"
         >
           {loading
             ? dict.forgotPasswordForm.sending

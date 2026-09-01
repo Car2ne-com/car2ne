@@ -169,7 +169,7 @@ export default function BetaChecklistForm({
         return (
           <section key={section.id}>
             <div className="mb-4 flex items-baseline justify-between gap-3 border-b border-border pb-3">
-              <h2 className="text-lg font-bold text-foreground">{section.title}</h2>
+              <h2 className="text-lg font-semibold text-foreground">{section.title}</h2>
               <span className="shrink-0 text-xs font-medium text-muted-foreground">
                 {sectionTested} / {section.items.length}
               </span>

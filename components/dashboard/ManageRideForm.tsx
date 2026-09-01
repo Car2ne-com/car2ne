@@ -624,7 +624,7 @@ export default function ManageRideForm({
               <Clock3 className="h-7 w-7 text-muted-foreground" />
             </div>
 
-            <h3 className="mt-4 text-lg font-bold text-foreground">
+            <h3 className="text-lg font-bold text-foreground">
               {dict.requests.emptyTitle}
             </h3>
 
@@ -681,7 +681,7 @@ export default function ManageRideForm({
                           }
                           disabled={processing}
                           variant="outline"
-                          className="h-auto flex-1 rounded-2xl bg-card px-5 py-3 text-sm font-semibold sm:flex-none"
+                          className="h-auto flex-1 bg-card px-5 py-3 text-sm font-semibold sm:flex-none"
                         >
                           {dict.requests.cancel}
                         </Button>
@@ -693,7 +693,7 @@ export default function ManageRideForm({
                           handleReject(request.id)
                         }
                         disabled={processing}
-                        className="h-auto flex-1 rounded-2xl border border-destructive/20 bg-card px-5 py-3 text-sm font-semibold text-destructive hover:bg-destructive/10 sm:flex-none"
+                        className="h-auto flex-1 border border-destructive/20 bg-card px-5 py-3 text-sm font-semibold text-destructive hover:bg-destructive/10 sm:flex-none"
                       >
                         <span className="flex items-center justify-center gap-2">
                           <XCircle className="h-4 w-4" />
@@ -715,7 +715,7 @@ export default function ManageRideForm({
                             processing ||
                             ride.available_seats <= 0
                           }
-                          className="h-auto flex-1 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 sm:flex-none"
+                          className="h-auto flex-1 bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 sm:flex-none"
                         >
                           <span className="flex items-center justify-center gap-2">
                             <CheckCircle2 className="h-4 w-4" />
@@ -742,10 +742,6 @@ export default function ManageRideForm({
 
       {confirmedPassengers.length > 0 && (
         <Card className="border-primary/20 p-8">
-          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {dict.confirmedPassengers.badge}
-          </span>
-
           <h2 className="mt-4 text-lg font-semibold text-foreground">
             {dict.confirmedPassengers.title}
           </h2>
@@ -783,7 +779,7 @@ export default function ManageRideForm({
                   {passenger.conversationId && !ride.eventConcluded && (
                     <Link
                       href={`/chat/${passenger.conversationId}`}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                     >
                       <MessageCircle className="h-4 w-4" />
                       {dict.confirmedPassengers.openChat}
@@ -931,7 +927,7 @@ export default function ManageRideForm({
           <Button
             type="submit"
             disabled={loading || deleting}
-            className="h-auto rounded-2xl bg-primary px-7 py-3 font-semibold text-primary-foreground hover:bg-primary/90"
+            className="h-auto bg-primary px-7 py-3 font-semibold text-primary-foreground hover:bg-primary/90"
           >
             {loading
               ? dict.form.saving
@@ -941,7 +937,7 @@ export default function ManageRideForm({
       </form>
 
       <Card className="border-destructive/20 bg-destructive/5 p-6">
-        <h2 className="text-lg font-bold text-destructive">
+        <h2 className="text-lg font-semibold text-destructive">
           {dict.cancelRide.title}
         </h2>
 
@@ -968,7 +964,7 @@ export default function ManageRideForm({
             type="button"
             onClick={handleDelete}
             disabled={loading || deleting}
-            className="h-auto rounded-2xl bg-destructive px-6 py-3 font-semibold text-destructive-foreground hover:bg-destructive/90"
+            className="h-auto bg-destructive px-6 py-3 font-semibold text-destructive-foreground hover:bg-destructive/90"
           >
             {deleting
               ? dict.cancelRide.cancelling
@@ -983,7 +979,7 @@ export default function ManageRideForm({
               onClick={() => setConfirmingDelete(false)}
               disabled={deleting}
               variant="outline"
-              className="h-auto rounded-2xl border-destructive/20 bg-card px-6 py-3 font-semibold text-destructive hover:bg-destructive/10"
+              className="h-auto border-destructive/20 bg-card px-6 py-3 font-semibold text-destructive hover:bg-destructive/10"
             >
               {dict.cancelRide.goBack}
             </Button>

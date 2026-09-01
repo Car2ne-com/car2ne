@@ -543,7 +543,7 @@ export default function RegisterForm({ dict }: Props) {
             !acceptedTerms ||
             !isAdult
           }
-          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
+          className="h-12 w-full text-base font-semibold"
         >
           {loading
             ? dict.registerForm.creatingAccount
@@ -577,7 +577,7 @@ export default function RegisterForm({ dict }: Props) {
           onClick={() =>
             handleOAuth("google")
           }
-          className="h-12 w-full rounded-2xl"
+          className="h-12 w-full"
         >
           {oauthLoading ===
           "google"

@@ -22,7 +22,7 @@ export default async function SegnalaEventoPage() {
       <Navbar />
 
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-20">
-        <h1 className="text-4xl font-black text-foreground">
+        <h1 className="text-4xl font-medium text-foreground">
           {t.page.title}
         </h1>
 
@@ -32,7 +32,7 @@ export default async function SegnalaEventoPage() {
           <EventSuggestionForm dict={t} />
         ) : (
           <Card className="mt-10 p-8 text-center shadow-sm">
-            <h2 className="text-lg font-bold text-foreground">
+            <h2 className="text-lg font-semibold text-foreground">
               {t.guestNotice.title}
             </h2>
 
@@ -44,7 +44,7 @@ export default async function SegnalaEventoPage() {
               href="/login"
               className={buttonVariants({
                 size: "lg",
-                className: "mt-8 h-12 w-full rounded-2xl px-8 text-base",
+                className: "mt-8 h-12 w-full px-8 text-base",
               })}
             >
               {t.guestNotice.cta}

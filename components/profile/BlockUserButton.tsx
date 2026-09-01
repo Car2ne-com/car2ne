@@ -117,7 +117,7 @@ export default function BlockUserButton({
           variant="outline"
           disabled={loading}
           onClick={handleUnblock}
-          className="h-10 rounded-2xl px-5 text-sm font-semibold"
+          className="h-10 px-5 text-sm font-semibold"
         >
           <ShieldCheck className="mr-2 h-4 w-4" />
           {loading ? dict.unblocking : dict.unblockButton}
@@ -142,7 +142,7 @@ export default function BlockUserButton({
             type="button"
             disabled={loading}
             onClick={handleBlock}
-            className="h-10 rounded-2xl bg-destructive px-5 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
+            className="h-10 bg-destructive px-5 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
           >
             {loading ? dict.blocking : dict.confirmButton}
           </Button>
@@ -152,7 +152,7 @@ export default function BlockUserButton({
             variant="outline"
             disabled={loading}
             onClick={() => setConfirmOpen(false)}
-            className="h-10 rounded-2xl px-5 text-sm font-semibold"
+            className="h-10 px-5 text-sm font-semibold"
           >
             {dict.cancelButton}
           </Button>
@@ -167,7 +167,7 @@ export default function BlockUserButton({
         type="button"
         variant="outline"
         onClick={() => setConfirmOpen(true)}
-        className="h-10 rounded-2xl border-destructive/30 px-5 text-sm font-semibold text-destructive hover:bg-destructive/10"
+        className="h-10 border-destructive/30 px-5 text-sm font-semibold text-destructive hover:bg-destructive/10"
       >
         <ShieldOff className="mr-2 h-4 w-4" />
         {dict.blockButton}
@@ -179,7 +179,7 @@ export default function BlockUserButton({
         onClick={() =>
           router.push(`/segnala-un-problema?userId=${targetUserId}`)
         }
-        className="h-10 rounded-2xl px-5 text-sm font-semibold text-muted-foreground"
+        className="h-10 px-5 text-sm font-semibold text-muted-foreground"
       >
         <Flag className="mr-2 h-4 w-4" />
         {reportButtonLabel}

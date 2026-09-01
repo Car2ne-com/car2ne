@@ -29,13 +29,13 @@ export default function VenueHero({ city, venue, eventCount, dict }: Props) {
     <section className="mb-16">
       <Link
         href={`/citta/${city.slug}`}
-        className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
         <MapPin className="h-4 w-4" />
         {city.name}
       </Link>
 
-      <h1 className="mt-6 flex items-center gap-3 text-5xl font-black tracking-tight text-foreground md:text-6xl">
+      <h1 className="mt-6 flex items-center gap-3 text-5xl font-medium tracking-tight text-foreground md:text-6xl">
         <Building2 className="h-10 w-10 text-primary" />
         {venue.name}
       </h1>

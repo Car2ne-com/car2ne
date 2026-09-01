@@ -515,7 +515,7 @@ export default function RideCard({
         onClick={handleRequestSeat}
         disabled={isDisabled}
         className={cn(
-          "mt-8 h-auto w-full gap-2 rounded-2xl px-5 py-4 text-base font-semibold text-primary-foreground transition duration-300 disabled:opacity-60",
+          "mt-8 h-auto w-full gap-2 px-5 py-4 text-base font-semibold text-primary-foreground transition duration-300 disabled:opacity-60",
           bookingStatus === "confirmed"
             ? "bg-primary hover:bg-primary"
             : bookingStatus === "pending"

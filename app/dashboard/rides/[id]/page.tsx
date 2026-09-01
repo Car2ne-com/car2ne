@@ -116,11 +116,7 @@ export default async function ManageRidePage({
         {/* Header */}
 
         <div className="mb-10">
-          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {t.managePage.badge}
-          </span>
-
-          <h1 className="mt-5 text-2xl font-bold text-foreground">
+          <h1 className="mt-5 text-2xl font-semibold text-foreground">
             {t.managePage.title}
           </h1>
 

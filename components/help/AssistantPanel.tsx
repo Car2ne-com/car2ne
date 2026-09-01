@@ -64,7 +64,7 @@ export default function AssistantPanel({
       <div className="border-b border-border bg-muted/40 p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
-          <h2 className="font-bold text-foreground">{dict.title}</h2>
+          <h2 className="font-semibold text-foreground">{dict.title}</h2>
         </div>
 
         <p className="mt-1 text-sm text-muted-foreground">{dict.subtitle}</p>

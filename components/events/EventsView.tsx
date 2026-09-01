@@ -221,7 +221,7 @@ export default function EventsView({
                 size="lg"
                 disabled={page <= 1 || isPending}
                 onClick={() => goToPage(page - 1)}
-                className="h-auto rounded-2xl px-6 py-3 text-base"
+                className="h-auto px-6 py-3 text-base"
               >
                 {dict.filters.previous}
               </Button>
@@ -238,7 +238,7 @@ export default function EventsView({
                 size="lg"
                 disabled={page >= totalPages || isPending}
                 onClick={() => goToPage(page + 1)}
-                className="h-auto rounded-2xl px-6 py-3 text-base"
+                className="h-auto px-6 py-3 text-base"
               >
                 {dict.filters.next}
               </Button>

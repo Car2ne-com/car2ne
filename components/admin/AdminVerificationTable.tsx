@@ -174,7 +174,7 @@ export default function AdminVerificationTable({
             type="button"
             onClick={() => setFilter(item.key)}
             className={cn(
-              "h-auto rounded-xl px-4 py-2",
+              "h-auto px-4 py-2",
               filter === item.key
                 ? "bg-foreground text-background hover:bg-foreground/90"
                 : "bg-card text-muted-foreground hover:bg-muted"
@@ -240,7 +240,7 @@ export default function AdminVerificationTable({
                             v.driverName
                           )}
                           size="icon-lg"
-                          className="rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+                          className="bg-blue-500 text-white hover:bg-blue-600"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -257,7 +257,7 @@ export default function AdminVerificationTable({
                               v.driverName
                             )}
                             size="icon-lg"
-                            className="rounded-xl"
+                            className=""
                           >
                             <CheckCircle2 className="h-4 w-4" />
                           </Button>

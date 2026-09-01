@@ -47,7 +47,7 @@ export default async function BetaChecklistPage() {
             {dict.betaChecklist.meta.eyebrow}
           </p>
 
-          <h1 className="mt-2 text-2xl font-bold text-foreground">
+          <h1 className="mt-2 text-2xl font-semibold text-foreground">
             {dict.betaChecklist.meta.title}
           </h1>
 

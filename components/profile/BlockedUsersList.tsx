@@ -94,7 +94,7 @@ export default function BlockedUsersList({
                 size="sm"
                 disabled={unblockingId === blockedUser.id}
                 onClick={() => handleUnblock(blockedUser.id)}
-                className="rounded-2xl font-semibold"
+                className="font-semibold"
               >
                 <ShieldOff className="mr-1.5 h-3.5 w-3.5" />
                 {unblockingId === blockedUser.id

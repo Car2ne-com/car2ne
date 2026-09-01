@@ -15,11 +15,7 @@ export default async function RegisterPage() {
       <main className="mx-auto flex min-h-screen max-w-md items-center px-6 pt-40 pb-16">
         <div className="w-full">
           <div className="mb-10 text-center">
-            <span className="inline-flex rounded-full border border-primary/20 bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-              {t.register.pageBadge}
-            </span>
-
-            <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground">
+            <h1 className="mt-6 text-4xl font-medium tracking-tight text-foreground">
               {t.register.pageTitle}
             </h1>
 

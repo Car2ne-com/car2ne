@@ -21,16 +21,13 @@ export default async function NavbarAuth() {
         {/* Su mobile "Accedi" vive nel menu (MobileMenu) per non
             affollare la pill: qui resta solo da sm in su. */}
         <Link href="/login" className="hidden sm:block">
-          <Button
-            variant="ghost"
-            className="h-10 rounded-full px-4 text-sm"
-          >
+          <Button variant="ghost" size="lg" className="h-10 px-4">
             {auth.login}
           </Button>
         </Link>
 
         <Link href="/register">
-          <Button className="h-10 rounded-full px-4 text-sm shadow-sm">
+          <Button size="lg" className="h-10 px-4 shadow-sm">
             {auth.register}
           </Button>
         </Link>

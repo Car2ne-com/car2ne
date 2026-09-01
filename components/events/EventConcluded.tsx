@@ -48,7 +48,7 @@ export default function EventConcluded({
         {dict.badge}
       </span>
 
-      <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground">
+      <h1 className="mt-6 text-4xl font-medium tracking-tight text-foreground">
         {event.title}
       </h1>
 
@@ -75,7 +75,7 @@ export default function EventConcluded({
         {reviewHref && (
           <Link
             href={reviewHref}
-            className={buttonVariants({ variant: "outline", size: "lg", className: "h-auto rounded-2xl px-8 py-4 text-base" })}
+            className={buttonVariants({ variant: "outline", size: "lg", className: "h-auto px-8 py-4 text-base" })}
           >
             {dict.leaveReviewButton}
           </Link>
@@ -83,7 +83,7 @@ export default function EventConcluded({
 
         <Link
           href="/events"
-          className={buttonVariants({ size: "lg", className: "h-auto rounded-2xl px-8 py-4 text-base" })}
+          className={buttonVariants({ size: "lg", className: "h-auto px-8 py-4 text-base" })}
         >
           {dict.browseEvents}
         </Link>

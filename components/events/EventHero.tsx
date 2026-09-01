@@ -37,7 +37,7 @@ export default function EventHero({ event, locale }: Props) {
       <div className="relative mx-auto flex min-h-[520px] max-w-7xl items-center px-6 py-24">
         <div className="grid w-full gap-14 lg:grid-cols-2 lg:items-center">
           <div className="text-white">
-            <h1 className="text-5xl font-black leading-tight md:text-6xl">
+            <h1 className="text-5xl font-medium leading-tight md:text-6xl">
               {event.title}
             </h1>
 

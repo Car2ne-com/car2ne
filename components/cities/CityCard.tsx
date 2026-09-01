@@ -31,7 +31,7 @@ export default function CityCard({ city, eventCount, dict }: Props) {
         </span>
 
         <div>
-          <h2 className="text-lg font-bold text-foreground">
+          <h2 className="text-lg font-semibold text-foreground">
             {city.name}
           </h2>
 

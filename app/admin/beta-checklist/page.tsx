@@ -103,7 +103,7 @@ export default async function AdminBetaChecklistPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground">
           {dict.betaChecklist.admin.title}
         </h1>
         <p className="mt-2 text-muted-foreground">{dict.betaChecklist.admin.subtitle}</p>

@@ -83,7 +83,7 @@ export default function PushNotificationPrompt({ dict }: Props) {
           onClick={handleEnable}
           disabled={busy}
           size="lg"
-          className="rounded-2xl px-5 py-3"
+          className="px-5 py-3"
         >
           {busy ? dict.enabling : dict.enable}
         </Button>
@@ -96,7 +96,7 @@ export default function PushNotificationPrompt({ dict }: Props) {
           title={dict.dismiss}
           aria-label={dict.dismiss}
           size="icon-lg"
-          className="rounded-2xl"
+          className=""
         >
           <X className="h-4 w-4" />
         </Button>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Fraunces } from "next/font/google";
 import { Toaster } from "sonner";
 
 import FloatingChat from "@/components/chat/FloatingChat";
@@ -14,6 +14,20 @@ const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+});
+
+/*
+ * Fraunces: display "old-style" con optical sizing — usato solo per i
+ * titoli (--font-heading). Il contrasto con Manrope (geometrica, per
+ * il corpo) dà alla UI un'impronta editoriale invece del solito
+ * "tutto la stessa sans".
+ */
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+  style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
 });
 
 export const viewport: Viewport = {
@@ -90,9 +104,9 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${manrope.variable} overflow-x-hidden antialiased`}
+      className={`${manrope.variable} ${fraunces.variable} overflow-x-hidden antialiased`}
     >
-      <body className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-background via-accent to-background font-sans text-foreground">
+      <body className="relative min-h-screen overflow-x-hidden bg-background font-sans text-foreground">
         {/*
          * React 19 solleva automaticamente <meta>/<link> nel <head>.
          * L'API Metadata di Next non tipizza né `rel="me"` né
@@ -120,8 +134,14 @@ export default async function RootLayout({
           }}
         />
 
-        <div className="pointer-events-none absolute -left-64 top-10 -z-10 hidden h-[700px] w-[700px] rounded-full bg-primary/20 blur-[110px] md:block" />
-        <div className="pointer-events-none absolute -right-64 top-0 -z-10 hidden h-[700px] w-[700px] rounded-full bg-primary/15 blur-[110px] md:block" />
+        {/*
+         * Aura superiore: una sola sfumatura tenue dietro l'header e
+         * l'hero, poi il fondo torna pulito. Niente "campo verde" su
+         * tutta la pagina — le viste interne (dashboard, admin, form)
+         * restano su carta chiara.
+         */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[460px] bg-gradient-to-b from-accent via-accent/35 to-transparent" />
+        <div className="pointer-events-none absolute top-[-5rem] right-[-9rem] -z-10 hidden h-[380px] w-[380px] rounded-full bg-primary/10 blur-[120px] lg:block" />
 
         {children}
 

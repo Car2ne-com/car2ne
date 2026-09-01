@@ -78,11 +78,7 @@ export default async function MyBookingsPage() {
         {/* Header */}
 
         <div className="mb-10">
-          <span className="inline-flex rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {dict.dashboardBookings.page.badge}
-          </span>
-
-          <h1 className="mt-5 text-2xl font-bold text-foreground">
+          <h1 className="mt-5 text-2xl font-semibold text-foreground">
             {dict.dashboardBookings.page.title}
           </h1>
 
@@ -102,7 +98,7 @@ export default async function MyBookingsPage() {
 
             <Link
               href="/events"
-              className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+              className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
               {dict.dashboardBookings.empty.cta}
             </Link>

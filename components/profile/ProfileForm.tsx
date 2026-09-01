@@ -469,7 +469,7 @@ export default function ProfileForm({
             </p>
           )}
 
-          <h2 className="mt-6 text-2xl font-bold text-foreground">
+          <h2 className="mt-6 text-2xl font-semibold text-foreground">
             {displayName}
           </h2>
 
@@ -619,7 +619,7 @@ export default function ProfileForm({
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="h-12 rounded-2xl bg-primary px-8 font-semibold hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-12 bg-primary px-8 font-semibold hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSaving ? (
               <>

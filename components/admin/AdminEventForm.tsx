@@ -127,7 +127,7 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
   }
     return (
     <Card className="p-10">
-      <h1 className="text-2xl font-bold text-foreground">
+      <h1 className="text-2xl font-semibold text-foreground">
         {event ? dict.editTitle : dict.newTitle}
       </h1>
 
@@ -241,7 +241,7 @@ export default function AdminEventForm({ event, dict, imageUploaderDict }: Props
         <Button
           onClick={handleSubmit}
           disabled={loading}
-          className="h-12 rounded-xl px-8"
+          className="h-12 px-8"
         >
           {loading
             ? dict.saving

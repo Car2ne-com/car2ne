@@ -64,11 +64,7 @@ export default async function AiutoPage() {
         />
 
         <section>
-          <span className="inline-flex items-center rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {t.hero.badge}
-          </span>
-
-          <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground md:text-5xl">
+          <h1 className="mt-6 text-4xl font-medium tracking-tight text-foreground md:text-5xl">
             {t.hero.title}
           </h1>
 
@@ -78,7 +74,7 @@ export default async function AiutoPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-xl font-bold text-foreground">
+          <h2 className="text-xl font-semibold text-foreground">
             {t.guide.title}
           </h2>
 
@@ -106,7 +102,7 @@ export default async function AiutoPage() {
         <AssistantPanel dict={t.assistant} faqItems={faqItems} />
 
         <section className="mt-16">
-          <h2 className="text-2xl font-black tracking-tight text-foreground">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
             {t.faq.title}
           </h2>
 
@@ -149,7 +145,7 @@ export default async function AiutoPage() {
         </section>
 
         <Card className="mt-16 p-8 shadow-sm">
-          <h2 className="text-lg font-bold text-foreground">
+          <h2 className="text-lg font-semibold text-foreground">
             {t.contact.title}
           </h2>
 
@@ -191,7 +187,7 @@ export default async function AiutoPage() {
             href="/segnala-un-problema"
             className={buttonVariants({
               size: "lg",
-              className: "mt-8 h-12 w-full rounded-2xl px-8 text-base",
+              className: "mt-8 h-12 w-full px-8 text-base",
             })}
           >
             {t.contact.reportCta}

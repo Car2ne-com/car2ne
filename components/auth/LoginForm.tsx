@@ -390,7 +390,7 @@ export default function LoginForm({ dict }: Props) {
           className="space-y-6"
         >
           <div>
-            <h2 className="text-xl font-bold text-foreground">
+            <h2 className="text-xl font-semibold text-foreground">
               {dict.loginForm.mfaTitle}
             </h2>
 
@@ -441,7 +441,7 @@ export default function LoginForm({ dict }: Props) {
           <Button
             type="submit"
             disabled={mfaLoading}
-            className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
+            className="h-12 w-full text-base font-semibold"
           >
             {mfaLoading ? dict.loginForm.mfaVerifying : dict.loginForm.mfaVerifyButton}
           </Button>
@@ -579,7 +579,7 @@ export default function LoginForm({ dict }: Props) {
             loading ||
             !!oauthLoading
           }
-          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
+          className="h-12 w-full text-base font-semibold"
         >
           {loading
             ? dict.loginForm.loggingIn
@@ -612,7 +612,7 @@ export default function LoginForm({ dict }: Props) {
           onClick={() =>
             handleOAuth("google")
           }
-          className="h-12 w-full rounded-2xl"
+          className="h-12 w-full"
         >
           {oauthLoading ===
           "google"

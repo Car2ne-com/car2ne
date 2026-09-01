@@ -235,11 +235,7 @@ export default async function RideList({
     <section>
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {t.badge}
-          </span>
-
-          <h2 className="mt-5 text-4xl font-black text-foreground">
+          <h2 className="mt-5 text-4xl font-medium text-foreground">
             {t.title}
           </h2>
 
@@ -261,7 +257,7 @@ export default async function RideList({
 
           <Link
             href={`/offer-ride?eventId=${eventId}`}
-            className="mt-8 inline-flex rounded-2xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
+            className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             {t.emptyCta}
           </Link>

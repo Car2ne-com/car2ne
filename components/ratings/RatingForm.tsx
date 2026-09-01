@@ -162,7 +162,7 @@ export default function RatingForm({
         type="button"
         variant="outline"
         onClick={() => setOpen(true)}
-        className="mt-6 h-10 w-full rounded-2xl text-sm font-semibold"
+        className="mt-6 h-10 w-full text-sm font-semibold"
       >
         {dict.leaveReviewButton.replace("{name}", rateeName)}
       </Button>
@@ -198,7 +198,7 @@ export default function RatingForm({
           type="button"
           disabled={submitting}
           onClick={handleSubmit}
-          className="h-10 rounded-2xl bg-primary px-5 text-sm font-semibold hover:bg-primary/90"
+          className="h-10 bg-primary px-5 text-sm font-semibold hover:bg-primary/90"
         >
           {submitting
             ? dict.sending
@@ -210,7 +210,7 @@ export default function RatingForm({
           variant="outline"
           disabled={submitting}
           onClick={() => setOpen(false)}
-          className="h-10 rounded-2xl px-5 text-sm font-semibold"
+          className="h-10 px-5 text-sm font-semibold"
         >
           {dict.cancelButton}
         </Button>

@@ -599,7 +599,7 @@ export default function AdminEventTable({
             type="button"
             onClick={() => setFilter(item.key)}
             className={cn(
-              "h-auto rounded-xl px-4 py-2",
+              "h-auto px-4 py-2",
               filter === item.key
                 ? "bg-foreground text-background hover:bg-foreground/90"
                 : "bg-card text-muted-foreground hover:bg-muted"
@@ -622,7 +622,7 @@ export default function AdminEventTable({
               setPendingConfirm({ kind: "bulk", status: "published" })
             }
             disabled={bulkBusy}
-            className="h-auto rounded-xl px-4 py-2"
+            className="h-auto px-4 py-2"
           >
             {dict.approveSelected}
           </Button>
@@ -633,7 +633,7 @@ export default function AdminEventTable({
               setPendingConfirm({ kind: "bulk", status: "rejected" })
             }
             disabled={bulkBusy}
-            className="h-auto rounded-xl bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
+            className="h-auto bg-amber-500 px-4 py-2 text-white hover:bg-amber-600"
           >
             {dict.rejectSelected}
           </Button>
@@ -643,7 +643,7 @@ export default function AdminEventTable({
             variant="ghost"
             onClick={() => setSelectedIds(new Set())}
             disabled={bulkBusy}
-            className="h-auto rounded-xl px-4 py-2 text-accent-foreground hover:bg-accent-foreground/10"
+            className="h-auto px-4 py-2 text-accent-foreground hover:bg-accent-foreground/10"
           >
             {dict.deselectAll}
           </Button>
@@ -758,7 +758,7 @@ export default function AdminEventTable({
                           title={dict.approveAndPublish}
                           aria-label={`${dict.approveAndPublish} ${event.title}`}
                           size="icon-lg"
-                          className="rounded-xl"
+                          className=""
                         >
                           <CheckCircle2 className="h-4 w-4" />
                         </Button>
@@ -790,7 +790,7 @@ export default function AdminEventTable({
                         aria-label={`${dict.edit} ${event.title}`}
                         className={cn(
                           buttonVariants({ size: "icon-lg" }),
-                          "rounded-xl bg-blue-500 hover:bg-blue-600"
+                          "bg-blue-500 hover:bg-blue-600"
                         )}
                       >
                         <Pencil className="h-4 w-4" />
@@ -808,7 +808,7 @@ export default function AdminEventTable({
                         title={dict.deleteAction}
                         aria-label={`${dict.deleteAction} ${event.title}`}
                         size="icon-lg"
-                        className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -829,7 +829,7 @@ export default function AdminEventTable({
             onClick={() =>
               setVisibleCount((count) => count + PAGE_SIZE)
             }
-            className="h-auto rounded-2xl px-8 py-3"
+            className="h-auto px-8 py-3"
           >
             {dict.loadMore.replace(
               "{count}",

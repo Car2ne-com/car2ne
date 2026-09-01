@@ -154,7 +154,7 @@ export default function AdminReportTable({
             type="button"
             onClick={() => setFilter(item.key)}
             className={cn(
-              "h-auto rounded-xl px-4 py-2",
+              "h-auto px-4 py-2",
               filter === item.key
                 ? "bg-foreground text-background hover:bg-foreground/90"
                 : "bg-card text-muted-foreground hover:bg-muted"
@@ -217,7 +217,7 @@ export default function AdminReportTable({
                         title={dict.markReviewing}
                         aria-label={dict.markReviewing}
                         size="icon-lg"
-                        className="rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+                        className="bg-blue-500 text-white hover:bg-blue-600"
                       >
                         <Clock3 className="h-4 w-4" />
                       </Button>
@@ -231,7 +231,6 @@ export default function AdminReportTable({
                       title={dict.resolve}
                       aria-label={dict.resolve}
                       size="icon-lg"
-                      className="rounded-xl"
                     >
                       <CheckCircle2 className="h-4 w-4" />
                     </Button>
@@ -244,7 +243,7 @@ export default function AdminReportTable({
                       title={dict.dismiss}
                       aria-label={dict.dismiss}
                       size="icon-lg"
-                      className="rounded-xl bg-muted-foreground text-background hover:bg-foreground"
+                      className="bg-muted-foreground text-background hover:bg-foreground"
                     >
                       <XCircle className="h-4 w-4" />
                     </Button>

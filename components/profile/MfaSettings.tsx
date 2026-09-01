@@ -426,7 +426,7 @@ export default function MfaSettings({ dict }: Props) {
 
       <div className="mt-6">
         {loadingFactors ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             {dict.loading}
           </p>
         ) : loadError ? (
@@ -442,7 +442,7 @@ export default function MfaSettings({ dict }: Props) {
               onClick={() =>
                 setReloadKey((key) => key + 1)
               }
-              className="h-11 rounded-2xl px-6 font-semibold"
+              className="h-11 px-6 font-semibold"
             >
               {dict.retry}
             </Button>
@@ -490,7 +490,7 @@ export default function MfaSettings({ dict }: Props) {
               <Button
                 type="submit"
                 disabled={busy}
-                className="h-11 rounded-2xl bg-destructive px-6 font-semibold text-destructive-foreground hover:bg-destructive/90"
+                className="h-11 bg-destructive px-6 font-semibold text-destructive-foreground hover:bg-destructive/90"
               >
                 {dict.reauthButton}
               </Button>
@@ -503,7 +503,7 @@ export default function MfaSettings({ dict }: Props) {
                   setNeedsReauth(false);
                   setReauthCode("");
                 }}
-                className="h-11 rounded-2xl px-6 font-semibold"
+                className="h-11 px-6 font-semibold"
               >
                 {dict.cancelButton}
               </Button>
@@ -569,7 +569,7 @@ export default function MfaSettings({ dict }: Props) {
               <Button
                 type="submit"
                 disabled={busy}
-                className="h-11 rounded-2xl bg-primary px-6 font-semibold hover:bg-primary/90"
+                className="h-11 bg-primary px-6 font-semibold hover:bg-primary/90"
               >
                 {dict.verifyAndEnableButton}
               </Button>
@@ -579,7 +579,7 @@ export default function MfaSettings({ dict }: Props) {
                 variant="outline"
                 disabled={busy}
                 onClick={handleCancelEnroll}
-                className="h-11 rounded-2xl px-6 font-semibold"
+                className="h-11 px-6 font-semibold"
               >
                 {dict.cancelButton}
               </Button>
@@ -587,7 +587,7 @@ export default function MfaSettings({ dict }: Props) {
           </form>
         ) : verifiedFactorId ? (
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
+            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
               <ShieldCheck className="h-4 w-4" />
               {dict.activeLabel}
             </div>
@@ -601,7 +601,7 @@ export default function MfaSettings({ dict }: Props) {
                   onClick={() =>
                     setConfirmingDisable(false)
                   }
-                  className="h-11 rounded-2xl px-6 font-semibold"
+                  className="h-11 px-6 font-semibold"
                 >
                   {dict.cancelButton}
                 </Button>
@@ -612,7 +612,7 @@ export default function MfaSettings({ dict }: Props) {
                 variant="outline"
                 disabled={busy}
                 onClick={handleDisable}
-                className="h-11 rounded-2xl px-6 font-semibold text-destructive hover:bg-destructive/10"
+                className="h-11 px-6 font-semibold text-destructive hover:bg-destructive/10"
               >
                 {confirmingDisable
                   ? dict.confirmDisableQuestion
@@ -631,7 +631,7 @@ export default function MfaSettings({ dict }: Props) {
               type="button"
               disabled={busy}
               onClick={handleStartEnroll}
-              className="h-11 rounded-2xl bg-primary px-6 font-semibold hover:bg-primary/90"
+              className="h-11 bg-primary px-6 font-semibold hover:bg-primary/90"
             >
               {dict.enableButton}
             </Button>

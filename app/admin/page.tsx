@@ -124,7 +124,7 @@ export default async function AdminDashboardPage() {
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground">
           {t.title}
         </h1>
 
@@ -347,7 +347,7 @@ export default async function AdminDashboardPage() {
           href="/admin/events"
           className={cn(
             buttonVariants(),
-            "h-auto rounded-2xl bg-foreground px-6 py-3 text-sm text-background hover:bg-foreground/90"
+            "h-auto bg-foreground px-6 py-3 text-sm text-background hover:bg-foreground/90"
           )}
         >
           {t.manageEvents}
@@ -357,7 +357,7 @@ export default async function AdminDashboardPage() {
           href="/admin/users"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "h-auto rounded-2xl px-6 py-3 text-sm"
+            "h-auto px-6 py-3 text-sm"
           )}
         >
           {t.manageUsers}
@@ -367,7 +367,7 @@ export default async function AdminDashboardPage() {
           href="/admin/import"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "h-auto rounded-2xl px-6 py-3 text-sm"
+            "h-auto px-6 py-3 text-sm"
           )}
         >
           {t.goToImports}
@@ -377,7 +377,7 @@ export default async function AdminDashboardPage() {
           href="/admin/analytics"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "h-auto rounded-2xl px-6 py-3 text-sm"
+            "h-auto px-6 py-3 text-sm"
           )}
         >
           {t.goToAnalytics}

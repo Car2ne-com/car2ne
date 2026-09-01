@@ -115,7 +115,7 @@ function ComboboxTrigger({
     <ComboboxPrimitive.Trigger
       data-slot="combobox-trigger"
       className={cn(
-        "group/button inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border bg-background text-sm font-medium whitespace-nowrap outline-none select-none transition-all hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
+        "group/button inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-border bg-background text-sm font-medium whitespace-nowrap outline-none select-none transition-all hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
         className
       )}
       {...props}

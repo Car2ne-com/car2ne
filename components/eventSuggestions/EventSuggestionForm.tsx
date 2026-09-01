@@ -68,7 +68,7 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
   if (submitted) {
     return (
       <Card className="mt-10 p-8 text-center shadow-sm">
-        <h2 className="text-xl font-bold text-foreground">
+        <h2 className="text-xl font-semibold text-foreground">
           {dict.success.title}
         </h2>
 
@@ -82,7 +82,7 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
             setUrl("");
             setSubmitted(false);
           }}
-          className="mt-6 h-12 rounded-2xl px-8 text-base font-semibold"
+          className="mt-6 h-12 px-8 text-base font-semibold"
         >
           {dict.success.another}
         </Button>
@@ -108,7 +108,7 @@ export default function EventSuggestionForm({ dict }: { dict: Dict }) {
           type="button"
           onClick={handleSubmit}
           disabled={submitting}
-          className="h-12 rounded-2xl px-8 text-base font-semibold"
+          className="h-12 px-8 text-base font-semibold"
         >
           {submitting ? (
             <>

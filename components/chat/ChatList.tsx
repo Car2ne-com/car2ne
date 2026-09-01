@@ -664,7 +664,7 @@ export default function ChatList({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="truncate text-lg font-bold text-foreground">
+              <h2 className="truncate text-lg font-semibold text-foreground">
                 {chat.otherName}
               </h2>
 

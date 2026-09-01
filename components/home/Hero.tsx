@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Search, CarFront } from "lucide-react";
+import { Search, ArrowUpRight } from "lucide-react";
 
 import HeroIllustration from "./HeroIllustration";
 import SearchBox from "./SearchBox";
@@ -13,107 +13,52 @@ export default async function Hero() {
   const searchBoxDict = dict.home.searchBox;
 
   return (
-    <section className="relative">
+    <section className="relative overflow-hidden">
+      {/* Texture "carta stampata" appena percettibile dietro l'hero */}
+      <div className="bg-dotgrid pointer-events-none absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,black,transparent_92%)]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-10 lg:py-14">
-
-      <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
-
-        {/* LEFT */}
-
-        <div className="max-w-xl">
-
-          <span className="inline-flex rounded-full border border-primary/20 bg-accent/80 px-5 py-2 text-sm font-medium text-accent-foreground backdrop-blur">
-            {t.badge}
-          </span>
-
-          <h1 className="mt-6 text-5xl font-black leading-[0.92] tracking-tight text-foreground md:text-6xl xl:text-[4.5rem]">
-            {t.titleLine1}
-            <br />
-            {t.titleLine2}
-            <br />
-            {t.titleLine3}
-            <br />
-            {t.titleLine4}
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 pt-6 pb-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-4 lg:pt-12">
+        {/* Testo */}
+        <div className="max-w-2xl">
+          <h1 className="mt-8 font-display text-[clamp(2.85rem,6vw,5rem)] font-medium leading-[1.0] tracking-[-0.025em] text-foreground">
+            {t.titleLine1}{" "}
+            <span className="italic text-primary">{t.titleLine2}</span>{" "}
+            {t.titleLine3} {t.titleLine4}
           </h1>
 
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
+          <p className="mt-7 max-w-md text-lg leading-8 text-muted-foreground">
             {t.description}
           </p>
 
-          {/* CTA */}
-
-          <div className="mt-8 flex flex-wrap gap-5">
-
+          <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
             <Link
               href="/events"
-              className="
-                inline-flex
-                h-16
-                items-center
-                justify-center
-                gap-3
-                rounded-2xl
-                bg-primary
-                px-10
-                text-lg
-                font-semibold
-                text-primary-foreground
-                shadow-lg
-                transition
-                hover:bg-primary/90
-                hover:shadow-xl
-              "
+              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-primary px-8 text-base font-semibold text-primary-foreground shadow-brand transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-brand-lg"
             >
-              <Search className="h-6 w-6" />
+              <Search className="h-5 w-5" />
               {t.searchEvent}
             </Link>
 
             <Link
               href="/offer-ride"
-              className="
-                inline-flex
-                h-16
-                items-center
-                justify-center
-                gap-3
-                rounded-2xl
-                border
-                border-border
-                bg-card
-                px-10
-                text-lg
-                font-semibold
-                text-foreground
-                shadow-sm
-                transition
-                hover:border-primary/30
-                hover:bg-accent
-                hover:shadow-lg
-              "
+              className="group inline-flex items-center gap-2 text-base font-semibold text-foreground"
             >
-              <CarFront className="h-6 w-6" />
               {t.offerRide}
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card transition-all group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+                <ArrowUpRight className="h-4 w-4" />
+              </span>
             </Link>
-
           </div>
-
         </div>
 
-        {/* RIGHT */}
-
+        {/* Illustrazione */}
         <HeroIllustration />
-
       </div>
 
-      {/* SEARCH */}
-
-      <div className="mt-8">
+      {/* La ricerca è la porta d'ingresso del prodotto: grande, in overlap */}
+      <div className="relative z-10 mx-auto -mb-10 max-w-6xl px-6">
         <SearchBox dict={searchBoxDict} />
       </div>
-
-      </div>
-
     </section>
   );
 }

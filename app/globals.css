@@ -7,8 +7,8 @@
   --color-foreground: var(--foreground);
 
   /* FONT */
-  --font-sans: var(--font-sans);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* COLORS */
@@ -41,30 +41,48 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /*
+   * Ombre firmate: due strati — uno neutro corto e ravvicinato, uno
+   * lungo tinto di verde brand. Danno "sollevamento" morbido invece
+   * del solito shadow-sm grigio piatto. `soft` per lo stato a riposo,
+   * `pop` per hover / elementi in primo piano.
+   */
+  --shadow-soft: 0 1px 2px rgb(28 25 23 / 0.04), 0 10px 30px -16px rgb(6 78 59 / 0.14);
+  --shadow-pop: 0 2px 6px rgb(28 25 23 / 0.05), 0 20px 44px -20px rgb(6 78 59 / 0.20);
+
+  /* Alone brand sotto i bottoni primari — discreto, non un neon. */
+  --shadow-brand: 0 4px 14px -6px rgb(5 150 105 / 0.35);
+  --shadow-brand-lg: 0 10px 24px -10px rgb(5 150 105 / 0.42);
 }
 
 :root {
-  --background: var(--color-white);
-  --foreground: var(--color-slate-900);
+  /*
+   * Neutri "carta calda" (scala stone) invece di bianco puro + slate
+   * freddo: il fondo pagina è una carta appena avorio, le card restano
+   * bianche e così si staccano da sole. Meno "template SaaS".
+   */
+  --background: var(--color-stone-50);
+  --foreground: var(--color-stone-900);
 
   --card: var(--color-white);
-  --card-foreground: var(--color-slate-900);
+  --card-foreground: var(--color-stone-900);
 
   --popover: var(--color-white);
-  --popover-foreground: var(--color-slate-900);
+  --popover-foreground: var(--color-stone-900);
 
   /* Brand: emerald is the app's de-facto accent throughout the UI — codified here as --primary */
   --primary: var(--color-emerald-600);
   --primary-foreground: var(--color-white);
 
-  --secondary: var(--color-slate-100);
-  --secondary-foreground: var(--color-slate-900);
+  --secondary: var(--color-stone-100);
+  --secondary-foreground: var(--color-stone-900);
 
-  --muted: var(--color-slate-50);
-  --muted-foreground: var(--color-slate-500);
+  --muted: var(--color-stone-100);
+  --muted-foreground: var(--color-stone-500);
 
   --accent: var(--color-emerald-50);
-  --accent-foreground: var(--color-emerald-600);
+  --accent-foreground: var(--color-emerald-700);
 
   --destructive: var(--color-red-600);
   --destructive-foreground: var(--color-white);
@@ -75,8 +93,8 @@
   --info: var(--color-blue-100);
   --info-foreground: var(--color-blue-700);
 
-  --border: var(--color-slate-200);
-  --input: var(--color-slate-200);
+  --border: var(--color-stone-200);
+  --input: var(--color-stone-200);
   --ring: var(--color-emerald-500);
 
   --radius: 0.625rem;
@@ -96,12 +114,38 @@
     font-family: var(--font-sans);
   }
 
+  /*
+   * Solo i titoli "editoriali" (h1/h2, o .font-display esplicito) usano
+   * Fraunces. h3–h6 restano su Manrope: nelle UI dense (card, tabelle,
+   * dashboard) una sans tiene tutto più pulito e leggibile.
+   */
   h1,
   h2,
+  .font-display {
+    font-family: var(--font-heading);
+    font-optical-sizing: auto;
+    letter-spacing: -0.014em;
+  }
+
   h3,
   h4,
   h5,
   h6 {
     font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+  /*
+   * Texture a griglia di punti — dà "carta stampata" alle sezioni
+   * invece del solito fondo piatto vettoriale. Tenue, non invadente.
+   */
+  .bg-dotgrid {
+    background-image: radial-gradient(
+      currentColor 0.8px,
+      transparent 0.8px
+    );
+    background-size: 26px 26px;
+    color: color-mix(in oklch, var(--foreground) 5%, transparent);
   }
 }

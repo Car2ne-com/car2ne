@@ -81,7 +81,7 @@ export default function PushNotificationToggle({ dict }: Props) {
         onClick={subscribed ? handleDisable : handleEnable}
         disabled={busy}
         size="lg"
-        className="shrink-0 rounded-2xl px-5 py-3"
+        className="shrink-0 px-5 py-3"
       >
         {busy
           ? subscribed

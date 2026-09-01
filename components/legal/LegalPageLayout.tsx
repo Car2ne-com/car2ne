@@ -21,7 +21,7 @@ export default async function LegalPageLayout({
       <Navbar />
 
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-20">
-        <h1 className="text-4xl font-black text-foreground">
+        <h1 className="text-4xl font-medium text-foreground">
           {title}
         </h1>
 
@@ -48,7 +48,7 @@ export function LegalSection({
 }) {
   return (
     <section>
-      <h2 className="text-xl font-bold text-foreground">
+      <h2 className="text-xl font-semibold text-foreground">
         {title}
       </h2>
 

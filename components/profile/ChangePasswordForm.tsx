@@ -138,7 +138,7 @@ export default function ChangePasswordForm({ dict }: Props) {
             type="button"
             variant="outline"
             onClick={() => setOpen(true)}
-            className="h-11 rounded-2xl px-6 font-semibold"
+            className="h-11 px-6 font-semibold"
           >
             <KeyRound className="mr-2 h-4 w-4" />
             {dict.changeButton}
@@ -279,7 +279,7 @@ export default function ChangePasswordForm({ dict }: Props) {
                   !passwordIsValid ||
                   password !== confirmPassword
                 }
-                className="h-11 rounded-2xl bg-primary px-6 font-semibold hover:bg-primary/90"
+                className="h-11 bg-primary px-6 font-semibold hover:bg-primary/90"
               >
                 {loading
                   ? dict.updating
@@ -291,7 +291,7 @@ export default function ChangePasswordForm({ dict }: Props) {
                 variant="outline"
                 disabled={loading}
                 onClick={resetForm}
-                className="h-11 rounded-2xl px-6 font-semibold"
+                className="h-11 px-6 font-semibold"
               >
                 {dict.cancelButton}
               </Button>

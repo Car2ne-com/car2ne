@@ -96,7 +96,7 @@ export default function WatchlistToggleButton({
       variant={watching ? "secondary" : "outline"}
       disabled={loading}
       onClick={handleToggle}
-      className="h-10 gap-2 rounded-2xl px-5 text-sm font-semibold"
+      className="h-10 gap-2 px-5 text-sm font-semibold"
     >
       {watching ? (
         <BellOff className="h-4 w-4" />

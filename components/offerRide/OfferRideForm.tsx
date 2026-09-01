@@ -1117,7 +1117,7 @@ export default function OfferRideForm({
                   href="/dashboard/rides"
                   className={buttonVariants({
                     size: "sm",
-                    className: "mt-4 h-auto rounded-xl bg-amber-600 px-4 py-2 text-sm hover:bg-amber-700",
+                    className: "mt-4 h-auto bg-amber-600 px-4 py-2 text-sm hover:bg-amber-700",
                   })}
                 >
                   {dict.alreadyHasRide.cta}
@@ -1371,7 +1371,7 @@ export default function OfferRideForm({
               loading ||
               loadingEvents
             }
-            className="h-12 rounded-2xl px-8 text-base"
+            className="h-12 px-8 text-base"
           >
             {loading
               ? dict.submit.publishing

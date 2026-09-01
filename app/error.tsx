@@ -57,17 +57,17 @@ export default function Error({
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-foreground">{t.title}</h1>
+        <h1 className="text-2xl font-semibold text-foreground">{t.title}</h1>
         <p className="mt-3 max-w-md text-muted-foreground">{t.description}</p>
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="outline" className="rounded-xl" onClick={() => retry()}>
+        <Button variant="outline" size="lg" onClick={() => retry()}>
           {t.retry}
         </Button>
 
         <Link href="/">
-          <Button className="rounded-xl">{t.home}</Button>
+          <Button size="lg">{t.home}</Button>
         </Link>
       </div>
     </div>

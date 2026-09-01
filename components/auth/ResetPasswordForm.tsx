@@ -305,7 +305,7 @@ export default function ResetPasswordForm({ email, dict }: Props) {
             !passwordIsValid ||
             password !== confirmPassword
           }
-          className="h-12 w-full rounded-2xl bg-primary text-base font-semibold hover:bg-primary/90"
+          className="h-12 w-full text-base font-semibold"
         >
           {loading ? t.updating : t.updateButton}
         </Button>

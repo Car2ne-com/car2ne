@@ -146,7 +146,7 @@ export default async function AdminCitiesPage({
   return (
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-2xl font-semibold text-foreground">
           {t.title}
         </h1>
 
@@ -264,13 +264,13 @@ function CitiesTable({
               }
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "h-auto rounded-xl px-4 py-2"
+                "h-auto px-4 py-2"
               )}
             >
               {dict.previous}
             </Link>
           ) : (
-            <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
+            <span className="rounded-full border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
               {dict.previous}
             </span>
           )}
@@ -286,13 +286,13 @@ function CitiesTable({
               href={`/admin/cities?page=${currentPage + 1}`}
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "h-auto rounded-xl px-4 py-2"
+                "h-auto px-4 py-2"
               )}
             >
               {dict.next}
             </Link>
           ) : (
-            <span className="rounded-xl border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
+            <span className="rounded-full border border-border/60 px-4 py-2 text-sm font-semibold text-muted-foreground/50">
               {dict.next}
             </span>
           )}

@@ -325,7 +325,7 @@ export default function DriverVerificationForm({
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="h-12 rounded-2xl bg-primary px-8 font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-12 bg-primary px-8 font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting ? (
                 <>

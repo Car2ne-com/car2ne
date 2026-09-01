@@ -99,7 +99,7 @@ export default function ImageUploader({
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="h-12 gap-2 rounded-xl px-6"
+        className="h-12 gap-2 px-6"
       >
         {uploading ? (
           <>

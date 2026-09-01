@@ -103,11 +103,7 @@ export default async function CitiesIndexPage({
 
       <main className="mx-auto max-w-7xl px-6 pt-36 pb-24">
         <section className="mb-16">
-          <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-            {t.badge}
-          </span>
-
-          <h1 className="mt-6 text-5xl font-black tracking-tight text-foreground md:text-6xl">
+          <h1 className="mt-6 text-5xl font-medium tracking-tight text-foreground md:text-6xl">
             {t.title}
           </h1>
 
@@ -190,14 +186,14 @@ function CityPagination({
           href={prevPage === 1 ? "/citta" : `/citta?page=${prevPage}`}
           className={buttonVariants({
             variant: "outline",
-            className: "h-auto gap-2 rounded-2xl px-5 py-3 text-sm",
+            className: "h-auto gap-2 px-5 py-3 text-sm",
           })}
         >
           <ChevronLeft className="h-4 w-4" />
           {dict.previous}
         </Link>
       ) : (
-        <span className="flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold text-muted-foreground/50">
+        <span className="flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-muted-foreground/50">
           <ChevronLeft className="h-4 w-4" />
           {dict.previous}
         </span>
@@ -214,14 +210,14 @@ function CityPagination({
           href={`/citta?page=${nextPage}`}
           className={buttonVariants({
             variant: "outline",
-            className: "h-auto gap-2 rounded-2xl px-5 py-3 text-sm",
+            className: "h-auto gap-2 px-5 py-3 text-sm",
           })}
         >
           {dict.next}
           <ChevronRight className="h-4 w-4" />
         </Link>
       ) : (
-        <span className="flex items-center gap-2 rounded-2xl border border-border px-5 py-3 text-sm font-semibold text-muted-foreground/50">
+        <span className="flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-muted-foreground/50">
           {dict.next}
           <ChevronRight className="h-4 w-4" />
         </span>

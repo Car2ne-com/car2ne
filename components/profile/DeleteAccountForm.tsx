@@ -104,7 +104,7 @@ export default function DeleteAccountForm({
             type="button"
             variant="outline"
             onClick={() => setOpen(true)}
-            className="h-11 rounded-2xl border-destructive/30 px-6 font-semibold text-destructive hover:bg-destructive/10"
+            className="h-11 border-destructive/30 px-6 font-semibold text-destructive hover:bg-destructive/10"
           >
             <Trash2 className="mr-2 h-4 w-4" />
             {dict.openButton}
@@ -149,7 +149,7 @@ export default function DeleteAccountForm({
                   confirmText !== dict.confirmWord
                 }
                 onClick={handleDelete}
-                className="h-11 rounded-2xl bg-destructive px-6 font-semibold text-destructive-foreground hover:bg-destructive/90"
+                className="h-11 bg-destructive px-6 font-semibold text-destructive-foreground hover:bg-destructive/90"
               >
                 {loading
                   ? dict.deleting
@@ -161,7 +161,7 @@ export default function DeleteAccountForm({
                 variant="outline"
                 disabled={loading}
                 onClick={resetForm}
-                className="h-11 rounded-2xl px-6 font-semibold"
+                className="h-11 px-6 font-semibold"
               >
                 {dict.cancelButton}
               </Button>

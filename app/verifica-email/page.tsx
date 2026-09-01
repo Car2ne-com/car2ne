@@ -50,11 +50,7 @@ export default async function VerificaEmailPage({
       <main className="mx-auto flex min-h-screen max-w-md items-center px-6 pt-28 pb-16">
         <div className="w-full">
           <div className="mb-10 text-center">
-            <span className="inline-flex rounded-full border border-primary/20 bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground">
-              {t.pageBadge}
-            </span>
-
-            <h1 className="mt-6 text-4xl font-black text-foreground">
+            <h1 className="mt-6 text-4xl font-medium text-foreground">
               {t.pageTitle}
             </h1>
           </div>

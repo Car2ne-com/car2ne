@@ -90,7 +90,7 @@ function AlertDialogClose({ className, ...props }: AlertDialogPrimitive.Close.Pr
     <AlertDialogPrimitive.Close
       data-slot="alert-dialog-close"
       className={cn(
-        "rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
+        "rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
         className
       )}
       {...props}

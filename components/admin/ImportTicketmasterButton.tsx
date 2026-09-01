@@ -138,7 +138,7 @@ export default function ImportTicketmasterButton({
               )
             : undefined
         }
-        className="h-auto gap-2 rounded-2xl px-6 py-3"
+        className="h-auto gap-2 px-6 py-3"
       >
         <RefreshCw
           className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}

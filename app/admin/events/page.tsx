@@ -80,7 +80,7 @@ export default async function AdminEventsPage({
     <main className="mx-auto max-w-7xl p-10">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-2xl font-semibold text-foreground">
             {t.title}
           </h1>
 
@@ -94,7 +94,7 @@ export default async function AdminEventsPage({
             href="/admin/events/new"
             className={cn(
               buttonVariants(),
-              "h-auto rounded-2xl px-6 py-3"
+              "h-auto px-6 py-3"
             )}
           >
             {t.newEvent}

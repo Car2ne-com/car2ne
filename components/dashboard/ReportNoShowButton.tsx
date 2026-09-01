@@ -133,7 +133,7 @@ export default function ReportNoShowButton({
             type="button"
             onClick={handleConfirm}
             disabled={submitting}
-            className="h-auto rounded-xl bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
+            className="h-auto bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground hover:bg-destructive/90"
           >
             {submitting ? dict.submitting : dict.confirm}
           </Button>

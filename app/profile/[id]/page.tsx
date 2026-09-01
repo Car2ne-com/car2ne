@@ -161,7 +161,7 @@ export default async function PublicProfilePage({
               size="lg"
             />
 
-            <h1 className="mt-6 text-3xl font-black text-foreground">
+            <h1 className="mt-6 text-3xl font-medium text-foreground">
               {displayName}
             </h1>
 
