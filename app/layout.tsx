@@ -140,7 +140,7 @@ export default async function RootLayout({
          * tutta la pagina — le viste interne (dashboard, admin, form)
          * restano su carta chiara.
          */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[460px] bg-gradient-to-b from-accent via-accent/35 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-gradient-to-b from-accent via-accent/40 to-transparent sm:h-[560px]" />
         <div className="pointer-events-none absolute top-[-5rem] right-[-9rem] -z-10 hidden h-[380px] w-[380px] rounded-full bg-primary/10 blur-[120px] lg:block" />
 
         {children}

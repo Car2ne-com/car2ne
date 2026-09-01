@@ -66,7 +66,7 @@ export default async function FeaturedEvents() {
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pt-16 pb-24 lg:pt-28">
+    <section className="mx-auto max-w-7xl px-6 pt-20 pb-24 lg:pt-24">
       <div className="mb-12 flex items-end justify-between">
         <div>
           <h2 className="font-display text-[2rem] font-medium tracking-[-0.02em] text-foreground md:text-[2.75rem]">
