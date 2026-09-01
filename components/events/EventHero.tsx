@@ -34,14 +34,14 @@ export default function EventHero({ event, locale }: Props) {
 
       <div className="absolute inset-0 bg-black/20" />
 
-      <div className="relative mx-auto flex min-h-[520px] max-w-7xl items-center px-6 py-24">
-        <div className="grid w-full gap-14 lg:grid-cols-2 lg:items-center">
+      <div className="relative mx-auto flex min-h-[420px] max-w-7xl items-center px-6 py-16 sm:min-h-[520px] sm:py-24">
+        <div className="grid w-full gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
           <div className="text-white">
-            <h1 className="text-5xl font-medium leading-tight md:text-6xl">
+            <h1 className="text-[1.85rem] font-medium leading-[1.12] tracking-[-0.01em] text-balance sm:text-4xl md:text-5xl">
               {event.title}
             </h1>
 
-            <p className="mt-3 text-2xl font-semibold text-primary-foreground/85">
+            <p className="mt-3 text-lg font-semibold text-primary-foreground/85 sm:text-2xl">
               {event.artist_slug ? (
                 <Link
                   href={`/artista/${event.artist_slug}`}
