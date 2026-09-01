@@ -22,7 +22,7 @@ export default async function ChatPage() {
     <>
       <Navbar />
 
-      <main className="mx-auto max-w-5xl px-6 pb-24 pt-40">
+      <main className="mx-auto max-w-5xl px-6 pb-24 pt-28">
         <div className="mb-10">
           <h1 className="text-[2.5rem] leading-[1.05] font-medium tracking-tight text-foreground sm:text-5xl">
             {dict.chat.page.title}

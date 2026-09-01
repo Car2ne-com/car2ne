@@ -334,11 +334,11 @@ export default function BookingCard({
             {booking.eventTitle}
           </p>
 
-          <h2 className="mt-1 text-2xl font-semibold text-foreground">
+          <h3 className="mt-1 text-xl font-bold text-foreground">
             {booking.departureCity}
             {" → "}
             {booking.destination}
-          </h2>
+          </h3>
         </div>
 
         {isConfirmed && booking.eventConcluded ? (

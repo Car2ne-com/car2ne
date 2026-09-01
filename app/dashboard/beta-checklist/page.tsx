@@ -41,7 +41,7 @@ export default async function BetaChecklistPage() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-4xl px-6 pt-28 pb-24">
         <div className="mb-10">
           <p className="text-xs font-bold tracking-widest text-primary uppercase">
             {dict.betaChecklist.meta.eyebrow}

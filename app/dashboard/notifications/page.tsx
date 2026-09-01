@@ -57,34 +57,26 @@ export default async function NotificationsPage() {
     ).length;
 
   return (
-    <main className="mx-auto max-w-4xl px-6 pb-24 pt-40">
+    <main className="mx-auto max-w-4xl px-6 pb-24 pt-28">
 
         {/* Header */}
 
-        <div className="mb-10 flex items-start justify-between gap-6">
-
-          <div>
-            <h1 className="mt-5 text-2xl font-semibold text-foreground">
+        <div className="mb-10">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl font-semibold text-foreground">
               {t.title}
             </h1>
 
-            <p className="mt-4 text-lg text-muted-foreground">
-              {t.subtitle}
-            </p>
+            {unreadCount > 0 && (
+              <span className="inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-sm font-semibold text-accent-foreground">
+                {unreadCount} {t.unreadLabel.toLowerCase()}
+              </span>
+            )}
           </div>
 
-          {unreadCount > 0 && (
-            <div className="shrink-0 rounded-2xl bg-accent px-5 py-4 text-center">
-              <p className="text-xs font-semibold text-accent-foreground">
-                {t.unreadLabel}
-              </p>
-
-              <p className="mt-1 text-2xl font-black text-accent-foreground">
-                {unreadCount}
-              </p>
-            </div>
-          )}
-
+          <p className="mt-4 text-lg text-muted-foreground">
+            {t.subtitle}
+          </p>
         </div>
 
         <PushNotificationToggle dict={dict.push} />
@@ -142,36 +134,30 @@ export default async function NotificationsPage() {
 
                     <div className="min-w-0 flex-1">
 
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-2">
+                        <h3 className="font-semibold text-foreground">
+                          {notification.title}
+                        </h3>
 
-                        <div className="flex items-center gap-2">
-
-                          <h2 className="font-semibold text-foreground">
-                            {notification.title}
-                          </h2>
-
-                          {isUnread && (
-                            <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-                          )}
-
-                        </div>
-
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {new Date(
-                            notification.created_at
-                          ).toLocaleString(
-                            "it-IT",
-                            {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </span>
-
+                        {isUnread && (
+                          <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                        )}
                       </div>
+
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {new Date(
+                          notification.created_at
+                        ).toLocaleString(
+                          "it-IT",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </span>
 
                       <p className="mt-2 leading-6 text-muted-foreground">
                         {notification.message}

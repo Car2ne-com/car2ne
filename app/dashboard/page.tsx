@@ -87,7 +87,7 @@ export default async function DashboardPage() {
       : null;
 
   return (
-    <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-7xl px-6 pt-28 pb-24">
         <DashboardHeader
           name={
             profileResult.data?.name ?? "👋"

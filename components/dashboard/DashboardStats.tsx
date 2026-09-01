@@ -40,14 +40,12 @@ export default function DashboardStats({
       title: dict.ridesPublished,
       value: String(ridesCount),
       icon: CarFront,
-      color: "bg-accent text-accent-foreground",
       href: "/dashboard/rides",
     },
     {
       title: dict.bookingsMade,
       value: String(bookingsCount),
       icon: Ticket,
-      color: "bg-blue-100 text-blue-600",
       href: "/dashboard/bookings",
     },
     {
@@ -60,14 +58,12 @@ export default function DashboardStats({
           ? ratingAverage.toFixed(1)
           : "—",
       icon: Star,
-      color: "bg-amber-100 text-amber-600",
       href: `/profile/${userId}#reviews`,
     },
     {
       title: dict.seatsOffered,
       value: String(seatsOffered),
       icon: Armchair,
-      color: "bg-violet-100 text-violet-600",
       href: "/dashboard/rides",
     },
   ];
@@ -88,13 +84,11 @@ export default function DashboardStats({
               className="absolute inset-0 z-10"
             />
 
-            <div
-              className={`flex h-14 w-14 items-center justify-center rounded-2xl ${stat.color}`}
-            >
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
               <Icon className="h-7 w-7" />
             </div>
 
-            <h3 className="mt-6 text-4xl font-black text-foreground">
+            <h3 className="mt-6 text-4xl font-semibold tracking-[-0.02em] text-foreground">
               {stat.value}
             </h3>
 

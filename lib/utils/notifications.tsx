@@ -132,18 +132,18 @@ export function getNotificationIcon(
     type === "report_dismissed"
   ) {
     return (
-      <div className={`${wrapperClass} bg-slate-100`}>
+      <div className={`${wrapperClass} bg-muted`}>
         <Flag
-          className={`${iconClass} text-slate-500`}
+          className={`${iconClass} text-muted-foreground`}
         />
       </div>
     );
   }
 
   return (
-    <div className={`${wrapperClass} bg-slate-100`}>
+    <div className={`${wrapperClass} bg-muted`}>
       <Clock3
-        className={`${iconClass} text-slate-500`}
+        className={`${iconClass} text-muted-foreground`}
       />
     </div>
   );

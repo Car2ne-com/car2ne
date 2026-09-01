@@ -111,7 +111,7 @@ export default async function ManageRidePage({
   ).format(new Date(event.event_date));
 
   return (
-    <main className="mx-auto max-w-5xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-5xl px-6 pt-28 pb-24">
 
         {/* Header */}
 

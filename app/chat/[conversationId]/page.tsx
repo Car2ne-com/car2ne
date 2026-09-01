@@ -360,7 +360,7 @@ export default async function ConversationPage({
     <>
       <Navbar />
 
-      <main className="mx-auto max-w-5xl px-6 pb-24 pt-32">
+      <main className="mx-auto max-w-5xl px-6 pb-24 pt-28">
         <Link
           href="/chat"
           className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition hover:text-primary"

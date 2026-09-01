@@ -73,7 +73,7 @@ export default async function MyBookingsPage() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-7xl px-6 pt-28 pb-24">
 
         {/* Header */}
 

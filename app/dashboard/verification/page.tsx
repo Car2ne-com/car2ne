@@ -26,7 +26,7 @@ export default async function DriverVerificationPage() {
     .maybeSingle();
 
   return (
-    <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-3xl px-6 pt-28 pb-24">
         <div className="mb-10">
           <h1 className="text-2xl font-semibold text-foreground">
             {dict.driverVerification.page.title}

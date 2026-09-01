@@ -60,7 +60,7 @@ export default async function MyRidesPage() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-6 pt-40 pb-24">
+    <main className="mx-auto max-w-7xl px-6 pt-28 pb-24">
 
         {/* Header */}
 
@@ -133,11 +133,11 @@ export default async function MyRidesPage() {
                         {event?.title ?? t.eventLabel}
                       </p>
 
-                      <h2 className="mt-1 text-2xl font-semibold text-foreground">
+                      <h3 className="mt-1 text-xl font-bold text-foreground">
                         {ride.departure_city}
                         {" → "}
                         {ride.destination}
-                      </h2>
+                      </h3>
                     </div>
 
                     <span

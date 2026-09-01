@@ -149,7 +149,7 @@ export default async function PublicProfilePage({
     <>
       <Navbar />
 
-      <main className="mx-auto max-w-3xl px-6 pt-40 pb-24">
+      <main className="mx-auto max-w-3xl px-6 pt-28 pb-24">
         <Card className="p-10">
           <div className="flex flex-col items-center text-center">
             <VerifiedAvatar
