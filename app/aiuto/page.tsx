@@ -64,7 +64,7 @@ export default async function AiutoPage() {
         />
 
         <section>
-          <h1 className="mt-6 text-4xl font-medium tracking-tight text-foreground md:text-5xl">
+          <h1 className="text-[2.25rem] leading-[1.08] font-medium tracking-tight text-foreground md:text-5xl">
             {t.hero.title}
           </h1>
 

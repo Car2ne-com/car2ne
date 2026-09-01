@@ -6,7 +6,7 @@ export default async function OfferRideHeader() {
 
   return (
     <section className="mb-12">
-      <h1 className="mt-6 text-5xl font-medium tracking-tight text-foreground">
+      <h1 className="text-[2.5rem] leading-[1.05] font-medium tracking-tight text-foreground sm:text-5xl">
         {t.title}
       </h1>
 

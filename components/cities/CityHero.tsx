@@ -24,7 +24,7 @@ export default function CityHero({ city, eventCount, dict }: Props) {
 
   return (
     <section className="mb-16">
-      <h1 className="mt-6 text-5xl font-medium tracking-tight text-foreground md:text-6xl">
+      <h1 className="text-[2.5rem] leading-[1.05] font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl">
         {dict.title.replace("{city}", city.name)}
       </h1>
 

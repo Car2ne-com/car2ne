@@ -9,14 +9,14 @@ export default async function HowItWorks() {
   const t = dict.home.howItWorks;
 
   return (
-    <section className="border-y border-border bg-secondary/30 py-28">
+    <section className="border-y border-border bg-secondary/30 py-20 lg:py-28">
       <div className="mx-auto max-w-5xl px-6">
-        <div className="mb-20 max-w-xl">
-          <h2 className="mt-6 font-display text-4xl font-medium tracking-[-0.02em] text-foreground md:text-[2.75rem]">
+        <div className="mb-14 max-w-xl lg:mb-20">
+          <h2 className="font-display text-[2rem] font-medium tracking-[-0.02em] text-foreground md:text-[2.75rem]">
             {t.title}
           </h2>
 
-          <p className="text-lg leading-8 text-muted-foreground">
+          <p className="mt-4 text-lg leading-8 text-muted-foreground">
             {t.subtitle}
           </p>
         </div>

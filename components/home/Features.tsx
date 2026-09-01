@@ -9,14 +9,14 @@ export default async function Features() {
   const t = dict.home.features;
 
   return (
-    <section className="bg-background py-24">
-      <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+    <section className="bg-background py-20 lg:py-24">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <h2 className="mt-6 font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-foreground md:text-5xl">
+          <h2 className="font-display text-[2rem] font-medium leading-[1.08] tracking-[-0.02em] text-foreground md:text-5xl">
             {t.title}
           </h2>
 
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
+          <p className="mt-5 text-lg leading-8 text-muted-foreground">
             {t.description}
           </p>
         </div>

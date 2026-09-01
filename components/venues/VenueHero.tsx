@@ -35,7 +35,7 @@ export default function VenueHero({ city, venue, eventCount, dict }: Props) {
         {city.name}
       </Link>
 
-      <h1 className="mt-6 flex items-center gap-3 text-5xl font-medium tracking-tight text-foreground md:text-6xl">
+      <h1 className="flex items-center gap-3 text-[2.5rem] leading-[1.05] font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl">
         <Building2 className="h-10 w-10 text-primary" />
         {venue.name}
       </h1>
