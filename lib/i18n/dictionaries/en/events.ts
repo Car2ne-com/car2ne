@@ -20,7 +20,7 @@ export const events: (typeof it)["events"] = {
       "Concerts, festivals, sports, fairs and shows. Find a ride or share your trip with other attendees.",
   },
   search: {
-    placeholder: "Search an event, a city or a venue...",
+    placeholder: "Search for an event, a city or a venue...",
   },
   filters: {
     cityAriaLabel: "Filter by city",

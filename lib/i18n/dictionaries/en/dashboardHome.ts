@@ -21,7 +21,7 @@ export const dashboardHome: (typeof it)["dashboardHome"] = {
     editProfileCta: "Edit profile",
     offerRideTitle: "Offer a ride",
     offerRideDescription:
-      "Share your trip with other participants and split the costs.",
+      "Share your trip with other attendees and split the costs.",
     offerRideCta: "Get started",
     findEventTitle: "Find an event",
     findEventDescription:

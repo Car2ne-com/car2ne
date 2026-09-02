@@ -48,7 +48,7 @@ export const reports = {
     reported: "Mancata presentazione segnalata",
     dialogTitle: "Segnala mancata presentazione",
     dialogDescription:
-      "Confermi che la controparte non si è presentata? Il nostro team esaminerà la segnalazione.",
+      "Confermi che l'altra persona non si è presentata? Il nostro team esaminerà la segnalazione.",
     noteLabel: "Nota (facoltativa)",
     confirm: "Segnala",
     cancel: "Annulla",

@@ -57,9 +57,9 @@ export default async function CommunityGuidelinesPage() {
         <LegalSection title="5. Communication">
           <p>
             Use the internal chat to arrange details
-            with the driver or passengers. It is not
-            allowed to use chat for spam, unsolicited
-            advertising or illegal content.
+            with the driver or passengers. Using the
+            chat for spam, unsolicited advertising or
+            illegal content is not allowed.
           </p>
         </LegalSection>
 

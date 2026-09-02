@@ -66,9 +66,7 @@ export default function AdminTrendChart({
               fill={color}
               opacity={0.85}
             >
-              <title>
-                {point.date}: {point.count}
-              </title>
+              <title>{`${point.date}: ${point.count}`}</title>
             </rect>
           );
         })}

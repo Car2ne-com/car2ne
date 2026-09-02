@@ -4,7 +4,7 @@ export const reports: (typeof it)["reports"] = {
   page: {
     title: "Report a problem",
     intro:
-      "If you've encountered a technical issue, inappropriate behavior from another user, inappropriate content in chat or in a review, or any other difficulty with Car2ne, report it and we'll get back to you as soon as possible.",
+      "If you've encountered a technical issue, improper behavior from another user, inappropriate content in chat or in a review, or any other difficulty with Car2ne, report it and we'll get back to you as soon as possible.",
   },
   guestNotice: {
     title: "What helps us respond faster",
@@ -50,7 +50,7 @@ export const reports: (typeof it)["reports"] = {
     reported: "No-show reported",
     dialogTitle: "Report no-show",
     dialogDescription:
-      "Confirm that the other party didn't show up? Our team will review the report.",
+      "Do you confirm the other person didn't show up? Our team will review the report.",
     noteLabel: "Note (optional)",
     confirm: "Report",
     cancel: "Cancel",

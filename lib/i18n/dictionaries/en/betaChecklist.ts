@@ -35,7 +35,7 @@ export const betaChecklist: (typeof it)["betaChecklist"] = {
         { id: "register-en", title: "Sign up with valid data — in English, with the site language set to EN." },
         { id: "register-weak-password", title: "Sign up with a weak password (e.g. no uppercase letter or special character).", expected: "The error message clearly explains what's missing." },
         { id: "register-underage", title: "Sign up entering an underage date of birth.", expected: "The user is blocked/redirected to the age check, no account is created." },
-        { id: "register-no-terms", title: "Try to sign up without accepting the Terms." },
+        { id: "register-no-terms", title: "Try to sign up without accepting the Terms.", expected: "Form submission stays blocked." },
         { id: "login-password", title: "Log in with a correct email and password." },
         { id: "login-google", title: "Log in with Google (OAuth)." },
         { id: "password-reset", title: "Password recovery: request email, receive link, set a new password, log in with the new password." },

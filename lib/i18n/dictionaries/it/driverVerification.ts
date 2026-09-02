@@ -8,7 +8,7 @@ export const driverVerification = {
     pending: "In revisione",
     approved: "Verificato",
     rejected: "Rifiutato",
-    expired: "Scaduta",
+    expired: "Scaduto",
     pendingDescription:
       "La tua richiesta è in attesa di revisione da parte del nostro team.",
     approvedDescription:

@@ -5,7 +5,6 @@ export const help = {
       "Come funziona Car2ne, come offrire o prenotare un passaggio e le risposte alle domande più frequenti.",
   },
   hero: {
-    badge: "❓ Centro assistenza",
     title: "Come possiamo aiutarti?",
     subtitle:
       "Come funziona Car2ne e le risposte alle domande più frequenti. Se non trovi quello che cerchi, scrivici.",

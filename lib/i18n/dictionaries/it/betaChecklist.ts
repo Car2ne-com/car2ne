@@ -33,7 +33,7 @@ export const betaChecklist = {
         { id: "register-en", title: "Registrazione con dati validi — in inglese, con lingua sito impostata su EN." },
         { id: "register-weak-password", title: "Registrazione con password debole (es. senza maiuscola o carattere speciale).", expected: "Il messaggio d'errore spiega chiaramente il requisito mancante." },
         { id: "register-underage", title: "Registrazione inserendo una data di nascita da minorenne.", expected: "L'utente viene bloccato/reindirizzato alla verifica età, non gli viene creato l'account." },
-        { id: "register-no-terms", title: "Tentativo di registrazione senza spuntare l'accettazione dei Termini.", expected: "Il submit resta bloccato." },
+        { id: "register-no-terms", title: "Tentativo di registrazione senza spuntare l'accettazione dei Termini.", expected: "L'invio del modulo resta bloccato." },
         { id: "login-password", title: "Login con email e password corretti." },
         { id: "login-google", title: "Login con Google (OAuth)." },
         { id: "password-reset", title: "Recupero password: richiesta email, link ricevuto, impostazione nuova password, login con la nuova password." },
@@ -61,7 +61,7 @@ export const betaChecklist = {
     },
     {
       id: "ride-driver",
-      title: "Pubblicare un passaggio (come autista)",
+      title: "Pubblicare un passaggio (come conducente)",
       items: [
         { id: "offer-ride-create", title: "Creazione di un nuovo passaggio da \"Offri un passaggio\": città di partenza, orario, posti disponibili, contributo spese." },
         { id: "offer-ride-fair-price", title: "Inserimento di un contributo spese molto alto rispetto alla distanza.", expected: "Compare un avviso non bloccante che segnala il contributo sopra la media." },
@@ -81,7 +81,7 @@ export const betaChecklist = {
         { id: "booking-list", title: "Elenco delle proprie prenotazioni nella dashboard." },
         { id: "booking-status-notification", title: "Notifica in-app quando la richiesta viene accettata o rifiutata." },
         { id: "booking-status-email", title: "Email corrispondente ricevuta per accettazione/rifiuto." },
-        { id: "ride-cancelled-as-passenger", title: "Il passaggio prenotato viene cancellato dall'autista.", expected: "Il passeggero riceve notifica ed email e la prenotazione risulta chiaramente cancellata nella sua dashboard." },
+        { id: "ride-cancelled-as-passenger", title: "Il passaggio prenotato viene cancellato dal conducente.", expected: "Il passeggero riceve notifica ed email e la prenotazione risulta chiaramente cancellata nella sua dashboard." },
       ],
     },
     {
@@ -105,7 +105,7 @@ export const betaChecklist = {
       id: "reviews",
       title: "Recensioni",
       items: [
-        { id: "review-reminder", title: "Dopo un passaggio concluso arriva un promemoria per lasciare una recensione, sia lato autista che lato passeggero." },
+        { id: "review-reminder", title: "Dopo un passaggio concluso arriva un promemoria per lasciare una recensione, sia lato conducente che lato passeggero." },
         { id: "review-submit", title: "Invio di una recensione con stelle e commento." },
         { id: "review-public-profile", title: "Le recensioni ricevute compaiono correttamente nel profilo pubblico dell'utente." },
       ],

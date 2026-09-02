@@ -88,9 +88,9 @@ export default async function PrivacyPolicyPage() {
             <li>
               <strong>Driver verification data (optional):</strong>{" "}
               if you request driver verification, we
-              collect your driving license number,
+              collect your driver&apos;s license number,
               vehicle plate, make and model, and a copy
-              of your driving license or ID document.
+              of your driver&apos;s license or ID document.
               The document is stored in a private,
               access-restricted archive and is deleted
               once your request has been reviewed, or
@@ -640,8 +640,8 @@ export default async function PrivacyPolicyPage() {
           I dati sono conservati per tutta la
           durata dell&apos;account. Se elimini il
           tuo account, non cancelliamo
-          fisicamente la tua riga di profilo: la
-          anonimizziamo (nome, cognome, foto,
+          fisicamente la tua riga di profilo:
+          l&apos;anonimizziamo (nome, cognome, foto,
           città e biografia vengono rimossi) e
           blocchiamo permanentemente
           l&apos;accesso (email e password

@@ -1,29 +1,24 @@
 export const auth = {
   login: {
-    pageBadge: "👋 Bentornato",
     pageTitle: "Accedi a Car2ne",
     pageSubtitle: "Accedi per offrire o prenotare un passaggio.",
   },
   register: {
-    pageBadge: "🚀 Benvenuto",
     pageTitle: "Crea il tuo account",
     pageSubtitle:
       "Registrati per offrire o prenotare passaggi verso i tuoi eventi preferiti.",
   },
   forgotPassword: {
-    pageBadge: "🔑 Recupero password",
     pageTitle: "Password dimenticata?",
     pageSubtitle:
       "Inserisci la tua email e ti invieremo un codice per reimpostarla.",
   },
   resetPassword: {
-    pageBadge: "🔑 Nuova password",
     pageTitle: "Imposta una nuova password",
     pageSubtitle:
       "Inserisci il codice che ti abbiamo inviato via email e scegli una nuova password.",
   },
   verifyAge: {
-    pageBadge: "🎂 Ultimo passaggio",
     pageTitle: "Completa la registrazione",
     pageSubtitle:
       "Car2ne è riservato a chi ha almeno 18 anni: inserisci la tua data di nascita per continuare.",
@@ -36,14 +31,12 @@ export const auth = {
     continueButton: "Continua",
   },
   mfaChallenge: {
-    pageBadge: "🔒 Verifica in due passaggi",
     pageTitle: "Conferma la tua identità",
     pageSubtitle:
       "Il tuo account ha l'autenticazione a due fattori attiva.",
     signingOut: "Disconnessione...",
   },
   verifyEmail: {
-    pageBadge: "📧 Ultimo passaggio",
     pageTitle: "Verifica la tua email",
     pageSubtitle:
       "Ti abbiamo inviato un codice a {email}. Inseriscilo qui sotto per attivare il tuo account.",

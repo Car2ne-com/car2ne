@@ -31,9 +31,9 @@ export const offerRide: (typeof it)["offerRide"] = {
   fields: {
     originCityLabel: "Departure and return city *",
     departureTimeLabel: "Outbound time *",
-    departureTimeHint: "Choose the time you expect to leave towards the event.",
+    departureTimeHint: "Choose the time you expect to set off for the event.",
     returnTimeLabel: "Return time *",
-    returnTimeHint: "Choose the time you expect to leave from the event.",
+    returnTimeHint: "Choose the time you expect to head back from the event.",
     seatsLabel: "Available seats *",
     contributionLabel: "Contribution per passenger (€) *",
     contributionHint:
@@ -56,7 +56,7 @@ export const offerRide: (typeof it)["offerRide"] = {
     publishFailed: "Couldn't publish the ride.",
     publishSuccess: "Ride published successfully!",
     contributionTooHigh:
-      "With these seats and this route, above {max} per passenger the trip would earn you a profit. Car2ne is for splitting costs, not making money.",
+      "With these seats and this route, above {max} per passenger the trip would make you a profit. Car2ne is for splitting costs, not making money.",
   },
   cityCombobox: {
     changeCityAriaLabel: "Change city",
@@ -65,7 +65,7 @@ export const offerRide: (typeof it)["offerRide"] = {
     noCityFound: "No city found.",
     minCharsHint: "Type at least {count} characters to search.",
     selectSuggestion: "Select a city from the suggestions.",
-    placeholder: "Search a city...",
+    placeholder: "Search for a city...",
   },
   fairPrice: {
     title: "Contribution above the fair share",

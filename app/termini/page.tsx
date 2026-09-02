@@ -61,8 +61,8 @@ export default async function TerminiPage() {
 
           <p>
             Some drivers may optionally request
-            verification of their driving license and
-            vehicle by submitting the relevant documents
+            verification of their driver&apos;s license
+            and vehicle by submitting the relevant documents
             for review. A &quot;verified driver&quot;
             badge only confirms that the submitted
             documents were reviewed and found consistent;

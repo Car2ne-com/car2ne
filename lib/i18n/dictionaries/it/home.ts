@@ -5,7 +5,6 @@ export const home = {
       "Concerti, festival, fiere e molto altro. Car2ne mette in contatto persone che stanno andando allo stesso evento per condividere il viaggio.",
   },
   hero: {
-    badge: "🚗 Viaggia insieme. Risparmia. Conosci nuove persone.",
     titleLine1: "Trova il tuo",
     titleLine2: "passaggio",
     titleLine3: "per il prossimo",
@@ -14,16 +13,6 @@ export const home = {
       "Concerti, festival, fiere e molto altro. Car2ne mette in contatto persone che stanno andando allo stesso evento per condividere il viaggio.",
     searchEvent: "Cerca un evento",
     offerRide: "Offri un passaggio",
-  },
-  floatingCards: {
-    eventName: "Coldplay World Tour",
-    eventLocation: "Milano • 18 Settembre",
-    rating: "4.9 / 5",
-    reviews: "120 recensioni",
-    seatsAvailable: "3 posti disponibili",
-    departureFrom: "Partenza da Milano",
-    destination: "Tomorrowland",
-    destinationLocation: "Boom, Belgio",
   },
   searchBox: {
     eventPlaceholder: "Cerca un evento",
@@ -35,7 +24,6 @@ export const home = {
     subtitle: "Scopri gli eventi più interessanti della community.",
   },
   howItWorks: {
-    badge: "Come funziona",
     title: "Bastano 3 semplici passaggi",
     subtitle:
       "Car2ne rende semplice trovare persone che stanno andando al tuo stesso evento.",
@@ -58,7 +46,6 @@ export const home = {
     ],
   },
   features: {
-    badge: "Perché Car2ne",
     title: "Il modo più semplice per raggiungere il tuo evento.",
     description:
       "Car2ne mette in contatto persone che stanno andando allo stesso evento per condividere il viaggio, risparmiare e divertirsi insieme.",

@@ -19,16 +19,16 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     title: "My bookings",
     subtitle: "Manage the rides you've booked on Car2ne.",
     tabActive: "Upcoming",
-    tabConcluded: "Concluded",
+    tabConcluded: "Past",
   },
   empty: {
     title: "No bookings yet",
     description:
       "When you book a ride, you'll find it here and can manage it directly from your account.",
-    cta: "Search an event",
+    cta: "Search for an event",
   },
   concludedEmpty: {
-    title: "No concluded bookings",
+    title: "No past bookings",
     description:
       "Rides land here once the event is over. The chat closes and only the history remains.",
   },
@@ -42,7 +42,7 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     rideLabel: "Booked ride",
     viewEvent: "View event",
     openChat: "Open chat",
-    concludedBadge: "Concluded",
+    concludedBadge: "Past",
     cancelButton: "Cancel booking",
     dialogCancelButton: "Cancel",
     dialogPleaseWait: "Please wait…",
@@ -63,6 +63,8 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     payConfirmTitle: "Confirm payment?",
     payConfirmDescription:
       "Did you complete the payment via {method}? Once confirmed, the booking will be marked as paid and this section will be disabled.",
+    payConfirmDescriptionInPerson:
+      "Do you confirm you paid in person? Once confirmed, the booking will be marked as paid and this section will be disabled.",
     payConfirmButton: "Yes, I paid",
     markingPaid: "Recording...",
     markPaidSuccess: "Payment recorded!",
@@ -72,5 +74,6 @@ export const dashboardBookings: (typeof it)["dashboardBookings"] = {
     methodSatispay: "Satispay",
     paidBadge: "Paid ✓",
     paidWith: "Paid with {method} on {date}",
+    paidInPerson: "Paid in person on {date}",
   },
 };

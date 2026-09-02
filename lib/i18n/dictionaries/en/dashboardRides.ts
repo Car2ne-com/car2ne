@@ -11,10 +11,10 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
     emptyCta: "Offer a ride",
     statusActive: "Active",
     statusCancelled: "Cancelled",
-    statusConcluded: "Concluded",
+    statusConcluded: "Past",
     tabActive: "Upcoming",
-    tabConcluded: "Concluded",
-    concludedEmptyTitle: "No concluded rides",
+    tabConcluded: "Past",
+    concludedEmptyTitle: "No past rides",
     concludedEmptyDescription:
       "Rides land here once the event is over. The passenger chat closes and only the history remains.",
     eventLabel: "Event",
@@ -60,7 +60,7 @@ export const dashboardRides: (typeof it)["dashboardRides"] = {
   confirmedPassengers: {
     badge: "✓ Confirmed passengers",
     title: "Ride chat",
-    subtitle: "Contact directly the passengers with a confirmed booking.",
+    subtitle: "Contact the passengers with a confirmed booking directly.",
     passengerLabel: "Confirmed passenger",
     openChat: "Open chat",
   },

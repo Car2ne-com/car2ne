@@ -2,47 +2,40 @@ import type { it } from "../it";
 
 export const auth: (typeof it)["auth"] = {
   login: {
-    pageBadge: "👋 Welcome back",
     pageTitle: "Log in to Car2ne",
     pageSubtitle: "Log in to offer or book a ride.",
   },
   register: {
-    pageBadge: "🚀 Welcome",
     pageTitle: "Create your account",
     pageSubtitle: "Sign up to offer or book rides to your favorite events.",
   },
   forgotPassword: {
-    pageBadge: "🔑 Password recovery",
     pageTitle: "Forgot your password?",
     pageSubtitle: "Enter your email and we'll send you a code to reset it.",
   },
   resetPassword: {
-    pageBadge: "🔑 New password",
     pageTitle: "Set a new password",
     pageSubtitle:
       "Enter the code we sent you by email and choose a new password.",
   },
   verifyAge: {
-    pageBadge: "🎂 Last step",
     pageTitle: "Complete your registration",
     pageSubtitle:
-      "Car2ne is reserved for people at least 18 years old: enter your date of birth to continue.",
+      "Car2ne is only for people aged 18 and over. Enter your date of birth to continue.",
     emptyBirthDateError: "Enter your date of birth.",
     notAdultFieldError:
       "You don't appear to be an adult: your account can't be activated.",
     notAdultToast:
-      "Car2ne is reserved for people at least 18 years old. Your account wasn't activated.",
+      "Car2ne is only for people aged 18 and over. Your account wasn't activated.",
     verifying: "Verifying...",
     continueButton: "Continue",
   },
   mfaChallenge: {
-    pageBadge: "🔒 Two-step verification",
     pageTitle: "Confirm your identity",
     pageSubtitle: "Your account has two-factor authentication enabled.",
     signingOut: "Signing out...",
   },
   verifyEmail: {
-    pageBadge: "📧 Last step",
     pageTitle: "Verify your email",
     pageSubtitle:
       "We sent a code to {email}. Enter it below to activate your account.",
@@ -112,11 +105,11 @@ export const auth: (typeof it)["auth"] = {
     surnameLabel: "Last name",
     surnamePlaceholder: "Rossi",
     birthDateLabel: "Date of birth",
-    ageNotice: "Car2ne is reserved for people at least 18 years old.",
+    ageNotice: "Car2ne is only for people aged 18 and over.",
     ageError: "You must be at least 18 years old to sign up.",
     confirmPasswordLabel: "Confirm password",
-    hideConfirmPassword: "Hide confirm password",
-    showConfirmPassword: "Show confirm password",
+    hideConfirmPassword: "Hide password confirmation",
+    showConfirmPassword: "Show password confirmation",
     acceptTermsPrefix: "I accept the",
     termsAndConditions: "Terms and Conditions",
     acceptPrivacyMiddle: "and I have read the",

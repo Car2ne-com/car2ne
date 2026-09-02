@@ -24,8 +24,8 @@ export const driverVerification: (typeof it)["driverVerification"] = {
     vehicleMakeLabel: "Vehicle make *",
     vehicleModelLabel: "Vehicle model *",
     vehiclePlateLabel: "License plate *",
-    licenseNumberLabel: "Driving license number *",
-    documentLabel: "Document (driving license or ID card)",
+    licenseNumberLabel: "Driver's license number *",
+    documentLabel: "Document (driver's license or ID card)",
     documentHint:
       "JPG, PNG or PDF · max 5 MB. The document is deleted right after review.",
     submit: "Submit request",

@@ -7,7 +7,6 @@ export const help: (typeof it)["help"] = {
       "How Car2ne works, how to offer or book a ride, and answers to the most common questions.",
   },
   hero: {
-    badge: "❓ Help centre",
     title: "How can we help?",
     subtitle:
       "How Car2ne works and answers to the most common questions. If you can't find what you're looking for, get in touch.",
@@ -97,15 +96,15 @@ export const help: (typeof it)["help"] = {
         items: [
           {
             q: "I can't find my event.",
-            a: "Use \"Suggest an event\" and paste the link to the official page. If the team approves it, the event is added to the catalogue. You need to be registered.",
+            a: "Use \"Suggest an event\" and paste the link to the official page. If the team approves it, the event is added to the catalog. You need to be registered.",
           },
           {
             q: "The event has passed, can I still do anything?",
-            a: "You can no longer search or offer rides, but you can leave a review for the people you travelled with.",
+            a: "You can no longer search for or offer rides, but you can leave a review for the people you traveled with.",
           },
           {
             q: "How do I know if someone publishes a ride for an event?",
-            a: "Open the event and tap \"Notify me when there's a ride\". You'll get a notification as soon as a ride is published. Followed events are in the dashboard.",
+            a: "Open the event and tap \"Notify me when a ride is posted\". You'll get a notification as soon as a ride is published. Followed events are in the dashboard.",
           },
         ],
       },

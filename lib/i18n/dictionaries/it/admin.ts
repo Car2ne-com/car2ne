@@ -46,7 +46,7 @@ export const admin = {
     subtitle: "Panoramica del servizio e delle attività recenti.",
     kpiOperationalEvents: "Eventi operativi",
     kpiUsers: "Utenti",
-    kpiActiveRides: "Ride attive",
+    kpiActiveRides: "Passaggi attivi",
     kpiBookings: "Prenotazioni",
     dataUnavailable: "Dato non disponibile",
     totalConcludedCaption: "{total} totali · {concluded} conclusi",
@@ -60,7 +60,7 @@ export const admin = {
     statFuture: "Futuri",
     statToday: "Oggi",
     statConcludedHistory: "Conclusi (storico)",
-    statActiveRides: "Ride attive",
+    statActiveRides: "Passaggi attivi",
     statTotalBookings: "Prenotazioni totali",
     statPendingRequests: "Richieste pendenti",
     statConfirmedBookings: "Prenotazioni confermate",
@@ -331,7 +331,7 @@ export const admin = {
   eventSuggestionsPage: {
     title: "Eventi segnalati",
     subtitle:
-      "Link a eventi segnalati dagli utenti perché mancanti dal catalogo. Approva quelli validi, poi crealo da \"+ Nuovo evento\" consultando il link; rifiuta gli altri.",
+      "Link a eventi segnalati dagli utenti perché mancanti dal catalogo. Approva quelli validi, poi crea l'evento da \"+ Nuovo evento\" consultando il link; rifiuta gli altri.",
   },
   eventSuggestionTable: {
     emptyTitle: "Nessuna segnalazione",
@@ -392,7 +392,7 @@ export const admin = {
     subtitle: "Andamento degli ultimi 30 giorni.",
     dataUnavailable: "Dato non disponibile.",
     newUsersPerDay: "Nuovi utenti al giorno",
-    newRidesPerDay: "Nuove ride pubblicate al giorno",
+    newRidesPerDay: "Nuovi passaggi pubblicati al giorno",
     newBookingsPerDay: "Nuove prenotazioni al giorno",
     paymentMethodsBreakdown: {
       title: "Metodi di pagamento preferiti",

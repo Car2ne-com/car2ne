@@ -3,12 +3,12 @@ export const events = {
     index: {
       title: "Eventi | Car2ne",
       description:
-        "Concerti, festival, sport e fiere in tutta Italia: trova un passaggio auto o condividi il tuo viaggio con Car2ne.",
+        "Concerti, festival, sport e fiere in tutta Italia: trova un passaggio o condividi il tuo viaggio con Car2ne.",
     },
     detail: {
       title: "{title} | Car2ne",
       description:
-        "{artist} — {venue}, {city}. Trova un passaggio auto per raggiungere l'evento o condividi il tuo viaggio con Car2ne.",
+        "{artist} — {venue}, {city}. Trova un passaggio per raggiungere l'evento o condividi il tuo viaggio con Car2ne.",
     },
   },
   header: {
@@ -54,7 +54,7 @@ export const events = {
     title: "Scegli il tuo viaggio",
     subtitle: "Unisciti ad altri partecipanti e condividi andata e ritorno.",
     emptyTitle: "Nessun passaggio disponibile",
-    emptyDescription: "Sii il primo ad offrirne uno.",
+    emptyDescription: "Sii il primo a offrirne uno.",
     emptyCta: "Offri un passaggio",
     driverFallback: "Conducente",
     driverLabel: "Conducente",

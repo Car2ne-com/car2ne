@@ -64,6 +64,7 @@ type Dict = {
   payInPersonNote: string;
   payConfirmTitle: string;
   payConfirmDescription: string;
+  payConfirmDescriptionInPerson: string;
   payConfirmButton: string;
   markingPaid: string;
   markPaidSuccess: string;
@@ -73,6 +74,7 @@ type Dict = {
   methodSatispay: string;
   paidBadge: string;
   paidWith: string;
+  paidInPerson: string;
 };
 
 type PaymentMethod = "paypal" | "revolut" | "satispay" | "in_person";
@@ -447,9 +449,11 @@ export default function BookingCard({
           {dict.paidBadge}
           {booking.paymentMethod && formattedPaidDate && (
             <span className="font-normal text-primary/80">
-              {dict.paidWith
-                .replace("{method}", methodLabel(booking.paymentMethod))
-                .replace("{date}", formattedPaidDate)}
+              {booking.paymentMethod === "in_person"
+                ? dict.paidInPerson.replace("{date}", formattedPaidDate)
+                : dict.paidWith
+                    .replace("{method}", methodLabel(booking.paymentMethod))
+                    .replace("{date}", formattedPaidDate)}
             </span>
           )}
         </div>
@@ -600,12 +604,14 @@ export default function BookingCard({
         }}
         title={dict.payConfirmTitle}
         description={
-          confirmMethod
-            ? dict.payConfirmDescription.replace(
-                "{method}",
-                methodLabel(confirmMethod)
-              )
-            : ""
+          confirmMethod === "in_person"
+            ? dict.payConfirmDescriptionInPerson
+            : confirmMethod
+              ? dict.payConfirmDescription.replace(
+                  "{method}",
+                  methodLabel(confirmMethod)
+                )
+              : ""
         }
         confirmLabel={
           marking ? dict.markingPaid : dict.payConfirmButton
