@@ -3,14 +3,14 @@ import type { it } from "../it";
 export const events: (typeof it)["events"] = {
   meta: {
     index: {
-      title: "Events | Car2ne",
+      title: "Concerts and live shows: find a ride | Car2ne",
       description:
-        "Concerts, festivals, sports and fairs all over Italy: find a ride or share your trip with Car2ne.",
+        "Concerts and live shows all over Italy: find a ride or share your trip with other attendees on Car2ne.",
     },
     detail: {
-      title: "{title} | Car2ne",
+      title: "{artist} in {city}: find a ride | Car2ne",
       description:
-        "{artist} — {venue}, {city}. Find a ride to the event or share your trip with Car2ne.",
+        "Going to {title} on {date} at {venue}, {city}? Find other attendees heading to the same event and share the trip. Rides from all over Italy on Car2ne.",
     },
   },
   header: {

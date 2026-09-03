@@ -1,14 +1,14 @@
 export const events = {
   meta: {
     index: {
-      title: "Eventi | Car2ne",
+      title: "Concerti e spettacoli: trova un passaggio | Car2ne",
       description:
-        "Concerti, festival, sport e fiere in tutta Italia: trova un passaggio o condividi il tuo viaggio con Car2ne.",
+        "Concerti e spettacoli dal vivo in tutta Italia: trova un passaggio o condividi il viaggio con altri spettatori con Car2ne.",
     },
     detail: {
-      title: "{title} | Car2ne",
+      title: "{artist} a {city}: trova un passaggio | Car2ne",
       description:
-        "{artist} — {venue}, {city}. Trova un passaggio per raggiungere l'evento o condividi il tuo viaggio con Car2ne.",
+        "Vai a {title} il {date} a {venue}, {city}? Trova altri spettatori diretti allo stesso evento e dividete il viaggio. Passaggi da tutta Italia su Car2ne.",
     },
   },
   header: {

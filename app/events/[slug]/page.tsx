@@ -68,17 +68,65 @@ function buildEventJsonLd(event: EventRecord) {
     location: {
       "@type": "Place",
       name: event.venue,
-      address: event.city,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: event.city,
+        addressCountry: "IT",
+      },
     },
     performer: {
       "@type": "PerformingGroup",
       name: event.artist,
     },
-    ...(event.image_url ? { image: [event.image_url] } : {}),
-    ...(event.description
-      ? { description: event.description }
-      : {}),
+    image: [
+      event.image_url ??
+        new URL("/images/hero.webp", SITE_URL).toString(),
+    ],
+    description:
+      event.description ??
+      `${event.artist} — ${event.venue}, ${event.city}.`,
     url: new URL(`/events/${event.slug}`, SITE_URL).toString(),
+  };
+}
+
+/*
+ * BreadcrumbList: dà a Google il percorso Home › Eventi › Città ›
+ * evento, così può mostrare i breadcrumb nel risultato di ricerca al
+ * posto dell'URL grezzo. La pagina non ha breadcrumb visibili, ma i
+ * link nell'hero (città, venue) rispecchiano comunque questa gerarchia.
+ */
+function buildBreadcrumbJsonLd(event: EventRecord, locale: string) {
+  const citySlug = toOne(event.cities)?.slug;
+
+  const trail: { name: string; url: string }[] = [
+    { name: "Car2ne", url: SITE_URL.origin },
+    {
+      name: locale === "en" ? "Events" : "Eventi",
+      url: new URL("/events", SITE_URL).toString(),
+    },
+  ];
+
+  if (citySlug) {
+    trail.push({
+      name: event.city,
+      url: new URL(`/citta/${citySlug}`, SITE_URL).toString(),
+    });
+  }
+
+  trail.push({
+    name: event.title,
+    url: new URL(`/events/${event.slug}`, SITE_URL).toString(),
+  });
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: crumb.url,
+    })),
   };
 }
 
@@ -92,19 +140,39 @@ export async function generateMetadata({
     return {};
   }
 
-  const { dict } = await getTranslations();
+  const { locale, dict } = await getTranslations();
   const { title: titleTemplate, description: descriptionTemplate } =
     dict.events.meta.detail;
 
-  const title = titleTemplate.replace("{title}", event.title);
+  const formattedDate = new Intl.DateTimeFormat(
+    locale === "en" ? "en-US" : "it-IT",
+    { dateStyle: "long" }
+  ).format(new Date(event.event_date));
+
+  const title = titleTemplate
+    .replace("{artist}", event.artist)
+    .replace("{city}", event.city);
+
   const description = descriptionTemplate
+    .replace("{title}", event.title)
     .replace("{artist}", event.artist)
     .replace("{venue}", event.venue)
-    .replace("{city}", event.city);
+    .replace("{city}", event.city)
+    .replace("{date}", formattedDate);
 
   return {
     title,
     description,
+    keywords: [
+      event.artist,
+      event.city,
+      event.venue,
+      locale === "en" ? "carpool" : "passaggio",
+      "carpooling",
+      locale === "en"
+        ? `how to get to ${event.venue}`
+        : `come arrivare a ${event.venue}`,
+    ],
     alternates: {
       canonical: `/events/${event.slug}`,
     },
@@ -128,7 +196,10 @@ export default async function EventPage({ params }: Props) {
     notFound();
   }
 
-  const jsonLd = buildEventJsonLd(event);
+  const jsonLd = [
+    buildEventJsonLd(event),
+    buildBreadcrumbJsonLd(event, locale),
+  ];
 
   if (isEventConcluded(event.event_date)) {
     const reviewHref = await getReviewHref(supabase, event.id);
