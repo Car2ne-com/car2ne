@@ -22,12 +22,6 @@ const EMERALD = "#059669";
 const INK = "#0f172a";
 const SLATE = "#475569";
 
-// Il marchio Car2ne (arco + punto), identico a components/layout/Logo.tsx
-// ma con il colore già risolto: dentro l'OG image non esistono le
-// CSS variables.
-const markSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 8 84 84"><path d="M74 28 A32 32 0 1 0 74 72" fill="none" stroke="${EMERALD}" stroke-width="14" stroke-linecap="round"/><circle cx="74" cy="50" r="9" fill="${EMERALD}"/></svg>`;
-const markDataUri = `data:image/svg+xml,${encodeURIComponent(markSvg)}`;
-
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -45,10 +39,24 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {/* Lockup del marchio */}
+        {/* Lockup del marchio — SVG inline (Satori lo renderizza
+            nativamente; un data-URI via <img> qui va in 500). */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={markDataUri} width={132} height={132} alt="" />
+          <svg
+            width={132}
+            height={132}
+            viewBox="8 8 84 84"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M74 28 A32 32 0 1 0 74 72"
+              fill="none"
+              stroke={EMERALD}
+              strokeWidth={14}
+              strokeLinecap="round"
+            />
+            <circle cx={74} cy={50} r={9} fill={EMERALD} />
+          </svg>
           <span
             style={{
               fontSize: 108,
@@ -84,7 +92,7 @@ export default function OpengraphImage() {
           }}
         >
           <span style={{ fontSize: 30, fontWeight: 600, color: SLATE }}>
-            Concerti · Festival · Sport · Fiere
+            Concerti · Festival · Spettacoli dal vivo
           </span>
           <span
             style={{
