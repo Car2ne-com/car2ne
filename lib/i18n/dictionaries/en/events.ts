@@ -80,6 +80,10 @@ export const events: (typeof it)["events"] = {
     mapOriginLabel: "Meeting point",
     mapVenueLabel: "Event venue",
   },
+  share: {
+    button: "Share",
+    message: "{title} — find a ride or offer one on Car2ne",
+  },
   watchlist: {
     notifyMe: "Notify me when a ride is posted",
     stopNotifying: "Stop notifying me",

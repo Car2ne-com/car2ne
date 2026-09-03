@@ -79,6 +79,10 @@ export const events = {
     mapOriginLabel: "Punto di ritrovo",
     mapVenueLabel: "Luogo dell'evento",
   },
+  share: {
+    button: "Condividi",
+    message: "{title} — trova un passaggio o offrine uno su Car2ne",
+  },
   watchlist: {
     notifyMe: "Avvisami quando c'è un passaggio",
     stopNotifying: "Non avvisarmi più",

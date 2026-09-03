@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import RideCard from "./RideCard";
+import ShareEventButton from "./ShareEventButton";
 import WatchlistToggleButton from "./WatchlistToggleButton";
 import { EmptyState } from "@/components/ui/empty-state";
 
@@ -11,6 +12,8 @@ import { getTranslations } from "@/lib/i18n";
 
 type Props = {
   eventId: string;
+  eventTitle: string;
+  shareUrl: string;
   venue?: {
     lat: number;
     lng: number;
@@ -20,6 +23,8 @@ type Props = {
 
 export default async function RideList({
   eventId,
+  eventTitle,
+  shareUrl,
   venue,
 }: Props) {
   const supabase = await createClient();
@@ -244,11 +249,19 @@ export default async function RideList({
           </p>
         </div>
 
-        <WatchlistToggleButton
-          eventId={eventId}
-          initiallyWatching={initiallyWatching}
-          dict={dict.events.watchlist}
-        />
+        <div className="flex flex-wrap items-center gap-3">
+          <ShareEventButton
+            url={shareUrl}
+            title={eventTitle}
+            dict={dict.events.share}
+          />
+
+          <WatchlistToggleButton
+            eventId={eventId}
+            initiallyWatching={initiallyWatching}
+            dict={dict.events.watchlist}
+          />
+        </div>
       </div>
 
       {formattedRides.length === 0 ? (

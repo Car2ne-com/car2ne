@@ -185,7 +185,15 @@ export default async function EventPage({ params }: Props) {
         <EventHero event={event} locale={locale} />
 
         <div className="mx-auto mt-14 max-w-7xl px-6">
-          <RideList eventId={event.id} venue={getEventVenue(event)} />
+          <RideList
+            eventId={event.id}
+            eventTitle={event.title}
+            shareUrl={new URL(
+              `/events/${event.slug}`,
+              SITE_URL
+            ).toString()}
+            venue={getEventVenue(event)}
+          />
         </div>
       </main>
 
