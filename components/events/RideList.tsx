@@ -267,7 +267,7 @@ export default async function RideList({
     <section>
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="mt-5 text-4xl font-medium text-foreground">
+          <h2 className="text-[1.75rem] font-medium tracking-[-0.01em] text-foreground sm:text-3xl">
             {t.title}
           </h2>
 
