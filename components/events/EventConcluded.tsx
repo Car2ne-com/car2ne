@@ -39,20 +39,20 @@ export default function EventConcluded({
   ).format(new Date(event.event_date));
 
   return (
-    <section className="mx-auto max-w-2xl px-6 py-32 text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-        <CalendarCheck className="h-8 w-8 text-muted-foreground" />
+    <section className="mx-auto max-w-2xl px-6 pt-6 pb-16 text-center sm:pt-10 sm:pb-24">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+        <CalendarCheck className="h-7 w-7 text-muted-foreground" />
       </div>
 
-      <span className="mt-6 inline-flex rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground">
+      <span className="mt-5 inline-flex rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
         {dict.badge}
       </span>
 
-      <h1 className="mt-6 text-4xl font-medium tracking-tight text-foreground">
+      <h1 className="mt-5 text-[1.6rem] font-medium leading-snug tracking-tight text-foreground sm:text-3xl">
         {event.title}
       </h1>
 
-      <p className="mt-2 text-lg font-medium text-primary">
+      <p className="mt-2 font-medium text-primary">
         {event.artist}
       </p>
 
@@ -71,11 +71,11 @@ export default function EventConcluded({
         {dict.description}
       </p>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <div className="mx-auto mt-8 flex max-w-xs flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center">
         {reviewHref && (
           <Link
             href={reviewHref}
-            className={buttonVariants({ variant: "outline", size: "lg", className: "h-auto px-8 py-4 text-base" })}
+            className={buttonVariants({ variant: "outline", size: "lg", className: "h-auto px-8 py-3.5 text-base" })}
           >
             {dict.leaveReviewButton}
           </Link>
@@ -83,7 +83,7 @@ export default function EventConcluded({
 
         <Link
           href="/events"
-          className={buttonVariants({ size: "lg", className: "h-auto px-8 py-4 text-base" })}
+          className={buttonVariants({ size: "lg", className: "h-auto px-8 py-3.5 text-base" })}
         >
           {dict.browseEvents}
         </Link>

@@ -34,10 +34,10 @@ export default function EventHero({ event, locale }: Props) {
 
       <div className="absolute inset-0 bg-black/20" />
 
-      <div className="relative mx-auto flex min-h-[420px] max-w-7xl items-center px-6 py-16 sm:min-h-[520px] sm:py-24">
-        <div className="grid w-full gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
+      <div className="relative mx-auto flex max-w-7xl flex-col px-6 pt-8 pb-12 sm:pt-12 sm:pb-16 lg:min-h-[480px] lg:justify-center lg:py-20">
+        <div className="grid w-full gap-8 lg:grid-cols-2 lg:items-center lg:gap-14">
           <div className="text-white">
-            <h1 className="text-[1.85rem] font-medium leading-[1.12] tracking-[-0.01em] text-balance sm:text-4xl md:text-5xl">
+            <h1 className="text-[1.8rem] font-medium leading-[1.15] tracking-[-0.01em] sm:text-4xl md:text-5xl">
               {event.title}
             </h1>
 
@@ -60,9 +60,9 @@ export default function EventHero({ event, locale }: Props) {
               </p>
             )}
 
-            <div className="mt-10 space-y-4">
-              <div className="flex items-center gap-3 text-lg">
-                <MapPin className="h-5 w-5" />
+            <div className="mt-8 space-y-3 text-[0.95rem] sm:text-lg">
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0" />
 
                 <span>
                   {event.cities ? (
@@ -89,8 +89,8 @@ export default function EventHero({ event, locale }: Props) {
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 text-lg">
-                <CalendarDays className="h-5 w-5" />
+              <div className="flex items-start gap-3">
+                <CalendarDays className="mt-0.5 h-5 w-5 shrink-0" />
 
                 <span>{formattedDate}</span>
               </div>
