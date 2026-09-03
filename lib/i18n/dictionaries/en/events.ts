@@ -58,6 +58,8 @@ export const events: (typeof it)["events"] = {
     emptyTitle: "No rides available",
     emptyDescription: "Be the first to offer one.",
     emptyCta: "Offer a ride",
+    demandSingular: "{count} person is following this event and waiting for a ride",
+    demandPlural: "{count} people are following this event and waiting for a ride",
     driverFallback: "Driver",
     driverLabel: "Driver",
     driverVerifiedBadge: "Verified",
@@ -79,10 +81,16 @@ export const events: (typeof it)["events"] = {
     mapToggleHide: "Hide the map",
     mapOriginLabel: "Meeting point",
     mapVenueLabel: "Event venue",
+    safetyNote:
+      "Before you book: agree on a public meeting point and check the driver's profile and reviews.",
+    safetyNoteLink: "Safety tips",
   },
   share: {
     button: "Share",
     message: "{title} — find a ride or offer one on Car2ne",
+    rideButton: "Share this ride",
+    rideMessage:
+      "I'm driving to {title} and have seats free — book yours on Car2ne",
   },
   watchlist: {
     notifyMe: "Notify me when a ride is posted",

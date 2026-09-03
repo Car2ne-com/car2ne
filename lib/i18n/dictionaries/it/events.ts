@@ -56,6 +56,8 @@ export const events = {
     emptyTitle: "Nessun passaggio disponibile",
     emptyDescription: "Sii il primo a offrirne uno.",
     emptyCta: "Offri un passaggio",
+    demandSingular: "{count} persona segue questo evento e aspetta un passaggio",
+    demandPlural: "{count} persone seguono questo evento e aspettano un passaggio",
     driverFallback: "Conducente",
     driverLabel: "Conducente",
     driverVerifiedBadge: "Verificato",
@@ -78,10 +80,16 @@ export const events = {
     mapToggleHide: "Nascondi la mappa",
     mapOriginLabel: "Punto di ritrovo",
     mapVenueLabel: "Luogo dell'evento",
+    safetyNote:
+      "Prima di prenotare: concorda un punto d'incontro pubblico e controlla il profilo e le recensioni del conducente.",
+    safetyNoteLink: "Consigli di sicurezza",
   },
   share: {
     button: "Condividi",
     message: "{title} — trova un passaggio o offrine uno su Car2ne",
+    rideButton: "Condividi il passaggio",
+    rideMessage:
+      "Guido a {title} e ho posti liberi — prenota il tuo su Car2ne",
   },
   watchlist: {
     notifyMe: "Avvisami quando c'è un passaggio",

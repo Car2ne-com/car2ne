@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ShieldCheck, Users } from "lucide-react";
 
 import RideCard from "./RideCard";
 import ShareEventButton from "./ShareEventButton";
@@ -47,6 +48,32 @@ export default async function RideList({
 
     initiallyWatching = !!watchRow;
   }
+
+  /*
+   * Domanda sull'evento: quante persone lo seguono in attesa di un
+   * passaggio. Mostrata come spinta a chi potrebbe offrirne uno. La
+   * RLS nasconde le righe altrui, quindi passa da una funzione
+   * SECURITY DEFINER (migration 0039).
+   */
+  const { data: watcherCountRaw, error: watcherCountError } =
+    await supabase.rpc("event_watcher_count", { event_id: eventId });
+
+  if (watcherCountError) {
+    console.error(
+      "Errore conteggio follower evento:",
+      watcherCountError.message
+    );
+  }
+
+  const watcherCount = watcherCountRaw ?? 0;
+
+  const demandLabel =
+    watcherCount > 0
+      ? (watcherCount === 1 ? t.demandSingular : t.demandPlural).replace(
+          "{count}",
+          String(watcherCount)
+        )
+      : null;
 
   let blockedCounterpartIds: string[] = [];
 
@@ -247,6 +274,13 @@ export default async function RideList({
           <p className="mt-3 text-lg text-muted-foreground">
             {t.subtitle}
           </p>
+
+          {demandLabel && (
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground">
+              <Users className="h-4 w-4" />
+              {demandLabel}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -276,15 +310,31 @@ export default async function RideList({
           </Link>
         </div>
       ) : (
-        <div className="grid gap-8 lg:grid-cols-2">
-          {formattedRides.map((ride) => (
-            <RideCard
-              key={ride.id}
-              ride={ride}
-              dict={t}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-8 lg:grid-cols-2">
+            {formattedRides.map((ride) => (
+              <RideCard
+                key={ride.id}
+                ride={ride}
+                dict={t}
+              />
+            ))}
+          </div>
+
+          <p className="mt-8 flex items-start gap-2 text-sm text-muted-foreground">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+
+            <span>
+              {t.safetyNote}{" "}
+              <Link
+                href="/community-guidelines"
+                className="font-medium text-primary underline underline-offset-2"
+              >
+                {t.safetyNoteLink}
+              </Link>
+            </span>
+          </p>
+        </>
       )}
     </section>
   );

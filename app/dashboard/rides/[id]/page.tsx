@@ -1,10 +1,12 @@
 import { notFound, redirect } from "next/navigation";
 
 import ManageRideForm from "@/components/dashboard/ManageRideForm";
+import ShareEventButton from "@/components/events/ShareEventButton";
 import { Card } from "@/components/ui/card";
 
 import { createClient } from "@/lib/supabase/server";
 import { getTranslations } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/siteConfig";
 import { isPastDateTime } from "@/lib/utils/date";
 import { isEventConcluded } from "@/lib/utils/eventStatus";
 
@@ -179,6 +181,25 @@ export default async function ManageRidePage({
 
           <div className="mt-5 rounded-2xl bg-muted p-4 text-sm text-muted-foreground">
             {t.managePage.infoLocked}
+          </div>
+
+          {/*
+           * Recluta i tuoi passeggeri: condividi il passaggio nella
+           * chat dei fan / gruppo WhatsApp. Il link porta alla pagina
+           * evento, dove si prenota il posto.
+           */}
+          <div className="mt-5">
+            <ShareEventButton
+              url={new URL(
+                `/events/${event.slug}`,
+                SITE_URL
+              ).toString()}
+              title={event.title}
+              dict={{
+                button: dict.events.share.rideButton,
+                message: dict.events.share.rideMessage,
+              }}
+            />
           </div>
         </Card>
 
