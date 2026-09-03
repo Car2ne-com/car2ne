@@ -52,8 +52,8 @@ export default async function Hero() {
             </div>
           </div>
 
-          {/* Illustrazione */}
-          <HeroIllustration />
+          {/* Composizione prodotto */}
+          <HeroIllustration dict={dict.home.showcase} />
         </div>
 
         {/* La ricerca è la porta d'ingresso del prodotto */}

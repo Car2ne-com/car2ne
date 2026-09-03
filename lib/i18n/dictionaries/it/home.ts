@@ -14,6 +14,18 @@ export const home = {
     searchEvent: "Cerca un evento",
     offerRide: "Offri un passaggio",
   },
+  showcase: {
+    departure: "Torino",
+    arrival: "San Siro",
+    eventName: "Coldplay",
+    eventVenue: "Stadio San Siro, Milano",
+    eventDate: "Sab 12 lug · 21:00",
+    rideDriver: "Giulia offre un passaggio",
+    rideRoute: "Torino → Milano",
+    rideSeats: "3 posti liberi",
+    co2Label: "CO₂ risparmiata",
+    co2Value: "−18 kg",
+  },
   searchBox: {
     eventPlaceholder: "Cerca un evento",
     departurePlaceholder: "Partenza",

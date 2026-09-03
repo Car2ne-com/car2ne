@@ -16,6 +16,18 @@ export const home: (typeof it)["home"] = {
     searchEvent: "Search for an event",
     offerRide: "Offer a ride",
   },
+  showcase: {
+    departure: "Turin",
+    arrival: "San Siro",
+    eventName: "Coldplay",
+    eventVenue: "San Siro Stadium, Milan",
+    eventDate: "Sat 12 Jul · 9:00 PM",
+    rideDriver: "Giulia is offering a ride",
+    rideRoute: "Turin → Milan",
+    rideSeats: "3 seats left",
+    co2Label: "CO₂ saved",
+    co2Value: "−18 kg",
+  },
   searchBox: {
     eventPlaceholder: "Search for an event",
     departurePlaceholder: "Departure",
