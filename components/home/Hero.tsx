@@ -42,12 +42,10 @@ export default async function Hero() {
 
               <Link
                 href="/offer-ride"
-                className="group inline-flex h-14 items-center justify-center gap-2 rounded-full border border-border bg-card px-6 text-base font-semibold text-foreground transition-colors hover:border-primary/30 hover:bg-accent sm:h-auto sm:border-0 sm:bg-transparent sm:px-0"
+                className="group inline-flex h-14 items-center justify-center gap-2 rounded-full border border-border bg-card px-6 text-base font-semibold text-foreground transition-colors hover:border-primary/30 hover:bg-accent sm:h-auto sm:border-0 sm:bg-transparent sm:px-0 sm:hover:bg-transparent sm:hover:text-primary"
               >
                 {t.offerRide}
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card transition-all group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
           </div>
