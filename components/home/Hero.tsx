@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Search, ArrowUpRight } from "lucide-react";
+import { Search } from "lucide-react";
 
 import HeroIllustration from "./HeroIllustration";
 import SearchBox from "./SearchBox";
@@ -42,10 +42,9 @@ export default async function Hero() {
 
               <Link
                 href="/offer-ride"
-                className="group inline-flex h-14 items-center justify-center gap-2 rounded-full border border-border bg-card px-6 text-base font-semibold text-foreground transition-colors hover:border-primary/30 hover:bg-accent sm:h-auto sm:border-0 sm:bg-transparent sm:px-0 sm:hover:bg-transparent sm:hover:text-primary"
+                className="inline-flex h-14 items-center justify-center rounded-full border border-border bg-card px-6 text-base font-semibold text-foreground transition-colors hover:border-primary/30 hover:bg-accent sm:h-auto sm:border-0 sm:bg-transparent sm:px-0 sm:hover:bg-transparent sm:hover:text-primary"
               >
                 {t.offerRide}
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
           </div>
