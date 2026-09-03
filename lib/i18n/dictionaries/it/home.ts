@@ -73,7 +73,7 @@ export const home = {
   },
   cta: {
     title: "Pronto per il tuo prossimo evento?",
-    subtitle: "Trova un passaggio oppure aiutane altri condividendo il tuo viaggio.",
+    subtitle: "Trova un passaggio oppure aiuta gli altri condividendo il tuo viaggio.",
     searchRide: "Cerca un passaggio",
     offerRide: "Offri un passaggio",
   },
