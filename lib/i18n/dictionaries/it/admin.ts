@@ -8,7 +8,6 @@ export const admin = {
     reports: "Segnalazioni",
     eventSuggestions: "Eventi segnalati",
     analytics: "Analytics",
-    betaChecklist: "Beta checklist",
   },
   usersPage: {
     title: "Gestione utenti",

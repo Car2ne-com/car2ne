@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { isBetaChecklistEnabled } from "@/lib/betaChecklist/config";
-
 type Tabs = {
   dashboard: string;
   events: string;
@@ -14,7 +12,6 @@ type Tabs = {
   reports: string;
   eventSuggestions: string;
   analytics: string;
-  betaChecklist: string;
 };
 
 type Props = {
@@ -39,9 +36,6 @@ export default function AdminTabs({ tabs }: Props) {
       label: tabs.eventSuggestions,
     },
     { href: "/admin/analytics", label: tabs.analytics },
-    ...(isBetaChecklistEnabled
-      ? [{ href: "/admin/beta-checklist", label: tabs.betaChecklist }]
-      : []),
   ];
 
   return (

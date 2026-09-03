@@ -10,7 +10,6 @@ export const admin: (typeof it)["admin"] = {
     reports: "Reports",
     eventSuggestions: "Suggested events",
     analytics: "Analytics",
-    betaChecklist: "Beta checklist",
   },
   usersPage: {
     title: "User management",

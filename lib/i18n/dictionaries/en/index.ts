@@ -7,7 +7,6 @@ import { cities } from "./cities";
 import { legal } from "./legal";
 import { profile } from "./profile";
 import { email } from "./email";
-import { betaChecklist } from "./betaChecklist";
 import { driverVerification } from "./driverVerification";
 import { reports } from "./reports";
 import { admin } from "./admin";
@@ -32,7 +31,6 @@ export const en = {
   legal,
   profile,
   email,
-  betaChecklist,
   driverVerification,
   reports,
   admin,

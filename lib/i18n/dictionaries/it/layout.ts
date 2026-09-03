@@ -21,7 +21,6 @@ export const layout = {
     myBookings: "Le mie prenotazioni",
     myWatchlist: "Eventi seguiti",
     myProfile: "Il mio profilo",
-    betaChecklist: "Beta checklist",
     admin: "Admin",
     logout: "Esci",
   },

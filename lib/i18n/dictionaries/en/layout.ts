@@ -23,7 +23,6 @@ export const layout: (typeof it)["layout"] = {
     myBookings: "My bookings",
     myWatchlist: "Followed events",
     myProfile: "My profile",
-    betaChecklist: "Beta checklist",
     admin: "Admin",
     logout: "Log out",
   },
